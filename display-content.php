@@ -907,6 +907,7 @@ function birdhive_display_collection ( $a = array() ) {
 		if ( $display_format == "table" ) { $fields = get_field('table_fields', $collection_id); } else { $fields = array(); }
 		if ( $display_format == "grid" ) { $num_cols = get_field('num_cols', $collection_id); } else { $num_cols = ""; }
 		//$content_type = $a['content_type']; -- probably mixed, but could be posts or whatever, collection of single type of items -- would have to loop to determine
+		$content_type = "mixed"; // tft
     	
 	} else {
 	
@@ -929,7 +930,7 @@ function birdhive_display_collection ( $a = array() ) {
 	$info .= collection_header ( $display_format, $fields );
 	
 	// For each item, get content for display in appropriate form...
-	foreach ( $items as $items ) {
+	foreach ( $items as $item ) {
 	
 		//get content for display in appropriate form...
 		//$item_args = array( 'content_type' => $content_type, 'display_format' => $display_format, 'item' => $item );
