@@ -930,6 +930,7 @@ function birdhive_display_collection ( $a = array() ) {
 	// List/table/grid header or container
 	$info .= collection_header ( $display_format, $fields );
 	
+	/*
 	// For each item, get content for display in appropriate form...
 	foreach ( $items as $item ) {
 	
@@ -1073,7 +1074,7 @@ function birdhive_display_collection ( $a = array() ) {
 		}
 		
 	}
-	
+	*/
 	// List/table/grid footer or close container
 	$info .= collection_footer ( $display_format );
 	
