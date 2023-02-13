@@ -904,8 +904,8 @@ function birdhive_display_collection ( $a = array() ) {
 		$display_format = get_field('display_format', $collection_id);
     	$items = get_field('collection_items', $collection_id); // ACF collection item repeater field values
 		$aspect_ratio = get_field('aspect_ratio', $collection_id);
-		if ( $display_format == "table" ) { $table_fields = get_field('table_fields', $collection_id); }
-		if ( $display_format == "grid" ) { $num_cols = get_field('num_cols', $collection_id); }
+		if ( $display_format == "table" ) { $fields = get_field('table_fields', $collection_id); } else { $fields = array(); }
+		if ( $display_format == "grid" ) { $num_cols = get_field('num_cols', $collection_id); } else { $num_cols = ""; }
 		//$content_type = $a['content_type']; -- probably mixed, but could be posts or whatever, collection of single type of items -- would have to loop to determine
     	
 	} else {
