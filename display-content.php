@@ -1144,6 +1144,9 @@ function collection_header ( $display_format = null, $fields = null, $num_cols =
 		//if ( $class ) { $colclass .= " ".$class; }
 		$info .= '<div class="flex-container '.$colclass.'">';
 	
+	} else {
+	
+		$info .= 'display_format '.$display_format.' not matched<br />';
 	}
 	
 	return $info;
