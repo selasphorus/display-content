@@ -1695,6 +1695,8 @@ function birdhive_content_collection ( $atts = [] ) {
 	$info = "";
 	$ts_info = "";
 
+	$info .= "<h3>*** WIP content_collection ***</h3>";
+	
 	$a = shortcode_atts( array(
         'id' => null,
     ), $atts );
