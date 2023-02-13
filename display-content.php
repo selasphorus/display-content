@@ -1076,7 +1076,12 @@ function birdhive_display_collection ( $a = array() ) {
 			
 		} else if ( $display_format == "grid" ) {
 		
-			$item_info .= display_grid_item($item_url, $item_title, $item_image, $item_text, $post_id, $arr_dpatts);
+			$item_info .= "post_id: ".$post_id."<br />";
+			$item_info .= "item_title: ".$item_title."<br />";
+			$item_info .= "item_url: ".$item_url."<br />";
+			$item_info .= "item_image: ".$item_image."<br />";
+			
+			//$item_info .= display_grid_item($item_url, $item_title, $item_image, $item_text, $post_id, $arr_dpatts);
 			
 		}
 		
