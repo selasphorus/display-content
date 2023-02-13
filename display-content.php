@@ -1085,6 +1085,8 @@ function birdhive_display_collection ( $a = array() ) {
 			
 		}
 		
+		$item_info .= "+~+~+~+~+~+~+~+~+~+~+~+~+<br />";
+		
 		$info .= $item_info;
 		
 	}
