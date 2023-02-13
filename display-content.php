@@ -845,27 +845,32 @@ function display_table_row ( $item_url = null, $item_title = null, $item_image =
 	
 }
 
-function display_grid_item ( $item_url = null, $item_title = null, $item_image = null, $item_text = null, $post_id = null ) {
+function display_grid_item ( $item_url = null, $item_title = null, $item_image = null, $item_text = null, $post_id = null, $arr_dpatts = array() ) {
 
 	$info = "";
 	
-	$post_info = "";
+	$item_info = "";
+	
+	if ( isset($arr_dpatts['spacing']) ) { $spacing = $arr_dpatts['spacing']; } else { $spacing = ""; }
+	if ( isset($arr_dpatts['overlay']) ) { $overlay = $arr_dpatts['overlay']; } else { $overlay = false; }
 	
 	// WIP
-	$post_info .= '<a href="'.get_the_permalink($post_id).'" rel="bookmark">';
-	$post_info .= '<span class="post_title">'.$post_title.'</span>';
-	// For events, also display the date/time
-	if ( post_type_exists('event') && 'event' ) { 
-		$event_start_datetime = get_post_meta( $post_id, '_event_start_local', true );
-		//$event_start_time = get_post_meta( $post_id, '_event_start_date', true );
-		if ( $event_start_datetime ) {
-			//$post_info .= "[".$event_start_datetime."]"; // tft
-			$date_str = date_i18n( "l, F d, Y \@ g:i a", strtotime($event_start_datetime) );
-			$post_info .= "<br />".$date_str;
+	$item_info .= '<a href="'.item_url.'" rel="bookmark">';
+	$item_info .= '<span class="item_title">'.$item_title.'</span>';
+	
+	if ( $post_id ) {	
+		// For events, also display the date/time
+		if ( post_type_exists('event') && $post_type == 'event' ) { 
+			$event_start_datetime = get_post_meta( $post_id, '_event_start_local', true );
+			//$event_start_time = get_post_meta( $post_id, '_event_start_date', true );
+			if ( $event_start_datetime ) {
+				//$item_info .= "[".$event_start_datetime."]"; // tft
+				$date_str = date_i18n( "l, F d, Y \@ g:i a", strtotime($event_start_datetime) );
+				$item_info .= "<br />".$date_str;
+			}
 		}
 	}
-	//
-	$post_info .= '</a>';
+	$item_info .= '</a>';
 	
 	$info .= '<div class="flex-box '.$spacing.'">';
 	$info .= '<div class="flex-img">';
@@ -874,9 +879,9 @@ function display_grid_item ( $item_url = null, $item_title = null, $item_image =
 	$info .= '</a>';
 	$info .= '</div>';
 	if ( $overlay == true ) {
-		$info .= '<div class="overlay">'.$post_info.'</div>';
+		$info .= '<div class="overlay">'.$item_info.'</div>';
 	} else {
-		$info .= '<div class="post_info">'.$post_info.'</div>';
+		$info .= '<div class="item_info">'.$item_info.'</div>';
 	}
 	$info .= '</div>';
 	
@@ -906,6 +911,8 @@ function birdhive_display_collection ( $a = array() ) {
 		$content_type = $a['content_type'];
 		$display_format = $a['display_format'];
 		$items = $a['content'];
+		$arr_dpatts = $a['arr_dpatts'];
+		
 		$aspect_ratio = "square";
 		if ( $display_format == "table" ) { $table_fields = $a['fields']; }
 		if ( $display_format == "grid" ) { $num_cols = $a['num_cols']; }
@@ -1055,7 +1062,7 @@ function birdhive_display_collection ( $a = array() ) {
 			
 		} else if ( $display_format == "grid" ) {
 		
-			$info .= display_grid_item($item_url, $item_title, $item_image, $item_text, $post_id);
+			$info .= display_grid_item($item_url, $item_title, $item_image, $item_text, $post_id, $arr_dpatts);
 			
 		}
 		
@@ -1663,7 +1670,7 @@ function birdhive_display_posts ( $atts = [] ) { //function birdhive_display_pos
         // WIP 02/23
 		//if ($a['header'] == 'true') { $info .= '<h3>Latest '.$category.' Articles:</h3>'; } // WIP
 		$info .= '<div class="dc-posts">';        
-        $display_args = array( 'content_type' => 'posts', 'display_format' => $return_format, 'content' => $posts );
+        $display_args = array( 'content_type' => 'posts', 'display_format' => $return_format, 'content' => $posts, 'arr_dpatts' => $a );
         $info .= birdhive_display_collection( $display_args );
         $info .= '</div>'; // end div class="dc-posts" (wrapper)
         
