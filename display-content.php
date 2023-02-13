@@ -1703,7 +1703,7 @@ function birdhive_content_collection ( $atts = [] ) {
     
     $collection_id = $a['id'];
     
-    $info .= birdhive_display_collection( $a );
+    $info .= birdhive_display_collection( array('collection_id' => $collection_id) );
     
     $info .= '<div class="troubleshooting">'.$ts_info.'</div>';
     
