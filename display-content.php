@@ -927,9 +927,12 @@ function birdhive_display_collection ( $a = array() ) {
 	
 	//?if ( $content_type == "posts" ) { $post_type = $a['post_type']; }
 	
+	$ts_info .= "+~+~+~+~+~+~+ collection_header +~+~+~+~+~+~+<br />";
+	
 	// List/table/grid header or container
 	$info .= collection_header ( $display_format, $fields );
 	
+	$ts_info .= "+~+~+~+~+~+~+ collection items +~+~+~+~+~+~+<br />";
 	/*
 	// For each item, get content for display in appropriate form...
 	foreach ( $items as $item ) {
@@ -1075,6 +1078,8 @@ function birdhive_display_collection ( $a = array() ) {
 		
 	}
 	*/
+	
+	$ts_info .= "+~+~+~+~+~+~+ collection_footer +~+~+~+~+~+~+<br />";
 	// List/table/grid footer or close container
 	$info .= collection_footer ( $display_format );
 	
