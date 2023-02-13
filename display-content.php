@@ -913,6 +913,7 @@ function birdhive_display_collection ( $a = array() ) {
 	
 		$ts_info .= "No collection_id set<br />";
 		
+		$collection_id = null;
 		$content_type = $a['content_type'];
 		$display_format = $a['display_format'];
 		$items = $a['content'];
@@ -970,7 +971,7 @@ function birdhive_display_collection ( $a = array() ) {
 			// Item Image
 			
 			// If this is a post via a collection, check to see if there's an image override
-			if ( isset($item['item_image']) ) { $item_image = $item['item_image']; } else { $item_image = null; }
+			if ( $collection_id && isset($item['item_image']) ) { $item_image = $item['item_image']; } else { $item_image = null; }
 			
 			// No collection image? Then look for a image via the post record
 			if ( ! $item_image ) {
