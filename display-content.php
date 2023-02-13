@@ -927,8 +927,6 @@ function birdhive_display_collection ( $a = array() ) {
 	
 	//?if ( $content_type == "posts" ) { $post_type = $a['post_type']; }
 	
-	$ts_info .= "+~+~+~+~+~+~+ collection_header +~+~+~+~+~+~+<br />";
-	
 	// List/table/grid header or container
 	$info .= collection_header ( $display_format, $fields );
 	
@@ -1079,7 +1077,6 @@ function birdhive_display_collection ( $a = array() ) {
 	}
 	*/
 	
-	$ts_info .= "+~+~+~+~+~+~+ collection_footer +~+~+~+~+~+~+<br />";
 	// List/table/grid footer or close container
 	$info .= collection_footer ( $display_format );
 	
@@ -1093,6 +1090,7 @@ function birdhive_display_collection ( $a = array() ) {
 function collection_header ( $display_format = null, $fields = null, $num_cols = 3 ) {
 
 	$info = "";
+	$info .= "+~+~+~+~+~+~+ collection_header +~+~+~+~+~+~+<br />";
 	
 	if ( $display_format == "links" ) {
 	
@@ -1155,6 +1153,7 @@ function collection_header ( $display_format = null, $fields = null, $num_cols =
 function collection_footer ( $display_format = null ) {
 
 	$info = "";
+	$info .= "+~+~+~+~+~+~+ collection_footer +~+~+~+~+~+~+<br />";
 	
 	if ( $display_format == "links" ) {
 		//if ( ! is_archive() && ! is_category() ) { $info .= '<li>'.$category_link.'</li>'; }
