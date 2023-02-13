@@ -930,11 +930,13 @@ function birdhive_display_collection ( $a = array() ) {
 	// List/table/grid header or container
 	$info .= collection_header ( $display_format, $fields );
 	
-	$info .= "+~+~+~+~+~+~+ collection items +~+~+~+~+~+~+<br />";
-	/*
+	//$info .= "+~+~+~+~+~+~+ collection items +~+~+~+~+~+~+<br />";
+	
 	// For each item, get content for display in appropriate form...
 	foreach ( $items as $item ) {
 	
+		$info .= "item: <pre>".print_r($item, true)."</pre>";
+		
 		//get content for display in appropriate form...
 		//$item_args = array( 'content_type' => $content_type, 'display_format' => $display_format, 'item' => $item );
 		//$info .= birdhive_display_item( $item_args );
@@ -1075,7 +1077,6 @@ function birdhive_display_collection ( $a = array() ) {
 		}
 		
 	}
-	*/
 	
 	// List/table/grid footer or close container
 	$info .= collection_footer ( $display_format );
