@@ -930,7 +930,7 @@ function birdhive_display_collection ( $a = array() ) {
 	// List/table/grid header or container
 	$info .= collection_header ( $display_format, $fields );
 	
-	$ts_info .= "+~+~+~+~+~+~+ collection items +~+~+~+~+~+~+<br />";
+	$info .= "+~+~+~+~+~+~+ collection items +~+~+~+~+~+~+<br />";
 	/*
 	// For each item, get content for display in appropriate form...
 	foreach ( $items as $item ) {
@@ -1090,7 +1090,7 @@ function birdhive_display_collection ( $a = array() ) {
 function collection_header ( $display_format = null, $fields = null, $num_cols = 3 ) {
 
 	$info = "";
-	$info .= "+~+~+~+~+~+~+ collection_header +~+~+~+~+~+~+<br />";
+	//$info .= "+~+~+~+~+~+~+ collection_header +~+~+~+~+~+~+<br />";
 	
 	if ( $display_format == "links" ) {
 	
@@ -1153,7 +1153,7 @@ function collection_header ( $display_format = null, $fields = null, $num_cols =
 function collection_footer ( $display_format = null ) {
 
 	$info = "";
-	$info .= "+~+~+~+~+~+~+ collection_footer +~+~+~+~+~+~+<br />";
+	//$info .= "+~+~+~+~+~+~+ collection_footer +~+~+~+~+~+~+<br />";
 	
 	if ( $display_format == "links" ) {
 		//if ( ! is_archive() && ! is_category() ) { $info .= '<li>'.$category_link.'</li>'; }
