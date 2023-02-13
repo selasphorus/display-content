@@ -897,8 +897,10 @@ function birdhive_display_collection ( $a = array() ) {
 	
 	// Get args from array
 	if ( isset($a['collection_id']) ) {
-	
-		$collection_id = $a['collection_id'];
+		
+		$collection_id = $a['collection_id'];	
+		$ts_info .= "collection_id: $collection_id<br />";
+		
 		$display_format = get_field('display_format', $collection_id);
     	$items = get_field('collection_items', $collection_id); // ACF collection item repeater field values
 		$aspect_ratio = get_field('aspect_ratio', $collection_id);
@@ -908,6 +910,8 @@ function birdhive_display_collection ( $a = array() ) {
     	
 	} else {
 	
+		$ts_info .= "No collection_id set<br />";
+		
 		$content_type = $a['content_type'];
 		$display_format = $a['display_format'];
 		$items = $a['content'];
@@ -915,7 +919,7 @@ function birdhive_display_collection ( $a = array() ) {
 		
 		$aspect_ratio = "square";
 		if ( $display_format == "table" ) { $table_fields = $a['fields']; }
-		if ( $display_format == "grid" ) { $num_cols = $a['num_cols']; }
+		if ( $display_format == "grid" && isset($a['num_cols']) ) { $num_cols = $a['num_cols']; } else { $num_cols = ""}
 		
 	}
 	
@@ -1070,6 +1074,8 @@ function birdhive_display_collection ( $a = array() ) {
 	
 	// List/table/grid footer or close container
 	$info .= collection_footer ( $display_format );
+	
+	$info .= $ts_info;
 	
 	// Return info for display
 	return $info;
