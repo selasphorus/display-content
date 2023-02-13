@@ -935,7 +935,9 @@ function birdhive_display_collection ( $a = array() ) {
 	// For each item, get content for display in appropriate form...
 	foreach ( $items as $item ) {
 	
-		$info .= "item: <pre>".print_r($item, true)."</pre>";
+		$item_info = "";
+		
+		//$info .= "item: <pre>".print_r($item, true)."</pre>";
 		
 		//get content for display in appropriate form...
 		//$item_args = array( 'content_type' => $content_type, 'display_format' => $display_format, 'item' => $item );
@@ -947,6 +949,8 @@ function birdhive_display_collection ( $a = array() ) {
 			$item_type = $item['item_type'];
 		}
 		
+		$item_info .= "item_type: ".$item_type."<br />";
+		
 		if ( $item_type == "post" ) { 
 		
 			$post = $item;
@@ -955,10 +959,10 @@ function birdhive_display_collection ( $a = array() ) {
 			
 			if ( post_type_exists('event') && $post_type == 'event' ) {
 				$post_id = $post->post_id;
-				$info .= '<!-- Event post_id: '.$post_id." -->"; // tft
+				$item_info .= '<!-- Event post_id: '.$post_id." -->"; // tft
 			} else {
 				$post_id = $post->ID;
-				$info .= '<!-- $post_type post_id: '.$post_id." -->"; // tft
+				$item_info .= '<!-- $post_type post_id: '.$post_id." -->"; // tft
 			}
 			
 			// Item Title
@@ -1055,26 +1059,28 @@ function birdhive_display_collection ( $a = array() ) {
 		
 		if ( $display_format == "links" ) {
 			
-			$info .= display_link_item($item_url,$item_title);
+			$item_info .= display_link_item($item_url,$item_title);
 			
 		} else if ( $display_format == "excerpts" || $display_format == "archive" ) {
 			
 			if ( $item_type == "post" ) {
-				$info .= '<!-- '.$display_format.' -->';
-				$info .= display_post_item($item_url, $item_title, $item_image, $item_text, $post_id);
+				$item_info .= '<!-- '.$display_format.' -->';
+				$item_info .= display_post_item($item_url, $item_title, $item_image, $item_text, $post_id);
 			} else {
 				// ??? -- These format options are only relevant for posts, not for other content types (?)
 			}
 			
 		} else if ( $display_format == "table" ) {
 		
-			$info .= display_table_row($item_url, $item_title, $item_image, $item_text, $post_id, $table_fields);
+			$item_info .= display_table_row($item_url, $item_title, $item_image, $item_text, $post_id, $table_fields);
 			
 		} else if ( $display_format == "grid" ) {
 		
-			$info .= display_grid_item($item_url, $item_title, $item_image, $item_text, $post_id, $arr_dpatts);
+			$item_info .= display_grid_item($item_url, $item_title, $item_image, $item_text, $post_id, $arr_dpatts);
 			
 		}
+		
+		$info .= $item_info;
 		
 	}
 	
