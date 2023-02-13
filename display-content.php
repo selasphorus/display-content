@@ -855,7 +855,7 @@ function display_grid_item ( $item_url = null, $item_title = null, $item_image =
 	if ( isset($arr_dpatts['overlay']) ) { $overlay = $arr_dpatts['overlay']; } else { $overlay = false; }
 	
 	// WIP
-	$item_info .= '<a href="'.item_url.'" rel="bookmark">';
+	$item_info .= '<a href="'.$item_url.'" rel="bookmark">';
 	$item_info .= '<span class="item_title">'.$item_title.'</span>';
 	
 	if ( $post_id ) {	
