@@ -1085,7 +1085,7 @@ function birdhive_display_collection ( $a = array() ) {
 	
 } // END function birdhive_display_collection ( $a = array() ) 
 
-function collection_header ( $display_format = null, $fields = null ) {
+function collection_header ( $display_format = null, $fields = null, $num_cols = 3 ) {
 
 	$info = "";
 	
@@ -1136,7 +1136,7 @@ function collection_header ( $display_format = null, $fields = null ) {
 	} else if ( $display_format == "grid" ) {
 	
 		$colclass = digit_to_word($num_cols)."col";
-		if ( $class ) { $colclass .= " ".$class; }
+		//if ( $class ) { $colclass .= " ".$class; }
 		$info .= '<div class="flex-container '.$colclass.'">';
 	
 	}
