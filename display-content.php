@@ -864,10 +864,29 @@ function display_grid_item ( $item = array(), $display_atts = array() ) {
 	
 	$item_info = "";
 	
+	// WIP
+	
+	/*
+    // Defaults
+	$defaults = array(
+		'post_id'         => null,
+		'preview_length'  => 55,
+		'readmore'        => false,
+	);
+	
+    // Parse args
+	$args = wp_parse_args( $args, $defaults );
+
+	// Extract
+	extract( $args );
+	*/
+	
 	if ( isset($display_atts['spacing']) ) { $spacing = $display_atts['spacing']; } else { $spacing = ""; }
 	if ( isset($display_atts['overlay']) ) { $overlay = $display_atts['overlay']; } else { $overlay = false; }
 	
-	// WIP
+	$item_url = $item['item_url'];
+	$item_title = $item['item_title'];
+	//
 	$item_info .= '<a href="'.$item_url.'" rel="bookmark">';
 	$item_info .= '<span class="item_title">'.$item_title.'</span>';
 	
