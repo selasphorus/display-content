@@ -742,7 +742,17 @@ function birdhive_get_default_category () {
 
 /*** RETRIEVE & DISPLAY POSTS with complex queries &c. ***/
 
-function display_list_item ( $item_url = null, $item_title = null ) {
+// TODO: for all display functions, figure out better way to pass parameters, including:
+// item_link_target
+// item_email
+// item_content
+// media_file
+// event_category
+// post_category
+// Perhaps simply: $item = array()
+
+function display_list_item ( $item = array() ) {
+//function display_list_item ( $item_url = null, $item_title = null ) {
 	
 	$info = "";
 	
@@ -756,7 +766,8 @@ function display_list_item ( $item_url = null, $item_title = null ) {
 			
 }
 
-function display_post_item ( $item_url = null, $item_title = null, $item_image = null, $item_text = null, $post_id = null ) {
+function display_post_item ( $item = array() ) {
+//function display_post_item ( $item_url = null, $item_title = null, $item_image = null, $item_text = null, $post_id = null ) {
 	
 	$info = "";
 	
@@ -792,7 +803,8 @@ function display_post_item ( $item_url = null, $item_title = null, $item_image =
 			
 }
 
-function display_table_row ( $item_url = null, $item_title = null, $item_image = null, $item_text = null, $post_id = null, $arr_fields = array() ) {
+function display_table_row ( $item = array(), $fields = array() ) {
+//function display_table_row ( $item_url = null, $item_title = null, $item_image = null, $item_text = null, $post_id = null, $arr_fields = array() ) {
 
 	$info = "";
 	
@@ -800,9 +812,9 @@ function display_table_row ( $item_url = null, $item_title = null, $item_image =
 	
 	// WIP: add arr_fields to function parameters
 	
-	if ( !empty($arr_fields) ) { 
+	if ( !empty($fields) ) { 
 		
-		foreach ( $arr_fields as $field_name ) {
+		foreach ( $fields as $field_name ) {
 			$field_name = trim($field_name);
 			if ( !empty($field_name) ) {
 				
@@ -845,14 +857,15 @@ function display_table_row ( $item_url = null, $item_title = null, $item_image =
 	
 }
 
-function display_grid_item ( $item_url = null, $item_title = null, $item_image = null, $item_text = null, $post_id = null, $arr_dpatts = array() ) {
+function display_grid_item ( $item = array(), $display_atts = array() ) {
+//function display_grid_item ( $item_url = null, $item_title = null, $item_image = null, $item_text = null, $post_id = null, $arr_dpatts = array() ) {
 
 	$info = "";
 	
 	$item_info = "";
 	
-	if ( isset($arr_dpatts['spacing']) ) { $spacing = $arr_dpatts['spacing']; } else { $spacing = ""; }
-	if ( isset($arr_dpatts['overlay']) ) { $overlay = $arr_dpatts['overlay']; } else { $overlay = false; }
+	if ( isset($display_atts['spacing']) ) { $spacing = $display_atts['spacing']; } else { $spacing = ""; }
+	if ( isset($display_atts['overlay']) ) { $overlay = $display_atts['overlay']; } else { $overlay = false; }
 	
 	// WIP
 	$item_info .= '<a href="'.$item_url.'" rel="bookmark">';
@@ -916,7 +929,7 @@ function birdhive_display_collection ( $a = array() ) {
 		$collection_id = null;
 		$content_type = $a['content_type'];
 		$display_format = $a['display_format'];
-		$items = $a['content'];
+		$items = $a['items'];
 		$arr_dpatts = $a['arr_dpatts'];
 		
 		$aspect_ratio = "square";
@@ -951,8 +964,10 @@ function birdhive_display_collection ( $a = array() ) {
 		
 		$item_info .= "item_type: ".$item_type."<br />";
 		
-		if ( $item_type == "post" ) { 
+		if ( $item_type == "post" ) {
 		
+			$item_arr = array();
+			
 			$post = $item;
 			//$ts_info .= '<pre>'.print_r($post, true).'</pre>'; // tft
 			//$ts_info .= 'post: <pre>'.print_r($post, true).'</pre>'; // tft
@@ -964,14 +979,17 @@ function birdhive_display_collection ( $a = array() ) {
 				$post_id = $post->ID;
 				$item_info .= '<!-- $post_type post_id: '.$post_id." -->"; // tft
 			}
+			$item_arr['post_id'] = $post_id;
 			
 			// Item Title
 			// If a short_title is set, use it. If not, use the post_title
 			$short_title = get_post_meta( $post_id, 'short_title', true );
 			if ( $short_title ) { $item_title = $short_title; } else { $item_title = get_the_title($post_id); }
+			$item_arr['item_title'] = $item_title;
 			
 			// Item URL
 			$item_url = get_the_permalink( $post_id );
+			$item_arr['item_url'] = $item_url;
 			
 			// +~+~+~+~+~+~+~+~+~+~+~+~+~+~+~+~+~+~+~+~+~+~+~+
 			// IMAGES -- WIP
@@ -1029,6 +1047,7 @@ function birdhive_display_collection ( $a = array() ) {
 				$item_image = '<img src="'.$featured_img_url.'" alt="'.get_the_title($post_id).'" width="100%" height="100%" />';
 		
 			}
+			$item_arr['item_image'] = $item_image;
 			// END IMAGES WIP
 			// +~+~+~+~+~+~+~+~+~+~+~+~+~+~+~+~+~+~+~+~+~+~+~+
 			
@@ -1040,9 +1059,16 @@ function birdhive_display_collection ( $a = array() ) {
 			} else {
 				$item_text = get_the_excerpt( $post_id ); //$info .= $post->post_excerpt;
 			}
-		
+			$item_arr['item_content'] = $item_text;
+			
+			
 		} else { // if ( $content_type == "mixed" )
 		
+			$item_arr = $item;
+			//$post_object = $item['post_object'];
+			//$item_arr['post_id'] = $post_id;
+			
+			/*
 			$post_object = $item['post_object'];
 			$item_title = $item['item_title'];
 			$item_image = $item['item_image'];
@@ -1054,34 +1080,34 @@ function birdhive_display_collection ( $a = array() ) {
 			$event_category = $item['event_category'];
 			$post_category = $item['post_category'];
 			//if ( isset($row['row_type']) ) { $row_type = $row['row_type']; } else { $row_type = null; }
+			*/
 						
 		}
 		
 		if ( $display_format == "links" ) {
 			
-			$item_info .= display_link_item($item_url,$item_title);
+			$item_info .= display_link_item($item_arr);
 			
 		} else if ( $display_format == "excerpts" || $display_format == "archive" ) {
 			
 			if ( $item_type == "post" ) {
 				$item_info .= '<!-- '.$display_format.' -->';
-				$item_info .= display_post_item($item_url, $item_title, $item_image, $item_text, $post_id);
+				$item_info .= display_post_item($item_arr);
 			} else {
 				// ??? -- These format options are only relevant for posts, not for other content types (?)
 			}
 			
 		} else if ( $display_format == "table" ) {
 		
-			$item_info .= display_table_row($item_url, $item_title, $item_image, $item_text, $post_id, $table_fields);
+			$item_info .= display_table_row($item_arr, $table_fields);
 			
 		} else if ( $display_format == "grid" ) {
 		
-			$item_info .= "post_id: ".$post_id."<br />";
+			//$item_info .= "post_id: ".$post_id."<br />";
 			$item_info .= "item_title: ".$item_title."<br />";
-			$item_info .= "item_url: ".$item_url."<br />";
-			//$item_info .= "item_image: ".$item_image."<br />";
+			//$item_info .= "item_url: ".$item_url."<br />";
 			
-			//$item_info .= display_grid_item($item_url, $item_title, $item_image, $item_text, $post_id, $arr_dpatts);
+			$item_info .= display_grid_item($item_arr, $arr_dpatts);
 			
 		}
 		
@@ -1700,7 +1726,7 @@ function birdhive_display_posts ( $atts = [] ) { //function birdhive_display_pos
         // WIP 02/23
 		//if ($a['header'] == 'true') { $info .= '<h3>Latest '.$category.' Articles:</h3>'; } // WIP
 		$info .= '<div class="dc-posts">';        
-        $display_args = array( 'content_type' => 'posts', 'display_format' => $return_format, 'content' => $posts, 'arr_dpatts' => $a );
+        $display_args = array( 'content_type' => 'posts', 'display_format' => $return_format, 'items' => $posts, 'arr_dpatts' => $a );
         $info .= birdhive_display_collection( $display_args );
         $info .= '</div>'; // end div class="dc-posts" (wrapper)
         
