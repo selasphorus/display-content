@@ -857,8 +857,8 @@ function display_table_row ( $item = array(), $fields = array() ) {
 	
 }
 
-function display_grid_item ( $item = array(), $display_atts = array() ) {
 //function display_grid_item ( $item_url = null, $item_title = null, $item_image = null, $item_text = null, $post_id = null, $arr_dpatts = array() ) {
+function display_grid_item ( $item = array(), $display_atts = array() ) {
 
 	$info = "";
 	
@@ -981,7 +981,7 @@ function birdhive_display_collection ( $a = array() ) {
 			$item_type = $item['item_type'];
 		}
 		
-		$item_info .= "item_type: ".$item_type."<br />";
+		if ( $item_type != "post" ) { $item_info .= "item_type: ".$item_type."<br />"; }
 		
 		if ( $item_type == "post" ) {
 		
@@ -1130,10 +1130,11 @@ function birdhive_display_collection ( $a = array() ) {
 			
 		} else if ( $display_format == "grid" ) {
 		
-			//$item_info .= "post_id: ".$post_id."<br />";
-			$item_info .= "item_title: ".$item_title."<br />";
-			//$item_info .= "item_url: ".$item_url."<br />";
-			
+			if ( $item_type != "post" ) {
+				//$item_info .= "post_id: ".$post_id."<br />";
+				$item_info .= "item_title: ".$item_title."<br />";
+				//$item_info .= "item_url: ".$item_url."<br />";
+			}
 			$item_info .= display_grid_item($item_arr, $arr_dpatts);
 			
 		}
