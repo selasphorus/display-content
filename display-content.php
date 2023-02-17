@@ -969,7 +969,7 @@ function birdhive_display_collection ( $a = array() ) {
 			$item_arr = array();
 			
 			if ( isset($item['post_object']) ) {
-				$post = $item['post_object'];
+				$post = $item['post_object'][0];
 			} else {
 				$post = $item;
 			}
