@@ -968,10 +968,16 @@ function birdhive_display_collection ( $a = array() ) {
 		
 			$item_arr = array();
 			
-			$post = $item;
+			if ( isset($item['post_object']) ) {
+				$post = $item['post_object'];
+			} else {
+				$post = $item;
+			}
+			$post_type = $post->post_type;
+			
+			$ts_info .= 'item: <pre>'.print_r($item, true).'</pre>'; // tft
 			//$post_type = get_post_type($post_id);
 			//$ts_info .= '<pre>'.print_r($post, true).'</pre>'; // tft
-			$ts_info .= 'post: <pre>'.print_r($post, true).'</pre>'; // tft
 			
 			if ( post_type_exists('event') && $post_type == 'event' ) {
 				$post_id = $post->post_id;
