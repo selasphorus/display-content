@@ -975,7 +975,7 @@ function birdhive_display_collection ( $a = array() ) {
 			}
 			$post_type = $post->post_type;
 			
-			$ts_info .= 'item: <pre>'.print_r($item, true).'</pre>'; // tft
+			//$ts_info .= 'item: <pre>'.print_r($item, true).'</pre>'; // tft
 			//$post_type = get_post_type($post_id);
 			//$ts_info .= '<pre>'.print_r($post, true).'</pre>'; // tft
 			
