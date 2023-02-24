@@ -858,7 +858,7 @@ function display_table_row ( $item = array(), $fields = array() ) {
 }
 
 //function display_grid_item ( $item_url = null, $item_title = null, $item_image = null, $item_text = null, $post_id = null, $arr_dpatts = array() ) {
-function display_grid_item ( $item = array(), $display_atts = array() ) {
+function display_grid_item ( $item = array(), $display_atts = array(), $ts_info = "" ) {
 
 	$info = "";
 	
@@ -903,6 +903,8 @@ function display_grid_item ( $item = array(), $display_atts = array() ) {
 		}
 	}
 	$item_info .= '</a>';
+	
+	$item_info .= $ts_info;
 	
 	$info .= '<div class="flex-box '.$spacing.'">';
 	$info .= '<div class="flex-img">';
@@ -968,6 +970,7 @@ function birdhive_display_collection ( $a = array() ) {
 	foreach ( $items as $item ) {
 	
 		$item_info = "";
+		$ts_info = "";
 		
 		//$info .= "item: <pre>".print_r($item, true)."</pre>";
 		
@@ -981,7 +984,7 @@ function birdhive_display_collection ( $a = array() ) {
 			$item_type = $item['item_type'];
 		}
 		
-		if ( $item_type != "post" ) { $item_info .= "item_type: ".$item_type."<br />"; }
+		if ( $item_type != "post" ) { $ts_info .= "item_type: ".$item_type."<br />"; }
 		
 		if ( $item_type == "post" ) {
 		
@@ -1001,10 +1004,10 @@ function birdhive_display_collection ( $a = array() ) {
 			
 			if ( post_type_exists('event') && $post_type == 'event' ) {
 				$post_id = $post->post_id;
-				$item_info .= '<!-- Event post_id: '.$post_id." -->"; // tft
+				$ts_info .= '<!-- Event post_id: '.$post_id." -->"; // tft
 			} else {
 				$post_id = $post->ID;
-				$item_info .= '<!-- $post_type post_id: '.$post_id." -->"; // tft
+				$ts_info .= '<!-- $post_type post_id: '.$post_id." -->"; // tft
 			}
 			$item_arr['post_id'] = $post_id;
 			
@@ -1118,7 +1121,7 @@ function birdhive_display_collection ( $a = array() ) {
 		} else if ( $display_format == "excerpts" || $display_format == "archive" ) {
 			
 			if ( $item_type == "post" ) {
-				$item_info .= '<!-- '.$display_format.' -->';
+				$ts_info .= '<!-- '.$display_format.' -->';
 				$item_info .= display_post_item($item_arr);
 			} else {
 				// ??? -- These format options are only relevant for posts, not for other content types (?)
@@ -1132,10 +1135,10 @@ function birdhive_display_collection ( $a = array() ) {
 		
 			if ( $item_type != "post" ) {
 				//$item_info .= "post_id: ".$post_id."<br />";
-				$item_info .= "item_title: ".$item_title."<br />";
+				$ts_info .= "item_title: ".$item_title."<br />";
 				//$item_info .= "item_url: ".$item_url."<br />";
 			}
-			$item_info .= display_grid_item($item_arr, $arr_dpatts);
+			$item_info .= display_grid_item($item_arr, $arr_dpatts, $ts_info);
 			
 		}
 		
