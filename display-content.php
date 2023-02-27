@@ -1156,7 +1156,9 @@ function birdhive_display_collection ( $a = array() ) {
 		}
 		$item_arr['item_image'] = $item_image;
 		
-		$ts_info .= "item_arr: <pre>".print_r($item_arr, true)."</pre>";
+		if ( empty($item_image) ) {
+			$ts_info .= "item_arr: <pre>".print_r($item_arr, true)."</pre>"; // tft
+		}
 		
 		//
 		if ( $display_format == "links" ) {
