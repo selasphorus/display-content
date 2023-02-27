@@ -1102,11 +1102,27 @@ function birdhive_display_collection ( $a = array() ) {
 			}
 			$item_arr['item_content'] = $item_text;
 		
-		} else if ( $item_type == "event_category" ) {
+		} else if ( $item_type == "event_category" || $item_type == "category" ) {
 		
 			$ts_info .= "item: <pre>".print_r($item, true)."</pre>";
 			
-		} else if ( $item_type == "event_category" ) {	
+			if ( $item_type == "event_category" ) { $term_id = $item['event_category']; } else { $term_id = $item['category']; }
+			
+			// Get category name as title
+			$term = get_term( $term_id ); // $term = get_term( $term_id, $taxonomy );
+			$item_title = $term->name;
+			$item['item_title'] = $item_title;
+			
+			// Build a URL, depending on which taxonomy is in play
+			
+			// Event category
+			
+			// Posts category
+			
+			
+		} else if ( $item_type == "XXX" ) {
+		
+			//
 			
 		} else { // if ( $content_type == "mixed" )
 		
