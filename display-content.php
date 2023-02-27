@@ -909,9 +909,7 @@ function display_grid_item ( $item = array(), $display_atts = array(), $ts_info 
 		}
 	}
 	
-	
-	
-	$item_info .= $ts_info;
+	if ( !empty($ts_info) ) { $item_info .= "<br />".$ts_info; }
 	
 	$info .= '<div class="flex-box '.$spacing.'">';
 	$info .= '<div class="flex-img">';
