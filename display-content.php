@@ -983,7 +983,7 @@ function birdhive_display_collection ( $a = array() ) {
 		$item_info = "";
 		$ts_info = "";
 		
-		$ts_info .= "item: <pre>".print_r($item, true)."</pre>";
+		//$ts_info .= "item: <pre>".print_r($item, true)."</pre>";
 		
 		//get content for display in appropriate form...
 		//$item_args = array( 'content_type' => $content_type, 'display_format' => $display_format, 'item' => $item );
