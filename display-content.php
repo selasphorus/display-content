@@ -1114,7 +1114,7 @@ function birdhive_display_collection ( $a = array() ) {
 			$item_arr['item_title'] = $item_title;
 			
 			// Get the taxonomy image, if any has been set
-			$item_arr['item_image'] = $item_image;
+			$item_arr['item_image'] = ""; // tft
 			
 			// Build a URL, depending on which taxonomy is in play
 			$item_arr['item_url'] = ""; // tft
