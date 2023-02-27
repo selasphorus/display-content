@@ -752,7 +752,7 @@ function birdhive_get_default_category () {
 // Perhaps simply: $item = array()
 
 //function display_list_item ( $item = array() ) { // only two vars here, so array seems like an unnecessary extra step
-function display_list_item ( $item_url = null, $item_title = null ) { // TODO: pass item link instead of URL? so as to include link target &c.
+function display_list_item ( $item_title = null ) { // $item_url = null,  ...
 	
 	$info = "";
 	$info .= '<li>';
@@ -771,10 +771,14 @@ function display_post_item ( $item = array() ) {
 	if ( isset($item['post_id']) ) { $post_id = $item['post_id']; } else { $post_id = null; }
 	
 	// Get/set item vars
-	if ( isset($item['item_url']) ) { $item_url = $item['item_url']; } else { $item_url = null; }
+	$item_title = $item['item_title'];
+	//$item_url = $item['item_url'];
+	$item_image = $item['item_image'];
+	$item_text = $item['item_text'];
+	/*if ( isset($item['item_url']) ) { $item_url = $item['item_url']; } else { $item_url = null; }
 	if ( isset($item['item_title']) ) { $item_title = $item['item_title']; } else { $item_title = null; }
 	if ( isset($item['item_image']) ) { $item_image = $item['item_image']; } else { $item_image = null; }
-	if ( isset($item['item_text']) ) { $item_text = $item['item_text']; } else { $item_text = null; }
+	if ( isset($item['item_text']) ) { $item_text = $item['item_text']; } else { $item_text = null; }*/
 	
 	// TODO: bring this more in alignment with theme template display? e.g. content-excerpt, content-sermon, content-event...
 	
@@ -886,9 +890,11 @@ function display_grid_item ( $item = array(), $display_atts = array(), $ts_info 
 	if ( isset($display_atts['overlay']) ) { $overlay = $display_atts['overlay']; } else { $overlay = false; }
 	
 	// Get/set item vars
-	$item_url = $item['item_url'];
 	$item_title = $item['item_title'];
+	//$item_url = $item['item_url'];
 	$item_image = $item['item_image'];
+	
+	$item_info = $item_title;
 	
 	if ( $post_id ) {	
 		// For events, also display the date/time
@@ -903,7 +909,7 @@ function display_grid_item ( $item = array(), $display_atts = array(), $ts_info 
 		}
 	}
 	
-	if ( !empty($item_url) ) { $item_info = '<a href="'.$item_url.'" rel="bookmark">'.$item_info.'</a>'; } // do we need this?
+	
 	
 	$item_info .= $ts_info;
 	
@@ -1099,7 +1105,7 @@ function birdhive_display_collection ( $a = array() ) {
 			$image_url = ""; // tft
 			
 			// Build a URL, depending on which taxonomy is in play
-			$item_arr['item_url'] = ""; // tft
+			$item_url = ""; // tft
 			
 			// Event category
 			
@@ -1132,9 +1138,7 @@ function birdhive_display_collection ( $a = array() ) {
 						
 		}
 		
-		if ( $item_url ) {
-			$item_arr['item_url'] = $item_url;
-		}
+		//if ( $item_url ) { $item_arr['item_url'] = $item_url; }
 		
 		if ( $item_title ) {
 			if ( !empty($item_title) ) {
@@ -1178,7 +1182,7 @@ function birdhive_display_collection ( $a = array() ) {
 		
 			if ( $item_type != "post" ) {
 				//$item_info .= "post_id: ".$post_id."<br />";
-				$ts_info .= "item_title: ".$item_title."<br />";
+				//$ts_info .= "item_title: ".$item_title."<br />";
 				//$item_info .= "item_url: ".$item_url."<br />";
 			}
 			$item_info .= display_grid_item($item_arr, $arr_dpatts, $ts_info);
