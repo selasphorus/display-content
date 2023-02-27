@@ -886,9 +886,6 @@ function display_grid_item ( $item = array(), $display_atts = array(), $ts_info 
 	extract( $args );
 	*/
 	
-	if ( isset($display_atts['spacing']) ) { $spacing = $display_atts['spacing']; } else { $spacing = ""; }
-	if ( isset($display_atts['overlay']) ) { $overlay = $display_atts['overlay']; } else { $overlay = false; }
-	
 	// Get/set item vars
 	$post_id = $item['post_id'];
 	$post_type = $item['post_type'];
@@ -896,6 +893,11 @@ function display_grid_item ( $item = array(), $display_atts = array(), $ts_info 
 	//$item_url = $item['item_url'];
 	$item_image = $item['item_image'];
 	
+	// Get/set display vars
+	if ( isset($display_atts['spacing']) ) { $spacing = $display_atts['spacing']; } else { $spacing = ""; }
+	if ( isset($display_atts['overlay']) ) { $overlay = $display_atts['overlay']; } else { $overlay = false; }
+	
+	// Begin building item_info
 	$item_info = $item_title;
 	
 	if ( $post_id ) {	
@@ -907,7 +909,11 @@ function display_grid_item ( $item = array(), $display_atts = array(), $ts_info 
 				//$item_info .= "[".$event_start_datetime."]"; // tft
 				$date_str = date_i18n( "l, F d, Y \@ g:i a", strtotime($event_start_datetime) );
 				$item_info .= "<br />".$date_str;
+			} else {
+				$item_info .= "<br />No event_start_datetime found.<br />"; // tft
 			}
+		} else {
+			$item_info .= "<br />Post is not an event.<br />"; // tft
 		}
 	}
 	
@@ -1011,7 +1017,7 @@ function birdhive_display_collection ( $a = array() ) {
 				$ts_info .= '<!-- Event post_id: '.$post_id." -->"; // tft
 			} else {
 				$post_id = $post->ID;
-				$ts_info .= '<!-- $post_type post_id: '.$post_id." -->"; // tft
+				$ts_info .= '<!-- '.$post_type.' post_id: '.$post_id." -->"; // tft
 			}
 			//
 			$item_arr['post_id'] = $post_id;
