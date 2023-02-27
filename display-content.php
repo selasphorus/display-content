@@ -913,7 +913,7 @@ function display_grid_item ( $item = array(), $display_atts = array(), $ts_info 
 				$item_info .= "<br />No event_start_datetime found.<br />"; // tft
 			}
 		} else {
-			$item_info .= "<br />Post is not an event.<br />"; // tft
+			$item_info .= "<br />post_type: $post_type.<br />"; // tft
 		}
 	}
 	
