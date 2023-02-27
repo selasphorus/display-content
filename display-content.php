@@ -983,7 +983,7 @@ function birdhive_display_collection ( $a = array() ) {
 		$item_info = "";
 		$ts_info = "";
 		
-		//$ts_info .= "item: <pre>".print_r($item, true)."</pre>";
+		$ts_info .= "item: <pre>".print_r($item, true)."</pre>";
 		
 		//get content for display in appropriate form...
 		//$item_args = array( 'content_type' => $content_type, 'display_format' => $display_format, 'item' => $item );
@@ -1104,7 +1104,7 @@ function birdhive_display_collection ( $a = array() ) {
 		
 		} else if ( $item_type == "event_category" || $item_type == "category" ) {
 		
-			$ts_info .= "item: <pre>".print_r($item, true)."</pre>";
+			//$ts_info .= "item: <pre>".print_r($item, true)."</pre>";
 			
 			if ( $item_type == "event_category" ) { $term_id = $item['event_category']; } else { $term_id = $item['category']; }
 			
@@ -1149,6 +1149,8 @@ function birdhive_display_collection ( $a = array() ) {
 			*/
 						
 		}
+		
+		$ts_info .= "item_arr: <pre>".print_r($item_arr, true)."</pre>";
 		
 		//
 		if ( $display_format == "links" ) {
