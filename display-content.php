@@ -869,9 +869,9 @@ function display_grid_item ( $item = array(), $display_atts = array(), $ts_info 
 	/*
     // Defaults
 	$defaults = array(
-		'post_id'         => null,
-		'preview_length'  => 55,
-		'readmore'        => false,
+		'item'			=> array(),
+		'display_atts'	=> array(),
+		'ts_info'		=> "",
 	);
 	
     // Parse args
@@ -884,11 +884,13 @@ function display_grid_item ( $item = array(), $display_atts = array(), $ts_info 
 	if ( isset($display_atts['spacing']) ) { $spacing = $display_atts['spacing']; } else { $spacing = ""; }
 	if ( isset($display_atts['overlay']) ) { $overlay = $display_atts['overlay']; } else { $overlay = false; }
 	
+	// Get/set item URL
 	$item_url = $item['item_url'];
+	if ( empty($item_url) && !empty($post_id) ) { $item_url = get_the_permalink($post_id); }
+	
+	// Get/set item Title
 	$item_title = $item['item_title'];
-	//
-	$item_info .= '<a href="'.$item_url.'" rel="bookmark">';
-	$item_info .= '<span class="item_title">'.$item_title.'</span>';
+	if ( !empty($item_title) ) { $item_info .= '<span class="item_title">'.$item_title.'</span>'; }
 	
 	if ( $post_id ) {	
 		// For events, also display the date/time
@@ -902,15 +904,15 @@ function display_grid_item ( $item = array(), $display_atts = array(), $ts_info 
 			}
 		}
 	}
-	$item_info .= '</a>';
+	
+	if ( !empty($item_url) ) { $item_info = '<a href="'.$item_url.'" rel="bookmark">'.$item_info.'</a>'; }
+	if ( !empty($item_url) ) { $item_image = '<a href="'.$item_url.'" rel="bookmark">'.$item_image.'</a>'; }
 	
 	$item_info .= $ts_info;
 	
 	$info .= '<div class="flex-box '.$spacing.'">';
 	$info .= '<div class="flex-img">';
-	$info .= '<a href="'.get_the_permalink($post_id).'" rel="bookmark">';
 	$info .= $item_image;
-	$info .= '</a>';
 	$info .= '</div>';
 	if ( $overlay == true ) {
 		$info .= '<div class="overlay">'.$item_info.'</div>';
