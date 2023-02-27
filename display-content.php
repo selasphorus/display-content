@@ -755,14 +755,6 @@ function birdhive_get_default_category () {
 function display_list_item ( $item_url = null, $item_title = null ) { // TODO: pass item link instead of URL? so as to include link target &c.
 	
 	$info = "";
-	
-	// Get/set item vars
-	//if ( isset($item['item_url']) ) { $item_url = $item['item_url']; } else { $item_url = null; }
-	//if ( isset($item['item_title']) ) { $item_title = $item['item_title']; } else { $item_title = null; }
-	
-	// Wrap the title in a hyperlink, if a URL has been set
-	if ( $item_url ) { $info .= '<a href="'.$item_url.'" rel="bookmark">'.$item_title.'</a>'; }
-	
 	$info .= '<li>';
 	$info .= $item_title;
 	$info .= '</li>';
@@ -788,7 +780,7 @@ function display_post_item ( $item = array() ) {
 	
 	$info .= '<article id="post-'.$post_id.'">'; // post_class()
 	$info .= '<header class="entry-header">';
-	$info .= '<h2 class="entry-title"><a href="'.$item_url.'" rel="bookmark">'.$item_title.'</a></h2>';
+	$info .= '<h2 class="entry-title">'.$item_title.'</h2>';
 	$info .= '</header><!-- .entry-header -->';
 	$info .= '<div class="entry-content">';
 	if ( $item_image ) { $info .= $item_image; } //if ( $show_images ) { $info .= $item_image; }
@@ -830,7 +822,7 @@ function display_table_row ( $item = array(), $fields = array() ) {
 				
 				$info .= '<td>';
 				if ( $field_name == "title" ) {
-					$field_value = '<a href="'.$item_url.'" rel="bookmark">'.$item_title.'</a>';
+					$field_value = $item_title;
 				} else {
 					$field_value = get_post_meta( $post_id, $field_name, true );
 					//$info .= "[".$field_name."] "; // tft
@@ -898,9 +890,6 @@ function display_grid_item ( $item = array(), $display_atts = array(), $ts_info 
 	$item_title = $item['item_title'];
 	$item_image = $item['item_image'];
 	
-	// TODO: do this instead where fcn is called?
-	if ( !empty($item_title) ) { $item_info .= '<span class="item_title">'.$item_title.'</span>'; }
-	
 	if ( $post_id ) {	
 		// For events, also display the date/time
 		if ( post_type_exists('event') && $post_type == 'event' ) { 
@@ -914,8 +903,7 @@ function display_grid_item ( $item = array(), $display_atts = array(), $ts_info 
 		}
 	}
 	
-	if ( !empty($item_url) ) { $item_info = '<a href="'.$item_url.'" rel="bookmark">'.$item_info.'</a>'; }
-	if ( !empty($item_url) ) { $item_image = '<a href="'.$item_url.'" rel="bookmark">'.$item_image.'</a>'; }
+	if ( !empty($item_url) ) { $item_info = '<a href="'.$item_url.'" rel="bookmark">'.$item_info.'</a>'; } // do we need this?
 	
 	$item_info .= $ts_info;
 	
@@ -1025,11 +1013,9 @@ function birdhive_display_collection ( $a = array() ) {
 			// If a short_title is set, use it. If not, use the post_title
 			$short_title = get_post_meta( $post_id, 'short_title', true );
 			if ( $short_title ) { $item_title = $short_title; } else { $item_title = get_the_title($post_id); }
-			$item_arr['item_title'] = $item_title;
 			
 			// Item URL
 			$item_url = get_the_permalink( $post_id );
-			$item_arr['item_url'] = $item_url;
 			
 			// +~+~+~+~+~+~+~+~+~+~+~+~+~+~+~+~+~+~+~+~+~+~+~+
 			// IMAGES -- WIP
@@ -1037,15 +1023,15 @@ function birdhive_display_collection ( $a = array() ) {
 			// Item Image
 			
 			// If this is a post via a collection, check to see if there's an image override
-			if ( $collection_id && isset($item['item_image']) ) { $item_image = $item['item_image']; } else { $item_image = null; }
+			if ( $collection_id && isset($item['item_image']['url']) ) { $image_url = $item['item_image']['url']; } else { $image_url = null; }
 			
 			// No collection image? Then look for a image via the post record
-			if ( ! $item_image ) {
+			if ( ! $image_url ) {
 			
 				if ( $aspect_ratio == "square" ) {
-					$featured_img_url = "/wp-content/uploads/woocommerce-placeholder-250x250.png"; // Default/placeholder
+					$image_url = "/wp-content/uploads/woocommerce-placeholder-250x250.png"; // Default/placeholder
 				} else {
-					$featured_img_url = "";
+					$image_url = "";
 					// TODO: create/set rectangular placeholder
 				}
 				
@@ -1054,7 +1040,7 @@ function birdhive_display_collection ( $a = array() ) {
 				
 				if ( $custom_thumb_id ) {
 		
-					$featured_img_url = wp_get_attachment_image_url( $custom_thumb_id, 'medium' ); 
+					$image_url = wp_get_attachment_image_url( $custom_thumb_id, 'medium' ); 
 					//$item_image = wp_get_attachment_image( $custom_thumb_id, 'medium', false, array( "class" => "custom_thumb" ) );
 					//$post_info .= "custom_thumb_id: $custom_thumb_id<br />"; // tft
 		
@@ -1063,7 +1049,7 @@ function birdhive_display_collection ( $a = array() ) {
 					// No custom_thumb? Then retrieve the url for the full size featured image, if any
 					if ( has_post_thumbnail( $post_id ) ) {
 			
-						$featured_img_url = get_the_post_thumbnail_url( $post_id, 'medium');
+						$image_url = get_the_post_thumbnail_url( $post_id, 'medium');
 						//$item_image = birdhive_post_thumbnail($post_id,'thumbnail',false,false); // function birdhive_post_thumbnail( $post_id = null, $imgsize = "thumbnail", $use_custom_thumb = false, $echo = true )
 			
 					} else { 
@@ -1077,17 +1063,14 @@ function birdhive_display_collection ( $a = array() ) {
 				
 							// If the image found is large enough, display it in the grid
 							if ( $first_img_src[1] > 300 && $first_img_src[2] > 300 ) {
-								$featured_img_url = wp_get_attachment_image_url( $first_image['id'], 'medium' );
+								$image_url = wp_get_attachment_image_url( $first_image['id'], 'medium' );
 							}
 						}			
 					}		
 				}
-				
-				//if ( $aspect_ratio == "square" ) { } else {}
-				$item_image = '<img src="'.$featured_img_url.'" alt="'.get_the_title($post_id).'" width="100%" height="100%" />';
 		
 			}
-			$item_arr['item_image'] = $item_image;
+			
 			// END IMAGES WIP
 			// +~+~+~+~+~+~+~+~+~+~+~+~+~+~+~+~+~+~+~+~+~+~+~+
 			
@@ -1113,7 +1096,7 @@ function birdhive_display_collection ( $a = array() ) {
 			$item_arr['item_title'] = $item_title;
 			
 			// Get the taxonomy image, if any has been set
-			$item_arr['item_image'] = ""; // tft
+			$image_url = ""; // tft
 			
 			// Build a URL, depending on which taxonomy is in play
 			$item_arr['item_url'] = ""; // tft
@@ -1148,6 +1131,28 @@ function birdhive_display_collection ( $a = array() ) {
 			*/
 						
 		}
+		
+		if ( $item_url ) {
+			$item_arr['item_url'] = $item_url;
+		}
+		
+		if ( $item_title ) {
+			if ( !empty($item_title) ) {
+				$item_title .= '<span class="item_title">'.$item_title.'</span>';
+				// Wrap the title in a hyperlink, if a URL has been set
+				if ( !empty($item_url) ) { $info .= '<a href="'.$item_url.'" rel="bookmark">'.$item_title.'</a>'; }
+			}
+			$item_arr['item_title'] = $item_title;
+		}
+		
+		if ( !empty($image_url) ) {
+			//if ( $aspect_ratio == "square" ) { } else {}
+			$item_image = '<img src="'.$image_url.'" alt="'.get_the_title($post_id).'" width="100%" height="100%" />';
+			if ( !empty($item_url) ) { $item_image = '<a href="'.$item_url.'" rel="bookmark">'.$item_image.'</a>'; }			
+		} else {
+			$item_image = "";
+		}
+		$item_arr['item_image'] = $item_image;
 		
 		$ts_info .= "item_arr: <pre>".print_r($item_arr, true)."</pre>";
 		
