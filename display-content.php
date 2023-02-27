@@ -1140,7 +1140,7 @@ function birdhive_display_collection ( $a = array() ) {
 			if ( !empty($item_title) ) {
 				$item_title = '<span class="item_title">'.$item_title.'</span>';
 				// Wrap the title in a hyperlink, if a URL has been set
-				if ( !empty($item_url) ) { $info .= '<a href="'.$item_url.'" rel="bookmark">'.$item_title.'</a>'; }
+				if ( !empty($item_url) ) { $item_title = '<a href="'.$item_url.'" rel="bookmark">'.$item_title.'</a>'; }
 			}
 			$item_arr['item_title'] = $item_title;
 		}
