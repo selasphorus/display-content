@@ -893,12 +893,12 @@ function display_grid_item ( $item = array(), $display_atts = array(), $ts_info 
 	if ( isset($display_atts['spacing']) ) { $spacing = $display_atts['spacing']; } else { $spacing = ""; }
 	if ( isset($display_atts['overlay']) ) { $overlay = $display_atts['overlay']; } else { $overlay = false; }
 	
-	// Get/set item URL
+	// Get/set item vars
 	$item_url = $item['item_url'];
-	if ( empty($item_url) && !empty($post_id) ) { $item_url = get_the_permalink($post_id); }
-	
-	// Get/set item Title
 	$item_title = $item['item_title'];
+	$item_image = $item['item_image'];
+	
+	// TODO: do this instead where fcn is called?
 	if ( !empty($item_title) ) { $item_info .= '<span class="item_title">'.$item_title.'</span>'; }
 	
 	if ( $post_id ) {	
@@ -1111,9 +1111,13 @@ function birdhive_display_collection ( $a = array() ) {
 			// Get category name as title
 			$term = get_term( $term_id ); // $term = get_term( $term_id, $taxonomy );
 			$item_title = $term->name;
-			$item['item_title'] = $item_title;
+			$item_arr['item_title'] = $item_title;
+			
+			// Get the taxonomy image, if any has been set
+			$item_arr['item_image'] = $item_image;
 			
 			// Build a URL, depending on which taxonomy is in play
+			$item_arr['item_url'] = ""; // tft
 			
 			// Event category
 			
