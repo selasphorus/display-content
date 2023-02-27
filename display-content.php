@@ -982,6 +982,7 @@ function birdhive_display_collection ( $a = array() ) {
 	
 		$item_info = "";
 		$ts_info = "";
+		$item_arr = array();
 		
 		//$ts_info .= "item: <pre>".print_r($item, true)."</pre>";
 		
@@ -998,8 +999,6 @@ function birdhive_display_collection ( $a = array() ) {
 		if ( $item_type != "post" ) { $ts_info .= "item_type: ".$item_type."<br />"; }
 		
 		if ( $item_type == "post" ) {
-		
-			$item_arr = array();
 			
 			if ( is_object($item) ) { // item is post object, e.g. when called via display_posts shortcode
 				$post = $item;
