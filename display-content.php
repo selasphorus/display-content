@@ -910,10 +910,10 @@ function display_grid_item ( $item = array(), $display_atts = array(), $ts_info 
 				$date_str = date_i18n( "l, F d, Y \@ g:i a", strtotime($event_start_datetime) );
 				$item_info .= "<br />".$date_str;
 			} else {
-				$item_info .= "<br />No event_start_datetime found.<br />"; // tft
+				$item_info .= "<!-- No event_start_datetime found. -->"; // tft
 			}
 		} else {
-			$item_info .= "<br />post_type: $post_type.<br />"; // tft
+			$item_info .= "<!-- post_type: $post_type -->"; // tft
 		}
 	}
 	
