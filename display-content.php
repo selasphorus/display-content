@@ -751,15 +751,20 @@ function birdhive_get_default_category () {
 // post_category
 // Perhaps simply: $item = array()
 
-function display_list_item ( $item = array() ) {
-//function display_list_item ( $item_url = null, $item_title = null ) {
+//function display_list_item ( $item = array() ) { // only two vars here, so array seems like an unnecessary extra step
+function display_list_item ( $item_url = null, $item_title = null ) { // TODO: pass item link instead of URL? so as to include link target &c.
 	
 	$info = "";
 	
+	// Get/set item vars
+	//if ( isset($item['item_url']) ) { $item_url = $item['item_url']; } else { $item_url = null; }
+	//if ( isset($item['item_title']) ) { $item_title = $item['item_title']; } else { $item_title = null; }
+	
+	// Wrap the title in a hyperlink, if a URL has been set
+	if ( $item_url ) { $info .= '<a href="'.$item_url.'" rel="bookmark">'.$item_title.'</a>'; }
+	
 	$info .= '<li>';
-	if ( $item_url ) { $info .= '<a href="'.$item_url.'" rel="bookmark">'; }
 	$info .= $item_title;
-	if ( $item_url ) { $info .= '</a>'; }
 	$info .= '</li>';
 	
 	return $info;
@@ -767,9 +772,17 @@ function display_list_item ( $item = array() ) {
 }
 
 function display_post_item ( $item = array() ) {
-//function display_post_item ( $item_url = null, $item_title = null, $item_image = null, $item_text = null, $post_id = null ) {
 	
 	$info = "";
+	
+	// Post ID?
+	if ( isset($item['post_id']) ) { $post_id = $item['post_id']; } else { $post_id = null; }
+	
+	// Get/set item vars
+	if ( isset($item['item_url']) ) { $item_url = $item['item_url']; } else { $item_url = null; }
+	if ( isset($item['item_title']) ) { $item_title = $item['item_title']; } else { $item_title = null; }
+	if ( isset($item['item_image']) ) { $item_image = $item['item_image']; } else { $item_image = null; }
+	if ( isset($item['item_text']) ) { $item_text = $item['item_text']; } else { $item_text = null; }
 	
 	// TODO: bring this more in alignment with theme template display? e.g. content-excerpt, content-sermon, content-event...
 	
@@ -778,15 +791,13 @@ function display_post_item ( $item = array() ) {
 	$info .= '<h2 class="entry-title"><a href="'.$item_url.'" rel="bookmark">'.$item_title.'</a></h2>';
 	$info .= '</header><!-- .entry-header -->';
 	$info .= '<div class="entry-content">';
-	//$info .= birdhive_post_thumbnail($post_id);
-	if ( $show_images ) { $info .= $item_image; }
-	
-	if ( $display_format == "excerpts" ) {				
-		$info .= $item_text;				
+	if ( $item_image ) { $info .= $item_image; } //if ( $show_images ) { $info .= $item_image; }
+	$info .= $item_text;
+	/*if ( $display_format == "excerpts" ) {				
+		$info .= $item_text;
 	} else {
 		$info .= get_the_content( $post_id );
-	}
-	
+	}*/	
 	$info .= '</div><!-- .entry-content -->';
 	$info .= '<footer class="entry-footer">';
 	$info .= birdhive_entry_meta( $post_id );
@@ -804,7 +815,6 @@ function display_post_item ( $item = array() ) {
 }
 
 function display_table_row ( $item = array(), $fields = array() ) {
-//function display_table_row ( $item_url = null, $item_title = null, $item_image = null, $item_text = null, $post_id = null, $arr_fields = array() ) {
 
 	$info = "";
 	
@@ -857,7 +867,6 @@ function display_table_row ( $item = array(), $fields = array() ) {
 	
 }
 
-//function display_grid_item ( $item_url = null, $item_title = null, $item_image = null, $item_text = null, $post_id = null, $arr_dpatts = array() ) {
 function display_grid_item ( $item = array(), $display_atts = array(), $ts_info = "" ) {
 
 	$info = "";
@@ -974,7 +983,7 @@ function birdhive_display_collection ( $a = array() ) {
 		$item_info = "";
 		$ts_info = "";
 		
-		//$info .= "item: <pre>".print_r($item, true)."</pre>";
+		//$ts_info .= "item: <pre>".print_r($item, true)."</pre>";
 		
 		//get content for display in appropriate form...
 		//$item_args = array( 'content_type' => $content_type, 'display_format' => $display_format, 'item' => $item );
@@ -1092,7 +1101,12 @@ function birdhive_display_collection ( $a = array() ) {
 				$item_text = get_the_excerpt( $post_id ); //$info .= $post->post_excerpt;
 			}
 			$item_arr['item_content'] = $item_text;
+		
+		} else if ( $item_type == "event_category" ) {
+		
+			$ts_info .= "item: <pre>".print_r($item, true)."</pre>";
 			
+		} else if ( $item_type == "event_category" ) {	
 			
 		} else { // if ( $content_type == "mixed" )
 		
@@ -1116,6 +1130,7 @@ function birdhive_display_collection ( $a = array() ) {
 						
 		}
 		
+		//
 		if ( $display_format == "links" ) {
 			
 			$item_info .= display_link_item($item_arr);
