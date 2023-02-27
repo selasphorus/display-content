@@ -1111,6 +1111,9 @@ function birdhive_display_collection ( $a = array() ) {
 			
 			// Get the taxonomy image, if any has been set
 			$image_url = ""; // tft
+			$EM_Tax_Term = new EM_Taxonomy_Term($term_id, 'term_id'); 
+			$item_image = $EM_Tax_Term->get_image_url();
+			//
 			
 			// Build a URL, depending on which taxonomy is in play
 			$item_url = ""; // tft
