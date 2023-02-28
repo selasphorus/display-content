@@ -1017,7 +1017,7 @@ function birdhive_display_collection ( $a = array() ) {
 				$ts_info .= '<!-- Event post_id: '.$post_id." -->"; // tft
 			} else {
 				$post_id = $post->ID;
-				$ts_info .= '<!-- '.$post_type.' post_id: '.$post_id." -->"; // tft
+				$ts_info .= '<!-- '.$post_type.' => post_id: '.$post_id." -->"; // tft
 			}
 			//
 			$item_arr['post_id'] = $post_id;
@@ -1107,7 +1107,7 @@ function birdhive_display_collection ( $a = array() ) {
 			// Get category name as title
 			$term = get_term( $term_id ); // $term = get_term( $term_id, $taxonomy );
 			$item_title = $term->name;
-			$item_arr['item_title'] = $item_title;
+			//$item_arr['item_title'] = $item_title;
 			
 			// Get the taxonomy image, if any has been set
 			$image_url = ""; // tft
@@ -1130,6 +1130,10 @@ function birdhive_display_collection ( $a = array() ) {
 		} else { // if ( $content_type == "mixed" )
 		
 			$item_arr = $item;
+			
+			$item_title = null;
+			$item_subtitle = null;
+			
 			//$post_object = $item['post_object'];
 			//$item_arr['post_id'] = $post_id;
 			
@@ -1158,6 +1162,13 @@ function birdhive_display_collection ( $a = array() ) {
 				if ( !empty($item_url) ) { $item_title = '<a href="'.$item_url.'" rel="bookmark">'.$item_title.'</a>'; }
 			}
 			$item_arr['item_title'] = $item_title;
+		}
+		
+		if ( $item_subtitle ) {
+			if ( !empty($item_subtitle) ) {
+				$item_subtitle = '<span class="item_subtitle">'.$item_subtitle.'</span>';
+			}
+			$item_arr['item_subtitle'] = $item_subtitle;
 		}
 		
 		if ( !empty($image_url) ) {
