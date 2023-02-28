@@ -1110,11 +1110,16 @@ function birdhive_display_collection ( $a = array() ) {
 			//$item_arr['item_title'] = $item_title;
 			
 			// Get the taxonomy image, if any has been set
+			// TMP solution:
+			global $wpdb; 
+			//wpstc_em_meta
+			$image_url = $wpdb->get_var('SELECT meta_value FROM '.EM_META_TABLE." WHERE object_id='".$term_id."' AND meta_key='category-image' LIMIT 1");
+			/*
 			$image_url = ""; // tft
 			//$EM_Tax_Term = new EM_Taxonomy_Term($term_id, 'term_id'); 
 			//$item_image = $EM_Tax_Term->get_image_url();
 			$item_image = "";
-			
+			*/
 			// Build a URL, depending on which taxonomy is in play
 			$item_url = ""; // tft
 			
