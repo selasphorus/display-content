@@ -1037,15 +1037,16 @@ function birdhive_display_collection ( $a = array() ) {
 			// Item Image
 			
 			// If this is a post via a collection, check to see if there's an image override
-			if ( $collection_id && isset($item['item_image']['url']) ) { $image_url = $item['item_image']['url']; } else { $image_url = null; }
+			if ( $collection_id && isset($item['item_image']['id']) ) { $image_id = $item['item_image']['id']; } else { $image_id = null; }
 			
 			// No collection image? Then look for a image via the post record
-			if ( ! $image_url ) {
+			if ( ! $image_id ) {
 			
 				if ( $aspect_ratio == "square" ) {
-					$image_url = "/wp-content/uploads/woocommerce-placeholder-250x250.png"; // Default/placeholder
+					$image_id = "";
+					//$image_url = "/wp-content/uploads/woocommerce-placeholder-250x250.png"; // Default/placeholder
 				} else {
-					$image_url = "";
+					$image_id = "";
 					// TODO: create/set rectangular placeholder
 				}
 				
@@ -1053,8 +1054,8 @@ function birdhive_display_collection ( $a = array() ) {
 				$custom_thumb_id = get_post_meta( $post_id, 'custom_thumb', true );
 				
 				if ( $custom_thumb_id ) {
-		
-					$image_url = wp_get_attachment_image_url( $custom_thumb_id, 'medium' ); 
+					$image_id = $custom_thumb_id;
+					//$image_url = wp_get_attachment_image_url( $custom_thumb_id, 'medium' ); 
 					//$item_image = wp_get_attachment_image( $custom_thumb_id, 'medium', false, array( "class" => "custom_thumb" ) );
 					//$post_info .= "custom_thumb_id: $custom_thumb_id<br />"; // tft
 		
@@ -1063,7 +1064,8 @@ function birdhive_display_collection ( $a = array() ) {
 					// No custom_thumb? Then retrieve the url for the full size featured image, if any
 					if ( has_post_thumbnail( $post_id ) ) {
 			
-						$image_url = get_the_post_thumbnail_url( $post_id, 'medium');
+						$image_id = get_post_thumbnail_id( $post_id );
+						//$image_url = get_the_post_thumbnail_url( $post_id, 'medium');
 						//$item_image = birdhive_post_thumbnail($post_id,'thumbnail',false,false); // function birdhive_post_thumbnail( $post_id = null, $imgsize = "thumbnail", $use_custom_thumb = false, $echo = true )
 			
 					} else { 
@@ -1077,7 +1079,8 @@ function birdhive_display_collection ( $a = array() ) {
 				
 							// If the image found is large enough, display it in the grid
 							if ( $first_img_src[1] > 300 && $first_img_src[2] > 300 ) {
-								$image_url = wp_get_attachment_image_url( $first_image['id'], 'medium' );
+								$image_id = $first_image['id'];
+								//$image_url = wp_get_attachment_image_url( $first_image['id'], 'medium' );
 							}
 						}			
 					}		
@@ -1113,7 +1116,7 @@ function birdhive_display_collection ( $a = array() ) {
 			// TMP solution:
 			global $wpdb; 
 			//wpstc_em_meta
-			$image_url = $wpdb->get_var('SELECT meta_value FROM '.EM_META_TABLE." WHERE object_id='".$term_id."' AND meta_key='category-image' LIMIT 1");
+			$image_id = $wpdb->get_var('SELECT meta_value FROM '.EM_META_TABLE." WHERE object_id='".$term_id."' AND meta_key='category-image-id' LIMIT 1"); // 288081
 			/*
 			$image_url = ""; // tft
 			//$EM_Tax_Term = new EM_Taxonomy_Term($term_id, 'term_id'); 
@@ -1121,7 +1124,7 @@ function birdhive_display_collection ( $a = array() ) {
 			$item_image = "";
 			*/
 			// Build a URL, depending on which taxonomy is in play
-			$item_url = ""; // tft
+			//$item_url = ""; // tft
 			
 			// Event category
 			
@@ -1178,10 +1181,12 @@ function birdhive_display_collection ( $a = array() ) {
 			$item_arr['item_subtitle'] = $item_subtitle;
 		}
 		
-		if ( !empty($image_url) ) {
+		if ( !empty($image_id) ) {
 			//if ( $aspect_ratio == "square" ) { } else {}
-			$item_image = '<img src="'.$image_url.'" alt="'.get_the_title($post_id).'" width="100%" height="100%" />';
-			if ( !empty($item_url) ) { $item_image = '<a href="'.$item_url.'" rel="bookmark">'.$item_image.'</a>'; }			
+			//wp_get_attachment_image( int $attachment_id, string|int[] $size = 'thumbnail', bool $icon = false, string|array $attr = '' ): string
+			$item_image = wp_get_attachment_image( $image_id, 'medium' );
+			//$item_image = '<img src="'.$image_url.'" alt="'.get_the_title($post_id).'" width="100%" height="100%" />';
+			if ( !empty($item_image) && !empty($item_url) ) { $item_image = '<a href="'.$item_url.'" rel="bookmark">'.$item_image.'</a>'; }			
 		} else {
 			$item_image = "";
 		}
