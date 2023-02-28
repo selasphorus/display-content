@@ -1131,8 +1131,10 @@ function birdhive_display_collection ( $a = array() ) {
 		
 			$item_arr = $item;
 			
+			// tft
 			$item_title = null;
 			$item_subtitle = null;
+			$image_url = null;
 			
 			//$post_object = $item['post_object'];
 			//$item_arr['post_id'] = $post_id;
