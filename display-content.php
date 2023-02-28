@@ -973,7 +973,7 @@ function birdhive_display_collection ( $a = array() ) {
 	//?if ( $content_type == "posts" ) { $post_type = $a['post_type']; }
 	
 	// List/table/grid header or container
-	$info .= collection_header ( $display_format, $fields, $num_cols );
+	$info .= collection_header ( $display_format, $fields, $num_cols, $aspect_ratio );
 	
 	//$info .= "+~+~+~+~+~+~+ collection items +~+~+~+~+~+~+<br />";
 	
@@ -1233,7 +1233,7 @@ function birdhive_display_collection ( $a = array() ) {
 	
 } // END function birdhive_display_collection ( $a = array() ) 
 
-function collection_header ( $display_format = null, $fields = null, $num_cols = 3 ) {
+function collection_header ( $display_format = null, $fields = null, $num_cols = 3, $aspect_ratio = "square" ) {
 
 	$info = "";
 	//$info .= "+~+~+~+~+~+~+ collection_header +~+~+~+~+~+~+<br />";
@@ -1286,7 +1286,7 @@ function collection_header ( $display_format = null, $fields = null, $num_cols =
 	
 		$colclass = digit_to_word($num_cols)."col";
 		//if ( $class ) { $colclass .= " ".$class; }
-		$info .= '<div class="flex-container '.$colclass.'">';
+		$info .= '<div class="flex-container '.$colclass.' '.$aspect_ratio.'">';
 	
 	} else {
 	
