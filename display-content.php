@@ -950,7 +950,7 @@ function birdhive_display_collection ( $a = array() ) {
     	$items = get_field('collection_items', $collection_id); // ACF collection item repeater field values
 		$aspect_ratio = get_field('aspect_ratio', $collection_id);
 		if ( $display_format == "table" ) { $fields = get_field('table_fields', $collection_id); } else { $fields = array(); }
-		if ( $display_format == "grid" ) { $num_cols = get_field('num_cols', $collection_id); } else { $num_cols = ""; }
+		if ( $display_format == "grid" ) { $num_cols = get_field('num_cols', $collection_id); } else { $num_cols = "3"; }
 		//$content_type = $a['content_type']; -- probably mixed, but could be posts or whatever, collection of single type of items -- would have to loop to determine
 		$content_type = "mixed"; // tft
     	
@@ -966,14 +966,14 @@ function birdhive_display_collection ( $a = array() ) {
 		
 		$aspect_ratio = "square";
 		if ( $display_format == "table" && isset($a['fields']) ) { $fields = $a['fields']; } else { $fields = array(); }
-		if ( $display_format == "grid" && isset($a['num_cols']) ) { $num_cols = $a['num_cols']; } else { $num_cols = ""; }
+		if ( $display_format == "grid" && isset($a['num_cols']) ) { $num_cols = $a['num_cols']; } else { $num_cols = "3"; }
 		
 	}
 	
 	//?if ( $content_type == "posts" ) { $post_type = $a['post_type']; }
 	
 	// List/table/grid header or container
-	$info .= collection_header ( $display_format, $fields );
+	$info .= collection_header ( $display_format, $fields, $num_cols );
 	
 	//$info .= "+~+~+~+~+~+~+ collection items +~+~+~+~+~+~+<br />";
 	
