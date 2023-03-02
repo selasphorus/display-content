@@ -949,6 +949,8 @@ function birdhive_display_collection ( $a = array() ) {
 	// init
 	$info = "";
 	$ts_info = "";
+	$arr_dpatts = array(); // DP stands for "display posts" -- i.e. special attributes if this fcn has been called via the display_posts shortcode -- TODO: simplify?
+	$collection_id = null;
 	
 	// Get args from array
 	if ( isset($a['collection_id']) ) {
@@ -956,19 +958,20 @@ function birdhive_display_collection ( $a = array() ) {
 		$collection_id = $a['collection_id'];	
 		$ts_info .= "collection_id: $collection_id<br />";
 		
+		$content_type = "mixed"; // tft
 		$display_format = get_field('display_format', $collection_id);
     	$items = get_field('collection_items', $collection_id); // ACF collection item repeater field values
+		
 		$aspect_ratio = get_field('aspect_ratio', $collection_id);
 		if ( $display_format == "table" ) { $fields = get_field('table_fields', $collection_id); } else { $fields = array(); }
 		if ( $display_format == "grid" ) { $num_cols = get_field('num_cols', $collection_id); } else { $num_cols = "3"; }
 		//$content_type = $a['content_type']; -- probably mixed, but could be posts or whatever, collection of single type of items -- would have to loop to determine
-		$content_type = "mixed"; // tft
+		
     	
 	} else {
 	
 		$ts_info .= "No collection_id set<br />";
 		
-		$collection_id = null;
 		$content_type = $a['content_type'];
 		$display_format = $a['display_format'];
 		$items = $a['items'];
