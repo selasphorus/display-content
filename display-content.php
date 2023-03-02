@@ -1251,7 +1251,7 @@ function birdhive_display_collection ( $a = array() ) {
 		}
 		
 		$info .= $item_info;
-		$ts_info .= $item_ts_info;
+		$info .= $item_ts_info;
 		
 	}
 	
