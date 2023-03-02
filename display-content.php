@@ -1203,9 +1203,9 @@ function birdhive_display_collection ( $a = array() ) {
 		
 		if ( !empty($image_id) ) {
 			if ( $aspect_ratio == "square" ) {
-				$img_size = 'large_crop';
+				$img_size = 'grid_crop_square';
 			} else {
-				$img_size = 'rectangle_crop';
+				$img_size = 'grid_crop_rect';
 			}			
 			//wp_get_attachment_image( int $attachment_id, string|int[] $size = 'thumbnail', bool $icon = false, string|array $attr = '' ): string
 			$img_attr = array ( 'sizes' => "(max-width: 600px) 100vw, 100vw" );
