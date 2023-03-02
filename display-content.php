@@ -1009,7 +1009,7 @@ function birdhive_display_collection ( $a = array() ) {
 			$item_type = $item['item_type'];
 		}
 		
-		if ( $item_type != "post" ) { $ts_info .= "item_type: ".$item_type."<br />"; }
+		if ( $item_type != "post" && $item_type != "event_category" ) { $ts_info .= "item_type: ".$item_type."<br />"; }
 		
 		// Some fields exist for content collection items ONLY, so set those directly from the item array
 		if ( !is_object($item) && isset($item['item_subtitle']) ) { $item_subtitle = $item['item_subtitle']; } else { $item_subtitle = ""; }
@@ -1199,9 +1199,13 @@ function birdhive_display_collection ( $a = array() ) {
 		}
 		
 		if ( !empty($image_id) ) {
-			//if ( $aspect_ratio == "square" ) { } else {}
+			if ( $aspect_ratio == "square" ) {
+				$img_size = 'large';
+			} else {
+				$img_size = 'medium_large';
+			}			
 			//wp_get_attachment_image( int $attachment_id, string|int[] $size = 'thumbnail', bool $icon = false, string|array $attr = '' ): string
-			$item_image = wp_get_attachment_image( $image_id, 'medium' );
+			$item_image = wp_get_attachment_image( $image_id, $img_size, false, 'width="100%" height="100%"' );
 			//$item_image = '<img src="'.$image_url.'" alt="'.get_the_title($post_id).'" width="100%" height="100%" />';
 			if ( !empty($item_image) && !empty($item_url) ) { $item_image = '<a href="'.$item_url.'" rel="bookmark">'.$item_image.'</a>'; }			
 		} else {
