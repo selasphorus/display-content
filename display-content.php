@@ -1008,6 +1008,9 @@ function birdhive_display_collection ( $a = array() ) {
 		
 		if ( $item_type != "post" ) { $ts_info .= "item_type: ".$item_type."<br />"; }
 		
+		// Some fields exist for content collection items ONLY, so set those directly from the item array
+		if ( isset($item['item_subtitle']) ) { $item_subtitle = $item['item_subtitle']; } else { $item_subtitle = ""; }
+		
 		if ( $item_type == "post" ) {
 			
 			if ( is_object($item) ) { // item is post object, e.g. when called via display_posts shortcode
