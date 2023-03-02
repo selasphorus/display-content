@@ -1242,7 +1242,7 @@ function birdhive_display_collection ( $a = array() ) {
 				//$item_ts_info .= "item_title: ".$item_title."<br />";
 				//$item_info .= "item_url: ".$item_url."<br />";
 			}
-			$item_info .= display_grid_item($item_arr, $arr_dpatts, $ts_info);
+			$item_info .= display_grid_item($item_arr, $arr_dpatts, $item_ts_info);
 			
 		}
 		
