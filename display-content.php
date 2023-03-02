@@ -887,11 +887,21 @@ function display_grid_item ( $item = array(), $display_atts = array(), $ts_info 
 	*/
 	
 	// Get/set item vars
-	$post_id = $item['post_id'];
+	if ( isset($item['post_id']) ) { $post_id = $item['post_id']; } else { $post_id = null; }
+	if ( isset($item['post_type']) ) { 
+		$post_type = $item['post_type'];
+	} else if ( $post_id ) {
+		$post_type = get_post_type($post_id); // necessary? better to just always set it before fcn is called?
+	} else {
+		$post_type = null;
+	}
+	if ( isset($item['item_title']) ) { $item_title = $item['item_title']; } else { $item_title = null; }
+	if ( isset($item['item_image']) ) { $item_image = $item['item_image']; } else { $item_image = null; }
+	/*$post_id = $item['post_id'];
 	$post_type = $item['post_type'];
 	$item_title = $item['item_title'];
 	//$item_url = $item['item_url'];
-	$item_image = $item['item_image'];
+	$item_image = $item['item_image'];*/
 	
 	// Get/set display vars
 	if ( isset($display_atts['spacing']) ) { $spacing = $display_atts['spacing']; } else { $spacing = ""; }
