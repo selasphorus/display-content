@@ -1203,7 +1203,7 @@ function birdhive_display_collection ( $a = array() ) {
 		
 		if ( !empty($image_id) ) {
 			if ( $aspect_ratio == "square" ) {
-				$img_size = 'medium';
+				$img_size = 'large';
 			} else {
 				$img_size = 'medium_large';
 			}			
