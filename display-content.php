@@ -980,8 +980,8 @@ function birdhive_display_collection ( $a = array() ) {
 		$arr_dpatts = $a['arr_dpatts'];
 		
 		$aspect_ratio = "square";
-		if ( $display_format == "table" && isset($a['fields']) ) { $fields = $a['fields']; } else { $fields = array(); }
-		if ( $display_format == "grid" && isset($a['cols']) ) { $num_cols = $a['cols']; } else { $num_cols = "3"; }
+		if ( $display_format == "table" && isset($arr_dpatts['fields']) ) { $fields = $arr_dpatts['fields']; } else { $fields = array(); }
+		if ( $display_format == "grid" && isset($arr_dpatts['cols']) ) { $num_cols = $arr_dpatts['cols']; } else { $num_cols = "3"; }
 		
 	}
 	
