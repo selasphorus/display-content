@@ -997,7 +997,7 @@ function birdhive_display_collection ( $a = array() ) {
 		$item_ts_info = "";
 		$item_arr = array();
 		
-		//$ts_info .= "item: <pre>".print_r($item, true)."</pre>";
+		//$item_ts_info .= "item: <pre>".print_r($item, true)."</pre>";
 		
 		//get content for display in appropriate form...
 		//$item_args = array( 'content_type' => $content_type, 'display_format' => $display_format, 'item' => $item );
@@ -1009,7 +1009,7 @@ function birdhive_display_collection ( $a = array() ) {
 			$item_type = $item['item_type'];
 		}
 		
-		if ( $item_type != "post" && $item_type != "event_category" ) { $ts_info .= "item_type: ".$item_type."<br />"; }
+		if ( $item_type != "post" && $item_type != "event_category" ) { $item_ts_info .= "item_type: ".$item_type."<br />"; }
 		
 		// Some fields exist for content collection items ONLY, so set those directly from the item array
 		if ( !is_object($item) && isset($item['item_subtitle']) ) { $item_subtitle = $item['item_subtitle']; } else { $item_subtitle = ""; }
@@ -1022,12 +1022,12 @@ function birdhive_display_collection ( $a = array() ) {
 			} else if ( isset($item['post_object']) ) {
 				$post = $item['post_object'][0];
 			}
-			//$ts_info .= 'post: <pre>'.print_r($post, true).'</pre>'; // tft
+			//$item_ts_info .= 'post: <pre>'.print_r($post, true).'</pre>'; // tft
 			$post_type = $post->post_type;
 			
-			//$ts_info .= 'item: <pre>'.print_r($item, true).'</pre>'; // tft
+			//$item_ts_info .= 'item: <pre>'.print_r($item, true).'</pre>'; // tft
 			//$post_type = get_post_type($post_id);
-			//$ts_info .= '<pre>'.print_r($post, true).'</pre>'; // tft
+			//$item_ts_info .= '<pre>'.print_r($post, true).'</pre>'; // tft
 			
 			if ( post_type_exists('event') && $post_type == 'event' ) {
 				$post_id = $post->post_id;
@@ -1120,7 +1120,7 @@ function birdhive_display_collection ( $a = array() ) {
 		
 		} else if ( $item_type == "event_category" || $item_type == "category" ) {
 		
-			//$ts_info .= "item: <pre>".print_r($item, true)."</pre>";
+			//$item_ts_info .= "item: <pre>".print_r($item, true)."</pre>";
 			
 			if ( $item_type == "event_category" ) { $term_id = $item['event_category']; } else { $term_id = $item['category']; }
 			
@@ -1239,7 +1239,7 @@ function birdhive_display_collection ( $a = array() ) {
 		
 			if ( $item_type != "post" ) {
 				//$item_info .= "post_id: ".$post_id."<br />";
-				//$ts_info .= "item_title: ".$item_title."<br />";
+				//$item_ts_info .= "item_title: ".$item_title."<br />";
 				//$item_info .= "item_url: ".$item_url."<br />";
 			}
 			$item_info .= display_grid_item($item_arr, $arr_dpatts, $ts_info);
