@@ -994,7 +994,7 @@ function birdhive_display_collection ( $a = array() ) {
 	foreach ( $items as $item ) {
 	
 		$item_info = "";
-		$ts_info = "";
+		$item_ts_info = "";
 		$item_arr = array();
 		
 		//$ts_info .= "item: <pre>".print_r($item, true)."</pre>";
@@ -1031,10 +1031,10 @@ function birdhive_display_collection ( $a = array() ) {
 			
 			if ( post_type_exists('event') && $post_type == 'event' ) {
 				$post_id = $post->post_id;
-				$ts_info .= '<!-- Event post_id: '.$post_id." -->"; // tft
+				$item_ts_info .= '<!-- Event post_id: '.$post_id." -->"; // tft
 			} else {
 				$post_id = $post->ID;
-				$ts_info .= '<!-- '.$post_type.' => post_id: '.$post_id." -->"; // tft
+				$item_ts_info .= '<!-- '.$post_type.' => post_id: '.$post_id." -->"; // tft
 			}
 			//
 			$item_arr['post_id'] = $post_id;
@@ -1214,7 +1214,7 @@ function birdhive_display_collection ( $a = array() ) {
 		$item_arr['item_image'] = $item_image;
 		
 		if ( empty($item_image) ) {
-			$ts_info .= "item_arr: <pre>".print_r($item_arr, true)."</pre>"; // tft
+			$item_ts_info .= "item_arr: <pre>".print_r($item_arr, true)."</pre>"; // tft
 		}
 		
 		//
@@ -1225,7 +1225,7 @@ function birdhive_display_collection ( $a = array() ) {
 		} else if ( $display_format == "excerpts" || $display_format == "archive" ) {
 			
 			if ( $item_type == "post" ) {
-				$ts_info .= '<!-- '.$display_format.' -->';
+				$item_ts_info .= '<!-- '.$display_format.' -->';
 				$item_info .= display_post_item($item_arr);
 			} else {
 				// ??? -- These format options are only relevant for posts, not for other content types (?)
@@ -1251,6 +1251,7 @@ function birdhive_display_collection ( $a = array() ) {
 		}
 		
 		$info .= $item_info;
+		$ts_info .= $item_ts_info;
 		
 	}
 	
