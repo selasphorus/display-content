@@ -952,7 +952,7 @@ function birdhive_display_collection ( $a = array() ) {
 	$arr_dpatts = array(); // DP stands for "display posts" -- i.e. special attributes if this fcn has been called via the display_posts shortcode -- TODO: simplify?
 	$collection_id = null;
 	
-	$ts_info .= "bdc atts: <pre>".print_r($a, true)."</pre>";
+	//$ts_info .= "bdc atts: <pre>".print_r($a, true)."</pre>";
 	
 	// Get args from array
 	if ( isset($a['collection_id']) ) {
