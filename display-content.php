@@ -1208,7 +1208,8 @@ function birdhive_display_collection ( $a = array() ) {
 				$img_size = 'medium_large';
 			}			
 			//wp_get_attachment_image( int $attachment_id, string|int[] $size = 'thumbnail', bool $icon = false, string|array $attr = '' ): string
-			$item_image = wp_get_attachment_image( $image_id, $img_size, false, 'width="100%" height="100%"' );
+			$img_attr = array ( 'sizes' => "(max-width: 600px) 100vw, 100vw" );
+			$item_image = wp_get_attachment_image( $image_id, $img_size, false, $img_attr );
 			//$item_image = '<img src="'.$image_url.'" alt="'.get_the_title($post_id).'" width="100%" height="100%" />';
 			if ( !empty($item_image) && !empty($item_url) ) { $item_image = '<a href="'.$item_url.'" rel="bookmark">'.$item_image.'</a>'; }			
 		} else {
