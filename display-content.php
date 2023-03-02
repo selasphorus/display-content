@@ -979,7 +979,7 @@ function birdhive_display_collection ( $a = array() ) {
 		
 		$aspect_ratio = "square";
 		if ( $display_format == "table" && isset($a['fields']) ) { $fields = $a['fields']; } else { $fields = array(); }
-		if ( $display_format == "grid" && isset($a['num_cols']) ) { $num_cols = $a['num_cols']; } else { $num_cols = "3"; }
+		if ( $display_format == "grid" && isset($a['cols']) ) { $num_cols = $a['cols']; } else { $num_cols = "3"; }
 		
 	}
 	
@@ -1200,7 +1200,7 @@ function birdhive_display_collection ( $a = array() ) {
 		
 		if ( !empty($image_id) ) {
 			if ( $aspect_ratio == "square" ) {
-				$img_size = 'large';
+				$img_size = 'medium';
 			} else {
 				$img_size = 'medium_large';
 			}			
