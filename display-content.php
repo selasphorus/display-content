@@ -1103,7 +1103,7 @@ function birdhive_display_collection ( $a = array() ) {
 			
 			// Item Excerpt/Text
 			if ( function_exists('is_dev_site') && is_dev_site() ) {
-				$item_text = expandable_text( $post_id, $text_length, $preview_length );
+				$item_text = expandable_text( $post_id ); //$item_text = expandable_text( $post_id, $text_length, $preview_length );
 				//$info .= expandable_text( array('post_id' => $post_id, 'text_length' => $text_length, 'preview_length' => $preview_length ) );
 				//$info .= dc_get_excerpt( array('post_id' => $post_id, 'expandable' => $expandable, 'text_length' => $text_length, 'preview_length' => $preview_length ) );				
 			} else {
