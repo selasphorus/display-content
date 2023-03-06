@@ -939,7 +939,7 @@ function display_grid_item ( $item = array(), $display_atts = array(), $ts_info 
 	if ( !empty($item_subtitle) ) { $item_info .= "<br />".$item_subtitle; }
 	
 	// Troubleshooting info
-	if ( !empty($ts_info) ) { $item_info .= "<br />".$ts_info; }
+	if ( !empty($ts_info) ) { $item_info .= $ts_info; }
 	
 	$info .= '<div class="flex-box '.$spacing.'">';
 	//
