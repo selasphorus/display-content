@@ -1282,7 +1282,7 @@ function birdhive_display_collection ( $a = array() ) {
 	// List/table/grid footer or close container
 	$info .= collection_footer ( $display_format );
 	
-	$info .= $ts_info;
+	$info .= '<div class="troubleshooting">'.$ts_info.'</div>';
 	
 	// Return info for display
 	return $info;
