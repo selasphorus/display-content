@@ -910,6 +910,12 @@ function display_grid_item ( $item = array(), $display_atts = array(), $ts_info 
 	if ( isset($display_atts['aspect_ratio']) ) { $aspect_ratio = $display_atts['aspect_ratio']; } else { $aspect_ratio = "square"; }
 	
 	// Begin building item_info
+	if ( $aspect_ratio == "square" ) { 
+		$item_title = "<h3>".$item_title."</h3>";
+		if ( $item_subtitle ) {
+			$item_subtitle = "<em>".$item_title."</em>";
+		}
+	}
 	$item_info = $item_title;
 	
 	if ( $post_id ) {	
