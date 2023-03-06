@@ -942,7 +942,7 @@ function display_grid_item ( $item = array(), $display_atts = array(), $ts_info 
 	
 	$info .= '<div class="flex-box '.$spacing.'">';
 	//
-	if ( $overlay !== true && $aspect_ratio == "square" ) {
+	if ( $overlay !== true && $aspect_ratio != "square" ) {
 		$info .= '<div class="item_info">'.$item_info.'</div>';
 	}
 	// Show the item image
@@ -952,7 +952,7 @@ function display_grid_item ( $item = array(), $display_atts = array(), $ts_info 
 	//
 	if ( $overlay == true ) {
 		$info .= '<div class="overlay">'.$item_info.'</div>';
-	} else if ( $aspect_ratio != "square" ) {
+	} else if ( $aspect_ratio == "square" ) {
 		$info .= '<div class="item_info">'.$item_info.'</div>';
 	}
 	$info .= '</div>';
@@ -982,6 +982,8 @@ function birdhive_display_collection ( $a = array() ) {
     	$items = get_field('collection_items', $collection_id); // ACF collection item repeater field values
 		
 		$aspect_ratio = get_field('aspect_ratio', $collection_id);
+		$arr_dpatts['aspect_ratio'] = $aspect_ratio;
+		//
 		if ( $display_format == "table" ) { $fields = get_field('table_fields', $collection_id); } else { $fields = array(); }
 		if ( $display_format == "grid" ) { $num_cols = get_field('num_cols', $collection_id); } else { $num_cols = "3"; }
 		//$content_type = $a['content_type']; -- probably mixed, but could be posts or whatever, collection of single type of items -- would have to loop to determine
@@ -998,8 +1000,7 @@ function birdhive_display_collection ( $a = array() ) {
 		
 		if ( $display_format == "table" && isset($arr_dpatts['fields']) ) { $fields = $arr_dpatts['fields']; } else { $fields = array(); }
 		if ( $display_format == "grid" && isset($arr_dpatts['cols']) ) { $num_cols = $arr_dpatts['cols']; } else { $num_cols = "3"; }
-		if ( isset($arr_dpatts['aspect_ratio']) ) { $aspect_ratio = $arr_dpatts['aspect_ratio']; } else { $aspect_ratio = "square"; }
-		
+		if ( !isset($arr_dpatts['aspect_ratio']) ) { $arr_dpatts['aspect_ratio'] = "square"; }
 	}
 	
 	$ts_info .= "num_cols: $num_cols<br />";
