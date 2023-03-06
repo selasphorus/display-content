@@ -912,9 +912,7 @@ function display_grid_item ( $item = array(), $display_atts = array(), $ts_info 
 	// Begin building item_info
 	if ( $aspect_ratio == "square" ) { 
 		$item_title = "<h3>".$item_title."</h3>";
-		if ( !empty($item_subtitle) ) {
-			$item_subtitle = "<em>".$item_subtitle."</em>";
-		}
+		if ( !empty($item_subtitle) ) { $item_subtitle = "<h4>".$item_subtitle."</h4>"; }
 	}
 	$item_info = $item_title;
 	
