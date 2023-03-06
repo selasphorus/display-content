@@ -896,6 +896,7 @@ function display_grid_item ( $item = array(), $display_atts = array(), $ts_info 
 		$post_type = null;
 	}
 	if ( isset($item['item_title']) ) { $item_title = $item['item_title']; } else { $item_title = null; }
+	if ( isset($item['item_subtitle']) ) { $item_subtitle = $item['item_subtitle']; } else { $item_subtitle = null; }
 	if ( isset($item['item_image']) ) { $item_image = $item['item_image']; } else { $item_image = null; }
 	/*$post_id = $item['post_id'];
 	$post_type = $item['post_type'];
@@ -906,6 +907,7 @@ function display_grid_item ( $item = array(), $display_atts = array(), $ts_info 
 	// Get/set display vars
 	if ( isset($display_atts['spacing']) ) { $spacing = $display_atts['spacing']; } else { $spacing = ""; }
 	if ( isset($display_atts['overlay']) ) { $overlay = $display_atts['overlay']; } else { $overlay = false; }
+	if ( isset($display_atts['aspect_ratio']) ) { $aspect_ratio = $display_atts['aspect_ratio']; } else { $aspect_ratio = "square"; }
 	
 	// Begin building item_info
 	$item_info = $item_title;
@@ -927,15 +929,25 @@ function display_grid_item ( $item = array(), $display_atts = array(), $ts_info 
 		}
 	}
 	
+	// Subtitle?
+	if ( !empty($item_subtitle) ) { $item_info .= "<br />".$item_subtitle; }
+	
+	// Troubleshooting info
 	if ( !empty($ts_info) ) { $item_info .= "<br />".$ts_info; }
 	
 	$info .= '<div class="flex-box '.$spacing.'">';
+	//
+	if ( $overlay !== true && $aspect_ratio == "square" ) {
+		$info .= '<div class="item_info">'.$item_info.'</div>';
+	}
+	// Show the item image
 	$info .= '<div class="flex-img">';
 	$info .= $item_image;
 	$info .= '</div>';
+	//
 	if ( $overlay == true ) {
 		$info .= '<div class="overlay">'.$item_info.'</div>';
-	} else {
+	} else if ( $aspect_ratio != "square" ) {
 		$info .= '<div class="item_info">'.$item_info.'</div>';
 	}
 	$info .= '</div>';
@@ -979,9 +991,9 @@ function birdhive_display_collection ( $a = array() ) {
 		$items = $a['items'];
 		$arr_dpatts = $a['arr_dpatts'];
 		
-		$aspect_ratio = "square";
 		if ( $display_format == "table" && isset($arr_dpatts['fields']) ) { $fields = $arr_dpatts['fields']; } else { $fields = array(); }
 		if ( $display_format == "grid" && isset($arr_dpatts['cols']) ) { $num_cols = $arr_dpatts['cols']; } else { $num_cols = "3"; }
+		if ( isset($arr_dpatts['aspect_ratio']) ) { $aspect_ratio = $arr_dpatts['aspect_ratio']; } else { $aspect_ratio = "square"; }
 		
 	}
 	
