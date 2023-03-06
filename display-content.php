@@ -936,7 +936,7 @@ function display_grid_item ( $item = array(), $display_atts = array(), $ts_info 
 	}
 	
 	// Subtitle?
-	if ( !empty($item_subtitle) ) { $item_info .= "<br />".$item_subtitle; }
+	if ( !empty($item_subtitle) ) { $item_info .= $item_subtitle; } //"<br />".
 	
 	// Troubleshooting info
 	if ( !empty($ts_info) ) { $item_info .= $ts_info; }
