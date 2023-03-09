@@ -1207,6 +1207,11 @@ function birdhive_display_collection ( $a = array() ) {
 		}
 		
 		//if ( $item_url ) { $item_arr['item_url'] = $item_url; }
+		if ( empty($item_url) ) {
+			if ( $item_email = $item['item_email'] ) {
+				$item_url = "mailto:".$item_email;
+			}
+		}
 		
 		if ( $item_title ) {
 			if ( !empty($item_title) ) {
@@ -1240,9 +1245,7 @@ function birdhive_display_collection ( $a = array() ) {
 		}
 		$item_arr['item_image'] = $item_image;
 		
-		if ( empty($item_image) ) {
-			$item_ts_info .= "item_arr: <pre>".print_r($item_arr, true)."</pre>"; // tft
-		}
+		//if ( empty($item_image) ) { $item_ts_info .= "item_arr: <pre>".print_r($item_arr, true)."</pre>"; } // tft
 		
 		//
 		if ( $display_format == "links" ) {
