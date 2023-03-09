@@ -1168,7 +1168,7 @@ function birdhive_display_collection ( $a = array() ) {
 				*/
 			} else {
 				$taxonomy_featured_image = get_term_meta( $term_id, 'taxonomy_featured_image', true );
-				if ( $taxonomy_featured_image ) { $image_id = $taxonomy_featured_image['ID']; } else { $image_id = null; }
+				if ( $taxonomy_featured_image ) { $image_id = $taxonomy_featured_image; } else { $image_id = null; }
 			}
 			// Event category
 			
