@@ -1180,23 +1180,32 @@ function birdhive_display_collection ( $a = array() ) {
 			$item_arr = $item;
 			
 			// tft
-			$item_title = null;
-			$item_subtitle = null;
-			$image_url = null;
+			//$item_title = null;
+			//$item_subtitle = null;
 			
+			$item_title = $item['item_title'];
+			$item_subtitle = $item['item_subtitle'];
+			
+			// Item URL
+			$item_url = $item['item_url'];
+			if ( $item_type == "email" ) {
+				$item_email = $item['item_email'];
+				if ( !empty($item_email) ) {
+					$item_url = "mailto:".$item_email;
+				}
+			}
+			if ( $item_type == "link" ) {
+				$link_target = $item['item_link_target'];
+			}
+			
+			// Item Image
 			$image_id = $item['item_image']['ID'];
-			//$item_ts_info .= "item_image: ".print_r($item_image, true)."<br />";
 			
 			//$post_object = $item['post_object'];
 			//$item_arr['post_id'] = $post_id;
 			
 			/*
 			$post_object = $item['post_object'];
-			$item_title = $item['item_title'];
-			$item_image = $item['item_image'];
-			$item_url = $item['item_url'];
-			$item_link_target = $item['item_link_target'];
-			$item_email = $item['item_email'];
 			$item_text = $item['item_content'];
 			$media_file = $item['media_file'];
 			$event_category = $item['event_category'];
@@ -1207,19 +1216,13 @@ function birdhive_display_collection ( $a = array() ) {
 		}
 		
 		//if ( $item_url ) { $item_arr['item_url'] = $item_url; }
-		if ( empty($item_url) ) {
-			if ( $item_email = $item['item_email'] ) {
-				$item_url = "mailto:".$item_email;
-			} else {
-				$item_ts_info .= "No item_url or item_email link found.";
-			}
-		}
+		if ( !isset($link_target) ) { $link_target = ""; } else { $link_target = ' target="'.$link_target.'"'; }
 		
 		if ( $item_title ) {
 			if ( !empty($item_title) ) {
 				$item_title = '<span class="item_title">'.$item_title.'</span>';
 				// Wrap the title in a hyperlink, if a URL has been set
-				if ( !empty($item_url) ) { $item_title = '<a href="'.$item_url.'" rel="bookmark">'.$item_title.'</a>'; }
+				if ( !empty($item_url) ) { $item_title = '<a href="'.$item_url.'" rel="bookmark"'.$link_target.'>'.$item_title.'</a>'; }
 			}
 			$item_arr['item_title'] = $item_title;
 		}
@@ -1241,7 +1244,7 @@ function birdhive_display_collection ( $a = array() ) {
 			$img_attr = array ( 'sizes' => "(max-width: 600px) 100vw, 100vw" );
 			$item_image = wp_get_attachment_image( $image_id, $img_size, false, $img_attr );
 			//$item_image = '<img src="'.$image_url.'" alt="'.get_the_title($post_id).'" width="100%" height="100%" />';
-			if ( !empty($item_image) && !empty($item_url) ) { $item_image = '<a href="'.$item_url.'" rel="bookmark">'.$item_image.'</a>'; }			
+			if ( !empty($item_image) && !empty($item_url) ) { $item_image = '<a href="'.$item_url.'" rel="bookmark"'.$link_target.'>'.$item_image.'</a>'; }			
 		} else {
 			$item_image = "";
 		}
