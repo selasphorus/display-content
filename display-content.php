@@ -1146,7 +1146,7 @@ function birdhive_display_collection ( $a = array() ) {
 		
 			//$item_ts_info .= "item: <pre>".print_r($item, true)."</pre>";
 			
-			if ( $item_type == "event_category" ) { $term_id = $item['event_category']; } else { $term_id = $item['category']; }
+			if ( $item_type == "event_category" ) { $term_id = $item['event_category']; } else { $term_id = $item['post_category']; }
 			
 			// Get category name as title
 			$term = get_term( $term_id ); // $term = get_term( $term_id, $taxonomy );
