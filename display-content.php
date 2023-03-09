@@ -1153,16 +1153,21 @@ function birdhive_display_collection ( $a = array() ) {
 			//$item_arr['item_title'] = $item_title;
 			
 			// Get the taxonomy image, if any has been set
-			// TMP solution:
-			global $wpdb; 
-			//wpstc_em_meta
-			$image_id = $wpdb->get_var('SELECT meta_value FROM '.EM_META_TABLE." WHERE object_id='".$term_id."' AND meta_key='category-image-id' LIMIT 1"); // 288081
-			/*
-			$image_url = ""; // tft
-			//$EM_Tax_Term = new EM_Taxonomy_Term($term_id, 'term_id'); 
-			//$item_image = $EM_Tax_Term->get_image_url();
-			$item_image = "";
-			*/
+			if ( $item_type == "event_category" ) { 
+				// TMP solution:
+				global $wpdb; 
+				//wpstc_em_meta
+				$image_id = $wpdb->get_var('SELECT meta_value FROM '.EM_META_TABLE." WHERE object_id='".$term_id."' AND meta_key='category-image-id' LIMIT 1"); // 288081
+				/* // TODO: figure out how to get EM taxonomy image without direct DB query
+				$image_url = ""; // tft
+				//$EM_Tax_Term = new EM_Taxonomy_Term($term_id, 'term_id'); 
+				//$item_image = $EM_Tax_Term->get_image_url();
+				$item_image = "";
+				*/
+			} else {
+				$taxonomy_featured_image = get_post_meta( $term_id, 'taxonomy_featured_image', true );
+				if ( $taxonomy_featured_image ) { $image_id = $taxonomy_featured_image['ID']; }
+			}
 			// Build a URL, depending on which taxonomy is in play
 			//$item_url = ""; // tft
 			
@@ -1193,10 +1198,8 @@ function birdhive_display_collection ( $a = array() ) {
 				if ( !empty($item_email) ) {
 					$item_url = "mailto:".$item_email;
 				}
-			}
-			if ( $item_type == "link" ) {
-				$link_target = $item['item_link_target'];
-			}
+			} 
+			//if ( $item_type == "link" ) { $link_target = $item['item_link_target']; }
 			
 			// Item Image
 			$image_id = $item['item_image']['ID'];
@@ -1216,15 +1219,35 @@ function birdhive_display_collection ( $a = array() ) {
 		}
 		
 		//if ( $item_url ) { $item_arr['item_url'] = $item_url; }
-		if ( !isset($link_target) ) { $link_target = ""; } else { $link_target = ' target="'.$link_target.'"'; }
+		$item_link_target = $item['item_link_target'];
+		if ( !isset($item_link_target) ) { $link_target = ""; } else { $link_target = ' target="'.$item_link_target.'"'; }
+		
+		/*if ( $item_type == "modal" || $item_link_target == "modal" ) {			
+			//<a id="dialog_handle_contact_us" class="dialog_handle" href="#!">
+			$dialog_id = ""; // tmp/wip
+		}*/
 		
 		if ( $item_title ) {
 			if ( !empty($item_title) ) {
-				$item_title = '<span class="item_title">'.$item_title.'</span>';
-				// Wrap the title in a hyperlink, if a URL has been set
-				if ( !empty($item_url) ) { $item_title = '<a href="'.$item_url.'" rel="bookmark"'.$link_target.'>'.$item_title.'</a>'; }
+			
+				// TODO: come up with a different var name to distinguish bare title from formatted title
+				$item_title_styled = '<span class="item_title">'.$item_title.'</span>';
+				
+				// Wrap the title in a hyperlink, if a URL has been set	OR if the item is linked to modal content		
+				if ( $item_type == "modal" || $item_link_target == "modal" ) {
+					$dialog_id = sanitize_title($item_title); // tmp/wip
+					$item_title_styled = '<a href="#!" id="dialog_handle_'.$dialog_id.'" class="dialog_handle">'.$item_title.'</a>'; 
+				} else {
+					if ( !empty($item_url) ) { $item_title_styled = '<a href="'.$item_url.'" rel="bookmark"'.$link_target.'>'.$item_title.'</a>'; }
+				}				
 			}
-			$item_arr['item_title'] = $item_title;
+			$item_arr['item_title'] = $item_title_styled; // Save styled/linked version to array to pass to display fcns
+		}
+		
+		if ( $item_type == "modal" || $item_link_target == "modal" ) {
+			$item_content = $item['item_content'];			
+		} else {
+			$item_content = null;
 		}
 		
 		if ( $item_subtitle ) {
@@ -1282,11 +1305,17 @@ function birdhive_display_collection ( $a = array() ) {
 		}
 		
 		if ( $display_format != "grid" ) {
-			$item_info .= "+~+~+~+~+~+~+~+~+~+~+~+~+<br />";
+			//$item_info .= "+~+~+~+~+~+~+~+~+~+~+~+~+<br />";
 		}
 		
 		$info .= $item_info;
 		$info .= $item_ts_info;
+		
+		if ( $item_content ) {
+			// modal_content...
+			//<div id="dialog_content_contact_us" class="dialog dialog_content"></div>
+			$info .= '<div id="dialog_content_'.$dialog_id.'" class="dialog dialog_content">'.$item_content.'</div>';
+		}
 		
 	}
 	
