@@ -1151,6 +1151,7 @@ function birdhive_display_collection ( $a = array() ) {
 			// Get category name as title
 			$term = get_term( $term_id ); // $term = get_term( $term_id, $taxonomy );
 			$item_title = $term->name;
+			$item_url = get_term_link( $term_id) ;
 			//$item_arr['item_title'] = $item_title;
 			
 			// Get the taxonomy image, if any has been set
@@ -1169,9 +1170,6 @@ function birdhive_display_collection ( $a = array() ) {
 				$taxonomy_featured_image = get_post_meta( $term_id, 'taxonomy_featured_image', true );
 				if ( $taxonomy_featured_image ) { $image_id = $taxonomy_featured_image['ID']; }
 			}
-			// Build a URL, depending on which taxonomy is in play
-			//$item_url = ""; // tft
-			
 			// Event category
 			
 			// Posts category
