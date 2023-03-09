@@ -1218,9 +1218,9 @@ function birdhive_display_collection ( $a = array() ) {
 		
 		//if ( $item_url ) { $item_arr['item_url'] = $item_url; }
 		if ( $collection_id ) {
-			if ( isset($item['item_link_target'] ) { $item_link_target = $item['item_link_target']; }
+			if ( isset($item['item_link_target'] ) ) { $item_link_target = $item['item_link_target']; }
 		}
-		if ( !isset($item_link_target) ) { $link_target = ""; } else { $link_target = ' target="'.$item_link_target.'"'; }
+		if ( !isset($item_link_target) ) { $link_target = ""; $item_link_target = null; } else { $link_target = ' target="'.$item_link_target.'"'; }
 		
 		if ( $item_title ) {
 			if ( !empty($item_title) ) {
