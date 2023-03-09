@@ -1201,14 +1201,12 @@ function birdhive_display_collection ( $a = array() ) {
 			} 
 			//if ( $item_type == "link" ) { $link_target = $item['item_link_target']; }
 			
+			
 			// Item Image
 			$image_id = $item['item_image']['ID'];
 			
 			//$post_object = $item['post_object'];
-			//$item_arr['post_id'] = $post_id;
-			
 			/*
-			$post_object = $item['post_object'];
 			$item_text = $item['item_content'];
 			$media_file = $item['media_file'];
 			$event_category = $item['event_category'];
@@ -1219,13 +1217,10 @@ function birdhive_display_collection ( $a = array() ) {
 		}
 		
 		//if ( $item_url ) { $item_arr['item_url'] = $item_url; }
-		$item_link_target = $item['item_link_target'];
+		if ( $collection_id ) {
+			if ( isset($item['item_link_target'] ) { $item_link_target = $item['item_link_target']; }
+		}
 		if ( !isset($item_link_target) ) { $link_target = ""; } else { $link_target = ' target="'.$item_link_target.'"'; }
-		
-		/*if ( $item_type == "modal" || $item_link_target == "modal" ) {			
-			//<a id="dialog_handle_contact_us" class="dialog_handle" href="#!">
-			$dialog_id = ""; // tmp/wip
-		}*/
 		
 		if ( $item_title ) {
 			if ( !empty($item_title) ) {
