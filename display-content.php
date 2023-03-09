@@ -1032,7 +1032,7 @@ function birdhive_display_collection ( $a = array() ) {
 			$item_type = $item['item_type'];
 		}
 		
-		if ( $item_type != "post" && $item_type != "event_category" ) { $item_ts_info .= "item_type: ".$item_type."<br />"; }
+		$item_ts_info .= "<!-- item_type: ".$item_type." -->";
 		
 		// Some fields exist for content collection items ONLY, so set those directly from the item array
 		if ( !is_object($item) && isset($item['item_subtitle']) ) { $item_subtitle = $item['item_subtitle']; } else { $item_subtitle = ""; }
@@ -1183,6 +1183,9 @@ function birdhive_display_collection ( $a = array() ) {
 			$item_title = null;
 			$item_subtitle = null;
 			$image_url = null;
+			
+			$item_image = $item['item_image'];
+			$item_ts_info .= "item_image: ".print_r($item_image, true)."<br />";
 			
 			//$post_object = $item['post_object'];
 			//$item_arr['post_id'] = $post_id;
