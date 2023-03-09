@@ -1019,6 +1019,7 @@ function birdhive_display_collection ( $a = array() ) {
 		$item_info = "";
 		$item_ts_info = "";
 		$item_arr = array();
+		$image_id = null;
 		
 		//$item_ts_info .= "item: <pre>".print_r($item, true)."</pre>";
 		
@@ -1141,7 +1142,7 @@ function birdhive_display_collection ( $a = array() ) {
 			}
 			$item_arr['item_content'] = $item_text;
 		
-		} else if ( $item_type == "event_category" || $item_type == "category" ) {
+		} else if ( $item_type == "event_category" || $item_type == "post_category" ) {
 		
 			//$item_ts_info .= "item: <pre>".print_r($item, true)."</pre>";
 			
@@ -1259,8 +1260,8 @@ function birdhive_display_collection ( $a = array() ) {
 				$img_size = 'grid_crop_rectangle';
 			}			
 			//wp_get_attachment_image( int $attachment_id, string|int[] $size = 'thumbnail', bool $icon = false, string|array $attr = '' ): string
-			$img_attr = array ( 'sizes' => "(max-width: 600px) 100vw, 100vw" );
-			$item_image = wp_get_attachment_image( $image_id, $img_size, false, $img_attr );
+			//$img_attr = array ( 'sizes' => "(max-width: 600px) 100vw, 100vw" );
+			$item_image = wp_get_attachment_image( $image_id, $img_size, false ); //, $img_attr
 			//$item_image = '<img src="'.$image_url.'" alt="'.get_the_title($post_id).'" width="100%" height="100%" />';
 			if ( !empty($item_image) && !empty($item_url) ) { $item_image = '<a href="'.$item_url.'" rel="bookmark"'.$link_target.'>'.$item_image.'</a>'; }			
 		} else {
