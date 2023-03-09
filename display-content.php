@@ -1210,6 +1210,8 @@ function birdhive_display_collection ( $a = array() ) {
 		if ( empty($item_url) ) {
 			if ( $item_email = $item['item_email'] ) {
 				$item_url = "mailto:".$item_email;
+			} else {
+				$item_ts_info .= "No item_url or item_email link found.";
 			}
 		}
 		
