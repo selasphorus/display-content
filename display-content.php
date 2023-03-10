@@ -1202,7 +1202,10 @@ function birdhive_display_collection ( $a = array() ) {
 			
 			
 			// Item Image
-			$image_id = $item['item_image']['ID'];
+			if ( isset($item['item_image']) ) {
+				$image_id = $item['item_image']['id'];
+				$item_ts_info .= '<!-- item_image: '.print_r($item['item_image'], true)." -->"; // tft
+			}
 			
 			//$post_object = $item['post_object'];
 			/*
