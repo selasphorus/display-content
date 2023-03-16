@@ -1056,7 +1056,7 @@ function birdhive_display_collection ( $a = array() ) {
 			
 			// Item Title
 			// Check for title override set via collection
-			if ( $collection_id && isset($item['item_title']) ) { 
+			if ( $collection_id && isset($item['item_title']) && !is_empty($item['item_title']) ) { 
 				$item_title = $item['item_title'];
 			} else {
 				// If a short_title is set, use it. If not, use the post_title
