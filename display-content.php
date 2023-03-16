@@ -772,13 +772,8 @@ function display_post_item ( $item = array() ) {
 	
 	// Get/set item vars
 	$item_title = $item['item_title'];
-	//$item_url = $item['item_url'];
 	$item_image = $item['item_image'];
 	$item_text = $item['item_text'];
-	/*if ( isset($item['item_url']) ) { $item_url = $item['item_url']; } else { $item_url = null; }
-	if ( isset($item['item_title']) ) { $item_title = $item['item_title']; } else { $item_title = null; }
-	if ( isset($item['item_image']) ) { $item_image = $item['item_image']; } else { $item_image = null; }
-	if ( isset($item['item_text']) ) { $item_text = $item['item_text']; } else { $item_text = null; }*/
 	
 	// TODO: bring this more in alignment with theme template display? e.g. content-excerpt, content-sermon, content-event...
 	
@@ -898,11 +893,6 @@ function display_grid_item ( $item = array(), $display_atts = array(), $ts_info 
 	if ( isset($item['item_title']) ) { $item_title = $item['item_title']; } else { $item_title = null; }
 	if ( isset($item['item_subtitle']) ) { $item_subtitle = $item['item_subtitle']; } else { $item_subtitle = null; }
 	if ( isset($item['item_image']) ) { $item_image = $item['item_image']; } else { $item_image = null; }
-	/*$post_id = $item['post_id'];
-	$post_type = $item['post_type'];
-	$item_title = $item['item_title'];
-	//$item_url = $item['item_url'];
-	$item_image = $item['item_image'];*/
 	
 	// Get/set display vars
 	if ( isset($display_atts['spacing']) ) { $spacing = $display_atts['spacing']; } else { $spacing = ""; }
@@ -1065,9 +1055,14 @@ function birdhive_display_collection ( $a = array() ) {
 			$item_arr['post_type'] = $post_type;
 			
 			// Item Title
-			// If a short_title is set, use it. If not, use the post_title
-			$short_title = get_post_meta( $post_id, 'short_title', true );
-			if ( $short_title ) { $item_title = $short_title; } else { $item_title = get_the_title($post_id); }
+			// Check for title override set via collection
+			if ( $collection_id && isset($item['item_title']) ) { 
+				$item_title = $item['item_title'];
+			} else {
+				// If a short_title is set, use it. If not, use the post_title
+				$short_title = get_post_meta( $post_id, 'short_title', true );
+				if ( $short_title ) { $item_title = $short_title; } else { $item_title = get_the_title($post_id); }
+			}
 			
 			// Item URL
 			$item_url = get_the_permalink( $post_id );
