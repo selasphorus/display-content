@@ -1710,6 +1710,14 @@ function birdhive_get_posts ( $a = array() ) {
                         'value' => '"' . $series_id . '"', // matches exactly "123", not just 123. This prevents a match for "1234"
                         'compare' => 'LIKE'	
 					);
+			} else if ( post_type_exists('event') && $post_type == 'event' && $series_id ) {
+
+				$meta_query_components[] = 
+					array(
+						'key' => 'events_series',
+                        'value' => '"' . $series_id . '"', // matches exactly "123", not just 123. This prevents a match for "1234"
+                        'compare' => 'LIKE'	
+					);
 			}
 
 			if ( count($meta_query_components) > 1 ) {
