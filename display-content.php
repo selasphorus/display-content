@@ -1864,7 +1864,9 @@ function birdhive_display_posts ( $atts = [] ) { //function birdhive_display_pos
     $headers = $a['headers'];
     
     // Meta...
+    if ( $a['orderby'] == "event_start_date" ) { $a['orderby'] = "_event_start_date"; }
     if ( $a['meta_key'] == "event_start_date" ) { $a['meta_key'] = "_event_start_date"; }
+    
     // Clean up the array
     if ( $post_type !== "event" ) { unset($a["scope"]); }
     if ( $post_type !== "event" && $post_type !== "sermon" ) { unset($a["series"]); }
