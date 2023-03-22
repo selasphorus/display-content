@@ -1036,7 +1036,7 @@ function birdhive_display_collection ( $a = array() ) {
 			} else if ( isset($item['post_object']) ) {
 				$post = $item['post_object'][0];
 			}
-			$item_ts_info .= 'post: <pre>'.print_r($post, true).'</pre>'; // tft
+			$item_ts_info .= '<!-- post: <pre>'.print_r($post, true).'</pre> -->'; // tft
 			$post_type = $post->post_type;
 			
 			$item_ts_info .= '<!-- post_type: '.$post_type." -->";
