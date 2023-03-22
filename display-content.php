@@ -1844,6 +1844,7 @@ function birdhive_display_posts ( $atts = [] ) { //function birdhive_display_pos
         
     ), $atts );
     
+    //
     $post_type = $a['post_type'];
     $return_format = $a['return_format'];
     $class = $a['class'];
@@ -1862,6 +1863,8 @@ function birdhive_display_posts ( $atts = [] ) { //function birdhive_display_pos
     $fields = $a['fields'];
     $headers = $a['headers'];
     
+    // Meta...
+    if ( $a['meta_key'] == "event_start_date" ) { $a['meta_key'] = "_event_start_date"; }
     // Clean up the array
     if ( $post_type !== "event" ) { unset($a["scope"]); }
     if ( $post_type !== "event" && $post_type !== "sermon" ) { unset($a["series"]); }
@@ -1928,7 +1931,7 @@ function birdhive_display_posts ( $atts = [] ) { //function birdhive_display_pos
     }
     */
     
-    if ( $a ) { $ts_info .= 'shortcode_atts as passed to birdhive_get_posts: <pre>'.print_r($a, true).'</pre>'; } // tft
+    //if ( $a ) { $ts_info .= 'shortcode_atts as passed to birdhive_get_posts: <pre>'.print_r($a, true).'</pre>'; } // tft
     	
 	$posts_info = birdhive_get_posts( $a );
 	$posts = $posts_info['arr_posts']->posts; // Retrieves an array of WP_Post Objects
