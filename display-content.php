@@ -1873,6 +1873,8 @@ function birdhive_display_posts ( $atts = [] ) { //function birdhive_display_pos
         $return_format = "links"; // default
     }
     
+    // WIP: version that searches events differently using native EM get fcn
+    /*
     // Retrieve an array of posts matching the args supplied    
     if ( post_type_exists('event') && $post_type == 'event' ) {
     
@@ -1924,7 +1926,15 @@ function birdhive_display_posts ( $atts = [] ) { //function birdhive_display_pos
         $info .= $posts_info['info'];
         $ts_info .= $posts_info['troubleshooting'];
     }
+    */
     
+    if ( $a ) { $ts_info .= 'shortcode_atts as passed to birdhive_get_posts: <pre>'.print_r($a, true).'</pre>'; } // tft
+    	
+	$posts_info = birdhive_get_posts( $a );
+	$posts = $posts_info['arr_posts']->posts; // Retrieves an array of WP_Post Objects
+	$info .= $posts_info['info'];
+	$ts_info .= $posts_info['troubleshooting'];
+        
     if ( $posts ) {
         
         $ts_info .= '<pre>'.print_r($posts, true).'</pre>'; // tft
