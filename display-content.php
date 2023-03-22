@@ -1039,13 +1039,15 @@ function birdhive_display_collection ( $a = array() ) {
 			//$item_ts_info .= 'post: <pre>'.print_r($post, true).'</pre>'; // tft
 			$post_type = $post->post_type;
 			
+			$item_ts_info .= '<!-- post_type: '.$post_type." -->";
+			
 			//$item_ts_info .= 'item: <pre>'.print_r($item, true).'</pre>'; // tft
 			//$post_type = get_post_type($post_id);
 			//$item_ts_info .= '<pre>'.print_r($post, true).'</pre>'; // tft
 			
 			if ( post_type_exists('event') && $post_type == 'event' ) {
 				$post_id = $post->post_id;
-				$item_ts_info .= '<!-- Event post_id: '.$post_id." -->"; // tft
+				$item_ts_info .= '<!-- Event post_id: '.$post_id." -->";
 			} else {
 				$post_id = $post->ID;
 				$item_ts_info .= '<!-- '.$post_type.' => post_id: '.$post_id." -->"; // tft
