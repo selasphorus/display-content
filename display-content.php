@@ -1895,7 +1895,7 @@ function birdhive_display_posts ( $atts = [] ) { //function birdhive_display_pos
     
     // Retrieve an array of posts matching the args supplied  
     // Use EM get if no series is set  
-    if ( post_type_exists('event') && $post_type == 'event' && !empty($a['series'] ) {
+    if ( post_type_exists('event') && $post_type == 'event' && empty($a['series']) ) {
     
     	// TODO: check to see if EM plugin is installed and active?
         // TODO: deal w/ taxonomy parameters -- how to translate these properly for EM?
