@@ -1876,6 +1876,7 @@ function birdhive_display_posts ( $atts = [] ) { //function birdhive_display_pos
     if ( $a['meta_key'] == "event_start_date" ) { $a['meta_key'] = "_event_start_date"; }
     // 'category' applies to pages and posts only, but it's an easy mistake to use that attribute for events too => correct for that possibility
     // NB we'll only do this if not searching for events in a series, because in that case we're running a non-EM get
+    // TODO: clean this all up...
     if ( isset($a['category']) && $post_type == "event" && !empty($a['series']) ) {
     	if ( !isset($a['taxonomy']) ) { $a['taxonomy'] = "event-categories"; $a['tax_terms'] = $a['category']; unset($a["category"]); }
     }
@@ -1891,16 +1892,15 @@ function birdhive_display_posts ( $atts = [] ) { //function birdhive_display_pos
         $return_format = "links"; // default
     }
     
-    // WIP: version that searches events differently using native EM get fcn
-    
-    // Retrieve an array of posts matching the args supplied  
-    // Use EM get if no series is set  
+    // Retrieve an array of posts matching the args supplied
     if ( post_type_exists('event') && $post_type == 'event' && empty($a['series']) ) {
     
+    	// Use EM get if no series is set  
+    	
     	// TODO: check to see if EM plugin is installed and active?
         // TODO: deal w/ taxonomy parameters -- how to translate these properly for EM?
         
-        // Unset args irrelevant to EM search attributes
+        // Unset args irrelevant to EM search attributes -- ??
         //unset($a["meta_key"]); unset($a["meta_value"]); unset($a["name"]); unset($a["taxonomy"]); unset($a["tax_terms"]); unset($a["return_format"]); unset($a["cols"]); unset($a["return_format"]);
         
         // Create array of args relevant to EM search attributes
@@ -1910,8 +1910,6 @@ function birdhive_display_posts ( $atts = [] ) { //function birdhive_display_pos
         $em_args['orderby'] = $a['orderby'];
         $em_args['category'] = $a['category'];
         $em_args['scope'] = $a['scope'];
-        //$em_args['limit'] = $a['limit'];
-        //$em_args['limit'] = $a['limit'];
         
         // Posts by ID -- translate to fit EM search attributes (https://wp-events-plugin.com/documentation/event-search-attributes/)
 		if ( isset($a['ids']) && !empty($a['ids']) ) {
@@ -1948,19 +1946,10 @@ function birdhive_display_posts ( $atts = [] ) { //function birdhive_display_pos
         $ts_info .= $posts_info['troubleshooting'];
     }
     
-    //if ( $a ) { $ts_info .= 'shortcode_atts as passed to birdhive_get_posts: <pre>'.print_r($a, true).'</pre>'; } // tft
-    /*	
-	$posts_info = birdhive_get_posts( $a );
-	$posts = $posts_info['arr_posts']->posts; // Retrieves an array of WP_Post Objects
-	$info .= $posts_info['info'];
-	$ts_info .= $posts_info['troubleshooting'];
-    */
-    
     if ( $posts ) {
         
         $ts_info .= '<pre>'.print_r($posts, true).'</pre>'; // tft
         
-        // WIP 02/23
 		//if ($a['header'] == 'true') { $info .= '<h3>Latest '.$category.' Articles:</h3>'; } // WIP
 		$info .= '<div class="dc-posts">';        
         $display_args = array( 'content_type' => 'posts', 'display_format' => $return_format, 'items' => $posts, 'arr_dpatts' => $a );
