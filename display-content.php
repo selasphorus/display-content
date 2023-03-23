@@ -1875,7 +1875,8 @@ function birdhive_display_posts ( $atts = [] ) { //function birdhive_display_pos
     if ( $a['orderby'] == "event_start_date" ) { $a['orderby'] = "_event_start_date"; }
     if ( $a['meta_key'] == "event_start_date" ) { $a['meta_key'] = "_event_start_date"; }
     // 'category' applies to pages and posts only, but it's an easy mistake to use that attribute for events too => correct for that possibility
-    if ( isset($a['category']) && $post_type == "event" ) {
+    // NB we'll only do this if not searching for events in a series, because in that case we're running a non-EM get
+    if ( isset($a['category']) && $post_type == "event" && empty($a['series']) ) {
     	if ( !isset($a['taxonomy']) ) { $a['taxonomy'] = "event-categories"; $a['tax_terms'] = $a['category']; unset($a["category"]); }
     }
     
@@ -1891,9 +1892,10 @@ function birdhive_display_posts ( $atts = [] ) { //function birdhive_display_pos
     }
     
     // WIP: version that searches events differently using native EM get fcn
-    /*
-    // Retrieve an array of posts matching the args supplied    
-    if ( post_type_exists('event') && $post_type == 'event' ) {
+    
+    // Retrieve an array of posts matching the args supplied  
+    // Use EM get if no series is set  
+    if ( post_type_exists('event') && $post_type == 'event' && !empty($a['series'] ) {
     
     	// TODO: check to see if EM plugin is installed and active?
         // TODO: deal w/ taxonomy parameters -- how to translate these properly for EM?
@@ -1934,24 +1936,26 @@ function birdhive_display_posts ( $atts = [] ) { //function birdhive_display_pos
     
     } else {
     	
-    	// NOT events
+    	// NOT events -- or: events in a series
     	
     	if ( $a ) { $ts_info .= 'shortcode_atts as passed to birdhive_get_posts: <pre>'.print_r($a, true).'</pre>'; } // tft
+    	
+    	// TODO: deal w/ events scope even if searching for series?
     	
         $posts_info = birdhive_get_posts( $a );
         $posts = $posts_info['arr_posts']->posts; // Retrieves an array of WP_Post Objects
         $info .= $posts_info['info'];
         $ts_info .= $posts_info['troubleshooting'];
     }
-    */
     
     //if ( $a ) { $ts_info .= 'shortcode_atts as passed to birdhive_get_posts: <pre>'.print_r($a, true).'</pre>'; } // tft
-    	
+    /*	
 	$posts_info = birdhive_get_posts( $a );
 	$posts = $posts_info['arr_posts']->posts; // Retrieves an array of WP_Post Objects
 	$info .= $posts_info['info'];
 	$ts_info .= $posts_info['troubleshooting'];
-        
+    */
+    
     if ( $posts ) {
         
         $ts_info .= '<pre>'.print_r($posts, true).'</pre>'; // tft
