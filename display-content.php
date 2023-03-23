@@ -1872,13 +1872,14 @@ function birdhive_display_posts ( $atts = [] ) { //function birdhive_display_pos
     $headers = $a['headers'];
     
     // Meta...
-    if ( $a['orderby'] == "event_start_date" ) { $a['orderby'] = "_event_start_date"; }
-    if ( $a['meta_key'] == "event_start_date" ) { $a['meta_key'] = "_event_start_date"; }
+    
     // 'category' applies to pages and posts only, but it's an easy mistake to use that attribute for events too => correct for that possibility
     // NB we'll only do this if not searching for events in a series, because in that case we're running a non-EM get
     // TODO: clean this all up...
-    if ( isset($a['category']) && $post_type == "event" && !empty($a['series']) ) {
-    	if ( !isset($a['taxonomy']) ) { $a['taxonomy'] = "event-categories"; $a['tax_terms'] = $a['category']; unset($a["category"]); }
+    if ( $post_type == "event" && !empty($a['series']) ) {
+    	if ( $a['orderby'] == "event_start_date" ) { $a['orderby'] = "_event_start_date"; }
+    	if ( $a['meta_key'] == "event_start_date" ) { $a['meta_key'] = "_event_start_date"; }
+    	if ( isset($a['category']) &&  !isset($a['taxonomy']) ) { $a['taxonomy'] = "event-categories"; $a['tax_terms'] = $a['category']; unset($a["category"]); }
     }
     
     // Clean up the array
