@@ -780,6 +780,7 @@ function display_post_item ( $item = array() ) {
 	$info .= '<article id="post-'.$post_id.'">'; // post_class()
 	$info .= '<header class="entry-header">';
 	$info .= '<h2 class="entry-title">'.$item_title.'</h2>';
+	// TODO: add subtitle?
 	$info .= '</header><!-- .entry-header -->';
 	$info .= '<div class="entry-content">';
 	if ( $item_image ) { $info .= $item_image; } //if ( $show_images ) { $info .= $item_image; }
@@ -1949,7 +1950,7 @@ function birdhive_display_posts ( $atts = [] ) { //function birdhive_display_pos
     
     if ( $posts ) {
         
-        $ts_info .= '<pre>'.print_r($posts, true).'</pre>'; // tft
+        //$ts_info .= '<pre>'.print_r($posts, true).'</pre>'; // tft
         
 		//if ($a['header'] == 'true') { $info .= '<h3>Latest '.$category.' Articles:</h3>'; } // WIP
 		$info .= '<div class="dc-posts">';        
