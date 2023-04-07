@@ -1611,7 +1611,14 @@ function birdhive_get_posts ( $a = array() ) {
                 ) );
                 */
             } else {
-                $args['orderby'] = $a['orderby'];
+            
+            	if ( is_array($a['orderby']) ) {
+            		$args['meta_key'] = $a['orderby'];
+            		$args['orderby'] = $a['meta_key'];
+            	} else {
+            		$args['orderby'] = $a['orderby'];
+            	}
+            	                
             }
 
         }
