@@ -1574,7 +1574,8 @@ function birdhive_get_posts ( $a = array() ) {
         if ( isset($a['orderby']) ) {
 
 			if (strpos($a['orderby'], ',') !== false) {
-				$a['orderby'] = birdhive_att_explode( $a['orderby'] );
+				$a['orderby'] = str_replace(","," ",$a['orderby']);
+				//$a['orderby'] = birdhive_att_explode( $a['orderby'] );
 			}
 			
             $standard_orderby_values = array( 'none', 'ID', 'author', 'title', 'name', 'type', 'date', 'modified', 'parent', 'rand', 'comment_count', 'relevance', 'menu_order', 'meta_value', 'meta_value_num', 'post__in', 'post_name__in', 'post_parent__in' );
