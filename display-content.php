@@ -1621,8 +1621,8 @@ function birdhive_get_posts ( $a = array() ) {
             			if ( in_array( $orderer, $standard_orderby_values ) ) {
 							$orderby .= $orderer.",";
 						} else {
-							$args['meta_key'] = $a['orderby'];
-							$args['orderby'] = $a['meta_key'];
+							$args['meta_key'] = $orderer;
+							$args['orderby'] = 'meta_key';
 						}
             		}
             		// TODO: deal w/ possibility of meta_key/value pair AND a standard orderby val...
