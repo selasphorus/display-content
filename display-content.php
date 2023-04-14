@@ -1623,12 +1623,12 @@ function birdhive_get_posts ( $a = array() ) {
                 */
             } else {
             
-            	$orderby = "";
+            	$orderby = array();
             		
 				foreach ( $a['orderby'] as $k => $v ) {
 					$v = trim($v);
 					if ( in_array( $k, $standard_orderby_values ) && ($v == "ASC" || $v == "DESC") ) {
-						$orderby .= $k." ".$v.",";
+						$orderby[$k] = $v;
 					} else {
 						$args['meta_key'] = $orderer;
 						$args['orderby'] = 'meta_key';
@@ -1636,7 +1636,6 @@ function birdhive_get_posts ( $a = array() ) {
 				}
 				// TODO: deal w/ possibility of meta_key/value pair AND a standard orderby val...
 				if ( empty($args['orderby']) && !empty( $orderby )) {
-					$orderby = substr($orderby, 0, -1); // trim trailing comma, if any
 					$args['orderby'] = $orderby;
 				}
 				
