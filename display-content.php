@@ -1572,6 +1572,8 @@ function birdhive_get_posts ( $a = array() ) {
         
         // Orderby
         if ( isset($a['orderby']) ) {
+        
+        	$ts_info .= "orderby: ".print_r($a['orderby'], true);
 
 			if ( !is_array($a['orderby']) && strpos($a['orderby'], ',') !== false) {
 				$a['orderby'] = str_replace(","," ",$a['orderby']);
