@@ -1573,7 +1573,7 @@ function birdhive_get_posts ( $a = array() ) {
         // Orderby
         if ( isset($a['orderby']) ) {
 
-			if (strpos($a['orderby'], ',') !== false) {
+			if ( !is_array($a['orderby']) && strpos($a['orderby'], ',') !== false) {
 				$a['orderby'] = str_replace(","," ",$a['orderby']);
 				//$a['orderby'] = birdhive_att_explode( $a['orderby'] );
 			}
