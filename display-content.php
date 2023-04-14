@@ -1585,14 +1585,22 @@ function birdhive_get_posts ( $a = array() ) {
             // TODO: set default orderby per post_type(?)
             
             // determine if orderby is actually meta_value or meta_value_num with orderby $a value to be used as meta_key
-            if ( !is_array($a['orderby']) && !in_array( $a['orderby'], $standard_orderby_values) ) {
-                // TODO: determine whether to sort meta values as numbers or as text
-                if (strpos($a['orderby'], 'num') !== false) {
-                    $args['orderby'] = 'meta_value_num'; // or meta_value?
+            if ( !is_array($a['orderby']) ) {
+                
+                if ( !in_array( $a['orderby'], $standard_orderby_values) ) {
+                	
+                	// TODO: determine whether to sort meta values as numbers or as text
+					if (strpos($a['orderby'], 'num') !== false) {
+						$args['orderby'] = 'meta_value_num'; // or meta_value?
+					} else {
+						$args['orderby'] = 'meta_value';
+					}
+					$args['meta_key'] = $a['orderby'];
+                
                 } else {
-                    $args['orderby'] = 'meta_value';
+                	$args['orderby'] = $a['orderby'];
                 }
-                $args['meta_key'] = $a['orderby'];
+                
                 
                 /* //TODO: consider naming meta_query sub-clauses, as per the following example:
                 $q = new WP_Query( array(
@@ -1615,29 +1623,24 @@ function birdhive_get_posts ( $a = array() ) {
                 */
             } else {
             
-            	if ( is_array($a['orderby']) ) {
+            	$orderby = "";
             		
-            		$orderby = "";
-            		
-            		foreach ( $a['orderby'] as $orderer ) {
-            			if ( in_array( $orderer, $standard_orderby_values ) ) {
-							$orderby .= $orderer.",";
-						} else {
-							$args['meta_key'] = $orderer;
-							$args['orderby'] = 'meta_key';
-						}
-            		}
-            		// TODO: deal w/ possibility of meta_key/value pair AND a standard orderby val...
-            		if ( empty($args['orderby']) && !empty( $orderby )) {
-            			$orderby = substr($orderby, 0, -1); // trim trailing comma, if any
-            			$args['orderby'] = $orderby;
-            		}
-            		
-            	} else {
-            		$args['orderby'] = $a['orderby'];
-            	}
-            	                
-            }
+				foreach ( $a['orderby'] as $k => $v ) {
+					$v = trim($v);
+					if ( in_array( $k, $standard_orderby_values ) && ($v == "ASC" || $v == "DESC") ) {
+						$orderby .= $k." ".$v.",";
+					} else {
+						$args['meta_key'] = $orderer;
+						$args['orderby'] = 'meta_key';
+					}
+				}
+				// TODO: deal w/ possibility of meta_key/value pair AND a standard orderby val...
+				if ( empty($args['orderby']) && !empty( $orderby )) {
+					$orderby = substr($orderby, 0, -1); // trim trailing comma, if any
+					$args['orderby'] = $orderby;
+				}
+				
+			}
 
         }
         
