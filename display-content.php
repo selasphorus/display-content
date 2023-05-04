@@ -887,7 +887,7 @@ function birdhive_display_collection ( $a = array() ) {
 				if ( $short_title ) { 
 					$item_title = $short_title;
 				} else if ( function_exists( 'sdg_post_title' ) ) {
-					$title_args = array( 'post' => $post_id, 'line_breaks' => true, 'show_subtitle' => true, 'echo' => false, 'hlevel_sub' => 3 );
+					$title_args = array( 'post' => $post_id, 'line_breaks' => true, 'show_subtitle' => true, 'echo' => false, 'hlevel' => 0, 'hlevel_sub' => 0 );
 					$item_title = sdg_post_title( $title_args );
 				} else {
 					$item_title = get_the_title($post_id);
