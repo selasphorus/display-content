@@ -643,7 +643,7 @@ function display_table_row ( $item = array(), $fields = array() ) {
 						if ( is_numeric($field_value[0]) ) {
 							// Get post_title
 							if ( function_exists( 'sdg_post_title' ) ) {
-								$title_args = array( 'post' => $field_value[0], 'line_breaks' => true, 'show_subtitle' => true, 'echo' => false, 'hlevel_sub' => 3 );
+								$title_args = array( 'post' => $field_value[0], 'line_breaks' => true, 'show_subtitle' => true, 'echo' => false, 'hlevel' => 0, 'hlevel_sub' => 0 );
 								$field_value = sdg_post_title( $title_args );
 							} else {
 								$field_value = get_the_title($field_value[0]);
@@ -908,14 +908,15 @@ function birdhive_display_collection ( $a = array() ) {
 			// No collection image? Then look for a image via the post record
 			if ( ! $image_id ) {
 			
+				// WIP
 				if ( $aspect_ratio == "square" ) {
-					$image_id = "";
-					//$image_url = "/wp-content/uploads/woocommerce-placeholder-250x250.png"; // Default/placeholder
+					$img_size = "rect..."; //$img_size = array( 250, 250);
 				} else {
-					$image_id = "";
-					// TODO: create/set rectangular placeholder
+					$img_size = "rect...";
 				}
+				$image_id = sdg_post_thumbnail ( $post_id, $img_size, true, false, "id" ); //sdg_post_thumbnail ( $post_id, $img_size, $use_custom_thumb, $echo )
 				
+				/*
 				// First, check to see if the post has a Custom Thumbnail
 				$custom_thumb_id = get_post_meta( $post_id, 'custom_thumb', true );
 				
@@ -949,7 +950,8 @@ function birdhive_display_collection ( $a = array() ) {
 								//$image_url = wp_get_attachment_image_url( $first_image['id'], 'medium' );
 							}
 						}			
-					}		
+					}
+					*/
 				}
 		
 			}
@@ -2606,7 +2608,7 @@ function birdhive_search_form ($atts = [], $content = null, $tag = '') {
                                         $options[$id] = $option_name;
                                         // TODO: deal w/ possibility that last_name, first_name fields are empty
                                     } else if ( function_exists( 'sdg_post_title' ) ) {
-										$title_args = array( 'post' => $post_id, 'line_breaks' => true, 'show_subtitle' => true, 'echo' => false, 'hlevel_sub' => 3 );
+										$title_args = array( 'post' => $post_id, 'line_breaks' => true, 'show_subtitle' => true, 'echo' => false, 'hlevel' => 0, 'hlevel_sub' => 0 );
 										$options[$id] = sdg_post_title( $title_args );
 									} else {
 										$options[$id] = get_the_title($id);
