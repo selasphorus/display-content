@@ -915,6 +915,7 @@ function birdhive_display_collection ( $a = array() ) {
 					$img_size = "rect...";
 				}*/
 				$img_size = array( 250, 250); // tft
+				$item_ts_info .= "Attempting to retrieve image_id using sdg_post_thumbnail fcn...";
 				$image_id = sdg_post_thumbnail ( $post_id, $img_size, true, false, "id" ); //sdg_post_thumbnail ( $post_id, $img_size, $use_custom_thumb, $echo )
 				
 				/*
