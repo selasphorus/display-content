@@ -907,55 +907,8 @@ function birdhive_display_collection ( $a = array() ) {
 			
 			// No collection image? Then look for a image via the post record
 			if ( ! $image_id ) {
-			
-				// WIP
-				if ( $aspect_ratio == "square" ) {
-					$img_size = "grid_crop_square";
-				} else {
-					$img_size = "grid_crop_rectangle";
-				}
-				$item_ts_info .= '<!-- aspect_ratio: '.$aspect_ratio.' -->'; // tft
-				$item_ts_info .= '<!-- img_size: '.$img_size.' -->'; // tft
-				$image_id = sdg_post_thumbnail ( $post_id, $img_size, true, false, "id" ); //sdg_post_thumbnail ( $post_id, $img_size, $use_custom_thumb, $echo, $return )
-				$item_ts_info .= '<!-- sdg_post_thumbnail: image_id: '.$image_id.' -->'; // tft
-				/*
-				// First, check to see if the post has a Custom Thumbnail
-				$custom_thumb_id = get_post_meta( $post_id, 'custom_thumb', true );
-				
-				if ( $custom_thumb_id ) {
-					$image_id = $custom_thumb_id;
-					//$image_url = wp_get_attachment_image_url( $custom_thumb_id, 'medium' ); 
-					//$item_image = wp_get_attachment_image( $custom_thumb_id, 'medium', false, array( "class" => "custom_thumb" ) );
-					//$post_info .= "custom_thumb_id: $custom_thumb_id<br />"; // tft
-		
-				} else {
-		
-					// No custom_thumb? Then retrieve the url for the full size featured image, if any
-					if ( has_post_thumbnail( $post_id ) ) {
-			
-						$image_id = get_post_thumbnail_id( $post_id );
-						//$image_url = get_the_post_thumbnail_url( $post_id, 'medium');
-						//$item_image = birdhive_post_thumbnail($post_id,'thumbnail',false,false); // function birdhive_post_thumbnail( $post_id = null, $img_size = "thumbnail", $use_custom_thumb = false, $echo = true )
-			
-					} else { 
-			
-						// If there's no featured image, look for an image in the post content
-			
-						$first_image = get_first_image_from_post_content( $post_id );
-						if ( $first_image && !empty($first_image['id']) ) {
-				
-							$first_img_src = wp_get_attachment_image_src( $first_image['id'], 'full' );
-				
-							// If the image found is large enough, display it in the grid
-							if ( $first_img_src[1] > 300 && $first_img_src[2] > 300 ) {
-								$image_id = $first_image['id'];
-								//$image_url = wp_get_attachment_image_url( $first_image['id'], 'medium' );
-							}
-						}			
-					}
-				}
-				*/
-		
+				$image_id = sdg_post_thumbnail ( $post_id, '', true, false, "id" ); //sdg_post_thumbnail ( $post_id, $img_size, $use_custom_thumb, $echo, $return )
+				$item_ts_info .= '<!-- sdg_post_thumbnail: image_id: '.$image_id.' -->'; // tft		
 			}
 			
 			// END IMAGES WIP
