@@ -951,8 +951,8 @@ function birdhive_display_collection ( $a = array() ) {
 							}
 						}			
 					}
-					*/
 				}
+				*/
 		
 			}
 			
