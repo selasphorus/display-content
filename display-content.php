@@ -1084,7 +1084,7 @@ function birdhive_display_collection ( $a = array() ) {
 		
 		if ( !empty($image_id) ) {
 		
-			$item_ts_info .= '<!-- image_id: '.$image_id." -->"; // tft
+			$item_ts_info .= '<!-- image_id: '.$image_id.' -->'; // tft
 			
 			if ( $aspect_ratio == "square" ) {
 				$img_size = 'grid_crop_square';
@@ -1099,7 +1099,10 @@ function birdhive_display_collection ( $a = array() ) {
 			if ( !empty($item_image) && !empty($item_url) ) { $item_image = '<a href="'.$item_url.'" rel="bookmark"'.$link_target.'>'.$item_image.'</a>'; }
 				
 		} else {
+		
+			$item_ts_info .= '<!-- image_id NOT FOUND -->'; // tft
 			$item_image = "";
+			
 		}
 		$item_arr['item_image'] = $item_image;
 		
