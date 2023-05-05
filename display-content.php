@@ -907,6 +907,12 @@ function birdhive_display_collection ( $a = array() ) {
 			
 			// No collection image? Then look for a image via the post record
 			if ( ! $image_id ) {
+				// WIP
+				if ( $aspect_ratio == "square" ) {
+					$img_size = "grid_crop_square";
+				} else {
+					$img_size = "grid_crop_rectangle";
+				}
 				$image_id = sdg_post_thumbnail ( $post_id, '', true, false, "id" ); //sdg_post_thumbnail ( $post_id, $img_size, $use_custom_thumb, $echo, $return )
 				$item_ts_info .= '<!-- sdg_post_thumbnail: image_id: '.$image_id.' -->'; // tft		
 			}
@@ -1042,7 +1048,7 @@ function birdhive_display_collection ( $a = array() ) {
 			$item_ts_info .= '<!-- image_id: '.$image_id.' -->'; // tft
 			
 			if ( $aspect_ratio == "square" ) {
-				$img_size = "grid_crop_square";
+				$img_size = "medium"; //$img_size = "grid_crop_square";
 			} else {
 				$img_size = "grid_crop_rectangle";
 			}
