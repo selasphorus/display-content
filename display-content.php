@@ -914,6 +914,7 @@ function birdhive_display_collection ( $a = array() ) {
 				} else {
 					$img_size = "rect...";
 				}*/
+				$item_ts_info .= '<!-- aspect_ratio: '.$aspect_ratio.' -->'; // tft
 				$img_size = array( 250, 250); // tft
 				//$item_ts_info .= "<!-- Attempting to retrieve image_id using sdg_post_thumbnail fcn...-->";
 				//$tmp = sdg_post_thumbnail ( $post_id, $img_size, true, false );
