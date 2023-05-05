@@ -909,11 +909,12 @@ function birdhive_display_collection ( $a = array() ) {
 			if ( ! $image_id ) {
 			
 				// WIP
-				if ( $aspect_ratio == "square" ) {
+				/*if ( $aspect_ratio == "square" ) {
 					$img_size = "rect..."; //$img_size = array( 250, 250);
 				} else {
 					$img_size = "rect...";
-				}
+				}*/
+				$img_size = array( 250, 250); // tft
 				$image_id = sdg_post_thumbnail ( $post_id, $img_size, true, false, "id" ); //sdg_post_thumbnail ( $post_id, $img_size, $use_custom_thumb, $echo )
 				
 				/*
