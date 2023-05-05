@@ -917,7 +917,7 @@ function birdhive_display_collection ( $a = array() ) {
 				$item_ts_info .= '<!-- aspect_ratio: '.$aspect_ratio.' -->'; // tft
 				$item_ts_info .= '<!-- img_size: '.$img_size.' -->'; // tft
 				$image_id = sdg_post_thumbnail ( $post_id, $img_size, true, false, "id" ); //sdg_post_thumbnail ( $post_id, $img_size, $use_custom_thumb, $echo, $return )
-				
+				$item_ts_info .= '<!-- sdg_post_thumbnail: image_id: '.$image_id.' -->'; // tft
 				/*
 				// First, check to see if the post has a Custom Thumbnail
 				$custom_thumb_id = get_post_meta( $post_id, 'custom_thumb', true );
