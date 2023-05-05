@@ -909,7 +909,7 @@ function birdhive_display_collection ( $a = array() ) {
 			if ( ! $image_id ) {
 			
 				// WIP
-				/if ( $aspect_ratio == "square" ) {
+				if ( $aspect_ratio == "square" ) {
 					$img_size = "grid_crop_square";
 				} else {
 					$img_size = "grid_crop_rectangle";
