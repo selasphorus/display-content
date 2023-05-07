@@ -1183,8 +1183,7 @@ function collection_header ( $display_format = null, $fields = null, $num_cols =
 		$info .= '<div class="flex-container '.$colclass.' '.$aspect_ratio.'">';
 	
 	} else {
-	
-		$info .= 'display_format '.$display_format.' not matched<br />';
+		$info .= '<!-- display_format '.$display_format.' not matched -->';
 	}
 	
 	return $info;
