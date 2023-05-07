@@ -913,7 +913,9 @@ function birdhive_display_collection ( $a = array() ) {
 				} else {
 					$img_size = "grid_crop_rectangle";
 				}
-				$image_id = sdg_post_thumbnail ( $post_id, '', true, false, "id" ); //sdg_post_thumbnail ( $post_id, $img_size, $use_custom_thumb, $echo, $return )
+				$img_args = array( 'post_id' => $post_id, 'img_size' => $img_size, 'sources' => "all", 'echo' => false );
+        		$image_id = sdg_post_thumbnail ( $img_args );
+				//$image_id = sdg_post_thumbnail ( $post_id, '', true, false, "id" ); //sdg_post_thumbnail ( $post_id, $img_size, $use_custom_thumb, $echo, $return )
 				$item_ts_info .= '<!-- sdg_post_thumbnail: image_id: '.$image_id.' -->'; // tft		
 			}
 			
