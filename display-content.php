@@ -903,7 +903,12 @@ function birdhive_display_collection ( $a = array() ) {
 			// Item Image
 			
 			// If this is a post via a collection, check to see if there's an image override
-			if ( $collection_id && isset($item['item_image']['id']) ) { $image_id = $item['item_image']['id']; } else { $image_id = null; }
+			if ( $collection_id && isset($item['item_image']) ) {
+				$item_ts_info .= '<!-- item_image: <pre>'.print_r($item['item_image'], true).'</pre> -->'; // tft
+				//$image_id = $item['item_image']['id'];
+			} else { 
+				$image_id = null;
+			}
 			
 			// No collection image? Then look for a image via the post record
 			if ( ! $image_id ) {
@@ -982,7 +987,7 @@ function birdhive_display_collection ( $a = array() ) {
 			// Item URL
 			if ( $item_type == "page_link" ) {
 				$item_url = $item['page_link'];
-				//$item_ts_info .= 'page_link item: <pre>'.print_r($item, true).'</pre>'; // tft
+				//$item_ts_info .= '<!-- page_link item: <pre>'.print_r($item, true).'</pre> -->'; // tft
 			} else {
 				$item_url = $item['item_url'];
 			}
