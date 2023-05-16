@@ -898,14 +898,11 @@ function birdhive_display_collection ( $a = array() ) {
 			$item_url = get_the_permalink( $post_id );
 			
 			// +~+~+~+~+~+~+~+~+~+~+~+~+~+~+~+~+~+~+~+~+~+~+~+
-			// IMAGES -- WIP
-			
 			// Item Image
 			
 			// If this is a post via a collection, check to see if there's an image override
 			if ( $collection_id && isset($item['item_image']) ) {
-				$item_ts_info .= '<!-- item_image: <pre>'.print_r($item['item_image'], true).'</pre> -->'; // tft
-				//$image_id = $item['item_image']['id'];
+				$image_id = $item['item_image'];
 			} else { 
 				$image_id = null;
 			}
@@ -922,8 +919,6 @@ function birdhive_display_collection ( $a = array() ) {
         		$image_id = sdg_post_thumbnail ( $img_args );
 				$item_ts_info .= '<!-- DC sdg_post_thumbnail: image_id: '.$image_id.' -->'; // tft		
 			}
-			
-			// END IMAGES WIP
 			// +~+~+~+~+~+~+~+~+~+~+~+~+~+~+~+~+~+~+~+~+~+~+~+
 			
 			// Item Excerpt/Text
