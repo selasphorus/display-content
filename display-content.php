@@ -1014,11 +1014,12 @@ function birdhive_display_collection ( $a = array() ) {
 		
 		// Set Link Target
 		$item_link_target = null; // init
+		$link_target = ""; // init
 		if ( $collection_id && isset($item['item_link_target'] ) ) {
 			$item_link_target = $item['item_link_target'];
 			$item_ts_info .= '<!-- item_link_target: '.$item_link_target.' -->'; // tft
 		}
-		if ( !empty($item_link_target) ) { $link_target = ""; } else { $link_target = ' target="'.$item_link_target.'"'; }
+		if ( !empty($item_link_target) ) { $link_target = ' target="'.$item_link_target.'"'; }
 		$item_ts_info .= '<!-- link_target: '.$link_target.' -->'; // tft
 		
 		if ( $item_title ) {
