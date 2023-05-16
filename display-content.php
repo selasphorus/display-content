@@ -991,8 +991,7 @@ function birdhive_display_collection ( $a = array() ) {
 				if ( !empty($item_email) ) {
 					$item_url = "mailto:".$item_email;
 				}
-			} 
-			//if ( $item_type == "link" ) { $link_target = $item['item_link_target']; }
+			}
 			
 			
 			// Item Image
@@ -1013,11 +1012,14 @@ function birdhive_display_collection ( $a = array() ) {
 						
 		}
 		
-		//if ( $item_url ) { $item_arr['item_url'] = $item_url; }
-		if ( $collection_id ) {
-			if ( isset($item['item_link_target'] ) ) { $item_link_target = $item['item_link_target']; }
+		// Set Link Target
+		$item_link_target = null; // init
+		if ( $collection_id && isset($item['item_link_target'] ) ) {
+			$item_link_target = $item['item_link_target'];
+			$item_ts_info .= '<!-- item_link_target: '.$item_link_target.' -->'; // tft
 		}
-		if ( !isset($item_link_target) ) { $link_target = ""; $item_link_target = null; } else { $link_target = ' target="'.$item_link_target.'"'; }
+		if ( !empty($item_link_target) ) { $link_target = ""; } else { $link_target = ' target="'.$item_link_target.'"'; }
+		$item_ts_info .= '<!-- link_target: '.$link_target.' -->'; // tft
 		
 		if ( $item_title ) {
 			if ( !empty($item_title) ) {
