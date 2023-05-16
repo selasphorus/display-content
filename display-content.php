@@ -931,10 +931,6 @@ function birdhive_display_collection ( $a = array() ) {
 			}
 			$item_arr['item_content'] = $item_text;
 		
-		} else if ( $item_type == "page_link" ) {
-		
-			$item_ts_info .= 'page_link item: <pre>'.print_r($item, true).'</pre>'; // tft
-		
 		} else if ( $item_type == "event_category" || $item_type == "post_category" ) {
 		
 			//$item_ts_info .= "item: <pre>".print_r($item, true)."</pre>";
@@ -984,7 +980,12 @@ function birdhive_display_collection ( $a = array() ) {
 			$item_subtitle = $item['item_subtitle'];
 			
 			// Item URL
-			$item_url = $item['item_url'];
+			if ( $item_type == "page_link" ) {
+				$item_url = $item['page_link'];
+				//$item_ts_info .= 'page_link item: <pre>'.print_r($item, true).'</pre>'; // tft
+			} else {
+				$item_url = $item['item_url'];
+			}
 			if ( $item_type == "email" ) {
 				$item_email = $item['item_email'];
 				if ( !empty($item_email) ) {
