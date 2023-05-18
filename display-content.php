@@ -697,7 +697,7 @@ function display_grid_item ( $item = array(), $display_atts = array(), $ts_info 
 	if ( isset($display_atts['spacing']) ) { $spacing = $display_atts['spacing']; } else { $spacing = ""; }
 	if ( isset($display_atts['overlay']) ) { $overlay = $display_atts['overlay']; } else { $overlay = "false"; }
 	if ( isset($display_atts['aspect_ratio']) ) { $aspect_ratio = $display_atts['aspect_ratio']; } else { $aspect_ratio = "square"; }
-	$item_info .= "<!-- overlay: $overlay -->"; // tft
+	$ts_info .= "<!-- overlay: $overlay -->"; // tft
 	
 	// Begin building item_info
 	if ( $aspect_ratio != "square" ) {
@@ -717,10 +717,10 @@ function display_grid_item ( $item = array(), $display_atts = array(), $ts_info 
 				$date_str = date_i18n( "l, F d, Y \@ g:i a", strtotime($event_start_datetime) );
 				$item_info .= "<br />".$date_str;
 			} else {
-				$item_info .= "<!-- No event_start_datetime found. -->"; // tft
+				$ts_info .= "<!-- No event_start_datetime found. -->"; // tft
 			}
 		} else {
-			$item_info .= "<!-- post_type: $post_type -->"; // tft
+			$ts_info .= "<!-- post_type: $post_type -->"; // tft
 		}
 	}
 	
@@ -732,7 +732,7 @@ function display_grid_item ( $item = array(), $display_atts = array(), $ts_info 
 	
 	$info .= '<div class="flex-box '.$spacing.'">';
 	//
-	if ( $overlay !== "true" && $aspect_ratio != "square" ) {
+	if ( $overlay != "true" && $aspect_ratio != "square" ) {
 		$info .= '<div class="item_info">'.$item_info.'</div>';
 	}
 	// Show the item image
