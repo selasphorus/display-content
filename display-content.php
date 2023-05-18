@@ -676,25 +676,7 @@ function display_table_row ( $item = array(), $fields = array() ) {
 function display_grid_item ( $item = array(), $display_atts = array(), $ts_info = "" ) {
 
 	$info = "";
-	
 	$item_info = "";
-	
-	// WIP
-	
-	/*
-    // Defaults
-	$defaults = array(
-		'item'			=> array(),
-		'display_atts'	=> array(),
-		'ts_info'		=> "",
-	);
-	
-    // Parse args
-	$args = wp_parse_args( $args, $defaults );
-
-	// Extract
-	extract( $args );
-	*/
 	
 	// Get/set item vars
 	if ( isset($item['post_id']) ) { $post_id = $item['post_id']; } else { $post_id = null; }
@@ -713,7 +695,7 @@ function display_grid_item ( $item = array(), $display_atts = array(), $ts_info 
 	
 	// Get/set display vars
 	if ( isset($display_atts['spacing']) ) { $spacing = $display_atts['spacing']; } else { $spacing = ""; }
-	if ( isset($display_atts['overlay']) ) { $overlay = $display_atts['overlay']; } else { $overlay = false; }
+	if ( isset($display_atts['overlay']) ) { $overlay = $display_atts['overlay']; } else { $overlay = "false"; }
 	if ( isset($display_atts['aspect_ratio']) ) { $aspect_ratio = $display_atts['aspect_ratio']; } else { $aspect_ratio = "square"; }
 	$item_info .= "<!-- overlay: $overlay -->"; // tft
 	
@@ -723,7 +705,7 @@ function display_grid_item ( $item = array(), $display_atts = array(), $ts_info 
 		if ( !empty($item_subtitle) ) { $hclass = "with-subtitle"; $item_subtitle = '<h4 class="subtitle">'.$item_subtitle.'</h4>'; }
 		$item_title = '<h3 class="'.$hclass.'">'.$item_title.'</h3>';
 	}
-	$item_info = $item_title;
+	$item_info .= $item_title;
 	
 	if ( $post_id ) {	
 		// For events, also display the date/time
@@ -750,7 +732,7 @@ function display_grid_item ( $item = array(), $display_atts = array(), $ts_info 
 	
 	$info .= '<div class="flex-box '.$spacing.'">';
 	//
-	if ( $overlay !== true && $aspect_ratio != "square" ) {
+	if ( $overlay !== "true" && $aspect_ratio != "square" ) {
 		$info .= '<div class="item_info">'.$item_info.'</div>';
 	}
 	// Show the item image
@@ -758,7 +740,7 @@ function display_grid_item ( $item = array(), $display_atts = array(), $ts_info 
 	$info .= $item_image;
 	$info .= '</div>';
 	//
-	if ( $overlay == true ) {
+	if ( $overlay == "true" ) {
 		$info .= '<div class="overlay">'.$item_info.'</div>';
 	} else if ( $aspect_ratio == "square" ) {
 		$info .= '<div class="item_info">'.$item_info.'</div>';
