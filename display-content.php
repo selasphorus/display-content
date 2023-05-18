@@ -1052,7 +1052,7 @@ function birdhive_display_collection ( $a = array() ) {
 			$item_ts_info .= '<!-- image_id: '.$image_id.' -->'; // tft
 			
 			if ( $aspect_ratio == "square" ) {
-				$img_size = array(600, 600); //"medium_large"; //$img_size = "grid_crop_square";
+				$img_size = "grid_crop_square"; //$img_size = array(600, 600); //"medium_large"; //
 			} else {
 				$img_size = "grid_crop_rectangle";
 			}
