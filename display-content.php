@@ -715,6 +715,7 @@ function display_grid_item ( $item = array(), $display_atts = array(), $ts_info 
 	if ( isset($display_atts['spacing']) ) { $spacing = $display_atts['spacing']; } else { $spacing = ""; }
 	if ( isset($display_atts['overlay']) ) { $overlay = $display_atts['overlay']; } else { $overlay = false; }
 	if ( isset($display_atts['aspect_ratio']) ) { $aspect_ratio = $display_atts['aspect_ratio']; } else { $aspect_ratio = "square"; }
+	$item_info .= "<!-- overlay: $overlay -->"; // tft
 	
 	// Begin building item_info
 	if ( $aspect_ratio != "square" ) {
@@ -1629,21 +1630,6 @@ function birdhive_display_posts ( $atts = [] ) { //function birdhive_display_pos
 	global $wpdb;
 	$info = "";
 	$ts_info = "";
-	
-	/*
-    // Defaults
-	$defaults = array(
-		'post_id'         => null,
-		'preview_length'  => 55,
-		'readmore'        => false,
-	);
-	
-    // Parse args
-	$args = wp_parse_args( $args, $defaults );
-
-	// Extract
-	extract( $args );
-	*/
 
 	$a = shortcode_atts( array(
         
@@ -1689,8 +1675,10 @@ function birdhive_display_posts ( $atts = [] ) { //function birdhive_display_pos
         
     ), $atts );
     
+    // Extract
+	extract( $a );
     //
-    $post_type = $a['post_type'];
+    /*$post_type = $a['post_type'];
     $return_format = $a['return_format'];
     $class = $a['class'];
     $show_images = $a['show_images'];
@@ -1707,6 +1695,7 @@ function birdhive_display_posts ( $atts = [] ) { //function birdhive_display_pos
     // For table format:
     $fields = $a['fields'];
     $headers = $a['headers'];
+    */
     
     // Meta...
     
@@ -1789,7 +1778,7 @@ function birdhive_display_posts ( $atts = [] ) { //function birdhive_display_pos
         //$ts_info .= '<pre>'.print_r($posts, true).'</pre>'; // tft
         
 		//if ($a['header'] == 'true') { $info .= '<h3>Latest '.$category.' Articles:</h3>'; } // WIP
-		$info .= '<div class="dc-posts">';        
+		$info .= '<div class="dc-posts '.$class.'">';        
         $display_args = array( 'content_type' => 'posts', 'display_format' => $return_format, 'items' => $posts, 'arr_dpatts' => $a );
         $info .= birdhive_display_collection( $display_args );
         $info .= '</div>'; // end div class="dc-posts" (wrapper)
