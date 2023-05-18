@@ -50,7 +50,7 @@ if ( file_exists($posttypes_filepath) ) { include_once( $posttypes_filepath ); }
 
 // Add custom image sizes
 // TODO: build in option to customize dimensions per site
-add_image_size( 'grid_crop_square', 600, 600, true );
+add_image_size( 'grid_crop_square', 400, 400, true ); // for stc: 600x600
 add_image_size( 'grid_crop_rectangle', 534, 300, true );
 add_filter( 'image_size_names_choose', 'birdhive_custom_image_sizes' );
 function birdhive_custom_image_sizes( $sizes ) {
