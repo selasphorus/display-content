@@ -185,8 +185,12 @@
     font-size: 1rem;
 }
 
+.overlay:hover {
+	background: var(--white);
+}
+
 .overlay a {
-    background: var(--white);
+    /*background: var(--white);*/
     padding: 1rem;
 }
 /*
