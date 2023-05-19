@@ -744,7 +744,7 @@ function display_grid_item ( $item = array(), $display_atts = array(), $ts_info 
 	
 	$info .= '<div class="flex-box '.$spacing.'">';
 	//
-	if ( $overlay != "true" && $aspect_ratio != "square" ) {
+	if ( $overlay == "false" && $aspect_ratio != "square" ) {
 		$info .= '<div class="item_info">'.$item_info.'</div>';
 	}
 	// Show the item image
@@ -752,8 +752,10 @@ function display_grid_item ( $item = array(), $display_atts = array(), $ts_info 
 	$info .= $item_image;
 	$info .= '</div>';
 	//
-	if ( $overlay == "true" ) {
-		$info .= '<div class="overlay">'.$item_info.'</div>';
+	if ( $overlay == "true" || $overlay == "fullover" ) {
+		$overclass = "overlay";
+		if ( $overlay == "fullover" ) { $overclass .= " fullover"; }
+		$info .= '<div class="'.$overclass.'">'.$item_info.'</div>';
 	} else if ( $aspect_ratio == "square" ) {
 		$info .= '<div class="item_info">'.$item_info.'</div>';
 	}
