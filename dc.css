@@ -190,6 +190,7 @@
 }
 
 .overlay.fullover:hover {
+	display: block;
 	background: var(--white);
 	height: 100%;
 }
