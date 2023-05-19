@@ -727,7 +727,8 @@ function display_grid_item ( $item = array(), $display_atts = array(), $ts_info 
 			if ( $event_start_datetime ) {
 				//$item_info .= "[".$event_start_datetime."]"; // tft
 				$date_str = date_i18n( "l, F d, Y \@ g:i a", strtotime($event_start_datetime) );
-				$item_info .= "<br />".$date_str;
+				//$item_info .="<br />";
+				$item_info .= $date_str;
 			} else {
 				$ts_info .= "<!-- No event_start_datetime found. -->"; // tft
 			}
