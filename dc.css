@@ -187,10 +187,12 @@
 
 .overlay.fullover {
 	height: 100%;
+	background: var(--white);
+	opacity: 0;
 }
 
 .overlay.fullover:hover {
-	background: var(--white);
+	opacity: 1;
 }
 
 .overlay a {
@@ -199,13 +201,11 @@
 }
 
 .overlay.fullover a {
-	opacity:0;
-	height: 100%;
-	vertical-align: middle;
+	opacity: inherit;
 }
 
 .overlay.fullover a:hover {
-	opacity:1;
+	opacity: inherit;
 }
 
 /*
