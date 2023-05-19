@@ -186,13 +186,11 @@
 }
 
 .overlay.fullover {
-	display: none;
+	height: 100%;
 }
 
 .overlay.fullover:hover {
-	display: block;
 	background: var(--white);
-	height: 100%;
 }
 
 .overlay a {
@@ -201,9 +199,11 @@
 }
 
 .overlay.fullover a {
+	opacity:0;
 }
 
 .overlay.fullover a:hover {
+	opacity:1;
 }
 
 /*
