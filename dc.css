@@ -192,7 +192,13 @@
 .overlay a {
     /*background: var(--white);*/
     padding: 1rem;
+    display: none;
 }
+
+.overlay a:hover {
+	display: block;
+}
+
 /*
 .flex-img {
 	padding: 0.25rem;
