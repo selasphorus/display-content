@@ -145,3 +145,90 @@
 .less-text.hide {
 	display: none;
 }
+
+/* Two options: 1) post_info, shows BELOW flex-box, 2) overlay */
+
+/*
+.post_info {
+    margin-top: 1rem;
+    padding: 0.5rem;
+}
+
+.post_info .post_title {
+    font-size: 1.1rem;
+}
+
+.post_info > a {
+    color: inherit;
+}
+
+.post_info > a:not(.button) > .post_title, 
+.post_info > a:link:not(.button) > .post_title {
+    border-bottom: 1px solid var(--mdred);
+    transition: color .3s ease-in-out;
+}
+*/
+.overlay {
+    display: flex;
+    flex-direction:column;
+    justify-content:center;
+	position:absolute;
+    z-index: 1;
+    width:100%;
+    height: auto;
+    bottom: 0;
+	left:0;
+    opacity: 0.85;
+	padding: 1rem;
+    background-color: transparent;
+	text-align: center;
+    font-size: 1rem;
+}
+
+.overlay a {
+    background: var(--white);
+    padding: 1rem;
+}
+/*
+.flex-img {
+	padding: 0.25rem;
+}
+
+.entry-content .flex-img img {
+    border-radius: 9px 9px 0 0;
+    -moz-border-radius: 9px 9px 0 0;
+    -webkit-border-radius: 9px 9px 0 0;
+}
+
+.entry-content .borderless .flex-img img,
+.entry-content .rectangle .flex-img img {
+    border-radius: 9px;
+    -moz-border-radius: 9px;
+    -webkit-border-radius: 9px;
+}
+
+.flex-container.twocol .flex-box .flex-img {
+    max-height: 600px;
+}
+
+.flex-container.threecol .flex-box .flex-img {
+    max-height: 400px;
+}
+
+.flex-container.fourcol .flex-box .flex-img {
+    max-height: 300px;
+}
+
+.flex-img > img {
+	display: block;
+}
+
+.flex-img p {
+    margin: 0;
+}
+
+.bordered {
+    border: 1px solid var(--ltgrey);
+}
+*/
+
