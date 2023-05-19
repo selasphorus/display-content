@@ -200,6 +200,8 @@
 
 .overlay.fullover a {
 	opacity:0;
+	height: 100%;
+	vertical-align: middle;
 }
 
 .overlay.fullover a:hover {
