@@ -45,7 +45,7 @@ $plugin_path = plugin_dir_path( __FILE__ );
 /* +~+~+~+~+~+~+~+~+~+~+~+~+~+~+~+~+~+~+~+~+~+~+~+~+ */
 
 // Register our sdg_settings_init to the admin_init action hook.
-add_action( 'admin_init', 'dsplycntnt_settings_init' );
+//add_action( 'admin_init', 'dsplycntnt_settings_init' );
 
 /**
  * Custom option and settings
