@@ -221,8 +221,9 @@
     transition: transform .8s cubic-bezier(.05,0.2,.1,1);
 }
 
-.flex-container.rectangle .flex-img,
-.flex-container.rectangle .flex-box img {
+/*.flex-container.rectangle .flex-img,*/
+.flex-container.rectangle .flex-box img,
+.flex-container.rectangle .flex-box img:hover {
     box-shadow: 0 0 5px 1px rgba(0,0,0,.5);
     -webkit-box-shadow: 0 0 5px 1px rgba(0,0,0,.5);
     -moz-box-shadow: 0 0 5px 1px rgba(0,0,0,.5);
