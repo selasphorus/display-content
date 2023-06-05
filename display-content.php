@@ -828,7 +828,10 @@ function display_grid_item ( $item = array(), $display_atts = array(), $ts_info 
 	// Troubleshooting info
 	if ( !empty($ts_info) ) { $item_info .= $ts_info; }
 	
-	$info .= '<div class="flex-box '.$spacing.'">';
+	$flex_box_classes = "flex-box ".$aspect_ratio;
+	if ( !empty($spacing) ) { $flex_box_classes .= " ".$spacing; }
+	
+	$info .= '<div class="'.$flex_box_classes.'">';
 	//
 	if ( $overlay == "false" && $aspect_ratio != "square" ) {
 		$info .= '<div class="item_info">'.$item_info.'</div>';
