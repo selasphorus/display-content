@@ -209,12 +209,15 @@
 }
 
 .flex-img {
-	padding: 0.25rem;    
+	padding: 0.25rem;
+}
+
+.flex-img img {
 	-webkit-transition: transform .8s cubic-bezier(.05,0.2,.1,1);
     transition: transform .8s cubic-bezier(.05,0.2,.1,1);
 }
 
-.flex-img:hover {
+.flex-img img:hover {
     -webkit-transform: scale(1.15);
     transform: scale(1.15);
 }
