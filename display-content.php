@@ -47,6 +47,88 @@ $plugin_path = plugin_dir_path( __FILE__ );
 // Register our sdg_settings_init to the admin_init action hook.
 add_action( 'admin_init', 'dsplycntnt_settings_init' );
 
+/**
+ * Custom option and settings
+ */
+function dsplycntnt_settings_init() {
+
+	// Register a new setting for "dsplycntnt" page.
+	register_setting( 'dsplycntnt', 'dsplycntnt_settings' );
+
+	// Register a new section in the "dsplycntnt" page.
+	add_settings_section(
+		'dsplycntnt_settings',
+		__( 'Display Content Plugin Settings', 'dsplycntnt' ), 'dsplycntnt_settings_section_callback',
+		'dsplycntnt'
+	);
+	
+	/*
+	// Checkbox to designate dev site
+	add_settings_field(
+        'is_dev_site',
+        esc_attr__('Dev Site', 'dsplycntnt'),
+        'dsplycntnt_devsite_field_cb',
+        'dsplycntnt',
+        'dsplycntnt_settings',
+        array( 
+            'type'         => 'checkbox',
+            //'option_group' => 'dsplycntnt_settings', 
+            'name'         => 'is_dev_site',
+            'label_for'    => 'is_dev_site',
+            'value'        => (empty(get_option('dsplycntnt_settings')['is_dev_site'])) ? 0 : get_option('dsplycntnt_settings')['is_dev_site'],
+            'description'  => __( 'This is a dev site.', 'dsplycntnt' ),
+            'checked'      => (!isset(get_option('dsplycntnt_settings')['is_dev_site'])) ? 0 : get_option('dsplycntnt_settings')['is_dev_site'],
+            // Used 0 in this case but will still return Boolean not[see notes below] 
+            ///'tip'          => esc_attr__( 'Use if plugin fields drastically changed when installing this plugin.', 'wpdevref' ) 
+            )
+    );
+    
+    // Checkbox to determine whether or not to use custom capabilities
+	add_settings_field(
+        'use_custom_caps',
+        esc_attr__('Capabilities (Permissions)', 'dsplycntnt'),
+        'dsplycntnt_caps_field_cb',
+        'dsplycntnt',
+        'dsplycntnt_settings',
+        array( 
+            'type'         => 'checkbox',
+            'name'         => 'use_custom_caps',
+            'label_for'    => 'use_custom_caps',
+            'value'        => (empty(get_option('dsplycntnt_settings')['use_custom_caps'])) ? 0 : get_option('dsplycntnt_settings')['use_custom_caps'],
+            'description'  => __( 'Use custom capabilities.', 'dsplycntnt' ),
+            'checked'      => (!isset(get_option('dsplycntnt_settings')['use_custom_caps'])) ? 0 : get_option('dsplycntnt_settings')['use_custom_caps'],
+            )
+    ); 
+	
+	// Register a new section in the "dsplycntnt" page.
+	add_settings_section(
+		'dsplycntnt_modules',
+		__( 'Display Content Modules', 'dsplycntnt' ), 'dsplycntnt_modules_section_callback',
+		'dsplycntnt'
+	);
+	
+	// Register a new field in the "dsplycntnt_modules" section, inside the "dsplycntnt" page.
+	add_settings_field(
+		'dsplycntnt_modules', // As of WP 4.6 this value is used only internally.
+		__( 'Active Modules', 'dsplycntnt' ),
+		'dsplycntnt_modules_field_cb',
+		'dsplycntnt',
+		'dsplycntnt_modules',
+		array(
+			'label_for'         => 'dsplycntnt_modules',
+			//'value'        		=> (empty(get_option('dsplycntnt_settings')['dsplycntnt_modules'])) ? 0 : get_option('dsplycntnt_settings')['dsplycntnt_modules'],
+			'class'             => 'dsplycntnt_row',
+			'dsplycntnt_custom_data' 	=> 'custom',
+		)
+	);
+	*/
+	// TODO: new section/field(s) geared toward individual artist site -- see "artiste" plugin posttypes draft
+	
+	
+}
+
+
+
 // Include custom post type (collection)
 $posttypes_filepath = $plugin_path . 'inc/posttypes.php';
 if ( file_exists($posttypes_filepath) ) { include_once( $posttypes_filepath ); } else { echo "no $posttypes_filepath found"; }
