@@ -44,6 +44,9 @@ $plugin_path = plugin_dir_path( __FILE__ );
 
 /* +~+~+~+~+~+~+~+~+~+~+~+~+~+~+~+~+~+~+~+~+~+~+~+~+ */
 
+// Register our sdg_settings_init to the admin_init action hook.
+add_action( 'admin_init', 'dsplycntnt_settings_init' );
+
 // Include custom post type (collection)
 $posttypes_filepath = $plugin_path . 'inc/posttypes.php';
 if ( file_exists($posttypes_filepath) ) { include_once( $posttypes_filepath ); } else { echo "no $posttypes_filepath found"; }
@@ -61,14 +64,14 @@ function birdhive_custom_image_sizes( $sizes ) {
 }
 
 // Enqueue scripts and styles -- WIP
-add_action( 'wp_enqueue_scripts', 'dc_scripts_method' );
-function dc_scripts_method() {
+add_action( 'wp_enqueue_scripts', 'dsplycntnt_scripts_method' );
+function dsplycntnt_scripts_method() {
     
     $ver = "0.1";
-    wp_enqueue_style( 'dc-style', plugin_dir_url( __FILE__ ) . 'dc.css', NULL, $ver );
+    wp_enqueue_style( 'dsplycntnt-style', plugin_dir_url( __FILE__ ) . 'display-content.css', NULL, $ver );
     
-    wp_register_script('dc-js', plugin_dir_url( __FILE__ ) . 'js/dc.js', array( 'jquery' ) );
-	wp_enqueue_script('dc-js');	
+    wp_register_script('dsplycntnt-js', plugin_dir_url( __FILE__ ) . 'js/display-content.js', array( 'jquery' ) );
+	wp_enqueue_script('dsplycntnt-js');	
 
 }
 
@@ -225,13 +228,13 @@ function get_first_image_from_post_content( $post_id ) {
 
 // Allow select HTML tags in excerpts
 // https://wordpress.stackexchange.com/questions/141125/allow-html-in-excerpt
-function dc_allowedtags() {
+function dsplycntnt_allowedtags() {
     return '<style>,<br>,<em>,<strong>'; 
 }
 
-if ( ! function_exists( 'dc_custom_wp_trim_excerpt' ) ) : 
+if ( ! function_exists( 'dsplycntnt_custom_wp_trim_excerpt' ) ) : 
 
-    function dc_custom_wp_trim_excerpt($excerpt) {
+    function dsplycntnt_custom_wp_trim_excerpt($excerpt) {
         
         global $post;
         
@@ -242,7 +245,7 @@ if ( ! function_exists( 'dc_custom_wp_trim_excerpt' ) ) :
             $excerpt = strip_shortcodes( $excerpt );
             $excerpt = apply_filters('the_content', $excerpt);
             $excerpt = str_replace(']]>', ']]&gt;', $excerpt);
-            $excerpt = strip_tags($excerpt, dc_allowedtags()); // IF you need to allow just certain tags. Delete if all tags are allowed
+            $excerpt = strip_tags($excerpt, dsplycntnt_allowedtags()); // IF you need to allow just certain tags. Delete if all tags are allowed
 
             //Set the excerpt word count and only break after sentence is complete.
             $excerpt_word_count = 75;
@@ -280,14 +283,14 @@ if ( ! function_exists( 'dc_custom_wp_trim_excerpt' ) ) :
             //$excerpt .= atc_excerpt_more( '' );
             //$excerpt .= "***";
         }
-        return apply_filters('dc_custom_wp_trim_excerpt', $dc_excerpt, $raw_excerpt);
+        return apply_filters('dsplycntnt_custom_wp_trim_excerpt', $dsplycntnt_excerpt, $raw_excerpt);
     }
 
 endif; 
 
 // Replace trim_excerpt function -- temp disabled for troubleshooting
 //remove_filter('get_the_excerpt', 'wp_trim_excerpt');
-//add_filter('get_the_excerpt', 'dc_custom_wp_trim_excerpt'); 
+//add_filter('get_the_excerpt', 'dsplycntnt_custom_wp_trim_excerpt'); 
 
 /* Function to allow for multiple different excerpt lengths as needed
  * Call as follows:
@@ -296,7 +299,7 @@ endif;
  */
 
 //if ( function_exists('is_dev_site') && is_dev_site() ) {
-function dc_get_excerpt( $args = array() ) {
+function dsplycntnt_get_excerpt( $args = array() ) {
 	
 	$info = ""; // init
 	$text = "";
@@ -309,7 +312,7 @@ function dc_get_excerpt( $args = array() ) {
 		'post_id'         => null,
 		'preview_length'  => 55, // num words to display as preview text
 		'readmore'        => false,
-		'readmore_text'   => esc_html__( 'Read more...', 'dc' ),
+		'readmore_text'   => esc_html__( 'Read more...', 'dsplycntnt' ),
 		'readmore_after'  => '',
 		'custom_excerpts' => true,
 		'disable_more'    => false,
@@ -318,7 +321,7 @@ function dc_get_excerpt( $args = array() ) {
 	);
 
 	// Apply filters
-	//$defaults = apply_filters( 'dc_get_excerpt_defaults', $defaults );
+	//$defaults = apply_filters( 'dsplycntnt_get_excerpt_defaults', $defaults );
 
 	// Parse args
 	$args = wp_parse_args( $args, $defaults );
@@ -326,7 +329,7 @@ function dc_get_excerpt( $args = array() ) {
 	//$info .= "args: <pre>".print_r($args, true)."</pre>";
 
 	// Apply filters to args
-	//$args = apply_filters( 'dc_get_excerpt_args', $defaults );
+	//$args = apply_filters( 'dsplycntnt_get_excerpt_args', $defaults );
 
 	// Extract
 	extract( $args );
@@ -368,11 +371,11 @@ function dc_get_excerpt( $args = array() ) {
 	
 	// Add readmore to excerpt if enabled
 	if ( $readmore ) {
-		$info .= apply_filters( 'dc_readmore_link', $readmore_link );
+		$info .= apply_filters( 'dsplycntnt_readmore_link', $readmore_link );
 	}
 
 	// Apply filters and echo
-	//return apply_filters( 'dc_get_excerpt', $info );
+	//return apply_filters( 'dsplycntnt_get_excerpt', $info );
 	return $info;
 
 }
@@ -774,7 +777,7 @@ function birdhive_display_collection ( $a = array() ) {
 	$arr_dpatts = array(); // DP stands for "display posts" -- i.e. special attributes if this fcn has been called via the display_posts shortcode -- TODO: simplify?
 	$collection_id = null;
 	
-	//$ts_info .= "bdc atts: <pre>".print_r($a, true)."</pre>";
+	//$ts_info .= "dsplycntnt atts: <pre>".print_r($a, true)."</pre>";
 	
 	// Get args from array
 	if ( isset($a['collection_id']) ) {
@@ -915,7 +918,7 @@ function birdhive_display_collection ( $a = array() ) {
 				}
 				$img_args = array( 'post_id' => $post_id, 'format' => 'excerpt', 'img_size' => $img_size, 'sources' => "all", 'echo' => false, 'return' => 'id' );
         		$image_id = sdg_post_thumbnail ( $img_args );
-				$item_ts_info .= '<!-- DC sdg_post_thumbnail: image_id: '.$image_id.' -->'; // tft		
+				$item_ts_info .= '<!-- dsplycntnt sdg_post_thumbnail: image_id: '.$image_id.' -->'; // tft		
 			}
 			// +~+~+~+~+~+~+~+~+~+~+~+~+~+~+~+~+~+~+~+~+~+~+~+
 			
@@ -923,7 +926,7 @@ function birdhive_display_collection ( $a = array() ) {
 			if ( function_exists('is_dev_site') && is_dev_site() ) {
 				$item_text = expandable_text( $post_id ); //$item_text = expandable_text( $post_id, $text_length, $preview_length );
 				//$info .= expandable_text( array('post_id' => $post_id, 'text_length' => $text_length, 'preview_length' => $preview_length ) );
-				//$info .= dc_get_excerpt( array('post_id' => $post_id, 'expandable' => $expandable, 'text_length' => $text_length, 'preview_length' => $preview_length ) );				
+				//$info .= dsplycntnt_get_excerpt( array('post_id' => $post_id, 'expandable' => $expandable, 'text_length' => $text_length, 'preview_length' => $preview_length ) );				
 			} else {
 				$item_text = get_the_excerpt( $post_id ); //$info .= $post->post_excerpt;
 			}
@@ -1775,10 +1778,10 @@ function birdhive_display_posts ( $atts = [] ) { //function birdhive_display_pos
         //$ts_info .= '<pre>'.print_r($posts, true).'</pre>'; // tft
         
 		//if ($a['header'] == 'true') { $info .= '<h3>Latest '.$category.' Articles:</h3>'; } // WIP
-		$info .= '<div class="dc-posts '.$class.'">';        
+		$info .= '<div class="dsplycntnt-posts '.$class.'">';        
         $display_args = array( 'content_type' => 'posts', 'display_format' => $return_format, 'items' => $posts, 'arr_dpatts' => $a );
         $info .= birdhive_display_collection( $display_args );
-        $info .= '</div>'; // end div class="dc-posts" (wrapper)
+        $info .= '</div>'; // end div class="dsplycntnt-posts" (wrapper)
         
         wp_reset_postdata();
     
