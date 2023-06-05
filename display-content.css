@@ -48,7 +48,7 @@
 .flex-box {
 	position: relative;
 	display: block;
-	padding: 0;
+	padding: 0.25rem;
     text-align: center;
 	overflow: hidden;
     flex-grow: 1;
