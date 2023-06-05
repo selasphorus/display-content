@@ -59,7 +59,8 @@
     margin-bottom: 1rem;
 }
 
-.flex-container.borderless .flex-box {
+.flex-container.borderless .flex-box,
+.flex-box.rectangle {
     border: none;
 }
 
