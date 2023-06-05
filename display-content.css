@@ -212,7 +212,7 @@
 	padding: 0.25rem;
 }
 
-.flex-image:hover {
+.flex-img:hover {
     -webkit-transform: scale(1.15);
     transform: scale(1.15);
 }
