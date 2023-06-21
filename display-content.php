@@ -307,7 +307,6 @@ function get_first_image_from_post_content( $post_id ) {
 
 /*** EXCERPTS AND ENTRY META ***/
 
-
 // Allow select HTML tags in excerpts
 // https://wordpress.stackexchange.com/questions/141125/allow-html-in-excerpt
 function dsplycntnt_allowedtags() {
@@ -380,7 +379,6 @@ endif;
  *
  */
 
-//if ( function_exists('is_dev_site') && is_dev_site() ) {
 function dsplycntnt_get_excerpt( $args = array() ) {
 	
 	$info = ""; // init
@@ -646,6 +644,26 @@ function birdhive_get_default_category () {
 }
 
 
+/*** Post Extras ***/
+
+function get_post_links( $post_id = null ) {
+
+	if ( empty($post_id) ) { return false; }
+	
+	// Init vars
+	$info = "";
+	//$ts_info = "";
+	
+	$post = get_post( $post_id );
+	if ( has_excerpt( $post_id ) ) { 
+		$preview_text = $post->post_excerpt; // ??
+	} else {
+		$preview_text = get_the_excerpt($post_id);
+	}
+	$full_text = $post->post_content;
+		
+}
+
 /*** RETRIEVE & DISPLAY POSTS with complex queries &c. ***/
 
 // TODO: for all display functions, figure out better way to pass parameters, including:
@@ -824,6 +842,10 @@ function display_grid_item ( $item = array(), $display_atts = array(), $ts_info 
 	
 	// Subtitle?
 	if ( !empty($item_subtitle) ) { $item_info .= $item_subtitle; } //"<br />".
+	
+	// Links?
+	$links = get_post_links( $post_id );
+	if ( $links ) { $item_info .= $links; }
 	
 	// Troubleshooting info
 	if ( !empty($ts_info) ) { $item_info .= $ts_info; }
@@ -1314,6 +1336,7 @@ function birdhive_get_posts ( $a = array() ) {
     global $wpdb;
     
     /*
+    // WIP/TODO -- set defaults, parse, extract
     // Defaults
 	$defaults = array(
 		'post_id'         => null,
@@ -1329,9 +1352,10 @@ function birdhive_get_posts ( $a = array() ) {
 	*/
     
     // Init vars
-    $arr_posts_info = array();
-    $info = "";
+    $arr_info = array();
+    //$info = ""; // obsolete(?)
     $ts_info = "";
+    //
     $get_by_ids = false;
     $get_by_slugs = false;
     $category_link = null;
@@ -1490,7 +1514,6 @@ function birdhive_get_posts ( $a = array() ) {
                 } else {
                 	$args['orderby'] = $a['orderby'];
                 }
-                
                 
                 /* //TODO: consider naming meta_query sub-clauses, as per the following example:
                 $q = new WP_Query( array(
@@ -1696,15 +1719,15 @@ function birdhive_get_posts ( $a = array() ) {
     $ts_info .= "birdhive_get_posts arr_posts->request<pre>".$arr_posts->request."</pre>"; // tft -- wip
     $ts_info .= "birdhive_get_posts last_query:<pre>".$wpdb->last_query."</pre>"; // tft
     
-    //$info = '<div class="troubleshooting">'.$info.'</div>';
+    //$ts_info = '<div class="troubleshooting">'.$ts_info.'</div>';
     
-    $arr_posts_info['arr_posts'] = $arr_posts;
-    $arr_posts_info['args'] = $args;
-    $arr_posts_info['category_link'] = $category_link;
-    $arr_posts_info['info'] = $info;
-    $arr_posts_info['troubleshooting'] = $ts_info;
+    $arr_info['arr_posts'] = $arr_posts;
+    $arr_info['args'] = $args;
+    $arr_info['category_link'] = $category_link;
+    //$arr_info['info'] = $info; // obsolete(?)
+    $arr_info['ts_info'] = $ts_info;
     
-    return $arr_posts_info;
+    return $arr_info;
 }
 
 // Function for display of posts in various formats -- links, grid, &c.
@@ -1855,7 +1878,7 @@ function birdhive_display_posts ( $atts = [] ) { //function birdhive_display_pos
         $posts_info = birdhive_get_posts( $a );
         $posts = $posts_info['arr_posts']->posts; // Retrieves an array of WP_Post Objects
         $info .= $posts_info['info'];
-        $ts_info .= $posts_info['troubleshooting'];
+        $ts_info .= $posts_info['ts_info'];
     }
     
     if ( $posts ) {
@@ -2924,14 +2947,11 @@ function birdhive_search_form ($atts = [], $content = null, $tag = '') {
                 $ts_info .= "Num arr_post_ids: [".count($arr_post_ids)."]<br />";
                 //$ts_info .= "arr_post_ids: <pre>".print_r($arr_post_ids,true)."</pre>"; // tft
                 
-                $info .= '<div class="troubleshooting">'.$posts_info['info'].'</div>';
-                //$ts_info .= $posts_info['info']."<hr />";
-                //$info .= $posts_info['info']."<hr />"; //$info .= "birdhive_get_posts/posts_info: ".$posts_info['info']."<hr />";
+                $info .= '<div class="troubleshooting">'.$posts_info['ts_info'].'</div>';
                 
                 // Print last SQL query string
                 global $wpdb;
                 $info .= '<div class="troubleshooting">'."last_query:<pre>".$wpdb->last_query."</pre>".'</div>'; // tft
-                //$ts_info .= "<p>last_query:</p><pre>".$wpdb->last_query."</pre>"; // tft
                 
             }
             
@@ -2948,7 +2968,7 @@ function birdhive_search_form ($atts = [], $content = null, $tag = '') {
                     $ts_info .= "Num arr_related_post_ids: [".count($arr_related_post_ids)."]<br />";
                     //$ts_info .= "arr_related_post_ids: <pre>".print_r($arr_related_post_ids,true)."</pre>"; // tft
 
-                    $ts_info .= $related_posts_info['info'];
+                    $ts_info .= $related_posts_info['ts_info'];
 
                     // Print last SQL query string
                     global $wpdb;
@@ -3045,8 +3065,7 @@ function birdhive_search_form ($atts = [], $content = null, $tag = '') {
                 
                 $arr_posts = $posts_info['arr_posts'];//$posts_info['arr_posts']->posts; // Retrieves an array of WP_Post Objects
                 
-                $ts_info .= $posts_info['info']."<hr />";
-                //$info .= $posts_info['info']."<hr />"; //$info .= "birdhive_get_posts/posts_info: ".$posts_info['info']."<hr />";
+                $ts_info .= $posts_info['ts_info']."<hr />";
                 
                 if ( !empty($arr_posts) ) {
                     
