@@ -357,7 +357,7 @@ if ( ! function_exists( 'dsplycntnt_custom_wp_trim_excerpt' ) ) :
             $excerpt = trim(force_balance_tags($excerptOutput));
             
             // After the content
-            $excerpt .= atc_excerpt_more( '' );
+            //$excerpt .= atc_excerpt_more( '' );
 
             return $excerpt;   
 
