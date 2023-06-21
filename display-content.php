@@ -313,9 +313,7 @@ function dsplycntnt_allowedtags() {
     return '<style>,<br>,<em>,<strong>'; 
 }
 
-if ( ! function_exists( 'dsplycntnt_custom_wp_trim_excerpt' ) ) : 
-
-    function dsplycntnt_custom_wp_trim_excerpt($excerpt) {
+function dsplycntnt_custom_wp_trim_excerpt($excerpt) {
         
         global $post;
         
@@ -366,8 +364,6 @@ if ( ! function_exists( 'dsplycntnt_custom_wp_trim_excerpt' ) ) :
         }
         return apply_filters('dsplycntnt_custom_wp_trim_excerpt', $dsplycntnt_excerpt, $raw_excerpt);
     }
-
-endif; 
 
 // Replace trim_excerpt function -- temp disabled for troubleshooting
 //remove_filter('get_the_excerpt', 'wp_trim_excerpt');
@@ -1325,65 +1321,55 @@ function collection_footer ( $display_format = null ) {
 }
 
 //
-function birdhive_get_posts ( $a = array() ) {
+function birdhive_get_posts ( $args = array() ) {
     
     global $wpdb;
     
-    /*
-    // WIP/TODO -- set defaults, parse, extract
+    // Init vars
+    $arr_info = array();
+    $ts_info = "";
+    //
+    $get_by_ids = false;
+    $get_by_slugs = false;
+    $category_link = null;
+    //
+    $ts_info .= "args as passed to birdhive_get_posts: <pre>".print_r($args,true)."</pre>";
+
     // Defaults
 	$defaults = array(
-		'post_id'         => null,
-		'preview_length'  => 55,
-		'readmore'        => false,
+		'limit'				=> -1,
+		'posts_per_page'  	=> -1,
+		'_search_title'		=> null, // The search_title is a special placeholder field handled by the birdhive_posts_where fcn
+		'_meta_or_tax'		=> null, // TODO: deal w/ underscore?
+		'post_type'			=> 'post',
+		'post_status'		=> 'publish',
+		'order'				=> null,
+		'orderby'			=> null,
+		'meta_query'        => array(),
+		'tax_query'			=> array(),
+		'return_fields'		=> 'all',
+		//
+		'ids'				=> null,
+		'slugs'				=> null,
+		'taxonomy'			=> null,
+		'tax_terms'			=> null,
+		'category'			=> null,
+		'meta_key'			=> null,
+		'meta_value'		=> null,
+		'series'			=> null, // For Events & Sermons, if those post_types exist for the current application
 	);
 	
     // Parse args
 	$args = wp_parse_args( $args, $defaults );
 
 	// Extract
-	extract( $args );
-	*/
-    
-    // Init vars
-    $arr_info = array();
-    //$info = ""; // obsolete(?)
-    $ts_info = "";
-    //
-    $get_by_ids = false;
-    $get_by_slugs = false;
-    $category_link = null;
-    
-    $ts_info .= "args as passed to birdhive_get_posts: <pre>".print_r($a,true)."</pre>";
-    
-    // Process the args as passed
+	extract( $args );    
     
     // Limit, aka posts_per_page, aka num posts to retrieve
-    if ( isset($a['limit']) )       { 
-        $posts_per_page = $a['limit']; 
-    } else if ( isset($a['posts_per_page']) )       { 
-        $posts_per_page = $a['posts_per_page']; 
-    } else { 
-        $posts_per_page = '-1';
-    }
-    
-    // The search_title is a special placeholder field handled by the birdhive_posts_where fcn
-    if ( isset($a['_search_title']) ){ $_search_title = $a['_search_title']; } else { $_search_title = null; }
-    if ( isset($a['_meta_or_tax']) ){ $_meta_or_tax = $a['_meta_or_tax']; } else { $_meta_or_tax = null; }
-    //
-    if ( isset($a['post_type']) )   { $post_type = $a['post_type']; } else { $post_type = 'post'; }
-    if ( isset($a['post_status']) ) { $post_status = $a['post_status']; } else { $post_status = array( 'publish' ); } // , 'draft'
-    //
-    if ( isset($a['order']) )       { $order = $a['order'];         } else { $order = null; }
-    if ( isset($a['orderby']) )     { $orderby = $a['orderby'];     } else { $orderby = null; }
-    //
-    if ( isset($a['meta_query']) )  { $meta_query = $a['meta_query']; } else { $meta_query = array(); }
-    if ( isset($a['tax_query']) )  	{ $tax_query = $a['tax_query']; } else { $tax_query = array(); }
-    //
-    if ( isset($a['return_fields']) )  { $return_fields = $a['return_fields']; } else { $return_fields = "all"; }
+    if ( empty($posts_per_page) && !empty($limit) ) { $posts_per_page = $limit;}
     
     // Set up basic query args
-    $args = array(
+    $wp_args = array(
 		'post_type'       => $post_type,
 		'post_status'     => $post_status,
 		'posts_per_page'  => $posts_per_page,
@@ -1391,52 +1377,41 @@ function birdhive_get_posts ( $a = array() ) {
 	);
     
     // Custom parameters
-    if ( $_search_title ) { $args['_search_title'] = $_search_title; }
-    if ( $_meta_or_tax ) { $args['_meta_or_tax'] = $_meta_or_tax; }
+    if ( $_search_title ) { $wp_args['_search_title'] = $_search_title; }
+    if ( $_meta_or_tax ) { $wp_args['_meta_or_tax'] = $_meta_or_tax; }
     
     // Order (ASC/DESC)
-    if ( $order ) { $args['order'] = $order; }
+    if ( $order ) { $wp_args['order'] = $order; }
     
     // Posts by ID
     // NB: if IDs are specified, ignore most other args
-    if ( isset($a['ids']) && !empty($a['ids']) ) {
+    if ( !empty($ids) ) {
         
-        $ts_info .= "Getting posts by IDs: ".$a['ids']."<br />";
+        $ts_info .= "Getting posts by IDs: ".$ids."<br />";
         
         // Turn the list of IDs into a proper array
-		$posts_in         = array_map( 'intval', birdhive_att_explode( $a['ids'] ) );
-		$args['post__in'] = $posts_in;
-        $args['orderby']  = 'post__in';
+		$posts_in         = array_map( 'intval', birdhive_att_explode( $ids ) );
+		$wp_args['post__in'] = $posts_in;
+        $wp_args['orderby']  = 'post__in';
         $get_by_ids = true;
         
 	}
     
     // Posts by slug
     // NB: if slugs are specified, ignore most other args
-    if ( isset($a['slugs']) && !empty($a['slugs']) ) {
+    if ( !empty($slugs) ) {
         
-        $ts_info .= "Getting posts by slugs: ".$a['slugs'];
+        $ts_info .= "Getting posts by slugs: ".$slugs;
         
         // Turn the list of slugs into a proper array
-		$posts_in = birdhive_att_explode( $a['slugs'] );
-		$args['post_name__in'] = $posts_in;
-        $args['orderby'] = 'post_name__in';
+		$posts_in = birdhive_att_explode( $slugs );
+		$wp_args['post_name__in'] = $posts_in;
+        $wp_args['orderby'] = 'post_name__in';
         $get_by_slugs = true;
         
 	}
     
     if ( !$get_by_ids && !$get_by_slugs ) {
-        
-        // TODO: simplify the setting of default values
-        if ( isset($a['taxonomy']) )    { $taxonomy = $a['taxonomy'];   } else { $taxonomy = null; }
-        if ( isset($a['tax_terms']) )   { $tax_terms = $a['tax_terms']; } else { $tax_terms = null; }
-        if ( isset($a['category']) )    { $category = $a['category'];   } else { $category = null; }
-		//
-        if ( isset($a['meta_key']) )    { $meta_key = $a['meta_key'];   } else { $meta_key = null; }
-        if ( isset($a['meta_value']) )  { $meta_value = $a['meta_value'];   } else { $meta_value = null; }
-        
-        // For Events & Sermons, if those post_types exist for the current application
-        if ( isset($a['series']) )      { $series_id = $a['series'];    } else { $series_id = null; }
         
         // Deal w/ taxonomy args
         $tax_field = 'slug'; // init -- in some cases will want to use term_id
@@ -1499,14 +1474,14 @@ function birdhive_get_posts ( $a = array() ) {
                 	
                 	// TODO: determine whether to sort meta values as numbers or as text
 					if (strpos($a['orderby'], 'num') !== false) {
-						$args['orderby'] = 'meta_value_num'; // or meta_value?
+						$wp_args['orderby'] = 'meta_value_num'; // or meta_value?
 					} else {
-						$args['orderby'] = 'meta_value';
+						$wp_args['orderby'] = 'meta_value';
 					}
-					$args['meta_key'] = $a['orderby'];
+					$wp_args['meta_key'] = $a['orderby'];
                 
                 } else {
-                	$args['orderby'] = $a['orderby'];
+                	$wp_args['orderby'] = $a['orderby'];
                 }
                 
                 /* //TODO: consider naming meta_query sub-clauses, as per the following example:
@@ -1537,13 +1512,13 @@ function birdhive_get_posts ( $a = array() ) {
 					if ( in_array( $k, $standard_orderby_values ) && ($v == "ASC" || $v == "DESC") ) {
 						$orderby[$k] = $v;
 					} else {
-						$args['meta_key'] = $orderer;
-						$args['orderby'] = 'meta_key';
+						$wp_args['meta_key'] = $orderer;
+						$wp_args['orderby'] = 'meta_key';
 					}
 				}
 				// TODO: deal w/ possibility of meta_key/value pair AND a standard orderby val...
-				if ( empty($args['orderby']) && !empty( $orderby )) {
-					$args['orderby'] = $orderby;
+				if ( empty($wp_args['orderby']) && !empty( $orderby )) {
+					$wp_args['orderby'] = $orderby;
 				}
 				
 			}
@@ -1553,7 +1528,7 @@ function birdhive_get_posts ( $a = array() ) {
 		
 		if ( !empty($tax_query) ) {
 			
-			$args['tax_query'] = $tax_query;
+			$wp_args['tax_query'] = $tax_query;
 			
 		} else if ( is_category() ) {
 
@@ -1574,7 +1549,7 @@ function birdhive_get_posts ( $a = array() ) {
 
             $tax_field = 'term_id';
 
-            $args['tax_query'] = array(
+            $wp_args['tax_query'] = array(
                 'relation' => 'AND',
                 array(
                     'taxonomy' => 'category',
@@ -1593,7 +1568,7 @@ function birdhive_get_posts ( $a = array() ) {
 
             $ts_info .= "Building tax_query based on taxonomy & tax_terms.<br />";
 
-            $args['tax_query'] = array(
+            $wp_args['tax_query'] = array(
                 array(
                     'taxonomy'  => $taxonomy,
                     'field'     => $tax_field,
@@ -1642,20 +1617,20 @@ function birdhive_get_posts ( $a = array() ) {
 			}
 
 			// Sermon series?
-			if ( post_type_exists('sermon') && $post_type == 'sermon' && $series_id ) {
+			if ( post_type_exists('sermon') && $post_type == 'sermon' && $series ) {
 
 				$meta_query_components[] = 
 					array(
 						'key' => 'sermons_series',
-                        'value' => '"' . $series_id . '"', // matches exactly "123", not just 123. This prevents a match for "1234"
+                        'value' => '"' . $series . '"', // Series ID -- matches exactly "123", not just 123. This prevents a match for "1234"
                         'compare' => 'LIKE'	
 					);
-			} else if ( post_type_exists('event') && $post_type == 'event' && $series_id ) {
+			} else if ( post_type_exists('event') && $post_type == 'event' && $series ) {
 
 				$meta_query_components[] = 
 					array(
 						'key' => 'events_series',
-                        'value' => '"' . $series_id . '"', // matches exactly "123", not just 123. This prevents a match for "1234"
+                        'value' => '"' . $series . '"', // Series ID -- matches exactly "123", not just 123. This prevents a match for "1234"
                         'compare' => 'LIKE'	
 					);
 			}
@@ -1672,7 +1647,7 @@ function birdhive_get_posts ( $a = array() ) {
 		}
 
         if ( !empty($meta_query) ) {
-            $args['meta_query'] = $meta_query;
+            $wp_args['meta_query'] = $meta_query;
         }
         
         if ( $cat_id && ! is_category() ) { // is_archive()
@@ -1696,17 +1671,17 @@ function birdhive_get_posts ( $a = array() ) {
     
     /*
     // TBD
-    if ( isset($a['name']) ) {
-		$args['name']     = $a['name'];
+    if ( isset($name) ) {
+		$wp_args['name']     = $name;
 	}*/
     
     // -------
     // Run the query
     // -------
-	$arr_posts = new WP_Query( $args );
+	$arr_posts = new WP_Query( $wp_args );
     
     $ts_info .= "WP_Query run as follows:";
-    $ts_info .= "<pre>args: ".print_r($args, true)."</pre>"; // tft
+    $ts_info .= "<pre>args: ".print_r($wp_args, true)."</pre>"; // tft
     //$ts_info .= "<pre>meta_query: ".print_r($meta_query, true)."</pre>"; // tft
 	//$ts_info .= "<pre>arr_posts: ".print_r($arr_posts, true)."</pre>"; // tft
 
@@ -1716,7 +1691,7 @@ function birdhive_get_posts ( $a = array() ) {
     //$ts_info = '<div class="troubleshooting">'.$ts_info.'</div>';
     
     $arr_info['arr_posts'] = $arr_posts;
-    $arr_info['args'] = $args;
+    $arr_info['args'] = $wp_args;
     $arr_info['category_link'] = $category_link;
     //$arr_info['info'] = $info; // obsolete(?)
     $arr_info['ts_info'] = $ts_info;
