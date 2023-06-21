@@ -1894,7 +1894,7 @@ function birdhive_display_posts ( $atts = [] ) { //function birdhive_display_pos
         
     } // END if posts
     
-    $info .= '<div class="troubleshooting">'.$ts_info.'</div>';
+    if ( $do_ts ) { $info .= '<div class="troubleshooting">'.$ts_info.'</div>'; }
     
     return $info;
     
@@ -1983,26 +1983,13 @@ function match_group_field ( $field_groups, $field_name ) {
 // https://www.advancedcustomfields.com/resources/creating-wp-archive-custom-field-filter/
 add_shortcode('birdhive_search_form', 'birdhive_search_form');
 function birdhive_search_form ($atts = [], $content = null, $tag = '') {
-//function birdhive_search_form ( $args = array() ) {
 
 	// TS/logging setup
     $do_ts = false; 
     $do_log = false;
     sdg_log( "divline2", $do_log );
-    
-	/*
-    // Defaults
-	$defaults = array(
-		'post_id'         => null,
-		'preview_length'  => 55,
-		'readmore'        => false,
-	);
 	
-    // Parse & Extract args
-	$args = wp_parse_args( $args, $defaults );
-	extract( $args );
-	*/
-	
+	// Init vars
 	$info = "";
     $ts_info = "";
     //$search_values = false; // var to track whether any search values have been submitted on which to base the search
@@ -2027,7 +2014,7 @@ function birdhive_search_form ($atts = [], $content = null, $tag = '') {
     // After building the form, assuming any search terms have been submitted, we're going to call the function birdhive_get_posts
     // In prep for that search call, initialize some vars to be used in the args array
     // Set up basic query args
-    $args = array(
+    $query_args = array(
 		'post_type'       => array( $post_type ), // Single item array, for now. May add other related_post_types -- e.g. repertoire; edition
 		'post_status'     => 'publish',
 		'posts_per_page'  => $limit, //-1, //$posts_per_page,
@@ -2325,8 +2312,8 @@ function birdhive_search_form ($atts = [], $content = null, $tag = '') {
                     
                     if ( $field_name == "post_title" && !empty($field_value) ) {
                         
-                        //$args['s'] = $field_value;
-                        $args['_search_title'] = $field_value; // custom parameter -- see posts_where filter fcn
+                        //$query_args['s'] = $field_value;
+                        $query_args['_search_title'] = $field_value; // custom parameter -- see posts_where filter fcn
 
                     } else if ( $field_type == "text" && !empty($field_value) ) { 
                         
@@ -2778,8 +2765,7 @@ function birdhive_search_form ($atts = [], $content = null, $tag = '') {
         
         $info .= '<input type="submit" value="Search Library">';
         $info .= '<a href="#!" id="form_reset">Clear Form</a>';
-        $info .= '</form>';
-        
+        $info .= '</form>';        
         
         // 
         $args_related = null; // init
@@ -2795,24 +2781,24 @@ function birdhive_search_form ($atts = [], $content = null, $tag = '') {
         // then set up a second set of args/birdhive_get_posts
         if ( $search_primary_post_type == true && $search_related_post_type == true && $search_operator == "and" ) { 
             $ts_info .= "Querying both primary and related post_types (two sets of args)<br />";
-            $args_related = $args;
+            $args_related = $query_args;
             $args_related['post_type'] = $related_post_type; // reset post_type            
         } else if ( $search_primary_post_type == true && $search_related_post_type == true && $search_operator == "or" ) { 
             // WIP -- in this case
             $ts_info .= "Querying both primary and related post_types (two sets of args) but with OR operator... WIP<br />";
-            //$args_related = $args;
+            //$args_related = $query_args;
             //$args_related['post_type'] = $related_post_type; // reset post_type            
         } else {
             if ( $search_primary_post_type == true ) {
                 // Searching primary post_type only
                 $ts_info .= "Searching primary post_type only<br />";
-                $args['post_type'] = $post_type;
+                $query_args['post_type'] = $post_type;
                 $mq_components = $mq_components_primary;
                 $tq_components = $tq_components_primary;
             } else if ( $search_related_post_type == true ) {
                 // Searching related post_type only
                 $ts_info .= "Searching related post_type only<br />";
-                $args['post_type'] = $related_post_type;
+                $query_args['post_type'] = $related_post_type;
                 $mq_components = $mq_components_related;
                 $tq_components = $tq_components_related;
             }
@@ -2822,7 +2808,7 @@ function birdhive_search_form ($atts = [], $content = null, $tag = '') {
         // ==============================
         /* 
         WIP if meta_key = title_clean and related_post_type is true then incorporate also, using title_clean meta_value:
-        $args['_search_title'] = $field_value; // custom parameter -- see posts_where filter fcn
+        $query_args['_search_title'] = $field_value; // custom parameter -- see posts_where filter fcn
         */
         
         if ( empty($args_related) ) {
@@ -2839,7 +2825,7 @@ function birdhive_search_form ($atts = [], $content = null, $tag = '') {
                 }
             }
             
-            if ( !empty($meta_query) ) { $args['meta_query'] = $meta_query; }
+            if ( !empty($meta_query) ) { $query_args['meta_query'] = $meta_query; }
             
         } else {
             
@@ -2857,7 +2843,7 @@ function birdhive_search_form ($atts = [], $content = null, $tag = '') {
             /*foreach ( $mq_components_primary AS $component ) {
                 $meta_query[] = $component;
             }*/
-            if ( !empty($meta_query) ) { $args['meta_query'] = $meta_query; }
+            if ( !empty($meta_query) ) { $query_args['meta_query'] = $meta_query; }
             
             // related query
             if ( count($mq_components_related) > 1 && empty($meta_query_related['relation']) ) {
@@ -2888,7 +2874,7 @@ function birdhive_search_form ($atts = [], $content = null, $tag = '') {
             foreach ( $tq_components AS $component ) {
                 $tax_query[] = $component;
             }
-            if ( !empty($tax_query) ) { $args['tax_query'] = $tax_query; }
+            if ( !empty($tax_query) ) { $query_args['tax_query'] = $tax_query; }
             
         } else {
             
@@ -2899,7 +2885,7 @@ function birdhive_search_form ($atts = [], $content = null, $tag = '') {
             foreach ( $tq_components_primary AS $component ) {
                 $tax_query[] = $component;
             }
-            if ( !empty($tax_query) ) { $args['tax_query'] = $tax_query; }
+            if ( !empty($tax_query) ) { $query_args['tax_query'] = $tax_query; }
             
             // related query
             if ( count($tq_components_related) > 1 && empty($tax_query_related['relation']) ) {
@@ -2920,7 +2906,7 @@ function birdhive_search_form ($atts = [], $content = null, $tag = '') {
             
             if ( $search_operator == "or" ) {
                 if ( !empty($tax_query) && !empty($meta_query) ) {
-                    $args['_meta_or_tax'] = true; // custom parameter -- see posts_where filters
+                    $query_args['_meta_or_tax'] = true; // custom parameter -- see posts_where filters
                 }
             }
         }
@@ -2929,15 +2915,15 @@ function birdhive_search_form ($atts = [], $content = null, $tag = '') {
         // If search values have been submitted, then run the search query
         if ( count($search_values) > 0 ) {
             
-            $ts_info .= "About to pass args to birdhive_get_posts: <pre>".print_r($args,true)."</pre>"; // tft
+            $ts_info .= "About to pass query_args to birdhive_get_posts: <pre>".print_r($query_args,true)."</pre>"; // tft
             
             // Get posts matching the assembled args
             /* ===================================== */
             if ( $form_type == "advanced_search" ) {
                 //$ts_info .= "<strong>NB: search temporarily disabled for troubleshooting.</strong><br />"; $posts_info = array(); // tft
-                $posts_info = birdhive_get_posts( $args );
+                $posts_info = birdhive_get_posts( $query_args );
             } else {
-                $posts_info = birdhive_get_posts( $args );
+                $posts_info = birdhive_get_posts( $query_args );
             }
             
             if ( isset($posts_info['arr_posts']) ) {
@@ -3057,8 +3043,7 @@ function birdhive_search_form ($atts = [], $content = null, $tag = '') {
                 
                 $info .= "No matching items found.<br />";
                 
-            } // END if ( !empty($arr_post_ids) )
-            
+            } // END if ( !empty($arr_post_ids) )            
             
             /*if ( isset($posts_info['arr_posts']) ) {
                 
@@ -3091,14 +3076,15 @@ function birdhive_search_form ($atts = [], $content = null, $tag = '') {
             
             $ts_info .= "No search values submitted.<br />";
             
-        }
-        
+        }        
         
     } // END if ( $a['fields'] )
-
-    $info .= '<div class="troubleshooting">';
-    $info .= $ts_info;
-    $info .= '</div>';
+    
+    if ( $do_ts ) {
+		$info .= '<div class="troubleshooting">';
+		$info .= $ts_info;
+		$info .= '</div>';
+	}
     
     return $info;
     
