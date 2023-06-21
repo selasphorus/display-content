@@ -52,6 +52,11 @@ $plugin_path = plugin_dir_path( __FILE__ );
  */
 function dsplycntnt_settings_init() {
 
+	// TS/logging setup
+    $do_ts = false; 
+    $do_log = false;
+    sdg_log( "divline2", $do_log );
+
 	// Register a new setting for "dsplycntnt" page.
 	register_setting( 'dsplycntnt', 'dsplycntnt_settings' );
 
@@ -126,7 +131,6 @@ function dsplycntnt_settings_init() {
 	
 	
 }
-
 
 
 // Include custom post type (collection)
@@ -256,13 +260,15 @@ function digit_to_word( $number ){
 // Extract first image from post content
 function get_first_image_from_post_content( $post_id ) {
     
-    $post = get_post( $post_id );
+    if ( empty($post_id) ) { return false; }
     
-    // init
+    // Init vars
     $info = array();
     $first_image = null;
     $first_image_id = null;
     $first_image_url = null;
+    
+    $post = get_post( $post_id );
     
     //ob_start();
     //ob_end_clean();
@@ -315,55 +321,55 @@ function dsplycntnt_allowedtags() {
 
 function dsplycntnt_custom_wp_trim_excerpt($excerpt) {
         
-        global $post;
-        
-        $raw_excerpt = $excerpt;
-        if ( '' == $excerpt ) {
+	global $post;
+	
+	$raw_excerpt = $excerpt;
+	if ( '' == $excerpt ) {
 
-            $excerpt = get_the_content('');
-            $excerpt = strip_shortcodes( $excerpt );
-            $excerpt = apply_filters('the_content', $excerpt);
-            $excerpt = str_replace(']]>', ']]&gt;', $excerpt);
-            $excerpt = strip_tags($excerpt, dsplycntnt_allowedtags()); // IF you need to allow just certain tags. Delete if all tags are allowed
+		$excerpt = get_the_content('');
+		$excerpt = strip_shortcodes( $excerpt );
+		$excerpt = apply_filters('the_content', $excerpt);
+		$excerpt = str_replace(']]>', ']]&gt;', $excerpt);
+		$excerpt = strip_tags($excerpt, dsplycntnt_allowedtags()); // IF you need to allow just certain tags. Delete if all tags are allowed
 
-            //Set the excerpt word count and only break after sentence is complete.
-            $excerpt_word_count = 75;
-            $excerpt_length = apply_filters('excerpt_length', $excerpt_word_count); 
-            $tokens = array();
-            $excerptOutput = '';
-            $count = 0;
+		//Set the excerpt word count and only break after sentence is complete.
+		$excerpt_word_count = 75;
+		$excerpt_length = apply_filters('excerpt_length', $excerpt_word_count); 
+		$tokens = array();
+		$excerptOutput = '';
+		$count = 0;
 
-            // Divide the string into tokens; HTML tags, or words, followed by any whitespace
-            preg_match_all('/(<[^>]+>|[^<>\s]+)\s*/u', $excerpt, $tokens);
+		// Divide the string into tokens; HTML tags, or words, followed by any whitespace
+		preg_match_all('/(<[^>]+>|[^<>\s]+)\s*/u', $excerpt, $tokens);
 
-            foreach ($tokens[0] as $token) { 
+		foreach ($tokens[0] as $token) { 
 
-                if ($count >= $excerpt_length && preg_match('/[\,\;\?\.\!]\s*$/uS', $token)) { 
-                // Limit reached, continue until , ; ? . or ! occur at the end
-                    $excerptOutput .= trim($token);
-                    break;
-                }
+			if ($count >= $excerpt_length && preg_match('/[\,\;\?\.\!]\s*$/uS', $token)) { 
+			// Limit reached, continue until , ; ? . or ! occur at the end
+				$excerptOutput .= trim($token);
+				break;
+			}
 
-                // Add words to complete sentence
-                $count++;
+			// Add words to complete sentence
+			$count++;
 
-                // Append what's left of the token
-                $excerptOutput .= $token;
-            }
+			// Append what's left of the token
+			$excerptOutput .= $token;
+		}
 
-            $excerpt = trim(force_balance_tags($excerptOutput));
-            
-            // After the content
-            //$excerpt .= atc_excerpt_more( '' );
+		$excerpt = trim(force_balance_tags($excerptOutput));
+		
+		// After the content
+		//$excerpt .= atc_excerpt_more( '' );
 
-            return $excerpt;   
+		return $excerpt;   
 
-        } else if ( has_excerpt( $post->ID ) ) {
-            //$excerpt .= atc_excerpt_more( '' );
-            //$excerpt .= "***";
-        }
-        return apply_filters('dsplycntnt_custom_wp_trim_excerpt', $dsplycntnt_excerpt, $raw_excerpt);
-    }
+	} else if ( has_excerpt( $post->ID ) ) {
+		//$excerpt .= atc_excerpt_more( '' );
+		//$excerpt .= "***";
+	}
+	return apply_filters('dsplycntnt_custom_wp_trim_excerpt', $dsplycntnt_excerpt, $raw_excerpt);
+}
 
 // Replace trim_excerpt function -- temp disabled for troubleshooting
 //remove_filter('get_the_excerpt', 'wp_trim_excerpt');
@@ -377,7 +383,8 @@ function dsplycntnt_custom_wp_trim_excerpt($excerpt) {
 
 function dsplycntnt_get_excerpt( $args = array() ) {
 	
-	$info = ""; // init
+	// init vars
+	$info = "";
 	$text = "";
 	
 	//$info .= "args: <pre>".print_r($args, true)."</pre>";
@@ -637,6 +644,11 @@ function birdhive_get_default_category () {
 
 function get_post_links( $post_id = null ) {
 
+	// TS/logging setup
+    $do_ts = false; 
+    $do_log = false;
+    sdg_log( "divline2", $do_log );
+
 	if ( empty($post_id) ) { return false; }
 	
 	// Init vars
@@ -672,6 +684,7 @@ function display_list_item ( $item_title = null ) { // $item_url = null,  ...
 
 function display_post_item ( $item = array() ) {
 	
+	// Init vars
 	$info = "";
 	
 	// Post ID?
@@ -715,6 +728,7 @@ function display_post_item ( $item = array() ) {
 
 function display_table_row ( $item = array(), $fields = array() ) {
 
+	// Init vars
 	$info = "";
 	
 	$info .= '<tr>';
@@ -773,6 +787,13 @@ function display_table_row ( $item = array(), $fields = array() ) {
 
 function display_grid_item ( $item = array(), $display_atts = array(), $ts_info = "" ) {
 
+	// TS/logging setup
+    $do_ts = false; 
+    $do_log = false;
+    sdg_log( "divline2", $do_log );
+    sdg_log( "function called: display_grid_item", $do_log );
+    
+	// Init vars
 	$info = "";
 	$item_info = "";
 	
@@ -831,7 +852,7 @@ function display_grid_item ( $item = array(), $display_atts = array(), $ts_info 
 	if ( $links ) { $item_info .= $links; }
 	
 	// Troubleshooting info
-	if ( !empty($ts_info) ) { $item_info .= $ts_info; }
+	if ( $do_ts && !empty($ts_info) ) { $item_info .= $ts_info; }
 	
 	$flex_box_classes = "flex-box ".$aspect_ratio;
 	if ( !empty($spacing) ) { $flex_box_classes .= " ".$spacing; }
@@ -861,7 +882,12 @@ function display_grid_item ( $item = array(), $display_atts = array(), $ts_info 
 
 function birdhive_display_collection ( $a = array() ) {
 
-	// init
+	// TS/logging setup
+    $do_ts = false; 
+    $do_log = false;
+    sdg_log( "divline2", $do_log );
+
+	// Init vars
 	$info = "";
 	$ts_info = "";
 	$arr_dpatts = array(); // DP stands for "display posts" -- i.e. special attributes if this fcn has been called via the display_posts shortcode -- TODO: simplify?
@@ -1315,6 +1341,11 @@ function collection_footer ( $display_format = null ) {
 
 //
 function birdhive_get_posts ( $args = array() ) {
+
+	// TS/logging setup
+    $do_ts = false; 
+    $do_log = false;
+    sdg_log( "divline2", $do_log );
     
     global $wpdb;
     
@@ -1684,7 +1715,7 @@ function birdhive_get_posts ( $args = array() ) {
     $arr_info['arr_posts'] = $arr_posts;
     $arr_info['args'] = $wp_args;
     $arr_info['category_link'] = $category_link;
-    $arr_info['ts_info'] = $ts_info;
+    if ( $do_ts ) { $arr_info['ts_info'] = $ts_info; } else { $arr_info['ts_info'] = null; }
     
     return $arr_info;
 }
@@ -1693,6 +1724,11 @@ function birdhive_get_posts ( $args = array() ) {
 // This shortcode is in use on numerous Pages, as well as via the archive.php page template
 add_shortcode('display_posts', 'birdhive_display_posts');
 function birdhive_display_posts ( $atts = [] ) { //function birdhive_display_posts ( $args = array() ) {
+
+	// TS/logging setup
+    $do_ts = false; 
+    $do_log = false;
+    sdg_log( "divline2", $do_log );
 	
 	global $wpdb;
 	$info = "";
@@ -1948,6 +1984,12 @@ function match_group_field ( $field_groups, $field_name ) {
 add_shortcode('birdhive_search_form', 'birdhive_search_form');
 function birdhive_search_form ($atts = [], $content = null, $tag = '') {
 //function birdhive_search_form ( $args = array() ) {
+
+	// TS/logging setup
+    $do_ts = false; 
+    $do_log = false;
+    sdg_log( "divline2", $do_log );
+    
 	/*
     // Defaults
 	$defaults = array(
