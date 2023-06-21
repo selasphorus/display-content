@@ -1871,7 +1871,7 @@ function birdhive_display_posts ( $atts = [] ) { //function birdhive_display_pos
     	
         $posts_info = birdhive_get_posts( $a );
         $posts = $posts_info['arr_posts']->posts; // Retrieves an array of WP_Post Objects
-        $info .= $posts_info['info'];
+        //$info .= $posts_info['info']; // obsolete(?)
         $ts_info .= $posts_info['ts_info'];
     }
     
