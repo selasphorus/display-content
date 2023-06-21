@@ -654,13 +654,7 @@ function get_post_links( $post_id = null ) {
 	$info = "";
 	//$ts_info = "";
 	
-	$post = get_post( $post_id );
-	if ( has_excerpt( $post_id ) ) { 
-		$preview_text = $post->post_excerpt; // ??
-	} else {
-		$preview_text = get_the_excerpt($post_id);
-	}
-	$full_text = $post->post_content;
+	//
 		
 }
 
