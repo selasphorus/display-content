@@ -399,16 +399,11 @@ function dsplycntnt_get_excerpt( $args = array() ) {
 	// Apply filters
 	//$defaults = apply_filters( 'dsplycntnt_get_excerpt_defaults', $defaults );
 
-	// Parse args
+	// Parse & Extract args
 	$args = wp_parse_args( $args, $defaults );
+	extract( $args );
 	
 	//$info .= "args: <pre>".print_r($args, true)."</pre>";
-
-	// Apply filters to args
-	//$args = apply_filters( 'dsplycntnt_get_excerpt_args', $defaults );
-
-	// Extract
-	extract( $args );
 
 	if ( $post_id ) {	
 		$post = get_post( $post_id );		
@@ -471,10 +466,8 @@ function expandable_text( $post_id = null, $text_length = "excerpt", $preview_le
 		'readmore'        => false,
 	);
 	
-    // Parse args
+    // Parse & Extract args
 	$args = wp_parse_args( $args, $defaults );
-
-	// Extract
 	extract( $args );
 	*/
 	
@@ -1359,11 +1352,9 @@ function birdhive_get_posts ( $args = array() ) {
 		'series'			=> null, // For Events & Sermons, if those post_types exist for the current application
 	);
 	
-    // Parse args
+    // Parse & Extract args
 	$args = wp_parse_args( $args, $defaults );
-
-	// Extract
-	extract( $args );    
+	extract( $args );   
     
     // Limit, aka posts_per_page, aka num posts to retrieve
     if ( empty($posts_per_page) && !empty($limit) ) { $posts_per_page = $limit;}
@@ -1693,7 +1684,6 @@ function birdhive_get_posts ( $args = array() ) {
     $arr_info['arr_posts'] = $arr_posts;
     $arr_info['args'] = $wp_args;
     $arr_info['category_link'] = $category_link;
-    //$arr_info['info'] = $info; // obsolete(?)
     $arr_info['ts_info'] = $ts_info;
     
     return $arr_info;
@@ -1966,10 +1956,8 @@ function birdhive_search_form ($atts = [], $content = null, $tag = '') {
 		'readmore'        => false,
 	);
 	
-    // Parse args
+    // Parse & Extract args
 	$args = wp_parse_args( $args, $defaults );
-
-	// Extract
 	extract( $args );
 	*/
 	
