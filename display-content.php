@@ -1343,7 +1343,7 @@ function collection_footer ( $display_format = null ) {
 function birdhive_get_posts ( $args = array() ) {
 
 	// TS/logging setup
-    $do_ts = true; 
+    $do_ts = false; 
     $do_log = false;
     sdg_log( "divline2", $do_log );
     
@@ -1727,7 +1727,7 @@ add_shortcode('display_posts', 'birdhive_display_posts');
 function birdhive_display_posts ( $atts = [] ) { //function birdhive_display_posts ( $args = array() ) {
 
 	// TS/logging setup
-    $do_ts = true; 
+    $do_ts = false; 
     $do_log = false;
     sdg_log( "divline2", $do_log );
 	
@@ -1757,10 +1757,12 @@ function birdhive_display_posts ( $atts = [] ) { //function birdhive_display_pos
         'tax_terms'  => null,
         //
         'return_format' => 'links', // other options: excerpts; archive (full post content); grid; table
+        // For grid return_format:
         'cols' => 4,
         'spacing' => 'spaced',
         'header' => false,
         'overlay' => false,
+        //
         'has_image' => false, // set to true to ONLY return posts with features images
         'class' => null, // for additional styling
         'show_images' => false,
@@ -1784,30 +1786,10 @@ function birdhive_display_posts ( $atts = [] ) { //function birdhive_display_pos
 	extract( $args );
 	
 	$ts_info .= 'extracted args <pre>'.print_r($args, true).'</pre>';
-	$ts_info .= "post_type: ".$post_type."<br />";	
+	$ts_info .= "post_type: ".$post_type."<br />";
+    
     //
-    /*
-    $return_format = $args['return_format'];
-    $class = $args['class'];
-    $show_images = $args['show_images'];
-    $expandable = $args['expandable'];
-    $text_length = $args['text_length'];
-    $preview_length = $args['preview_length'];
-    
-    // For grid format:
-    $num_cols = $args['cols'];
-    $spacing = $args['spacing'];
-    $header = $args['header'];
-    $overlay = $args['overlay'];
-    
-    // For table format:
-    $fields = $args['fields'];
-    $headers = $args['headers'];
-    */
-    
-    // Meta...
-    
-    // 'category' applies to pages and posts only, but it's an easy mistake to use that attribute for events too => correct for that possibility
+    // TODO: 'category' applies to pages and posts only, but it's an easy mistake to use that attribute for events too => correct for that possibility
     // NB we'll only do this if NOT searching for events in a series, because in that case we're running a NON-EM get
     
     // Events are a special case...
