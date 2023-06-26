@@ -1361,7 +1361,7 @@ function birdhive_get_posts ( $args = array() ) {
 
     // Defaults
 	$defaults = array(
-		'limit'				=> -1,
+		'limit'				=> null,
 		'posts_per_page'  	=> -1,
 		'_search_title'		=> null, // The search_title is a special placeholder field handled by the birdhive_posts_where fcn
 		'_meta_or_tax'		=> null, // TODO: deal w/ underscore?
@@ -1388,7 +1388,7 @@ function birdhive_get_posts ( $args = array() ) {
 	extract( $args );   
     
     // Limit, aka posts_per_page, aka num posts to retrieve
-    if ( empty($posts_per_page) && !empty($limit) ) { $posts_per_page = $limit;}
+    if ( !empty($limit) ) { $posts_per_page = $limit; }
     
     // Set up basic query args
     $wp_args = array(
@@ -1478,7 +1478,7 @@ function birdhive_get_posts ( $args = array() ) {
         // Orderby
         if ( isset($orderby) ) {
         
-        	$ts_info .= "orderby: ".print_r($orderby, true);
+        	$ts_info .= "orderby: ".print_r($orderby, true)."<br />";
 
 			if ( !is_array($orderby) && strpos($orderby, ',') !== false) {
 				$orderby = str_replace(","," ",$orderby);
