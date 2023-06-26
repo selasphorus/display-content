@@ -1783,10 +1783,9 @@ function birdhive_display_posts ( $atts = [] ) { //function birdhive_display_pos
 	extract( $args );
 	
 	$ts_info .= 'extracted args <pre>'.print_r($args, true).'</pre>';
-	$ts_info .= "post_type: ".$post_type."<br />";
-	
+	$ts_info .= "post_type: ".$post_type."<br />";	
     //
-    /*$post_type = $args['post_type'];
+    /*
     $return_format = $args['return_format'];
     $class = $args['class'];
     $show_images = $args['show_images'];
@@ -1808,11 +1807,18 @@ function birdhive_display_posts ( $atts = [] ) { //function birdhive_display_pos
     // Meta...
     
     // 'category' applies to pages and posts only, but it's an easy mistake to use that attribute for events too => correct for that possibility
-    // NB we'll only do this if not searching for events in a series, because in that case we're running a non-EM get
+    // NB we'll only do this if NOT searching for events in a series, because in that case we're running a NON-EM get
     // TODO: clean this all up...
-    if ( $post_type == "event" && !empty($args['series']) ) {
-    	//if ( $orderby == "event_start_date" ) { $orderby = "_event_start_date"; }
-    	//if ( $args['meta_key'] == "event_start_date" ) { $args['meta_key'] = "_event_start_date"; }
+    if ( $post_type == "event" && !empty($series) ) {
+    	$ts_info .= "searching for events with series_id: ".$series."<br />";
+    	if ( empty($meta_key) && $orderby == "event_start_date" ) { 
+    		$args['orderby'] = "meta_value";
+    		$args['meta_key'] = "_event_start_date";
+    		//if ( $orderby == "event_start_date,event_start_time" ) { $orderby = "_event_start_date"; }		
+    	} else {
+    		if ( $meta_key == "event_start_date" ) { $args['meta_key'] = "_event_start_date"; }
+    		if ( empty($orderby) ) { $args['orderby'] = "meta_value"; } else { $ts_info .= "args['meta_key']: ".$args['meta_key']."<br />"; $ts_info .= "orderby: ".$orderby."<br />"; }
+    	}    	
     	if ( isset($args['category']) &&  !isset($args['taxonomy']) ) { $args['taxonomy'] = "event-categories"; $args['tax_terms'] = $args['category']; unset($args["category"]); }
     }
     
