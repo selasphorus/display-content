@@ -1781,6 +1781,9 @@ function birdhive_display_posts ( $atts = [] ) { //function birdhive_display_pos
     
     // Extract
 	extract( $args );
+	
+	$ts_info .= 'extracted args <pre>'.print_r($args, true).'</pre>';
+	
     //
     /*$post_type = $args['post_type'];
     $return_format = $args['return_format'];
@@ -1807,8 +1810,8 @@ function birdhive_display_posts ( $atts = [] ) { //function birdhive_display_pos
     // NB we'll only do this if not searching for events in a series, because in that case we're running a non-EM get
     // TODO: clean this all up...
     if ( $post_type == "event" && !empty($args['series']) ) {
-    	if ( $orderby == "event_start_date" ) { $orderby = "_event_start_date"; }
-    	if ( $args['meta_key'] == "event_start_date" ) { $args['meta_key'] = "_event_start_date"; }
+    	//if ( $orderby == "event_start_date" ) { $orderby = "_event_start_date"; }
+    	//if ( $args['meta_key'] == "event_start_date" ) { $args['meta_key'] = "_event_start_date"; }
     	if ( isset($args['category']) &&  !isset($args['taxonomy']) ) { $args['taxonomy'] = "event-categories"; $args['tax_terms'] = $args['category']; unset($args["category"]); }
     }
     
