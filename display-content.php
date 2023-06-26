@@ -1783,6 +1783,7 @@ function birdhive_display_posts ( $atts = [] ) { //function birdhive_display_pos
 	extract( $args );
 	
 	$ts_info .= 'extracted args <pre>'.print_r($args, true).'</pre>';
+	$ts_info .= "post_type: ".$post_type."<br />";
 	
     //
     /*$post_type = $args['post_type'];
