@@ -1476,13 +1476,15 @@ function birdhive_get_posts ( $args = array() ) {
         //if ( !empty($terms) ) { } // TBD
         
         // Orderby
-        if ( isset($a['orderby']) ) {
+        if ( isset($orderby) ) {
+        //if ( isset($a['orderby']) ) {
         
-        	$ts_info .= "orderby: ".print_r($a['orderby'], true);
+        	$ts_info .= "orderby: ".print_r($orderby, true);
+        	//$ts_info .= "orderby: ".print_r($a['orderby'], true);
 
-			if ( !is_array($a['orderby']) && strpos($a['orderby'], ',') !== false) {
-				$a['orderby'] = str_replace(","," ",$a['orderby']);
-				//$a['orderby'] = birdhive_att_explode( $a['orderby'] );
+			if ( !is_array($orderby) && strpos($orderby, ',') !== false) {
+				$orderby = str_replace(","," ",$orderby);
+				//$orderby = birdhive_att_explode( $orderby );
 			}
 			
             $standard_orderby_values = array( 'none', 'ID', 'author', 'title', 'name', 'type', 'date', 'modified', 'parent', 'rand', 'comment_count', 'relevance', 'menu_order', 'meta_value', 'meta_value_num', 'post__in', 'post_name__in', 'post_parent__in' );
@@ -1490,20 +1492,21 @@ function birdhive_get_posts ( $args = array() ) {
             // TODO: set default orderby per post_type(?)
             
             // determine if orderby is actually meta_value or meta_value_num with orderby $a value to be used as meta_key
-            if ( !is_array($a['orderby']) ) {
+            if ( !is_array($orderby) ) {
                 
-                if ( !in_array( $a['orderby'], $standard_orderby_values) ) {
+                // Is the orderby value one of the standard values for ordering?
+                if ( !in_array( $orderby, $standard_orderby_values) ) {
                 	
                 	// TODO: determine whether to sort meta values as numbers or as text
-					if (strpos($a['orderby'], 'num') !== false) {
+					if (strpos($orderby, 'num') !== false) {
 						$wp_args['orderby'] = 'meta_value_num'; // or meta_value?
 					} else {
 						$wp_args['orderby'] = 'meta_value';
 					}
-					$wp_args['meta_key'] = $a['orderby'];
+					$wp_args['meta_key'] = $orderby;
                 
                 } else {
-                	$wp_args['orderby'] = $a['orderby'];
+                	$wp_args['orderby'] = $orderby;
                 }
                 
                 /* //TODO: consider naming meta_query sub-clauses, as per the following example:
@@ -1529,7 +1532,7 @@ function birdhive_get_posts ( $args = array() ) {
             
             	$orderby = array();
             		
-				foreach ( $a['orderby'] as $k => $v ) {
+				foreach ( $orderby as $k => $v ) {
 					$v = trim($v);
 					if ( in_array( $k, $standard_orderby_values ) && ($v == "ASC" || $v == "DESC") ) {
 						$orderby[$k] = $v;
