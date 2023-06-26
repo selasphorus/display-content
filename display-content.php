@@ -880,7 +880,7 @@ function display_grid_item ( $item = array(), $display_atts = array(), $ts_info 
 	
 }
 
-function birdhive_display_collection ( $a = array() ) {
+function birdhive_display_collection ( $args = array() ) {
 
 	// TS/logging setup
     $do_ts = false; 
@@ -893,12 +893,12 @@ function birdhive_display_collection ( $a = array() ) {
 	$arr_dpatts = array(); // DP stands for "display posts" -- i.e. special attributes if this fcn has been called via the display_posts shortcode -- TODO: simplify?
 	$collection_id = null;
 	
-	//$ts_info .= "dsplycntnt atts: <pre>".print_r($a, true)."</pre>";
+	//$ts_info .= "dsplycntnt atts: <pre>".print_r($args, true)."</pre>";
 	
 	// Get args from array
-	if ( isset($a['collection_id']) ) {
+	if ( isset($args['collection_id']) ) {
 		
-		$collection_id = $a['collection_id'];	
+		$collection_id = $args['collection_id'];	
 		$ts_info .= "collection_id: $collection_id<br />";
 		
 		$content_type = "mixed"; // tft
@@ -910,17 +910,17 @@ function birdhive_display_collection ( $a = array() ) {
 		//
 		if ( $display_format == "table" ) { $fields = get_field('table_fields', $collection_id); } else { $fields = array(); }
 		if ( $display_format == "grid" ) { $num_cols = get_field('num_cols', $collection_id); } else { $num_cols = "3"; }
-		//$content_type = $a['content_type']; -- probably mixed, but could be posts or whatever, collection of single type of items -- would have to loop to determine
+		//$content_type = $args['content_type']; -- probably mixed, but could be posts or whatever, collection of single type of items -- would have to loop to determine
 		
     	
 	} else {
 	
 		$ts_info .= "No collection_id set<br />";
 		
-		$content_type = $a['content_type'];
-		$display_format = $a['display_format'];
-		$items = $a['items'];
-		$arr_dpatts = $a['arr_dpatts'];
+		$content_type = $args['content_type'];
+		$display_format = $args['display_format'];
+		$items = $args['items'];
+		$arr_dpatts = $args['arr_dpatts'];
 		
 		if ( $display_format == "table" && isset($arr_dpatts['fields']) ) { $fields = $arr_dpatts['fields']; } else { $fields = array(); }
 		if ( $display_format == "grid" && isset($arr_dpatts['cols']) ) { $num_cols = $arr_dpatts['cols']; } else { $num_cols = "3"; }
@@ -930,7 +930,7 @@ function birdhive_display_collection ( $a = array() ) {
 	}
 	
 	$ts_info .= "num_cols: $num_cols<br />";
-	//?if ( $content_type == "posts" ) { $post_type = $a['post_type']; }
+	//?if ( $content_type == "posts" ) { $post_type = $args['post_type']; }
 	
 	// List/table/grid header or container
 	$info .= collection_header ( $display_format, $fields, $num_cols, $aspect_ratio );
@@ -1255,7 +1255,7 @@ function birdhive_display_collection ( $a = array() ) {
 	// Return info for display
 	return $info;
 	
-} // END function birdhive_display_collection ( $a = array() ) 
+} // END function birdhive_display_collection ( $args = array() ) 
 
 function collection_header ( $display_format = null, $fields = null, $num_cols = 3, $aspect_ratio = "square" ) {
 
@@ -1477,10 +1477,8 @@ function birdhive_get_posts ( $args = array() ) {
         
         // Orderby
         if ( isset($orderby) ) {
-        //if ( isset($a['orderby']) ) {
         
         	$ts_info .= "orderby: ".print_r($orderby, true);
-        	//$ts_info .= "orderby: ".print_r($a['orderby'], true);
 
 			if ( !is_array($orderby) && strpos($orderby, ',') !== false) {
 				$orderby = str_replace(","," ",$orderby);
@@ -1491,7 +1489,7 @@ function birdhive_get_posts ( $args = array() ) {
             
             // TODO: set default orderby per post_type(?)
             
-            // determine if orderby is actually meta_value or meta_value_num with orderby $a value to be used as meta_key
+            // determine if orderby is actually meta_value or meta_value_num with orderby $args value to be used as meta_key
             if ( !is_array($orderby) ) {
                 
                 // Is the orderby value one of the standard values for ordering?
@@ -1611,7 +1609,7 @@ function birdhive_get_posts ( $args = array() ) {
         
 			// Featured Image restrictions?
 			// TODO: update this to account for custom_thumb and first_image options? Or is it no longer necessary at all?
-			if ( isset($a['has_image']) && $a['has_image'] == true ) {
+			if ( isset($args['has_image']) && $args['has_image'] == true ) {
 				$meta_query_components[] = 
 					array(
 						'key' => '_thumbnail_id',
@@ -1620,7 +1618,7 @@ function birdhive_get_posts ( $args = array() ) {
 			}
 
 			// WIP/TODO: check to see if meta_query was set already via query args...
-			//if ( !isset($a['meta_query']) )  {
+			//if ( !isset($args['meta_query']) )  {
 
 			if ( ( $meta_key && $meta_value ) ) {
 
@@ -1737,7 +1735,7 @@ function birdhive_display_posts ( $atts = [] ) { //function birdhive_display_pos
 	$info = "";
 	$ts_info = "";
 
-	$a = shortcode_atts( array(
+	$args = shortcode_atts( array(
         
         'post_type'	=> 'post',
         'limit' 	=> 15,
@@ -1782,25 +1780,25 @@ function birdhive_display_posts ( $atts = [] ) { //function birdhive_display_pos
     ), $atts );
     
     // Extract
-	extract( $a );
+	extract( $args );
     //
-    /*$post_type = $a['post_type'];
-    $return_format = $a['return_format'];
-    $class = $a['class'];
-    $show_images = $a['show_images'];
-    $expandable = $a['expandable'];
-    $text_length = $a['text_length'];
-    $preview_length = $a['preview_length'];
+    /*$post_type = $args['post_type'];
+    $return_format = $args['return_format'];
+    $class = $args['class'];
+    $show_images = $args['show_images'];
+    $expandable = $args['expandable'];
+    $text_length = $args['text_length'];
+    $preview_length = $args['preview_length'];
     
     // For grid format:
-    $num_cols = $a['cols'];
-    $spacing = $a['spacing'];
-    $header = $a['header'];
-    $overlay = $a['overlay'];
+    $num_cols = $args['cols'];
+    $spacing = $args['spacing'];
+    $header = $args['header'];
+    $overlay = $args['overlay'];
     
     // For table format:
-    $fields = $a['fields'];
-    $headers = $a['headers'];
+    $fields = $args['fields'];
+    $headers = $args['headers'];
     */
     
     // Meta...
@@ -1808,16 +1806,16 @@ function birdhive_display_posts ( $atts = [] ) { //function birdhive_display_pos
     // 'category' applies to pages and posts only, but it's an easy mistake to use that attribute for events too => correct for that possibility
     // NB we'll only do this if not searching for events in a series, because in that case we're running a non-EM get
     // TODO: clean this all up...
-    if ( $post_type == "event" && !empty($a['series']) ) {
-    	if ( $a['orderby'] == "event_start_date" ) { $a['orderby'] = "_event_start_date"; }
-    	if ( $a['meta_key'] == "event_start_date" ) { $a['meta_key'] = "_event_start_date"; }
-    	if ( isset($a['category']) &&  !isset($a['taxonomy']) ) { $a['taxonomy'] = "event-categories"; $a['tax_terms'] = $a['category']; unset($a["category"]); }
+    if ( $post_type == "event" && !empty($args['series']) ) {
+    	if ( $orderby == "event_start_date" ) { $orderby = "_event_start_date"; }
+    	if ( $args['meta_key'] == "event_start_date" ) { $args['meta_key'] = "_event_start_date"; }
+    	if ( isset($args['category']) &&  !isset($args['taxonomy']) ) { $args['taxonomy'] = "event-categories"; $args['tax_terms'] = $args['category']; unset($args["category"]); }
     }
     
     // Clean up the array
-    if ( $post_type !== "event" ) { unset($a["scope"]); }
-    if ( $post_type !== "event" && $post_type !== "sermon" ) { unset($a["series"]); }
-    if ( $return_format != "grid" ) { unset($a["cols"]); unset($a["spacing"]); unset($a["overlay"]); }
+    if ( $post_type !== "event" ) { unset($args["scope"]); }
+    if ( $post_type !== "event" && $post_type !== "sermon" ) { unset($args["series"]); }
+    if ( $return_format != "grid" ) { unset($args["cols"]); unset($args["spacing"]); unset($args["overlay"]); }
     
     // Make sure the return_format is valid
     // TODO: revive/fix "archive" option -- deal w/ get_template_part issue...
@@ -1826,7 +1824,7 @@ function birdhive_display_posts ( $atts = [] ) { //function birdhive_display_pos
     }
     
     // Retrieve an array of posts matching the args supplied
-    if ( post_type_exists('event') && $post_type == 'event' && empty($a['series']) ) {
+    if ( post_type_exists('event') && $post_type == 'event' && empty($args['series']) ) {
     
     	// Use EM get if no series is set  
     	
@@ -1834,21 +1832,21 @@ function birdhive_display_posts ( $atts = [] ) { //function birdhive_display_pos
         // TODO: deal w/ taxonomy parameters -- how to translate these properly for EM?
         
         // Unset args irrelevant to EM search attributes -- ??
-        //unset($a["meta_key"]); unset($a["meta_value"]); unset($a["name"]); unset($a["taxonomy"]); unset($a["tax_terms"]); unset($a["return_format"]); unset($a["cols"]); unset($a["return_format"]);
+        //unset($args["meta_key"]); unset($args["meta_value"]); unset($args["name"]); unset($args["taxonomy"]); unset($args["tax_terms"]); unset($args["return_format"]); unset($args["cols"]); unset($args["return_format"]);
         
         // Create array of args relevant to EM search attributes
         $em_args = array();
-        $em_args['limit'] = $a['limit'];
-        $em_args['order'] = $a['order'];
-        $em_args['orderby'] = $a['orderby'];
-        $em_args['category'] = $a['category'];
-        $em_args['scope'] = $a['scope'];
+        $em_args['limit'] = $args['limit'];
+        $em_args['order'] = $args['order'];
+        $em_args['orderby'] = $orderby;
+        $em_args['category'] = $args['category'];
+        $em_args['scope'] = $args['scope'];
         
         // Posts by ID -- translate to fit EM search attributes (https://wp-events-plugin.com/documentation/event-search-attributes/)
-		if ( isset($a['ids']) && !empty($a['ids']) ) {
-			$ts_info .= "Getting posts by IDs: ".$a['ids']."<br />";
-			//$em_args['event'] = $a['ids'];
-			$em_args['post_id'] = $a['ids'];
+		if ( isset($args['ids']) && !empty($args['ids']) ) {
+			$ts_info .= "Getting posts by IDs: ".$args['ids']."<br />";
+			//$em_args['event'] = $args['ids'];
+			$em_args['post_id'] = $args['ids'];
 		}
         if ( $em_args ) { $ts_info .= 'shortcode_atts as passed to EM_Events::get <pre>'.print_r($em_args, true).'</pre>'; } // tft
         
@@ -1869,11 +1867,11 @@ function birdhive_display_posts ( $atts = [] ) { //function birdhive_display_pos
     	
     	// NOT events -- or: events in a series
     	
-    	if ( $a ) { $ts_info .= 'shortcode_atts as passed to birdhive_get_posts: <pre>'.print_r($a, true).'</pre>'; } // tft
+    	if ( $args ) { $ts_info .= 'shortcode_atts as passed to birdhive_get_posts: <pre>'.print_r($args, true).'</pre>'; } // tft
     	
     	// TODO: deal w/ events scope even if searching for series?
     	
-        $posts_info = birdhive_get_posts( $a );
+        $posts_info = birdhive_get_posts( $args );
         $posts = $posts_info['arr_posts']->posts; // Retrieves an array of WP_Post Objects
         //$info .= $posts_info['info']; // obsolete(?)
         $ts_info .= $posts_info['ts_info'];
@@ -1883,9 +1881,9 @@ function birdhive_display_posts ( $atts = [] ) { //function birdhive_display_pos
         
         //$ts_info .= '<pre>'.print_r($posts, true).'</pre>'; // tft
         
-		//if ($a['header'] == 'true') { $info .= '<h3>Latest '.$category.' Articles:</h3>'; } // WIP
+		//if ($args['header'] == 'true') { $info .= '<h3>Latest '.$category.' Articles:</h3>'; } // WIP
 		$info .= '<div class="dsplycntnt-posts '.$class.'">';        
-        $display_args = array( 'content_type' => 'posts', 'display_format' => $return_format, 'items' => $posts, 'arr_dpatts' => $a );
+        $display_args = array( 'content_type' => 'posts', 'display_format' => $return_format, 'items' => $posts, 'arr_dpatts' => $args );
         $info .= birdhive_display_collection( $display_args );
         $info .= '</div>'; // end div class="dsplycntnt-posts" (wrapper)
         
@@ -1910,11 +1908,11 @@ function birdhive_content_collection ( $atts = [] ) {
 	$info = "";
 	$ts_info = "";
 	
-	$a = shortcode_atts( array(
+	$args = shortcode_atts( array(
         'id' => null,
     ), $atts );
     
-    $collection_id = $a['id'];
+    $collection_id = $args['id'];
     
     $info .= birdhive_display_collection( array('collection_id' => $collection_id) );
     
@@ -2001,23 +1999,23 @@ function birdhive_search_form ($atts = [], $content = null, $tag = '') {
     $ts_info .= '_GET: <pre>'.print_r($_GET,true).'</pre>'; // tft
     //$ts_info .= '_REQUEST: <pre>'.print_r($_REQUEST,true).'</pre>'; // tft
         
-	$a = shortcode_atts( array(
+	$args = shortcode_atts( array(
 		'post_type'    => 'post',
 		'fields'       => null,
         'form_type'    => 'simple_search',
         'limit'        => '-1'
     ), $atts );
     
-    $post_type = $a['post_type'];
-    $form_type = $a['form_type'];
-    $limit = $a['limit'];
+    $post_type = $args['post_type'];
+    $form_type = $args['form_type'];
+    $limit = $args['limit'];
     
     //$info .= "form_type: $form_type<br />"; // tft
 
     // After building the form, assuming any search terms have been submitted, we're going to call the function birdhive_get_posts
     // In prep for that search call, initialize some vars to be used in the args array
     // Set up basic query args
-    $query_args = array(
+    $wp_args = array(
 		'post_type'       => array( $post_type ), // Single item array, for now. May add other related_post_types -- e.g. repertoire; edition
 		'post_status'     => 'publish',
 		'posts_per_page'  => $limit, //-1, //$posts_per_page,
@@ -2060,10 +2058,10 @@ function birdhive_search_form ($atts = [], $content = null, $tag = '') {
     $query_assignment = "primary"; // init -- each field pertains to either primary or related query
     
     // Check to see if any fields have been designated via the shortcode attributes
-    if ( $a['fields'] ) {
+    if ( $args['fields'] ) {
         
         // Turn the fields list into an array
-        $arr_fields = birdhive_att_explode( $a['fields'] ); //if ( function_exists('sdg_att_explode') ) { }
+        $arr_fields = birdhive_att_explode( $args['fields'] ); //if ( function_exists('sdg_att_explode') ) { }
         //$info .= print_r($arr_fields, true); // tft
         
         // e.g. http://stthomas.choirplanner.com/library/search.php?workQuery=Easter&composerQuery=Williams
@@ -2315,8 +2313,8 @@ function birdhive_search_form ($atts = [], $content = null, $tag = '') {
                     
                     if ( $field_name == "post_title" && !empty($field_value) ) {
                         
-                        //$query_args['s'] = $field_value;
-                        $query_args['_search_title'] = $field_value; // custom parameter -- see posts_where filter fcn
+                        //$wp_args['s'] = $field_value;
+                        $wp_args['_search_title'] = $field_value; // custom parameter -- see posts_where filter fcn
 
                     } else if ( $field_type == "text" && !empty($field_value) ) { 
                         
@@ -2784,24 +2782,24 @@ function birdhive_search_form ($atts = [], $content = null, $tag = '') {
         // then set up a second set of args/birdhive_get_posts
         if ( $search_primary_post_type == true && $search_related_post_type == true && $search_operator == "and" ) { 
             $ts_info .= "Querying both primary and related post_types (two sets of args)<br />";
-            $args_related = $query_args;
+            $args_related = $wp_args;
             $args_related['post_type'] = $related_post_type; // reset post_type            
         } else if ( $search_primary_post_type == true && $search_related_post_type == true && $search_operator == "or" ) { 
             // WIP -- in this case
             $ts_info .= "Querying both primary and related post_types (two sets of args) but with OR operator... WIP<br />";
-            //$args_related = $query_args;
+            //$args_related = $wp_args;
             //$args_related['post_type'] = $related_post_type; // reset post_type            
         } else {
             if ( $search_primary_post_type == true ) {
                 // Searching primary post_type only
                 $ts_info .= "Searching primary post_type only<br />";
-                $query_args['post_type'] = $post_type;
+                $wp_args['post_type'] = $post_type;
                 $mq_components = $mq_components_primary;
                 $tq_components = $tq_components_primary;
             } else if ( $search_related_post_type == true ) {
                 // Searching related post_type only
                 $ts_info .= "Searching related post_type only<br />";
-                $query_args['post_type'] = $related_post_type;
+                $wp_args['post_type'] = $related_post_type;
                 $mq_components = $mq_components_related;
                 $tq_components = $tq_components_related;
             }
@@ -2811,7 +2809,7 @@ function birdhive_search_form ($atts = [], $content = null, $tag = '') {
         // ==============================
         /* 
         WIP if meta_key = title_clean and related_post_type is true then incorporate also, using title_clean meta_value:
-        $query_args['_search_title'] = $field_value; // custom parameter -- see posts_where filter fcn
+        $wp_args['_search_title'] = $field_value; // custom parameter -- see posts_where filter fcn
         */
         
         if ( empty($args_related) ) {
@@ -2828,7 +2826,7 @@ function birdhive_search_form ($atts = [], $content = null, $tag = '') {
                 }
             }
             
-            if ( !empty($meta_query) ) { $query_args['meta_query'] = $meta_query; }
+            if ( !empty($meta_query) ) { $wp_args['meta_query'] = $meta_query; }
             
         } else {
             
@@ -2846,7 +2844,7 @@ function birdhive_search_form ($atts = [], $content = null, $tag = '') {
             /*foreach ( $mq_components_primary AS $component ) {
                 $meta_query[] = $component;
             }*/
-            if ( !empty($meta_query) ) { $query_args['meta_query'] = $meta_query; }
+            if ( !empty($meta_query) ) { $wp_args['meta_query'] = $meta_query; }
             
             // related query
             if ( count($mq_components_related) > 1 && empty($meta_query_related['relation']) ) {
@@ -2877,7 +2875,7 @@ function birdhive_search_form ($atts = [], $content = null, $tag = '') {
             foreach ( $tq_components AS $component ) {
                 $tax_query[] = $component;
             }
-            if ( !empty($tax_query) ) { $query_args['tax_query'] = $tax_query; }
+            if ( !empty($tax_query) ) { $wp_args['tax_query'] = $tax_query; }
             
         } else {
             
@@ -2888,7 +2886,7 @@ function birdhive_search_form ($atts = [], $content = null, $tag = '') {
             foreach ( $tq_components_primary AS $component ) {
                 $tax_query[] = $component;
             }
-            if ( !empty($tax_query) ) { $query_args['tax_query'] = $tax_query; }
+            if ( !empty($tax_query) ) { $wp_args['tax_query'] = $tax_query; }
             
             // related query
             if ( count($tq_components_related) > 1 && empty($tax_query_related['relation']) ) {
@@ -2909,7 +2907,7 @@ function birdhive_search_form ($atts = [], $content = null, $tag = '') {
             
             if ( $search_operator == "or" ) {
                 if ( !empty($tax_query) && !empty($meta_query) ) {
-                    $query_args['_meta_or_tax'] = true; // custom parameter -- see posts_where filters
+                    $wp_args['_meta_or_tax'] = true; // custom parameter -- see posts_where filters
                 }
             }
         }
@@ -2918,15 +2916,15 @@ function birdhive_search_form ($atts = [], $content = null, $tag = '') {
         // If search values have been submitted, then run the search query
         if ( count($search_values) > 0 ) {
             
-            $ts_info .= "About to pass query_args to birdhive_get_posts: <pre>".print_r($query_args,true)."</pre>"; // tft
+            $ts_info .= "About to pass wp_args to birdhive_get_posts: <pre>".print_r($wp_args,true)."</pre>"; // tft
             
             // Get posts matching the assembled args
             /* ===================================== */
             if ( $form_type == "advanced_search" ) {
                 //$ts_info .= "<strong>NB: search temporarily disabled for troubleshooting.</strong><br />"; $posts_info = array(); // tft
-                $posts_info = birdhive_get_posts( $query_args );
+                $posts_info = birdhive_get_posts( $wp_args );
             } else {
-                $posts_info = birdhive_get_posts( $query_args );
+                $posts_info = birdhive_get_posts( $wp_args );
             }
             
             if ( isset($posts_info['arr_posts']) ) {
@@ -3081,7 +3079,7 @@ function birdhive_search_form ($atts = [], $content = null, $tag = '') {
             
         }        
         
-    } // END if ( $a['fields'] )
+    } // END if ( $args['fields'] )
     
     if ( $do_ts ) {
 		$info .= '<div class="troubleshooting">';
