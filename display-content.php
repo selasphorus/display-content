@@ -1250,7 +1250,7 @@ function birdhive_display_collection ( $args = array() ) {
 	// List/table/grid footer or close container
 	$info .= collection_footer ( $display_format );
 	
-	$info .= '<div class="troubleshooting">'.$ts_info.'</div>';
+	if ( $do_ts ) { $info .= '<div class="troubleshooting">'.$ts_info.'</div>'; }
 	
 	// Return info for display
 	return $info;
@@ -1343,7 +1343,7 @@ function collection_footer ( $display_format = null ) {
 function birdhive_get_posts ( $args = array() ) {
 
 	// TS/logging setup
-    $do_ts = false; 
+    $do_ts = true; 
     $do_log = false;
     sdg_log( "divline2", $do_log );
     
@@ -1727,7 +1727,7 @@ add_shortcode('display_posts', 'birdhive_display_posts');
 function birdhive_display_posts ( $atts = [] ) { //function birdhive_display_posts ( $args = array() ) {
 
 	// TS/logging setup
-    $do_ts = false; 
+    $do_ts = true; 
     $do_log = false;
     sdg_log( "divline2", $do_log );
 	
