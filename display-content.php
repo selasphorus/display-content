@@ -1734,6 +1734,7 @@ function birdhive_display_posts ( $atts = [] ) { //function birdhive_display_pos
 	global $wpdb;
 	$info = "";
 	$ts_info = "";
+	$posts = array();
 
 	$args = shortcode_atts( array(
         
@@ -1808,19 +1809,65 @@ function birdhive_display_posts ( $atts = [] ) { //function birdhive_display_pos
     
     // 'category' applies to pages and posts only, but it's an easy mistake to use that attribute for events too => correct for that possibility
     // NB we'll only do this if NOT searching for events in a series, because in that case we're running a NON-EM get
-    // TODO: clean this all up...
-    if ( $post_type == "event" && !empty($series) ) {
-    	$ts_info .= "searching for events with series_id: ".$series."<br />";
-    	// If no meta_key is yet set and the orderby str is event_start, or _event_start_date, or variations on that theme, set the ordering and meta_key accordingly
-    	if ( empty($meta_key) && str_contains($orderby, "event_start" ) ) { 
-    		$args['orderby'] = "meta_value";
-    		$args['meta_key'] = "_event_start"; // use event_start because that covers date AND time	
+    
+    // Events are a special case...
+    if ( post_type_exists('event') && $post_type == "event" ) {    
+    	
+    	if ( empty($series) ) {
+    	
+    		// Use EM::get if no series ID has been designated
+			// TODO: check to see if EM plugin is installed and active?
+    	
+    		// If ordering is setup by meta_key, translate that for EM
+    		if ( empty($orderby) && str_contains($meta_key, "event_start" ) ) { $orderby = "event_start"; }		
+    		
+			// TODO: deal w/ taxonomy parameters -- how to translate these properly for EM?
+			// Deal w/ other args...: meta_key, meta_value, name, taxonomy, tax_terms, return_format, cols...
+		
+			// Create array of args relevant to EM search attributes
+			$em_args = array();
+			$em_args['limit'] = $limit;
+			$em_args['order'] = $order;
+			$em_args['orderby'] = $orderby;
+			$em_args['category'] = $category;
+			$em_args['scope'] = $scope;
+		
+			// Posts by ID -- translate to fit EM search attributes (https://wp-events-plugin.com/documentation/event-search-attributes/)
+			if ( !empty($ids) ) {
+				$ts_info .= "Getting posts by IDs: ".$ids."<br />";
+				$em_args['post_id'] = $ids;
+			}
+			if ( $em_args ) { $ts_info .= 'shortcode_atts as passed to EM_Events::get <pre>'.print_r($em_args, true).'</pre>'; } // tft
+		
+			$posts = EM_Events::get( $em_args ); // Retrieves an array of EM_Event Objects
+		
+			/*$ts_info .= 'Posts retrieved using EM_Events::get: <pre>';		
+			foreach ( $posts as $post ) {
+				//$ts_info .= "post: ".print_r($post, true)."<br />";
+				$ts_info .= "post_id: ".$post->post_id."<br />";
+				//$ts_info .= "event_attributes: ".print_r($post->event_attributes, true)."<br />";
+				if ( isset($post->event_attributes['event_series']) ) { $ts_info .= "event_series: ".$post->event_attributes['event_series']."<br />"; }
+			}*/
+			//$ts_info .= 'last_query: '.print_r( $wpdb->last_query, true); // '<pre></pre>'
+			$ts_info .= '</pre>'; // tft
+        
     	} else {
-    		if ( str_contains($meta_key, "event_start" ) ) { $args['meta_key'] = "_event_start"; }
-    		//if ( $meta_key == "event_start_date,event_start_time" ) { $args['meta_key'] = "_event_start_date"; }
-    		if ( empty($orderby) ) { $args['orderby'] = "meta_value"; } else { $ts_info .= "args['meta_key']: ".$args['meta_key']."<br />"; $ts_info .= "orderby: ".$orderby."<br />"; }
-    	}    	
-    	if ( isset($args['category']) &&  !isset($args['taxonomy']) ) { $args['taxonomy'] = "event-categories"; $args['tax_terms'] = $args['category']; unset($args["category"]); }
+    	
+    		$ts_info .= "searching for events with series_id: ".$series."<br />";
+    		
+    		// If no meta_key is yet set and the orderby str is event_start, or _event_start_date, or variations on that theme, set the ordering and meta_key accordingly
+			if ( empty($meta_key) && str_contains($orderby, "event_start" ) ) { 
+				$args['orderby'] = "meta_value";
+				$args['meta_key'] = "_event_start"; // use event_start because that covers date AND time	
+			} else {
+				if ( str_contains($meta_key, "event_start" ) ) { $args['meta_key'] = "_event_start"; }
+				//if ( $meta_key == "event_start_date,event_start_time" ) { $args['meta_key'] = "_event_start_date"; }
+				if ( empty($orderby) ) { $args['orderby'] = "meta_value"; } else { $ts_info .= "args['meta_key']: ".$args['meta_key']."<br />"; $ts_info .= "orderby: ".$orderby."<br />"; }
+			}
+    		
+    		if ( isset($args['category']) &&  !isset($args['taxonomy']) ) { $args['taxonomy'] = "event-categories"; $args['tax_terms'] = $args['category']; unset($args["category"]); }
+    	}
+    	
     }
     
     // Clean up the array
@@ -1834,47 +1881,8 @@ function birdhive_display_posts ( $atts = [] ) { //function birdhive_display_pos
         $return_format = "links"; // default
     }
     
-    // Retrieve an array of posts matching the args supplied
-    if ( post_type_exists('event') && $post_type == 'event' && empty($args['series']) ) {
-    
-    	// Use EM get if no series is set  
-    	
-    	// TODO: check to see if EM plugin is installed and active?
-        // TODO: deal w/ taxonomy parameters -- how to translate these properly for EM?
-        
-        // Unset args irrelevant to EM search attributes -- ??
-        //unset($args["meta_key"]); unset($args["meta_value"]); unset($args["name"]); unset($args["taxonomy"]); unset($args["tax_terms"]); unset($args["return_format"]); unset($args["cols"]); unset($args["return_format"]);
-        
-        // Create array of args relevant to EM search attributes
-        $em_args = array();
-        $em_args['limit'] = $args['limit'];
-        $em_args['order'] = $args['order'];
-        $em_args['orderby'] = $orderby;
-        $em_args['category'] = $args['category'];
-        $em_args['scope'] = $args['scope'];
-        
-        // Posts by ID -- translate to fit EM search attributes (https://wp-events-plugin.com/documentation/event-search-attributes/)
-		if ( isset($args['ids']) && !empty($args['ids']) ) {
-			$ts_info .= "Getting posts by IDs: ".$args['ids']."<br />";
-			//$em_args['event'] = $args['ids'];
-			$em_args['post_id'] = $args['ids'];
-		}
-        if ( $em_args ) { $ts_info .= 'shortcode_atts as passed to EM_Events::get <pre>'.print_r($em_args, true).'</pre>'; } // tft
-        
-        $posts = EM_Events::get( $em_args ); // Retrieves an array of EM_Event Objects
-        
-        //$ts_info .= 'Posts retrieved using EM_Events::get: <pre>';
-        
-        foreach ( $posts as $post ) {
-            //$ts_info .= "post: ".print_r($post, true)."<br />";
-            $ts_info .= "post_id: ".$post->post_id."<br />";
-            //$ts_info .= "event_attributes: ".print_r($post->event_attributes, true)."<br />";
-            if ( isset($post->event_attributes['event_series']) ) { $ts_info .= "event_series: ".$post->event_attributes['event_series']."<br />"; }
-        }
-        //$ts_info .= 'last_query: '.print_r( $wpdb->last_query, true); // '<pre></pre>'
-        $ts_info .= '</pre>'; // tft
-    
-    } else {
+    // Retrieve an array of posts matching the args supplied -- if we didn't already get the posts using EM
+    if ( empty($posts) ) {
     	
     	// NOT events -- or: events in a series
     	
