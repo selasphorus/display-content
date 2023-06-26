@@ -1811,12 +1811,13 @@ function birdhive_display_posts ( $atts = [] ) { //function birdhive_display_pos
     // TODO: clean this all up...
     if ( $post_type == "event" && !empty($series) ) {
     	$ts_info .= "searching for events with series_id: ".$series."<br />";
-    	if ( empty($meta_key) && $orderby == "event_start_date" ) { 
+    	// If no meta_key is yet set and the orderby str is event_start, or _event_start_date, or variations on that theme, set the ordering and meta_key accordingly
+    	if ( empty($meta_key) && str_contains($orderby, "event_start" ) ) { 
     		$args['orderby'] = "meta_value";
-    		$args['meta_key'] = "_event_start_date";
-    		//if ( $orderby == "event_start_date,event_start_time" ) { $orderby = "_event_start_date"; }		
+    		$args['meta_key'] = "_event_start"; // use event_start because that covers date AND time	
     	} else {
-    		if ( $meta_key == "event_start_date" ) { $args['meta_key'] = "_event_start_date"; }
+    		if ( str_contains($meta_key, "event_start" ) ) { $args['meta_key'] = "_event_start"; }
+    		//if ( $meta_key == "event_start_date,event_start_time" ) { $args['meta_key'] = "_event_start_date"; }
     		if ( empty($orderby) ) { $args['orderby'] = "meta_value"; } else { $ts_info .= "args['meta_key']: ".$args['meta_key']."<br />"; $ts_info .= "orderby: ".$orderby."<br />"; }
     	}    	
     	if ( isset($args['category']) &&  !isset($args['taxonomy']) ) { $args['taxonomy'] = "event-categories"; $args['tax_terms'] = $args['category']; unset($args["category"]); }
