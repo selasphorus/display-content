@@ -385,9 +385,8 @@ function dsplycntnt_get_excerpt( $args = array() ) {
 	
 	// init vars
 	$info = "";
-	$text = "";
-	
-	//$info .= "args: <pre>".print_r($args, true)."</pre>";
+	$text = "";	
+	//$info .= "args (initial): <pre>".print_r($args, true)."</pre>";
 	
 	// Defaults
 	$defaults = array(
@@ -408,19 +407,14 @@ function dsplycntnt_get_excerpt( $args = array() ) {
 
 	// Parse & Extract args
 	$args = wp_parse_args( $args, $defaults );
-	extract( $args );
-	
+	extract( $args );	
 	//$info .= "args: <pre>".print_r($args, true)."</pre>";
 
-	if ( $post_id ) {	
-		$post = get_post( $post_id );		
-	} else {	
-		// Get global post data
-		if ( ! $post ) {
-			global $post;
-		}
-		// Get post ID
-		$post_id = $post->ID;		
+	if ( $post_id ) {
+		$post = get_post( $post_id );
+	} else {
+		if ( ! $post ) { global $post; } // Get global post data
+		$post_id = $post->ID; // Get post ID
 	}
 	
 	// Set up the "Read more" link
@@ -442,7 +436,8 @@ function dsplycntnt_get_excerpt( $args = array() ) {
 	}
 	
 	if ( $expandable ) {
-		$info .= expandable_text( $text, $post_id, $text_length, $preview_length );
+		$exp_args = array( 'text' => $text, 'post_id' => $post_id, 'text_length' => $text_length, 'preview_length' => $preview_length );
+		$info .= expandable_text( $exp_args );
 	} else {
 		$info .= $text;
 	}		
@@ -461,84 +456,102 @@ function dsplycntnt_get_excerpt( $args = array() ) {
 // WIP
 // see https://developer.wordpress.org/reference/functions/get_the_excerpt/
 // TODO: pare down number of args -- simplify
-//function expandable_text( $args = array() ) {
-function expandable_text( $post_id = null, $text_length = "excerpt", $preview_length = 55 ) {
-//function expandable_text( $text = null, $post_id = null, $text_length = "excerpt", $preview_length = 55 ) { //function expandable_excerpt($excerpt) // $args = array() 
+// TODO: build in option to submit $preview_text and $full_text as vars to be formatted for display
+function expandable_text( $args = array() ) {
 	
-	/*
+	// Init	
+	$info = "";
+	
     // Defaults
 	$defaults = array(
-		'post_id'         => null,
-		'preview_length'  => 55,
-		'readmore'        => false,
+		'post_id'         	=> null,
+		'text'         		=> null,
+		'preview_text'      => null,
+		'text_length'		=> "excerpt",
+		'preview_length'	=> null, //55,
+		'readmore'        	=> false,
 	);
 	
     // Parse & Extract args
 	$args = wp_parse_args( $args, $defaults );
 	extract( $args );
-	*/
 	
-	$output = "";
+	// Get the text and preview_text
+	if ( empty($post_id) && empty($text) ) {
 	
-	//if ( empty($text) ) {
-		if ( empty($post_id) ) { 
-			return false;
-		} else {
-			$post = get_post( $post_id );
-			if ( has_excerpt( $post_id ) ) { 
-				$preview_text = $post->post_excerpt; // ??
-			} else {
-				$preview_text = get_the_excerpt($post_id);
-			}
-			$full_text = $post->post_content;
+		return false; // nothing to work with
+		
+	} else if ( $text ) {
+	
+		$full_text = $text;
+		
+		// If no preview_text was provided, make an excerpt
+		if ( empty($preview_text) ) {
+			//
 		}
-	//}
 	
-	// TODO fix the following in terms of handling html tags within the text
-	//$stripped_text = wp_strip_all_tags($text);
-	$split = explode(" ", $preview_text); // convert string to array
-	$len = count($split); // get number of words in text
+	} else if ( $post_id ) {
 	
-	//$output .= "<pre>".print_r($split, true)."</pre>";
+		$post = get_post( $post_id );
+		if ( has_excerpt( $post_id ) ) { 
+			$preview_text = $post->post_excerpt; // ??
+		} else {
+			$preview_text = get_the_excerpt($post_id);
+		}
+		if ( $text_length == "full_text" ) {
+			$full_text = $post->post_content;
+		}		
+		
+		// If a preview_length has been set, adjust the preview_text as needed
+		// WIP! Needs to be tested.
+		if ( $preview_length  ) {
+		
+			// TODO fix the following in terms of handling html tags within the text
+			//$stripped_text = wp_strip_all_tags($text);
+			$split = explode(" ", $preview_text); // convert string to array
+			$len = count($split); // get number of words in text
+			//$info .= "<pre>".print_r($split, true)."</pre>";
+		
+			if ( $len > $preview_length ) {
+			
+				// The excerpt-as-preview_text is longer than the set preview length, so we need to truncate it
+				$info .= "<!-- extxt len > preview_length -->";
+		
+				$firsthalf = array_slice($split, 0, $preview_length);
+				$secondhalf = array_slice($split, $preview_length, $len - 1);
+		
+				$preview_text = implode(' ', $firsthalf) . '<span class="extxt spacer">&nbsp;</span><span class="extxt more-text readmore">more</span>';
+				$full_text = implode(' ', $secondhalf);
+			
+			}		
+		
+		}
+	}
 	
-	if ( $len > $preview_length ) { // Is the excerpt-as-preview_text longer than the set preview length?
-
-		$output .= "<!-- extxt len > preview_length -->";
-		
-		$firsthalf = array_slice($split, 0, $preview_length);
-		$secondhalf = array_slice($split, $preview_length, $len - 1);
-		
-		$output .= '<p class="expandable-text" >';
-		$output .= implode(' ', $firsthalf) . '<span class="extxt spacer">&nbsp;</span><span class="extxt more-text readmore">more</span>';
-		$output .= '<span class="extxt text-full hide">';
-		$output .= ' ' . implode(' ', $secondhalf);
-		$output .= '</span>';
-		$output .= '<span class="extxt spacer hide">&nbsp;</span><span class="extxt less-text readmore hide">less</span>';
-		$output .= '</p>';
-		
-	} else if ( strlen(wp_strip_all_tags($preview_text)) != strlen(wp_strip_all_tags($full_text)) ) {
+	// Check to be sure the full_text is actually longer than the preview_text (if it's not there's no point in expanding/collapsing)
+	if ( strlen(wp_strip_all_tags($preview_text)) != strlen(wp_strip_all_tags($full_text)) ) {
 	
-		$output .= "<!-- extxt preview_text not same as full_text -->";
+		$info .= "<!-- extxt preview_text not same as full_text -->";
 		
-		//$output = '<p class="extxt expandable-text">'.$text.'</p>';
-		$output .= '<p class="expandable-text" >';
-		$output .= '<span class="extxt text-preview" >';
-		$output .= $preview_text;
-		$output .= '</span>';
-		$output .= '<span class="extxt spacer">&nbsp;</span><span class="extxt more-text readmore">more</span>';
-		$output .= '<span class="extxt text-full hide">';
-		$output .= $full_text;
-		$output .= '</span>';
-		$output .= '<span class="extxt spacer hide">&nbsp;</span><span class="extxt less-text readmore hide">less</span>';
-		$output .= '</p>';
+		//$info = '<p class="extxt expandable-text">'.$text.'</p>';
+		$info .= '<p class="expandable-text" >';
+		$info .= '<span class="extxt text-preview" >';
+		$info .= $preview_text;
+		$info .= '</span>';
+		$info .= '<span class="extxt spacer">&nbsp;</span><span class="extxt more-text readmore">more</span>';
+		$info .= '<span class="extxt text-full hide">';
+		$info .= $full_text;
+		$info .= '</span>';
+		$info .= '<span class="extxt spacer hide">&nbsp;</span><span class="extxt less-text readmore hide">less</span>';
+		$info .= '</p>';
 	
 	} else if ( strlen($full_text) > 0 ) {
 	
-		$output = '<p class="extxt">'.$full_text.'</p>';
+		$info = '<p class="extxt">'.$full_text.'</p>';
 		
 	}
 	
-	return $output;
+	return $info;
 }
 
 //}
@@ -1040,8 +1053,8 @@ function birdhive_display_collection ( $args = array() ) {
 			
 			// Item Excerpt/Text
 			if ( function_exists('is_dev_site') && is_dev_site() ) {
-				$item_text = expandable_text( $post_id ); //$item_text = expandable_text( $post_id, $text_length, $preview_length );
-				//$info .= expandable_text( array('post_id' => $post_id, 'text_length' => $text_length, 'preview_length' => $preview_length ) );
+				$exp_args = array( 'post_id' => $post_id ); // $exp_args = array( 'text' => $text, 'post_id' => $post_id, 'text_length' => $text_length, 'preview_length' => $preview_length );
+				$item_text = expandable_text( $exp_args );
 				//$info .= dsplycntnt_get_excerpt( array('post_id' => $post_id, 'expandable' => $expandable, 'text_length' => $text_length, 'preview_length' => $preview_length ) );				
 			} else {
 				$item_text = get_the_excerpt( $post_id ); //$info .= $post->post_excerpt;
