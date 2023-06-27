@@ -483,6 +483,7 @@ function expandable_text( $args = array() ) {
 		
 	} else if ( $text ) {
 	
+		$info .= "<!-- extxt set full_text to text -->";	
 		$full_text = $text;
 		
 		// If no preview_text was provided, make an excerpt
