@@ -476,18 +476,19 @@ function expandable_text( $args = array() ) {
 	$args = wp_parse_args( $args, $defaults );
 	extract( $args );
 	
-	$info = "extxt args: <pre>".print_r($args, true)."</pre>";
+	//$info = "extxt args: <pre>".print_r($args, true)."</pre>";
 	
 	if ( empty($post_id) && empty($text) ) { return false; } // nothing to work with
 	
 	// Get the text and preview_text
 	if ( $text ) {
 	
-		$info .= "<!-- extxt set full_text to text -->";	
+		$info .= "<!-- extxt set full_text to text -->";
 		$full_text = $text;
 		
 		// If no preview_text was provided, make an excerpt
 		if ( empty($preview_text) ) {
+			$info .= "<!-- extxt preview_text is empty -->";
 			//
 		}
 	
