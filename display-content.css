@@ -5,21 +5,24 @@
 .troubleshooting.inline {
 	display: none;
     text-align: left;
+	padding: 1rem;
+	/*background-color: #91F718;*/
+	background-color: #d1fb9d;
 }
 
 .dev-view .troubleshooting {
 	display: block;
-	padding: 1rem;
-	background-color: #91F718;
 }
 
-
-.dev-view .troubleshooting.inline {
-	display: inline;
+.troubleshooting.inline {
     background-color: transparent;
 	color: #42A406;
 	padding: 0 1rem;
 	margin-bottom: 0;
+}
+
+.dev-view .troubleshooting.inline {
+	display: inline;
 }
 
 /*** GRID & FLEX layouts -- for events, landing pages, &c. ***/
