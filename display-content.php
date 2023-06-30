@@ -1221,7 +1221,8 @@ function birdhive_display_collection ( $args = array() ) {
 		//
 		if ( $display_format == "links" ) {
 			
-			$item_info .= display_link_item($item_arr);
+			$item_info .= display_list_item($item_title);
+			//$item_info .= display_link_item($item_arr);
 			
 		} else if ( $display_format == "excerpts" || $display_format == "archive" ) {
 			
