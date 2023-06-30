@@ -461,6 +461,7 @@ function expandable_text( $args = array() ) {
 	
 	// Init	
 	$info = "";
+	$full_text = "";
 	
     // Defaults
 	$defaults = array(
@@ -496,13 +497,16 @@ function expandable_text( $args = array() ) {
 	
 		$post = get_post( $post_id );
 		if ( has_excerpt( $post_id ) ) { 
-			$preview_text = $post->post_excerpt; // ??
+			$excerpt = $post->post_excerpt; // ??
 		} else {
-			$preview_text = get_the_excerpt($post_id);
+			$excerpt = get_the_excerpt($post_id);
 		}
+		$preview_text = $excerpt;
 		if ( $text_length == "full_text" ) {
-			$full_text = $post->post_content;
-		}		
+			$full_text = $post->post_content;			
+		} else {
+			$full_text = $excerpt;
+		}	
 		
 		// If a preview_length has been set, adjust the preview_text as needed
 		// WIP! Needs to be tested.
