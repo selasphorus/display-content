@@ -839,8 +839,8 @@ function display_grid_item ( $item = array(), $display_atts = array(), $ts_info 
 	
 	// Begin building item_info
 	if ( $aspect_ratio != "square" ) {
-		$hclass = "";
-		if ( !empty($item_subtitle) ) { $hclass = "with-subtitle"; $item_subtitle = '<h4 class="subtitle">'.$item_subtitle.'</h4>'; }
+		$hclass = "grid_rect";
+		if ( !empty($item_subtitle) ) { $hclass .= " with-subtitle"; $item_subtitle = '<h4 class="subtitle">'.$item_subtitle.'</h4>'; }
 		$item_title = '<h3 class="'.$hclass.'">'.$item_title.'</h3>';
 	}
 	$item_info .= $item_title;
@@ -899,6 +899,7 @@ function display_grid_item ( $item = array(), $display_atts = array(), $ts_info 
 	
 }
 
+// Display a collection of post items
 function birdhive_display_collection ( $args = array() ) {
 
 	// TS/logging setup
@@ -946,7 +947,11 @@ function birdhive_display_collection ( $args = array() ) {
 		if ( !isset($arr_dpatts['aspect_ratio']) ) { $arr_dpatts['aspect_ratio'] = "square"; }
 		$aspect_ratio = $arr_dpatts['aspect_ratio'];
 		
+		//if ( isset($arr_dpatts['groupby']) ) { $groupby = $arr_dpatts['groupby']; } else { $groupby = null; }
+		
 	}
+	
+	
 	
 	$ts_info .= "num_cols: $num_cols<br />";
 	//?if ( $content_type == "posts" ) { $post_type = $args['post_type']; }
@@ -955,6 +960,8 @@ function birdhive_display_collection ( $args = array() ) {
 	$info .= collection_header ( $display_format, $fields, $num_cols, $aspect_ratio );
 	
 	//$info .= "+~+~+~+~+~+~+ collection items +~+~+~+~+~+~+<br />";
+	
+	if ( $groupby ) { $current_term_id = ""; } // init for displaying grouping headers
 	
 	// For each item, get content for display in appropriate form...
 	foreach ( $items as $item ) {
@@ -1222,7 +1229,7 @@ function birdhive_display_collection ( $args = array() ) {
 		
 		//if ( empty($item_image) ) { $item_ts_info .= "item_arr: <pre>".print_r($item_arr, true)."</pre>"; } // tft
 		
-		//
+		
 		if ( $display_format == "links" ) {
 			
 			$item_info .= display_list_item($item_title);
@@ -1256,6 +1263,19 @@ function birdhive_display_collection ( $args = array() ) {
 			//$item_info .= "+~+~+~+~+~+~+~+~+~+~+~+~+<br />";
 		}
 		
+		// WIP groupby -- this may not work. Instead, may need to build set of sorted relevant taxonomies and then get posts per term_id?
+		/*if ( $groupby && $content_type == "posts" ) {
+			// Display groupby headers
+			$item_terms = wp_get_post_terms( $post_id, 'category' ); // Replace 'category' with your desired taxonomy
+
+			// Display header for each new term
+			if ( $item_terms && $item_terms[0]->term_id !== $current_term_id ) {
+				echo '<h3>' . $terms[0]->name . '</h3>';
+				$current_term_id = $terms[0]->term_id;
+			}
+		}*/
+		
+		// Add the item_info to the info for return/display		
 		$info .= $item_info;
 		$info .= $item_ts_info;
 		
@@ -1265,7 +1285,7 @@ function birdhive_display_collection ( $args = array() ) {
 			$info .= '<div id="dialog_content_'.$dialog_id.'" class="dialog dialog_content">'.$item_content.'</div>';
 		}
 		
-	}
+	} // END foreach items as item
 	
 	// List/table/grid footer or close container
 	$info .= collection_footer ( $display_format );
@@ -1359,7 +1379,8 @@ function collection_footer ( $display_format = null ) {
 	
 }
 
-//
+// Get an array of posts by processing/assembling args and passing them to WP_Query
+// Among other things, this function can deal w/ special cases like sermon series, accept strings of slugs and turn them into arrays, etc. -- issues related to CPTs and taxonomies
 function birdhive_get_posts ( $args = array() ) {
 
 	// TS/logging setup
@@ -1389,6 +1410,7 @@ function birdhive_get_posts ( $args = array() ) {
 		'post_status'		=> 'publish',
 		'order'				=> null,
 		'orderby'			=> null,
+		'groupby'			=> null,
 		'meta_query'        => array(),
 		'tax_query'			=> array(),
 		'return_fields'		=> 'all',
@@ -1453,6 +1475,7 @@ function birdhive_get_posts ( $args = array() ) {
         
 	}
     
+    // If not getting posts by ID or by slugs, build the Tax and Meta Queries
     if ( !$get_by_ids && !$get_by_slugs ) {
         
         // Deal w/ taxonomy args
@@ -1568,7 +1591,7 @@ function birdhive_get_posts ( $args = array() ) {
 
         }
         
-		
+		// Tax Query
 		if ( !empty($tax_query) ) {
 			
 			$wp_args['tax_query'] = $tax_query;
@@ -1712,6 +1735,9 @@ function birdhive_get_posts ( $args = array() ) {
         
     } // END if ( !$get_by_ids )
     
+    // Groupby
+    //if ( $groupby ) { $wp_args['groupby'] = $groupby; }
+    
     /*
     // TBD
     if ( isset($name) ) {
@@ -1764,8 +1790,7 @@ function birdhive_display_posts ( $atts = [] ) { //function birdhive_display_pos
         'order' 	=> 'ASC',
         'meta_key' 	=> null,
         'meta_value'=> null,
-        //
-        'group_by'	=> null, // e.g. category, event-categories, link_category
+        //'groupby'	=> null,
         //
         'ids' 		=> null,
         'slugs' 	=> null,
@@ -1775,6 +1800,9 @@ function birdhive_display_posts ( $atts = [] ) { //function birdhive_display_pos
         'category' => null, // for posts/pages only
         'taxonomy'  => null,
         'tax_terms'  => null,
+        //
+        // This group_by is NOT the same as the wpq arg 'groupby' -- we're going to use it to retrieve posts group by group for display with headers... WIP
+        'group_by'	=> null, // e.g. category, event-categories, link_category
         //
         'return_format' => 'links', // other options: excerpts; archive (full post content); grid; table
         // For grid return_format:
@@ -1892,6 +1920,24 @@ function birdhive_display_posts ( $atts = [] ) { //function birdhive_display_pos
     	
     	// TODO: deal w/ events scope even if searching for series?
     	
+    	// If we've got a group_by value, then handle it
+		if ( $group_by ) {
+			// First check to see if the group_by refers to a taxonomy
+			if ( taxonomy_exists($group_by) ) {
+				$terms = get_terms( array( 'taxonomy' => $group_by, 'hide_empty' => true, 'orderby' => 'meta_value_num', 'meta_key' => 'sort_num' ) );
+				foreach ( $terms as $term ) {
+					$term_id = $term->term_id;
+					// Get posts per term_id
+					// The problem then is how to handle the group headers...
+					// Rather than a simple single posts array, have an array of post arrays? WIP...
+					//$posts_info = birdhive_get_posts( $args );
+					//$posts = $posts_info['arr_posts']->posts; 
+				}
+			}
+			// If it's not a taxonomy, then what?
+			//
+		}
+		
         $posts_info = birdhive_get_posts( $args );
         $posts = $posts_info['arr_posts']->posts; // Retrieves an array of WP_Post Objects
         //$info .= $posts_info['info']; // obsolete(?)
@@ -1903,9 +1949,10 @@ function birdhive_display_posts ( $atts = [] ) { //function birdhive_display_pos
         //$ts_info .= '<pre>'.print_r($posts, true).'</pre>'; // tft
         
 		//if ($args['header'] == 'true') { $info .= '<h3>Latest '.$category.' Articles:</h3>'; } // WIP
-		$info .= '<div class="dsplycntnt-posts '.$class.'">';        
-        $display_args = array( 'content_type' => 'posts', 'display_format' => $return_format, 'items' => $posts, 'arr_dpatts' => $args );
+		$info .= '<div class="dsplycntnt-posts '.$class.'">';
+		$display_args = array( 'content_type' => 'posts', 'display_format' => $return_format, 'items' => $posts, 'arr_dpatts' => $args );
         $info .= birdhive_display_collection( $display_args );
+		
         $info .= '</div>'; // end div class="dsplycntnt-posts" (wrapper)
         
         wp_reset_postdata();
