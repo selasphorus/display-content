@@ -961,7 +961,7 @@ function birdhive_display_collection ( $args = array() ) {
 	
 	//$info .= "+~+~+~+~+~+~+ collection items +~+~+~+~+~+~+<br />";
 	
-	if ( $groupby ) { $current_term_id = ""; } // init for displaying grouping headers
+	//if ( $groupby ) { $current_term_id = ""; } // init for displaying grouping headers -- WIP
 	
 	// For each item, get content for display in appropriate form...
 	foreach ( $items as $item ) {
