@@ -1849,7 +1849,9 @@ function birdhive_display_posts ( $atts = [] ) { //function birdhive_display_pos
 			// TODO: check to see if EM plugin is installed and active?
     	
     		// If ordering is setup by meta_key, translate that for EM
-    		if ( empty($orderby) && str_contains($meta_key, "event_start" ) ) { $orderby = "event_start"; }		
+    		if ( ( empty($orderby) && str_contains($meta_key, "event_start" ) ) || str_contains($orderby, "event_start" )) { 
+    			$orderby = "event_start";
+    		}
     		
 			// TODO: deal w/ taxonomy parameters -- how to translate these properly for EM?
 			// Deal w/ other args...: meta_key, meta_value, name, taxonomy, tax_terms, return_format, cols...
