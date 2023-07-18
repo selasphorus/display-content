@@ -271,11 +271,12 @@
 
 @media (max-width: 800px) { /* Changed from 600px to 800px 08/23/21 */
     
+    .flex-container .flex-box.square,
     .flex-container.twocol .flex-box,
     .flex-container.threecol .flex-box,
     .flex-container.fourcol .flex-box {
         flex: 100%;
-        /*max-width: 100%;*/
+        max-width: 100%;
         margin-bottom: 1rem;
     }
 
