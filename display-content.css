@@ -280,6 +280,10 @@
         margin-bottom: 1rem;
     }
     
+    .flex-container .flex-box.rectangle {
+    	margin-bottom: 0;
+    }
+    
     .flex-box .item_info {
     	font-size: 1.1rem;
     }
