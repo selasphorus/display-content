@@ -126,6 +126,12 @@
 	display: none;
 }
 
+/*** FLEX BOXES ***/
+
+.flex-box .item_info {
+	padding: 1rem;
+}
+
 /* Two options: 1) post_info, shows BELOW flex-box, 2) overlay */
 
 /*
@@ -187,7 +193,7 @@
 .overlay.fullover a:hover {
 	opacity: inherit;
 }
-
+    
 .flex-img {
 	/*padding: 0.25rem;*/
 	overflow: hidden;
@@ -290,7 +296,6 @@
     
     .flex-box .item_info {
     	font-size: 1.1rem;
-    	padding: 1rem;
     }
 
 }
