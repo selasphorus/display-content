@@ -279,5 +279,9 @@
         max-width: 100%;
         margin-bottom: 1rem;
     }
+    
+    .flex-box .item_info {
+    	font-size: 1.1rem;
+    }
 
 }
