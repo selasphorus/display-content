@@ -284,6 +284,10 @@
     	margin-bottom: 0;
     }
     
+    .flex-container .flex-box h3 {
+    	font-size: 1.5rem;
+    }
+    
     .flex-box .item_info {
     	font-size: 1.1rem;
     }
