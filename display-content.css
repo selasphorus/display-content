@@ -215,6 +215,7 @@
     -moz-box-shadow: 0 0 5px 1px rgba(0,0,0,.5);
 }
 
+.flex-box img:hover,
 .flex-img img:hover {
     -webkit-transform: scale(1.15);
     transform: scale(1.15);
