@@ -1080,11 +1080,17 @@ function birdhive_display_collection ( $args = array() ) {
 			
 			if ( $item_type == "event_category" ) { $term_id = $item['event_category']; } else { $term_id = $item['post_category']; }
 			
-			// Get category name as title
+			// Get term
 			$term = get_term( $term_id ); // $term = get_term( $term_id, $taxonomy );
-			$item_title = $term->name;
+			
+			// If there's a title override, use it. Otherwise, use the taxonomy term name.
+			if ( isset($item['item_title']) && !empty($item['item_title']) ) { 
+				$item_title = $item['item_title'];
+			} else {
+				$item_title = $term->name;	
+			}
+			
 			$item_url = get_term_link( $term_id) ;
-			//$item_arr['item_title'] = $item_title;
 			
 			// Get the taxonomy image, if any has been set
 			if ( $item_type == "event_category" ) { 
