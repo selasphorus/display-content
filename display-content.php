@@ -1429,6 +1429,8 @@ function birdhive_get_posts ( $args = array() ) {
 		'meta_key'			=> null,
 		'meta_value'		=> null,
 		'series'			=> null, // For Events & Sermons, if those post_types exist for the current application
+		//
+		'do_ts'				=> false,
 	);
 	
     // Parse & Extract args
