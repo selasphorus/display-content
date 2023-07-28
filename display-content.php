@@ -615,21 +615,39 @@ function birdhive_get_default_category () {
 	$default_cat = "";
 	
     if ( is_category() ) {
+    
         $category = get_queried_object();
         $default_cat = $category->name;
+        
     } else if ( is_single() ) {
+    
         $categories = get_the_category();
         $post_id = get_the_ID();
         $parent_id = wp_get_post_parent_id( $post_id );
         //$parent = $post->post_parent;
+        // WIP...
+        
     }
 	
 	if ( ! empty( $categories ) ) {
-		//echo esc_html( $categories[0]->name );		 
+		
+		//echo esc_html( $categories[0]->name );	
+		// WIP...
+			 
 	} else if ( empty($default_cat) ) {
         
+		// TODO: generalize so that this isn't so STC-specific
 		// TODO: make this more efficient by simply checking to see if name of Page is same as name of any Category
-		//echo "No categories.<br />";
+		// Get page slug
+		if ( is_page() ) {
+			global $post;
+			$page_slug = $post->post_name;
+			// Does a taxonomy term exist matching this slug?
+			$default_cat = term_exists( $page_slug );
+		}
+		// Get default cat as per plugin options? WIP
+		
+		/*
 		if ( is_page('Families') ) {
 			$default_cat = "Families";
 		} else if (is_page('Giving')) {
@@ -651,6 +669,7 @@ function birdhive_get_default_category () {
 		} else {
 			$default_cat = "Latest News";
 		}
+		*/
 	}
 	//$info .= "default_cat: $default_cat<br />";
 	//echo "default_cat: $default_cat<br />";
