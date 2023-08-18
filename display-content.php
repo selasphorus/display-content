@@ -872,6 +872,7 @@ function display_grid_item ( $item = array(), $display_atts = array(), $ts_info 
 			if ( $event_start_datetime ) {
 				//$item_info .= "[".$event_start_datetime."]"; // tft
 				$date_str = date_i18n( "l, F d, Y \@ g:i a", strtotime($event_start_datetime) );
+				$date_str = str_replace(array('am','pm'),array('a.m.','p.m.'),$date_str);
 				if ( $aspect_ratio == "square" ) { $item_info .="<br />"; }
 				$item_info .= $date_str;
 			} else {
