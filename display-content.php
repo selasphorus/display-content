@@ -156,7 +156,7 @@ function dsplycntnt_scripts_method() {
     $ver = "0.1";
     wp_enqueue_style( 'dsplycntnt-style', plugin_dir_url( __FILE__ ) . 'display-content.css', NULL, $ver );
     
-    wp_register_script('dsplycntnt-js', plugin_dir_url( __FILE__ ) . 'js/display-content.js', array( 'jquery' ) );
+    wp_register_script('dsplycntnt-js', plugin_dir_url( __FILE__ ) . 'js/dc.js', array( 'jquery' ) );
 	wp_enqueue_script('dsplycntnt-js');	
 
 }
