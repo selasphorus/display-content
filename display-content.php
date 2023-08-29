@@ -948,7 +948,7 @@ function birdhive_display_collection ( $args = array() ) {
 		$aspect_ratio = get_field('aspect_ratio', $collection_id);
 		$arr_dpatts['aspect_ratio'] = $aspect_ratio;
 		//
-		if ( $display_format == "table" ) { $fields = get_field('table_fields', $collection_id); } else { $fields = array(); }
+		if ( $display_format == "table" ) { $table_fields = get_field('table_fields', $collection_id); } else { $table_fields = array(); }
 		if ( $display_format == "grid" ) { $num_cols = get_field('num_cols', $collection_id); } else { $num_cols = "3"; }
 		//$content_type = $args['content_type']; -- probably mixed, but could be posts or whatever, collection of single type of items -- would have to loop to determine
 		
@@ -962,7 +962,7 @@ function birdhive_display_collection ( $args = array() ) {
 		$items = $args['items'];
 		$arr_dpatts = $args['arr_dpatts'];
 		
-		if ( $display_format == "table" && isset($arr_dpatts['fields']) ) { $fields = $arr_dpatts['fields']; } else { $fields = array(); }
+		if ( $display_format == "table" && isset($arr_dpatts['fields']) ) { $table_fields = $arr_dpatts['fields']; } else { $table_fields = array(); }
 		if ( $display_format == "grid" && isset($arr_dpatts['cols']) ) { $num_cols = $arr_dpatts['cols']; } else { $num_cols = "3"; }
 		if ( !isset($arr_dpatts['aspect_ratio']) ) { $arr_dpatts['aspect_ratio'] = "square"; }
 		$aspect_ratio = $arr_dpatts['aspect_ratio'];
@@ -977,7 +977,7 @@ function birdhive_display_collection ( $args = array() ) {
 	//?if ( $content_type == "posts" ) { $post_type = $args['post_type']; }
 	
 	// List/table/grid header or container
-	$info .= collection_header ( $display_format, $fields, $num_cols, $aspect_ratio );
+	$info .= collection_header ( $display_format, $table_fields, $num_cols, $aspect_ratio );
 	
 	//$info .= "+~+~+~+~+~+~+ collection items +~+~+~+~+~+~+<br />";
 	
