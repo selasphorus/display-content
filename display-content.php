@@ -765,10 +765,18 @@ function display_post_item ( $item = array() ) {
 }
 
 function display_table_row ( $item = array(), $fields = array() ) {
-
+	
+	// TS/logging setup
+    $do_ts = true; 
+    $do_log = false;
+    sdg_log( "divline2", $do_log );
+    sdg_log( "function called: display_table_row", $do_log );
+    
 	// Init vars
 	$info = "";
+	$ts_info = "";
 	
+	$ts_info .= "<!-- item: ".print_r($item, true)."; fields: ".print_r($fields, true)." -->";
 	$info .= '<tr>';
 	
 	// WIP: add arr_fields to function parameters
@@ -818,6 +826,8 @@ function display_table_row ( $item = array(), $fields = array() ) {
 	}
 	
 	$info .= '</tr>';
+	
+	$info .= $ts_info;
 
 	return $info;
 	
