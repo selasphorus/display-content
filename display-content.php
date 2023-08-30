@@ -789,7 +789,7 @@ function display_table_row ( $item = array(), $fields = array() ) {
 				
 				$info .= '<td>';
 				if ( $field_name == "title" ) {
-					$field_value = $item_title;
+					$field_value = $item_title; // WIP!!!
 				} else {
 					$field_value = get_post_meta( $post_id, $field_name, true );
 					//$info .= "[".$field_name."] "; // tft
@@ -1335,8 +1335,16 @@ function birdhive_display_collection ( $args = array() ) {
 
 function collection_header ( $display_format = null, $fields = null, $num_cols = 3, $aspect_ratio = "square" ) {
 
+	// TS/logging setup
+    $do_ts = true; 
+    $do_log = false;
+    sdg_log( "divline2", $do_log );
+
+	// Init vars
 	$info = "";
-	//$info .= "+~+~+~+~+~+~+ collection_header +~+~+~+~+~+~+<br />";
+	$ts_info = "";
+	
+	$ts_info .= "+~+~+~+~+~+~+ collection_header +~+~+~+~+~+~+<br />";
 	
 	if ( $display_format == "links" ) {
 	
