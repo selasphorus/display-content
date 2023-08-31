@@ -993,8 +993,8 @@ function birdhive_display_collection ( $args = array() ) {
 	if ( $display_format == "table" ) { 
 		$do_ts = true;
 		$ts_info .= "display_format: $display_format<br />";
-		$ts_info .= "table_fields: $table_fields<br />";
-		$ts_info .= "table_headers: $table_headers<br />";
+		$ts_info .= "table_fields: ".print_r($table_fields, true)."<br />";
+		$ts_info .= "table_headers: ".print_r($table_headers, true)."<br />";
 	}
 	
 	//$ts_info .= "num_cols: $num_cols<br />";
