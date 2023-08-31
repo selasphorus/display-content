@@ -779,9 +779,8 @@ function display_table_row ( $item = array(), $fields = array() ) {
 	$ts_info .= "<!-- item: ".print_r($item, true)."; fields: ".print_r($fields, true)." -->";
 	$info .= '<tr>';
 	
-	// WIP: add arr_fields to function parameters
-	
-	if ( !empty($fields) ) { 
+	// WIP
+	if ( $fields ) { 
 		
 		foreach ( $fields as $field_name ) {
 			$field_name = trim($field_name);
