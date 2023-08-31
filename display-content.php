@@ -1298,6 +1298,7 @@ function birdhive_display_collection ( $args = array() ) {
 			
 		} else if ( $display_format == "table" ) {
 		
+			$item_ts_info .= '<!-- table_fields: '.print_r($table_fields,true).' -->';
 			$item_info .= display_table_row($item_arr, $table_fields);
 			
 		} else if ( $display_format == "grid" ) {
