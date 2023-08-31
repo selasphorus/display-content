@@ -982,6 +982,7 @@ function birdhive_display_collection ( $args = array() ) {
 		
 		if ( $display_format == "table" && isset($arr_dpatts['fields']) ) {
 			$table_fields = $arr_dpatts['fields'];
+			$table_headers = $arr_dpatts['headers'];
 		}
 		if ( $display_format == "grid" && isset($arr_dpatts['cols']) ) { $num_cols = $arr_dpatts['cols']; }
 		if ( isset($arr_dpatts['aspect_ratio']) ) { $aspect_ratio = $arr_dpatts['aspect_ratio']; }
@@ -1877,6 +1878,7 @@ function birdhive_display_posts ( $atts = [] ) { //function birdhive_display_pos
         'group_by'	=> null, // e.g. category, event-categories, link_category
         //
         'return_format' => 'links', // other options: excerpts; archive (full post content); grid; table
+        
         // For grid return_format:
         'cols' => 4,
         'spacing' => 'spaced',
@@ -1900,7 +1902,7 @@ function birdhive_display_posts ( $atts = [] ) { //function birdhive_display_pos
         'fields'  => null,
         'headers'  => null,
         
-        // For table return_format
+        // TS
         'do_ts'  => false,
         
     ), $atts );
