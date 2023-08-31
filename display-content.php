@@ -780,9 +780,10 @@ function display_table_row ( $item = array(), $fields = array() ) {
 	$info .= '<tr>';
 	
 	// WIP
-	if ( $fields ) { 
+	if ( !is_array($fields) ) { $arr_fields = explode(",",$fields); } else { $arr_fields = $fields; }
+	if ( $arr_fields ) { 
 		
-		foreach ( $fields as $field_name ) {
+		foreach ( $arr_fields as $field_name ) {
 			$field_name = trim($field_name);
 			if ( !empty($field_name) ) {
 				
@@ -1384,11 +1385,7 @@ function collection_header ( $display_format = null, $num_cols = 3, $aspect_rati
 			$info .= "<tr>"; // prep the header row
 		
 			// make array from fields string
-			if ( !is_array($fields) ) {
-				$arr_fields = explode(",",$fields);
-			} else {
-				$arr_fields = $fields;
-			}
+			if ( !is_array($fields) ) { $arr_fields = explode(",",$fields); } else { $arr_fields = $fields; }
 			//$info .= "<td>".$fields."</td>"; // tft
 			//$info .= "<td><pre>".print_r($arr_fields, true)."</pre></td>"; // tft
 		
