@@ -1351,7 +1351,7 @@ function birdhive_display_collection ( $args = array() ) {
 	// List/table/grid footer or close container
 	$info .= collection_footer ( $display_format );
 	
-	if ( $do_ts ) { $info .= '<div class="troubleshooting">'.$ts_info.'</div>'; }
+	if ( $do_ts ) { $info .= $ts_info; } //if ( $do_ts ) { $info .= '<div class="troubleshooting">'.$ts_info.'</div>'; }
 	
 	// Return info for display
 	return $info;
@@ -1429,7 +1429,7 @@ function collection_header ( $display_format = null, $num_cols = 3, $aspect_rati
 		$info .= '<!-- display_format '.$display_format.' not matched -->';
 	}
 	
-	if ( $do_ts ) { $info .= '<div class="troubleshooting">'.$ts_info.'</div>'; }
+	if ( $do_ts ) { $info .= $ts_info; } //if ( $do_ts ) { $info .= '<div class="troubleshooting">'.$ts_info.'</div>'; }
 	
 	// Return info for display
 	return $info;
@@ -3233,14 +3233,11 @@ function birdhive_search_form ($atts = [], $content = null, $tag = '') {
         
     } // END if ( $args['fields'] )
     
-    if ( $do_ts ) {
-		$info .= '<div class="troubleshooting">';
-		$info .= $ts_info;
-		$info .= '</div>';
-	}
+    //if ( $do_ts ) { $info .= $ts_info; }
+    if ( $do_ts ) { $info .= '<div class="troubleshooting">'.$ts_info.'</div>'; }
     
     return $info;
     
-}
+} // END fcn birdhive_search_form
 
 ?>
