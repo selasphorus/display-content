@@ -778,9 +778,9 @@ function display_table_row ( $item = array(), $fields = array() ) {
 	
 	// Get/set item vars
 	if ( isset($item['post_id']) ) { $post_id = $item['post_id']; } else { $post_id = null; }	
-	$item_title = $item['item_title'];
-	$item_image = $item['item_image'];
-	$item_text = $item['item_text'];
+	if ( isset($item['item_title']) ) { $item_title = $item['item_title']; }
+	if ( isset($item['item_image']) ) { $item_image = $item['item_image']; }
+	if ( isset($item['item_text']) ) { $item_text = $item['item_text']; }
 	//
 	//$ts_info .= "<!-- item: ".print_r($item, true)."; fields: ".print_r($fields, true)." -->";
 	
