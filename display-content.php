@@ -1360,6 +1360,8 @@ function collection_header ( $display_format = null, $num_cols = 3, $aspect_rati
 	} else if ( $display_format == "table" ) {
 	
 		$do_ts = true;
+		$ts_info .= "fields: <pre>".print_r($fields, true)."</pre>";
+		$ts_info .= "headers: <pre>".print_r($headers, true)."</pre>";
 		
 		$info .= '<table class="posts_archive">'; //$info .= '<table class="posts_archive '.$class.'">';
 		
