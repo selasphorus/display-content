@@ -986,6 +986,10 @@ function birdhive_display_collection ( $args = array() ) {
 		//if ( isset($arr_dpatts['groupby']) ) { $groupby = $arr_dpatts['groupby']; } else { $groupby = null; }
 		
 	}
+	
+	// Show TS info based on display_format (tft)
+	if ( $display_format == "table" ) { $do_ts = true; }
+	
 	//$ts_info .= "num_cols: $num_cols<br />";
 	//?if ( $content_type == "posts" ) { $post_type = $args['post_type']; }
 	
