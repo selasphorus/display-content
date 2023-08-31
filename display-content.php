@@ -942,7 +942,11 @@ function birdhive_display_collection ( $args = array() ) {
 	$ts_info = "";
 	$arr_dpatts = array(); // DP stands for "display posts" -- i.e. special attributes if this fcn has been called via the display_posts shortcode -- TODO: simplify?
 	$collection_id = null;
-	
+	//
+	$table_fields = array();
+	$table_headers = array();
+	$num_cols = "3";
+	$aspect_ratio = "square";
 	//$ts_info .= "dsplycntnt atts: <pre>".print_r($args, true)."</pre>";
 	
 	// Get args from array
@@ -954,12 +958,13 @@ function birdhive_display_collection ( $args = array() ) {
 		$content_type = "mixed"; // tft
 		$display_format = get_field('display_format', $collection_id);
     	$items = get_field('collection_items', $collection_id); // ACF collection item repeater field values
-		
 		$aspect_ratio = get_field('aspect_ratio', $collection_id);
-		$arr_dpatts['aspect_ratio'] = $aspect_ratio;
 		//
-		if ( $display_format == "table" ) { $table_fields = get_field('table_fields', $collection_id); } else { $table_fields = array(); }
-		if ( $display_format == "grid" ) { $num_cols = get_field('num_cols', $collection_id); } else { $num_cols = "3"; }
+		if ( $display_format == "table" ) { 
+			$table_fields = get_field('table_fields', $collection_id);
+			$table_headers = get_field('table_headers', $collection_id);
+		}
+		if ( $display_format == "grid" ) { $num_cols = get_field('num_cols', $collection_id); }
 		//$content_type = $args['content_type']; -- probably mixed, but could be posts or whatever, collection of single type of items -- would have to loop to determine
 		
     	
@@ -972,22 +977,20 @@ function birdhive_display_collection ( $args = array() ) {
 		$items = $args['items'];
 		$arr_dpatts = $args['arr_dpatts'];
 		
-		if ( $display_format == "table" && isset($arr_dpatts['fields']) ) { $table_fields = $arr_dpatts['fields']; } else { $table_fields = array(); }
-		if ( $display_format == "grid" && isset($arr_dpatts['cols']) ) { $num_cols = $arr_dpatts['cols']; } else { $num_cols = "3"; }
-		if ( !isset($arr_dpatts['aspect_ratio']) ) { $arr_dpatts['aspect_ratio'] = "square"; }
-		$aspect_ratio = $arr_dpatts['aspect_ratio'];
+		if ( $display_format == "table" && isset($arr_dpatts['fields']) ) {
+			$table_fields = $arr_dpatts['fields'];
+		}
+		if ( $display_format == "grid" && isset($arr_dpatts['cols']) ) { $num_cols = $arr_dpatts['cols']; }
+		if ( isset($arr_dpatts['aspect_ratio']) ) { $aspect_ratio = $arr_dpatts['aspect_ratio']; }
 		
 		//if ( isset($arr_dpatts['groupby']) ) { $groupby = $arr_dpatts['groupby']; } else { $groupby = null; }
 		
 	}
-	
-	
-	
-	$ts_info .= "num_cols: $num_cols<br />";
+	//$ts_info .= "num_cols: $num_cols<br />";
 	//?if ( $content_type == "posts" ) { $post_type = $args['post_type']; }
 	
 	// List/table/grid header or container
-	$info .= collection_header ( $display_format, $table_fields, $num_cols, $aspect_ratio );
+	$info .= collection_header ( $display_format, $num_cols, $aspect_ratio, $table_fields, $table_headers );
 	
 	//$info .= "+~+~+~+~+~+~+ collection items +~+~+~+~+~+~+<br />";
 	
@@ -1333,10 +1336,10 @@ function birdhive_display_collection ( $args = array() ) {
 	
 } // END function birdhive_display_collection ( $args = array() ) 
 
-function collection_header ( $display_format = null, $fields = null, $num_cols = 3, $aspect_ratio = "square" ) {
+function collection_header ( $display_format = null, $num_cols = 3, $aspect_ratio = "square", $fields = null, $headers = null ) {
 
 	// TS/logging setup
-    $do_ts = true; 
+    $do_ts = false;
     $do_log = false;
     sdg_log( "divline2", $do_log );
 
@@ -1356,6 +1359,8 @@ function collection_header ( $display_format = null, $fields = null, $num_cols =
 		
 	} else if ( $display_format == "table" ) {
 	
+		$do_ts = true;
+		
 		$info .= '<table class="posts_archive">'; //$info .= '<table class="posts_archive '.$class.'">';
 		
 		// Make header row from field names
@@ -1364,7 +1369,11 @@ function collection_header ( $display_format = null, $fields = null, $num_cols =
 			$info .= "<tr>"; // prep the header row
 		
 			// make array from fields string
-			$arr_fields = explode(",",$fields);
+			if ( !is_array($fields) ) {
+				$arr_fields = explode(",",$fields);
+			} else {
+				$arr_fields = $fields;
+			}
 			//$info .= "<td>".$fields."</td>"; // tft
 			//$info .= "<td><pre>".print_r($arr_fields, true)."</pre></td>"; // tft
 		
@@ -1400,6 +1409,9 @@ function collection_header ( $display_format = null, $fields = null, $num_cols =
 		$info .= '<!-- display_format '.$display_format.' not matched -->';
 	}
 	
+	if ( $do_ts ) { $info .= '<div class="troubleshooting">'.$ts_info.'</div>'; }
+	
+	// Return info for display
 	return $info;
 }
 
