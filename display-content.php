@@ -835,7 +835,7 @@ function display_table_row ( $item = array(), $fields = array() ) {
 	
 	$info .= '</tr>';
 	
-	$info .= $ts_info;
+	//if ( $do_ts ) { $info .= $ts_info; } //if ( $do_ts ) { $info .= '<div class="troubleshooting">'.$ts_info.'</div>'; }
 
 	return $info;
 	
@@ -1001,7 +1001,7 @@ function birdhive_display_collection ( $args = array() ) {
 	
 	// Show TS info based on display_format (tft)
 	if ( $display_format == "table" ) { 
-		$do_ts = true;
+		//$do_ts = true;
 		$ts_info .= "display_format: $display_format<br />";
 		$ts_info .= "table_fields: ".print_r($table_fields, true)."<br />";
 		$ts_info .= "table_headers: ".print_r($table_headers, true)."<br />";
@@ -1381,7 +1381,7 @@ function collection_header ( $display_format = null, $num_cols = 3, $aspect_rati
 		
 	} else if ( $display_format == "table" ) {
 	
-		$do_ts = true;
+		//$do_ts = true;
 		$ts_info .= "fields: <pre>".print_r($fields, true)."</pre>";
 		$ts_info .= "headers: <pre>".print_r($headers, true)."</pre>";
 		
