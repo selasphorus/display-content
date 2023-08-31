@@ -947,6 +947,8 @@ function birdhive_display_collection ( $args = array() ) {
 	$table_headers = array();
 	$num_cols = "3";
 	$aspect_ratio = "square";
+	//
+	$ts_info .= "args: <pre>".print_r($args, true)."</pre>";
 	//$ts_info .= "dsplycntnt atts: <pre>".print_r($args, true)."</pre>";
 	
 	// Get args from array
@@ -988,7 +990,12 @@ function birdhive_display_collection ( $args = array() ) {
 	}
 	
 	// Show TS info based on display_format (tft)
-	if ( $display_format == "table" ) { $do_ts = true; }
+	if ( $display_format == "table" ) { 
+		$do_ts = true;
+		$ts_info .= "display_format: $display_format<br />";
+		$ts_info .= "table_fields: $table_fields<br />";
+		$ts_info .= "table_headers: $table_headers<br />";
+	}
 	
 	//$ts_info .= "num_cols: $num_cols<br />";
 	//?if ( $content_type == "posts" ) { $post_type = $args['post_type']; }
