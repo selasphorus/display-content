@@ -940,7 +940,9 @@ function birdhive_display_collection ( $args = array() ) {
 	// Init vars
 	$info = "";
 	$ts_info = "";
-	$arr_dpatts = array(); // DP stands for "display posts" -- i.e. special attributes if this fcn has been called via the display_posts shortcode -- TODO: simplify?
+	//
+	// DP stands for "display posts" -- i.e. special attributes if this fcn has been called via the display_posts shortcode -- TODO: simplify?
+	if ( isset($args['arr_dpatts']) ) { $arr_dpatts = $args['arr_dpatts']; } else { $arr_dpatts = array(); }
 	$collection_id = null;
 	//
 	$table_fields = array();
@@ -948,8 +950,8 @@ function birdhive_display_collection ( $args = array() ) {
 	$num_cols = "3";
 	$aspect_ratio = "square";
 	//
-	$ts_info .= "args: <pre>".print_r($args, true)."</pre>";
-	//$ts_info .= "dsplycntnt atts: <pre>".print_r($args, true)."</pre>";
+	//$ts_info .= "args: <pre>".print_r($args, true)."</pre>";
+	$ts_info .= "arr_dpatts: <pre>".print_r($arr_dpatts, true)."</pre>";
 	
 	// Get args from array
 	if ( isset($args['collection_id']) ) {
@@ -977,7 +979,6 @@ function birdhive_display_collection ( $args = array() ) {
 		$content_type = $args['content_type'];
 		$display_format = $args['display_format'];
 		$items = $args['items'];
-		$arr_dpatts = $args['arr_dpatts'];
 		
 		if ( $display_format == "table" && isset($arr_dpatts['fields']) ) {
 			$table_fields = $arr_dpatts['fields'];
