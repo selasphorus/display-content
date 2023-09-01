@@ -1920,7 +1920,7 @@ function birdhive_display_posts ( $atts = [] ) { //function birdhive_display_pos
 	$ts_info .= 'extracted args <pre>'.print_r($args, true).'</pre>';
 	$ts_info .= "post_type: ".$post_type."<br />";
     
-    if ( $return_format == "table" ) { $do_ts = true; } // tft
+    if ( $return_format == "table" ) { $do_ts = true; $args['do_ts'] = $do_ts; } // tft
     
     //
     // TODO: 'category' applies to pages and posts only, but it's an easy mistake to use that attribute for events too => correct for that possibility
