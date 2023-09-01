@@ -799,7 +799,7 @@ function display_table_row ( $item = array(), $fields = array() ) {
 				
 				$info .= '<td>';
 				
-				$info .= "[".$field_name."] ";
+				//$info .= "[".$field_name."] "; // tft
 				
 				if ( $field_name == "title" ) {
 					$field_value = $item_title; // WIP!!!
