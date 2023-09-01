@@ -805,7 +805,7 @@ function display_table_row ( $item = array(), $fields = array() ) {
 					$field_value = $item_title; // WIP!!!
 				} else {
 					$field_value = get_post_meta( $post_id, $field_name, true );
-					//$ts_info .= "[".$field_name."/".$field_value."] "; // tft
+					$ts_info .= "[".$field_name."/".$field_value."] "; // tft
 				}
 				
 				if ( is_array($field_value) ) {
