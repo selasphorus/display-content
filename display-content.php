@@ -792,15 +792,20 @@ function display_table_row ( $item = array(), $fields = array() ) {
 	if ( $arr_fields ) { 
 		
 		foreach ( $arr_fields as $field_name ) {
+		
 			$field_name = trim($field_name);
+			
 			if ( !empty($field_name) ) {
 				
 				$info .= '<td>';
+				
+				$info .= "[".$field_name."] ";
+				
 				if ( $field_name == "title" ) {
 					$field_value = $item_title; // WIP!!!
 				} else {
 					$field_value = get_post_meta( $post_id, $field_name, true );
-					//$info .= "[".$field_name."] "; // tft
+					//$ts_info .= "[".$field_name."/".$field_value."] "; // tft
 				}
 				
 				if ( is_array($field_value) ) {
@@ -835,7 +840,7 @@ function display_table_row ( $item = array(), $fields = array() ) {
 	
 	$info .= '</tr>';
 	
-	//if ( $do_ts ) { $info .= $ts_info; } //if ( $do_ts ) { $info .= '<div class="troubleshooting">'.$ts_info.'</div>'; }
+	if ( $do_ts ) { $info .= $ts_info; } //if ( $do_ts ) { $info .= '<div class="troubleshooting">'.$ts_info.'</div>'; }
 
 	return $info;
 	
