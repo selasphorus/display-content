@@ -819,7 +819,7 @@ function display_table_row ( $item = array(), $fields = array() ) {
 							
 							// Get post_title
 							if ( function_exists( 'sdg_post_title' ) ) {
-								$title_args = array( 'post' => $field_value[0], 'line_breaks' => true, 'show_subtitle' => true, 'echo' => false, 'hlevel' => 0, 'hlevel_sub' => 0 );
+								$title_args = array( 'post' => $field_value[0], 'line_breaks' => false, 'show_subtitle' => false, 'echo' => false );
 								$value = sdg_post_title( $title_args );
 							} else {
 								$value = get_the_title($field_value[0]);
