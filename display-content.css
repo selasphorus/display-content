@@ -254,6 +254,18 @@
     border: 1px solid var(--ltgrey);
 }
 
+/*** Tables ***/
+
+table.posts_archive {
+	width: fit-content;
+}
+
+table.posts_archive tr th,
+table.posts_archive tr td {
+	padding: 0.5rem 0;
+}
+
+
 /*** Hover Capability ***/
 /* Primary input mechanism system can 
    hover over elements with ease */
