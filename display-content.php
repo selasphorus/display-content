@@ -815,10 +815,11 @@ function display_table_row ( $item = array(), $fields = array() ) {
 						
 						if ( is_numeric($field_value[0]) ) {
 							
-							$info .= $field_value[0];
+							//$info .= $field_value[0];
 							
 							// Get post_title
 							if ( function_exists( 'sdg_post_title' ) ) {
+								$info .= "get sdg_post_title for id ".$field_value[0];
 								$title_args = array( 'post' => $field_value[0], 'line_breaks' => true, 'show_subtitle' => true, 'echo' => false, 'hlevel' => 0, 'hlevel_sub' => 0 );
 								$field_value = sdg_post_title( $title_args );
 							} else {
