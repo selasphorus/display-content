@@ -262,7 +262,7 @@ table.posts_archive {
 
 table.posts_archive tr th,
 table.posts_archive tr td {
-	padding: 0.5rem 0;
+	padding: 0 0.5rem;
 }
 
 
