@@ -811,9 +811,12 @@ function display_table_row ( $item = array(), $fields = array() ) {
 					
 					if ( count($field_value) == 1 ) {
 						
-						$info .= "<pre>".print_r($field_value,true)."</pre>";
+						//$info .= "<pre>".print_r($field_value,true)."</pre>";
 						
 						if ( is_numeric($field_value[0]) ) {
+							
+							$info .= $field_value[0];
+							
 							// Get post_title
 							if ( function_exists( 'sdg_post_title' ) ) {
 								$title_args = array( 'post' => $field_value[0], 'line_breaks' => true, 'show_subtitle' => true, 'echo' => false, 'hlevel' => 0, 'hlevel_sub' => 0 );
