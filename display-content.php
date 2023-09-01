@@ -821,6 +821,9 @@ function display_table_row ( $item = array(), $fields = array() ) {
 							if ( function_exists( 'sdg_post_title' ) ) {
 								$title_args = array( 'post' => $field_value[0], 'line_breaks' => false, 'show_subtitle' => false, 'echo' => false );
 								$value = sdg_post_title( $title_args );
+								if ( empty($value) ) {
+									$info .= "no title found using sdg_post_title with title_args: <pre>".print_r($title_args, true)."</pre>";
+								}
 							} else {
 								$value = get_the_title($field_value[0]);
 							}
