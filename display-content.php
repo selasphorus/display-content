@@ -700,20 +700,26 @@ function get_post_links( $post_id = null ) {
 /*** RETRIEVE & DISPLAY POSTS with complex queries &c. ***/
 
 // TODO: for all display functions, figure out better way to pass parameters, including:
+// item_title
+// item_image
+// item_text
+//
 // item_link_target
 // item_email
 // item_content
 // media_file
 // event_category
 // post_category
+//
 // Perhaps simply: $item = array()
+// Perhaps rework all of this to make it object-oriented, with an "item" class of objects?
 
 //function display_list_item ( $item = array() ) { // only two vars here, so array seems like an unnecessary extra step
-function display_list_item ( $item_title = null ) { // $item_url = null,  ...
+function display_list_item ( $item_str = null ) { // $item_url = null,  ...
 	
 	$info = "";
 	$info .= '<li>';
-	$info .= $item_title;
+	$info .= $item_str;
 	$info .= '</li>';
 	
 	return $info;
@@ -728,21 +734,16 @@ function display_post_item ( $item = array() ) {
 	// Post ID?
 	if ( isset($item['post_id']) ) { $post_id = $item['post_id']; } else { $post_id = null; }
 	
-	// Get/set item vars
-	$item_title = $item['item_title'];
-	$item_image = $item['item_image'];
-	$item_text = $item['item_text'];
-	
 	// TODO: bring this more in alignment with theme template display? e.g. content-excerpt, content-sermon, content-event...
 	
 	$info .= '<article id="post-'.$post_id.'">'; // post_class()
 	$info .= '<header class="entry-header">';
-	$info .= '<h2 class="entry-title">'.$item_title.'</h2>';
+	if ( isset($item['item_title']) ) { $info .= '<h2 class="entry-title">'.$item['item_title'].'</h2>'; }
 	// TODO: add subtitle?
 	$info .= '</header><!-- .entry-header -->';
 	$info .= '<div class="entry-content">';
-	if ( $item_image ) { $info .= $item_image; } //if ( $show_images ) { $info .= $item_image; }
-	$info .= $item_text;
+	if ( isset($item['item_image']) ) { $info .= $item['item_image']; }
+	if ( isset($item['item_text']) ) { $info .= $item['item_text']; }
 	/*if ( $display_format == "excerpts" ) {				
 		$info .= $item_text;
 	} else {
@@ -777,17 +778,16 @@ function display_table_row ( $item = array(), $fields = array() ) {
 	$ts_info = "";
 	
 	// Get/set item vars
-	if ( isset($item['post_id']) ) { $post_id = $item['post_id']; } else { $post_id = null; }	
-	if ( isset($item['item_title']) ) { $item_title = $item['item_title']; }
-	if ( isset($item['item_image']) ) { $item_image = $item['item_image']; }
-	if ( isset($item['item_text']) ) { $item_text = $item['item_text']; }
-	//
 	//$ts_info .= "<!-- item: ".print_r($item, true)."; fields: ".print_r($fields, true)." -->";
+	// TODO: figure out a better more efficient way to do this -- possibly via class object
+	if ( isset($item['post_id']) ) { $post_id = $item['post_id']; } else { $post_id = null; }
+	//if ( isset($item['item_image']) ) { $item_image = $item['item_image']; } // TBD: build in possibility that one field value might be item_image?
+	//if ( isset($item['item_text']) ) { $item_text = $item['item_text']; } // TBD: build in possibility that one field value might be item_text?
 	
 	// Start building the rows
 	$info .= '<tr>';
 	
-	// WIP
+	// Make sure we've got a proper array of fields and then loop through them to accumulate the info for display
 	if ( !is_array($fields) ) { $arr_fields = explode(",",$fields); } else { $arr_fields = $fields; }
 	if ( $arr_fields ) { 
 		
@@ -797,12 +797,11 @@ function display_table_row ( $item = array(), $fields = array() ) {
 			
 			if ( !empty($field_name) ) {
 				
-				$info .= '<td>';
-				
+				$info .= '<td>';				
 				//$info .= "[".$field_name."] "; // tft
 				
-				if ( $field_name == "title" ) {
-					$field_value = $item_title; // WIP!!!
+				if ( $field_name == "title" && isset($item['item_title']) ) {
+					$field_value = $item['item_title']; // WIP!!!
 				} else {
 					$field_value = get_post_meta( $post_id, $field_name, true );
 				}
@@ -811,11 +810,11 @@ function display_table_row ( $item = array(), $fields = array() ) {
 					
 					if ( count($field_value) == 1 ) {
 						
-						//$info .= "<pre>".print_r($field_value,true)."</pre>";
+						//$info .= "<pre>".print_r($field_value,true)."</pre>"; // tft
 						
 						if ( is_numeric($field_value[0]) ) {
 							
-							//$info .= $field_value[0];
+							//$info .= $field_value[0]; // tft
 							
 							// Get post_title
 							if ( function_exists( 'sdg_post_title' ) ) {
@@ -1006,7 +1005,7 @@ function birdhive_display_collection ( $args = array() ) {
 			$table_headers = $arr_dpatts['headers'];
 		}
 		if ( $display_format == "grid" && isset($arr_dpatts['cols']) ) { $num_cols = $arr_dpatts['cols']; }
-		if ( isset($arr_dpatts['aspect_ratio']) ) { $aspect_ratio = $arr_dpatts['aspect_ratio']; }
+		if ( isset($arr_dpatts['aspect_ratio']) ) { $aspect_ratio = $arr_dpatts['aspect_ratio']; } // TODO: either eliminate this, or make it so that aspect_ratio actually ever is passable as an arg, via mods to args array of display_posts, for example...
 		
 		//if ( isset($arr_dpatts['groupby']) ) { $groupby = $arr_dpatts['groupby']; } else { $groupby = null; }
 		
@@ -1373,6 +1372,7 @@ function birdhive_display_collection ( $args = array() ) {
 	
 } // END function birdhive_display_collection ( $args = array() ) 
 
+// TODO: add options for collection_SUBheaders... e.g. for group/subgroups/personnel; links displayed grouped by link categories; etc.
 function collection_header ( $display_format = null, $num_cols = 3, $aspect_ratio = "square", $fields = null, $headers = null ) {
 
 	// TS/logging setup
@@ -1900,10 +1900,10 @@ function birdhive_display_posts ( $atts = [] ) { //function birdhive_display_pos
         'return_format' => 'links', // other options: excerpts; archive (full post content); grid; table
         
         // For grid return_format:
-        'cols' => 4,
-        'spacing' => 'spaced',
+        'cols' => 4, // ***
+        'spacing' => 'spaced', // ***
         'header' => false,
-        'overlay' => false,
+        'overlay' => false, // ***
         //
         'has_image' => false, // set to true to ONLY return posts with features images
         'class' => null, // for additional styling
@@ -1911,6 +1911,7 @@ function birdhive_display_posts ( $atts = [] ) { //function birdhive_display_pos
         'expandable' => false, // for excerpts
         'text_length' => 'excerpt', // excerpt or full length
         'preview_length' => '55',
+        //'aspect_ratio' => 'square', // TBD whether to activate this or not... probably better to simplify args array
         
         // For post_type 'event'
         'scope' => 'upcoming',
@@ -1919,8 +1920,8 @@ function birdhive_display_posts ( $atts = [] ) { //function birdhive_display_pos
         'series' => false,
         
         // For table return_format
-        'fields'  => null,
-        'headers'  => null,
+        'fields'  => null, // ***
+        'headers'  => null, // ***
         
         // TS
         'do_ts'  => false,
@@ -2051,6 +2052,7 @@ function birdhive_display_posts ( $atts = [] ) { //function birdhive_display_pos
         
 		//if ($args['header'] == 'true') { $info .= '<h3>Latest '.$category.' Articles:</h3>'; } // WIP
 		$info .= '<div class="dsplycntnt-posts '.$class.'">';
+		// TODO: modify the following to pass only subset of args? Much of the info is not needed for the display_collection fcn
 		$display_args = array( 'content_type' => 'posts', 'display_format' => $return_format, 'items' => $posts, 'arr_dpatts' => $args );
         $info .= birdhive_display_collection( $display_args );
 		
