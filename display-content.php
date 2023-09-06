@@ -953,7 +953,7 @@ function display_grid_item ( $item = array(), $display_atts = array(), $ts_info 
 function birdhive_display_collection ( $args = array() ) {
 
 	// TS/logging setup
-    $do_ts = false; 
+    $do_ts = true; 
     $do_log = false;
     sdg_log( "divline2", $do_log );
 
@@ -1061,8 +1061,11 @@ function birdhive_display_collection ( $args = array() ) {
 				$post = $item;
 			} else if ( isset($item['post_object']) ) {
 				$post = $item['post_object'][0];
+			} else if ( is_numeric($item) ) {
+				$post = get_post( $item );
+			} else {
+				$item_ts_info .= '<!-- post: <pre>'.print_r($post, true).'</pre> -->';
 			}
-			//$item_ts_info .= '<!-- post: <pre>'.print_r($post, true).'</pre> -->'; // tft
 			
 			$post_type = $post->post_type;
 			$post_id = $post->ID;
