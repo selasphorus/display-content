@@ -706,7 +706,6 @@ function get_post_links( $post_id = null ) {
 //
 // item_link_target
 // item_email
-// item_content
 // media_file
 // event_category
 // post_category
@@ -744,11 +743,6 @@ function display_post_item ( $item = array() ) {
 	$info .= '<div class="entry-content">';
 	if ( isset($item['item_image']) ) { $info .= $item['item_image']; }
 	if ( isset($item['item_text']) ) { $info .= $item['item_text']; }
-	/*if ( $display_format == "excerpts" ) {				
-		$info .= $item_text;
-	} else {
-		$info .= get_the_content( $post_id );
-	}*/	
 	$info .= '</div><!-- .entry-content -->';
 	$info .= '<footer class="entry-footer">';
 	$info .= birdhive_entry_meta( $post_id );
@@ -949,6 +943,255 @@ function display_grid_item ( $item = array(), $display_atts = array(), $ts_info 
 	
 }
 
+// TODO:
+// * separate process of assembling item arr (somewhat different for collection vs. display_posts) from fcn to display items in collection
+// * 
+
+// WIP build item_arr
+function build_item_arr ( $item = array(), $item_type = null, $aspect_ratio = null, $collection_id = null ) {
+	
+	// Init vars
+	$item_arr = array();
+	//
+	$post_id = null;
+	$post_type = null;
+	$item_title = null;
+	$item_subtitle = null;
+	$item_text = null;
+	$item_image = null;
+	//	
+	$item_url = null;
+	
+	// Some fields exist for content collection items ONLY, so set those directly from the item array
+	if ( !is_object($item) && isset($item['item_subtitle']) ) { $item_subtitle = $item['item_subtitle']; }
+	// TODO: figure out how to handle it if post ALSO has a subtitle...
+		
+	if ( $item_type == "post" ) {
+		
+		if ( is_object($item) ) { // item is post object, e.g. when called via display_posts shortcode
+			$post = $item;
+		} else if ( isset($item['post_object']) ) {
+			$post = $item['post_object'][0];
+		} else if ( is_numeric($item) ) {
+			$post = get_post( $item );
+		} else {
+			$item_ts_info .= '<!-- post: <pre>'.print_r($post, true).'</pre> -->';
+		}
+		
+		$post_type = $post->post_type;
+		$post_id = $post->ID;
+		$item_ts_info .= '<!-- '.$post_type.' => post_id: '.$post_id." -->";
+		
+		/*if ( post_type_exists('event') && $post_type == 'event' ) {
+			$post_id = $post->post_id;
+			$item_ts_info .= '<!-- Event post_id: '.$post_id." -->";
+		} else {
+			$post_id = $post->ID;
+			$item_ts_info .= '<!-- '.$post_type.' => post_id: '.$post_id." -->"; // tft
+		}*/
+		
+		// Item Title
+		// Check for title override set via collection
+		if ( $collection_id && isset($item['item_title']) && !empty($item['item_title']) ) { 
+			$item_title = $item['item_title'];
+		} else {
+			// If a short_title is set, use it. If not, use the post_title
+			$short_title = get_post_meta( $post_id, 'short_title', true );
+			if ( $short_title ) { 
+				$item_title = $short_title;
+			} else if ( function_exists( 'sdg_post_title' ) ) {
+				$title_args = array( 'post' => $post_id, 'line_breaks' => true, 'show_subtitle' => true, 'echo' => false, 'hlevel' => 0, 'hlevel_sub' => 0 );
+				$item_title = sdg_post_title( $title_args );
+			} else {
+				$item_title = get_the_title($post_id);
+			}
+		}
+		
+		// Item URL
+		$item_url = get_the_permalink( $post_id );
+		
+		// +~+~+~+~+~+~+~+~+~+~+~+~+~+~+~+~+~+~+~+~+~+~+~+
+		// Item Image
+		
+		// If this is a post via a collection, check to see if there's an image override
+		if ( $collection_id && isset($item['item_image']) ) {
+			$image_id = $item['item_image'];
+		} else { 
+			$image_id = null;
+		}
+		
+		// No collection image? Then look for a image via the post record
+		if ( ! $image_id ) {
+			// WIP
+			if ( $aspect_ratio == "square" ) {
+				$img_size = "grid_crop_square";
+			} else {
+				$img_size = "grid_crop_rectangle";
+			}
+			$img_args = array( 'post_id' => $post_id, 'format' => 'excerpt', 'img_size' => $img_size, 'sources' => "all", 'echo' => false, 'return' => 'id' );
+			$image_id = sdg_post_thumbnail ( $img_args );
+			$item_ts_info .= '<!-- dsplycntnt sdg_post_thumbnail: image_id: '.$image_id.' -->'; // tft		
+		}
+		// +~+~+~+~+~+~+~+~+~+~+~+~+~+~+~+~+~+~+~+~+~+~+~+
+		
+		// Item Excerpt/Text
+		if ( function_exists('is_dev_site') && is_dev_site() ) {
+			$exp_args = array( 'post_id' => $post_id ); // $exp_args = array( 'text' => $text, 'post_id' => $post_id, 'text_length' => $text_length, 'preview_length' => $preview_length );
+			$item_text = expandable_text( $exp_args );
+			//$info .= dsplycntnt_get_excerpt( array('post_id' => $post_id, 'expandable' => $expandable, 'text_length' => $text_length, 'preview_length' => $preview_length ) );				
+		} else {
+			$item_text = get_the_excerpt( $post_id ); //$info .= $post->post_excerpt;
+		}
+	
+	} else if ( $item_type == "event_category" || $item_type == "post_category" ) {
+	
+		//$item_ts_info .= "item: <pre>".print_r($item, true)."</pre>";
+		
+		if ( $item_type == "event_category" ) { $term_id = $item['event_category']; } else { $term_id = $item['post_category']; }
+		
+		// Get term
+		$term = get_term( $term_id ); // $term = get_term( $term_id, $taxonomy );
+		
+		// If there's a title override, use it. Otherwise, use the taxonomy term name.
+		if ( isset($item['item_title']) && !empty($item['item_title']) ) { 
+			$item_title = $item['item_title'];
+		} else {
+			$item_title = $term->name;	
+		}
+		
+		$item_url = get_term_link( $term_id) ;
+		
+		// Get the taxonomy image, if any has been set
+		if ( $item_type == "event_category" ) { 
+			// TMP solution:
+			global $wpdb; 
+			//wpstc_em_meta
+			$image_id = $wpdb->get_var('SELECT meta_value FROM '.EM_META_TABLE." WHERE object_id='".$term_id."' AND meta_key='category-image-id' LIMIT 1"); // 288081
+			/* // TODO: figure out how to get EM taxonomy image without direct DB query
+			$image_url = ""; // tft
+			//$EM_Tax_Term = new EM_Taxonomy_Term($term_id, 'term_id'); 
+			//$item_image = $EM_Tax_Term->get_image_url();
+			$item_image = "";
+			*/
+		} else {
+			$taxonomy_featured_image = get_term_meta( $term_id, 'taxonomy_featured_image', true );
+			if ( $taxonomy_featured_image ) { $image_id = $taxonomy_featured_image; } else { $image_id = null; }
+		}
+		// Event category
+		
+		// Posts category
+		
+		
+	} else { // if ( $item_type == ??? )
+	
+		$item_arr = $item; // init
+		//
+		$item_title = $item['item_title'];
+		$item_subtitle = $item['item_subtitle'];
+		
+		// Item URL
+		if ( $item_type == "page_link" ) {
+			$item_url = $item['page_link'];
+			//$item_ts_info .= '<!-- page_link item: <pre>'.print_r($item, true).'</pre> -->'; // tft
+		} else {
+			$item_url = $item['item_url'];
+		}
+		if ( $item_type == "email" ) {
+			$item_email = $item['item_email'];
+			if ( !empty($item_email) ) {
+				$item_url = "mailto:".$item_email;
+			}
+		}
+		
+		// Item Image
+		if ( isset($item['item_image']) ) {
+			$image_id = $item['item_image']; //$image_id = $item['item_image']['id'];
+			//$item_ts_info .= '<!-- item_image: '.print_r($item['item_image'], true)." -->"; // tft
+		}
+		
+		/* WIP
+		//$post_object = $item['post_object']; // ???
+		$media_file = $item['media_file'];
+		$event_category = $item['event_category'];
+		$post_category = $item['post_category'];
+		//if ( isset($row['row_type']) ) { $row_type = $row['row_type']; } else { $row_type = null; }
+		*/
+					
+	}
+	
+	// Set Link Target
+	$item_link_target = null; // init
+	$link_target = ""; // init
+	if ( $collection_id && isset($item['item_link_target'] ) ) {
+		$item_link_target = $item['item_link_target'];
+		$item_ts_info .= '<!-- item_link_target: '.$item_link_target.' -->'; // tft
+	} else if ( $display_format == "table" ) {
+		$item_link_target = "_blank";
+	}
+	if ( !empty($item_link_target) ) { $link_target = ' target="'.$item_link_target.'"'; }
+	$item_ts_info .= '<!-- link_target: '.$link_target.' -->'; // tft
+	
+	// Style the title
+	if ( !empty($item_title) ) {
+		$item_title = '<span class="item_title">'.$item_title.'</span>';		
+		// Wrap the title in a hyperlink, if a URL has been set	OR if the item is linked to modal content		
+		if ( $item_type == "modal" || $item_link_target == "modal" ) {
+			$dialog_id = sanitize_title($item_title); // tmp/wip
+			$item_title = '<a href="#!" id="dialog_handle_'.$dialog_id.'" class="dialog_handle">'.$item_title.'</a>'; 
+		} else {
+			if ( !empty($item_url) ) { $item_title = '<a href="'.$item_url.'" rel="bookmark"'.$link_target.'>'.$item_title.'</a>'; }
+		}		
+	}
+	
+	// Style the subtitle
+	if ( !empty($item_subtitle) ) { $item_subtitle = '<span class="item_subtitle">'.$item_subtitle.'</span>'; }
+	
+	// Finalize the item image html based on the image_id, if any
+	$item_image = ""; // init
+	if ( !empty($image_id) ) {
+	
+		$item_ts_info .= '<!-- image_id: '.print_r($image_id,true).' -->'; // tft
+		
+		if ( $aspect_ratio == "square" ) {
+			$img_size = "grid_crop_square"; //$img_size = array(600, 600); //"medium_large"; //
+		} else {
+			$img_size = "grid_crop_rectangle";
+		}
+		$item_ts_info .= '<!-- aspect_ratio: '.$aspect_ratio.' -->'; // tft
+		$item_ts_info .= '<!-- img_size: '.print_r($img_size, true).' -->'; // tft		
+		//wp_get_attachment_image( int $attachment_id, string|int[] $size = 'thumbnail', bool $icon = false, string|array $attr = '' ): string
+		//$img_attr = array ( 'sizes' => "(max-width: 600px) 100vw, 100vw" );
+		$item_image = wp_get_attachment_image( $image_id, $img_size );
+		//$item_image = '<img src="'.$image_url.'" alt="'.get_the_title($post_id).'" width="100%" height="100%" />';
+		
+		if ( !empty($item_image) ) {
+			if ( !empty($dialog_id) && ( $item_type == "modal" || $item_link_target == "modal" ) ) {
+				$item_image = '<a href="#!" id="dialog_handle_'.$dialog_id.'" class="dialog_handle">'.$item_image.'</a>'; 
+			} else if ( !empty($item_url) ) { 
+				$item_image = '<a href="'.$item_url.'" rel="bookmark"'.$link_target.'>'.$item_image.'</a>';
+			}
+		}
+		
+	} else {		
+		$item_ts_info .= '<!-- image_id NOT FOUND -->';
+		//$item_ts_info .= "item_arr: <pre>".print_r($item_arr, true)."</pre>";
+	}
+	
+	// Set the array values based on what we've found
+	// Some of the values will be null, but that will prevent undefined index errors
+	$item_arr['post_id'] = $post_id;
+	$item_arr['post_type'] = $post_type;
+	$item_arr['item_title'] = $item_title;
+	$item_arr['item_subtitle'] = $item_subtitle;
+	$item_arr['item_text'] = $item_text;
+	$item_arr['item_image'] = $item_image;
+	
+	// Return the assembled item array
+	return $item_arr;
+		
+}
+
+
 // Display a collection of post items
 function birdhive_display_collection ( $args = array() ) {
 
@@ -990,8 +1233,7 @@ function birdhive_display_collection ( $args = array() ) {
 		}
 		if ( $display_format == "grid" ) { $num_cols = get_field('num_cols', $collection_id); }
 		//$content_type = $args['content_type']; -- probably mixed, but could be posts or whatever, collection of single type of items -- would have to loop to determine
-		
-    	
+
 	} else {
 	
 		$ts_info .= "No collection_id set<br />";
@@ -1043,6 +1285,18 @@ function birdhive_display_collection ( $args = array() ) {
 		//$item_args = array( 'content_type' => $content_type, 'display_format' => $display_format, 'item' => $item );
 		//$info .= birdhive_display_item( $item_args );
 		
+		// WIP grouping -- this may not work. Instead, may need to build set of sorted relevant taxonomies and then get posts per term_id?
+		/*if ( $grouping && $content_type == "posts" ) {
+			// Display grouping headers
+			$item_terms = wp_get_post_terms( $post_id, 'category' ); // Replace 'category' with your desired taxonomy
+
+			// Display header for each new term
+			if ( $item_terms && $item_terms[0]->term_id !== $current_term_id ) {
+				echo '<h3>' . $terms[0]->name . '</h3>';
+				$current_term_id = $terms[0]->term_id;
+			}
+		}*/
+		
 		if ( $content_type == "posts" ) {
 			$item_type = "post";
 		} else {
@@ -1051,266 +1305,14 @@ function birdhive_display_collection ( $args = array() ) {
 		
 		$item_ts_info .= "<!-- item_type: ".$item_type." -->";
 		
-		// Some fields exist for content collection items ONLY, so set those directly from the item array
-		if ( !is_object($item) && isset($item['item_subtitle']) ) { $item_subtitle = $item['item_subtitle']; } else { $item_subtitle = ""; }
-		// TODO: figure out how to handle it if post ALSO has a subtitle...
+		// Assemble the item_arr
+		$item_arr = build_item_arr ( $item, $item_type, $aspect_ratio, $collection_id );
 		
-		if ( $item_type == "post" ) {
-			
-			if ( is_object($item) ) { // item is post object, e.g. when called via display_posts shortcode
-				$post = $item;
-			} else if ( isset($item['post_object']) ) {
-				$post = $item['post_object'][0];
-			} else if ( is_numeric($item) ) {
-				$post = get_post( $item );
-			} else {
-				$item_ts_info .= '<!-- post: <pre>'.print_r($post, true).'</pre> -->';
-			}
-			
-			$post_type = $post->post_type;
-			$post_id = $post->ID;
-			$item_ts_info .= '<!-- '.$post_type.' => post_id: '.$post_id." -->";
-			
-			//$item_ts_info .= '<!-- post_type: '.$post_type." -->";
-			
-			//$item_ts_info .= 'item: <pre>'.print_r($item, true).'</pre>'; // tft
-			//$post_type = get_post_type($post_id);
-			//$item_ts_info .= '<pre>'.print_r($post, true).'</pre>'; // tft
-			
-			/*if ( post_type_exists('event') && $post_type == 'event' ) {
-				$post_id = $post->post_id;
-				$item_ts_info .= '<!-- Event post_id: '.$post_id." -->";
-			} else {
-				$post_id = $post->ID;
-				$item_ts_info .= '<!-- '.$post_type.' => post_id: '.$post_id." -->"; // tft
-			}*/
-				
-			//
-			$item_arr['post_id'] = $post_id;
-			$item_arr['post_type'] = $post_type;
-			
-			// Item Title
-			// Check for title override set via collection
-			if ( $collection_id && isset($item['item_title']) && !empty($item['item_title']) ) { 
-				$item_title = $item['item_title'];
-			} else {
-				// If a short_title is set, use it. If not, use the post_title
-				$short_title = get_post_meta( $post_id, 'short_title', true );
-				if ( $short_title ) { 
-					$item_title = $short_title;
-				} else if ( function_exists( 'sdg_post_title' ) ) {
-					$title_args = array( 'post' => $post_id, 'line_breaks' => true, 'show_subtitle' => true, 'echo' => false, 'hlevel' => 0, 'hlevel_sub' => 0 );
-					$item_title = sdg_post_title( $title_args );
-				} else {
-					$item_title = get_the_title($post_id);
-				}
-			}
-			
-			// Item URL
-			$item_url = get_the_permalink( $post_id );
-			
-			// +~+~+~+~+~+~+~+~+~+~+~+~+~+~+~+~+~+~+~+~+~+~+~+
-			// Item Image
-			
-			// If this is a post via a collection, check to see if there's an image override
-			if ( $collection_id && isset($item['item_image']) ) {
-				$image_id = $item['item_image'];
-			} else { 
-				$image_id = null;
-			}
-			
-			// No collection image? Then look for a image via the post record
-			if ( ! $image_id ) {
-				// WIP
-				if ( $aspect_ratio == "square" ) {
-					$img_size = "grid_crop_square";
-				} else {
-					$img_size = "grid_crop_rectangle";
-				}
-				$img_args = array( 'post_id' => $post_id, 'format' => 'excerpt', 'img_size' => $img_size, 'sources' => "all", 'echo' => false, 'return' => 'id' );
-        		$image_id = sdg_post_thumbnail ( $img_args );
-				$item_ts_info .= '<!-- dsplycntnt sdg_post_thumbnail: image_id: '.$image_id.' -->'; // tft		
-			}
-			// +~+~+~+~+~+~+~+~+~+~+~+~+~+~+~+~+~+~+~+~+~+~+~+
-			
-			// Item Excerpt/Text
-			if ( function_exists('is_dev_site') && is_dev_site() ) {
-				$exp_args = array( 'post_id' => $post_id ); // $exp_args = array( 'text' => $text, 'post_id' => $post_id, 'text_length' => $text_length, 'preview_length' => $preview_length );
-				$item_text = expandable_text( $exp_args );
-				//$info .= dsplycntnt_get_excerpt( array('post_id' => $post_id, 'expandable' => $expandable, 'text_length' => $text_length, 'preview_length' => $preview_length ) );				
-			} else {
-				$item_text = get_the_excerpt( $post_id ); //$info .= $post->post_excerpt;
-			}
-			$item_arr['item_content'] = $item_text;
-		
-		} else if ( $item_type == "event_category" || $item_type == "post_category" ) {
-		
-			//$item_ts_info .= "item: <pre>".print_r($item, true)."</pre>";
-			
-			if ( $item_type == "event_category" ) { $term_id = $item['event_category']; } else { $term_id = $item['post_category']; }
-			
-			// Get term
-			$term = get_term( $term_id ); // $term = get_term( $term_id, $taxonomy );
-			
-			// If there's a title override, use it. Otherwise, use the taxonomy term name.
-			if ( isset($item['item_title']) && !empty($item['item_title']) ) { 
-				$item_title = $item['item_title'];
-			} else {
-				$item_title = $term->name;	
-			}
-			
-			$item_url = get_term_link( $term_id) ;
-			
-			// Get the taxonomy image, if any has been set
-			if ( $item_type == "event_category" ) { 
-				// TMP solution:
-				global $wpdb; 
-				//wpstc_em_meta
-				$image_id = $wpdb->get_var('SELECT meta_value FROM '.EM_META_TABLE." WHERE object_id='".$term_id."' AND meta_key='category-image-id' LIMIT 1"); // 288081
-				/* // TODO: figure out how to get EM taxonomy image without direct DB query
-				$image_url = ""; // tft
-				//$EM_Tax_Term = new EM_Taxonomy_Term($term_id, 'term_id'); 
-				//$item_image = $EM_Tax_Term->get_image_url();
-				$item_image = "";
-				*/
-			} else {
-				$taxonomy_featured_image = get_term_meta( $term_id, 'taxonomy_featured_image', true );
-				if ( $taxonomy_featured_image ) { $image_id = $taxonomy_featured_image; } else { $image_id = null; }
-			}
-			// Event category
-			
-			// Posts category
-			
-			
-		} else if ( $item_type == "XXX" ) {
-		
-			//
-			
-		} else { // if ( $content_type == "mixed" )
-		
-			$item_arr = $item;
-			
-			// tft
-			//$item_title = null;
-			//$item_subtitle = null;
-			
-			$item_title = $item['item_title'];
-			$item_subtitle = $item['item_subtitle'];
-			
-			// Item URL
-			if ( $item_type == "page_link" ) {
-				$item_url = $item['page_link'];
-				//$item_ts_info .= '<!-- page_link item: <pre>'.print_r($item, true).'</pre> -->'; // tft
-			} else {
-				$item_url = $item['item_url'];
-			}
-			if ( $item_type == "email" ) {
-				$item_email = $item['item_email'];
-				if ( !empty($item_email) ) {
-					$item_url = "mailto:".$item_email;
-				}
-			}
-			
-			
-			// Item Image
-			if ( isset($item['item_image']) ) {
-				$image_id = $item['item_image'];
-				//$image_id = $item['item_image']['id'];
-				//$item_ts_info .= '<!-- item_image: '.print_r($item['item_image'], true)." -->"; // tft
-			}
-			
-			//$post_object = $item['post_object'];
-			/*
-			$item_text = $item['item_content'];
-			$media_file = $item['media_file'];
-			$event_category = $item['event_category'];
-			$post_category = $item['post_category'];
-			//if ( isset($row['row_type']) ) { $row_type = $row['row_type']; } else { $row_type = null; }
-			*/
-						
-		}
-		
-		// Set Link Target
-		$item_link_target = null; // init
-		$link_target = ""; // init
-		if ( $collection_id && isset($item['item_link_target'] ) ) {
-			$item_link_target = $item['item_link_target'];
-			$item_ts_info .= '<!-- item_link_target: '.$item_link_target.' -->'; // tft
-		} else if ( $display_format == "table" ) {
-			$item_link_target = "_blank";
-		}
-		if ( !empty($item_link_target) ) { $link_target = ' target="'.$item_link_target.'"'; }
-		$item_ts_info .= '<!-- link_target: '.$link_target.' -->'; // tft
-		
-		if ( $item_title ) {
-			if ( !empty($item_title) ) {
-			
-				// TODO: come up with a different var name to distinguish bare title from formatted title
-				$item_title_styled = '<span class="item_title">'.$item_title.'</span>';
-				
-				// Wrap the title in a hyperlink, if a URL has been set	OR if the item is linked to modal content		
-				if ( $item_type == "modal" || $item_link_target == "modal" ) {
-					$dialog_id = sanitize_title($item_title); // tmp/wip
-					$item_title_styled = '<a href="#!" id="dialog_handle_'.$dialog_id.'" class="dialog_handle">'.$item_title.'</a>'; 
-				} else {
-					if ( !empty($item_url) ) { $item_title_styled = '<a href="'.$item_url.'" rel="bookmark"'.$link_target.'>'.$item_title.'</a>'; }
-				}				
-			}
-			$item_arr['item_title'] = $item_title_styled; // Save styled/linked version to array to pass to display fcns
-		}
-		
-		if ( $item_type == "modal" || $item_link_target == "modal" ) {
-			$item_content = $item['item_content'];			
-		} else {
-			$item_content = null;
-		}
-		
-		if ( $item_subtitle ) {
-			if ( !empty($item_subtitle) ) {
-				$item_subtitle = '<span class="item_subtitle">'.$item_subtitle.'</span>';
-			}
-			$item_arr['item_subtitle'] = $item_subtitle;
-		}
-		
-		if ( !empty($image_id) ) {
-		
-			$item_ts_info .= '<!-- image_id: '.print_r($image_id,true).' -->'; // tft
-			
-			if ( $aspect_ratio == "square" ) {
-				$img_size = "grid_crop_square"; //$img_size = array(600, 600); //"medium_large"; //
-			} else {
-				$img_size = "grid_crop_rectangle";
-			}
-			$item_ts_info .= '<!-- aspect_ratio: '.$aspect_ratio.' -->'; // tft
-			$item_ts_info .= '<!-- img_size: '.print_r($img_size, true).' -->'; // tft		
-			//wp_get_attachment_image( int $attachment_id, string|int[] $size = 'thumbnail', bool $icon = false, string|array $attr = '' ): string
-			//$img_attr = array ( 'sizes' => "(max-width: 600px) 100vw, 100vw" );
-			$item_image = wp_get_attachment_image( $image_id, $img_size );
-			//$item_image = '<img src="'.$image_url.'" alt="'.get_the_title($post_id).'" width="100%" height="100%" />';
-			
-			if ( !empty($item_image) ) {
-				if ( !empty($dialog_id) && ( $item_type == "modal" || $item_link_target == "modal" ) ) {
-					$item_image = '<a href="#!" id="dialog_handle_'.$dialog_id.'" class="dialog_handle">'.$item_image.'</a>'; 
-				} else if ( !empty($item_url) ) { 
-					$item_image = '<a href="'.$item_url.'" rel="bookmark"'.$link_target.'>'.$item_image.'</a>';
-				}
-			}
-			
-		} else {
-		
-			$item_ts_info .= '<!-- image_id NOT FOUND -->'; // tft
-			$item_image = "";
-			
-		}
-		$item_arr['item_image'] = $item_image;
-		
-		//if ( empty($item_image) ) { $item_ts_info .= "item_arr: <pre>".print_r($item_arr, true)."</pre>"; } // tft
-		
-		
+		// Display the item based on the item_arr
 		if ( $display_format == "links" ) {
 			
-			$item_info .= display_list_item($item_title);
-			//$item_info .= display_link_item($item_arr);
+			//$item_info .= display_list_item($item_title);
+			$item_info .= display_link_item($item_arr);
 			
 		} else if ( $display_format == "excerpts" || $display_format == "archive" ) {
 			
@@ -1337,30 +1339,14 @@ function birdhive_display_collection ( $args = array() ) {
 			
 		}
 		
-		if ( $display_format != "grid" ) {
-			//$item_info .= "+~+~+~+~+~+~+~+~+~+~+~+~+<br />";
-		}
-		
-		// WIP groupby -- this may not work. Instead, may need to build set of sorted relevant taxonomies and then get posts per term_id?
-		/*if ( $groupby && $content_type == "posts" ) {
-			// Display groupby headers
-			$item_terms = wp_get_post_terms( $post_id, 'category' ); // Replace 'category' with your desired taxonomy
-
-			// Display header for each new term
-			if ( $item_terms && $item_terms[0]->term_id !== $current_term_id ) {
-				echo '<h3>' . $terms[0]->name . '</h3>';
-				$current_term_id = $terms[0]->term_id;
-			}
-		}*/
-		
 		// Add the item_info to the info for return/display		
 		$info .= $item_info;
 		if ( $do_ts ) { $info .= $item_ts_info; }
 		
-		if ( $item_content ) {
+		if ( isset( $item_arr['item_content'] ) && ( $item_type == "modal" || $item_link_target == "modal" ) ) { 
 			// modal_content...
 			//<div id="dialog_content_contact_us" class="dialog dialog_content"></div>
-			$info .= '<div id="dialog_content_'.$dialog_id.'" class="dialog dialog_content">'.$item_content.'</div>';
+			$info .= '<div id="dialog_content_'.$dialog_id.'" class="dialog dialog_content">'.$item_arr['item_content'].'</div>';
 		}
 		
 	} // END foreach items as item
@@ -1834,6 +1820,10 @@ function birdhive_get_posts ( $args = array() ) {
     // Groupby
     //if ( $groupby ) { $wp_args['groupby'] = $groupby; }
     
+    // Grouping -- as distinct from groupby -- option to group posts according to taxonomy, for example, and display the taxonomies as headers...
+    // WIP
+    // TBD whether to sort posts in initial query or to sort array of posts after wp_query is complete
+    
     /*
     // TBD
     if ( isset($name) ) {
@@ -2054,7 +2044,7 @@ function birdhive_display_posts ( $atts = [] ) { //function birdhive_display_pos
         //$ts_info .= '<pre>'.print_r($posts, true).'</pre>'; // tft
         
 		//if ($args['header'] == 'true') { $info .= '<h3>Latest '.$category.' Articles:</h3>'; } // WIP
-		$info .= '<div class="dsplycntnt-posts '.$class.'">';
+		$info .= '<div class="dsplycntnt-posts'.$class.'">';
 		// TODO: modify the following to pass only subset of args? Much of the info is not needed for the display_collection fcn
 		$display_args = array( 'content_type' => 'posts', 'display_format' => $return_format, 'items' => $posts, 'arr_dpatts' => $args );
         $info .= birdhive_display_collection( $display_args );
