@@ -959,6 +959,7 @@ function build_item_arr ( $item = array(), $item_type = null, $aspect_ratio = nu
 	
 	// Init vars
 	$item_arr = array();
+	$ts_info = "";
 	//
 	$post_id = null;
 	$post_type = null;
@@ -982,19 +983,19 @@ function build_item_arr ( $item = array(), $item_type = null, $aspect_ratio = nu
 		} else if ( is_numeric($item) ) {
 			$post = get_post( $item );
 		} else {
-			$item_ts_info .= '<!-- post: <pre>'.print_r($post, true).'</pre> -->';
+			$ts_info .= '<!-- post: <pre>'.print_r($post, true).'</pre> -->';
 		}
 		
 		$post_type = $post->post_type;
 		$post_id = $post->ID;
-		$item_ts_info .= '<!-- '.$post_type.' => post_id: '.$post_id." -->";
+		$ts_info .= '<!-- '.$post_type.' => post_id: '.$post_id." -->";
 		
 		/*if ( post_type_exists('event') && $post_type == 'event' ) {
 			$post_id = $post->post_id;
-			$item_ts_info .= '<!-- Event post_id: '.$post_id." -->";
+			$ts_info .= '<!-- Event post_id: '.$post_id." -->";
 		} else {
 			$post_id = $post->ID;
-			$item_ts_info .= '<!-- '.$post_type.' => post_id: '.$post_id." -->"; // tft
+			$ts_info .= '<!-- '.$post_type.' => post_id: '.$post_id." -->"; // tft
 		}*/
 		
 		// Item Title
@@ -1037,7 +1038,7 @@ function build_item_arr ( $item = array(), $item_type = null, $aspect_ratio = nu
 			}
 			$img_args = array( 'post_id' => $post_id, 'format' => 'excerpt', 'img_size' => $img_size, 'sources' => "all", 'echo' => false, 'return' => 'id' );
 			$image_id = sdg_post_thumbnail ( $img_args );
-			$item_ts_info .= '<!-- dsplycntnt sdg_post_thumbnail: image_id: '.$image_id.' -->'; // tft		
+			$ts_info .= '<!-- dsplycntnt sdg_post_thumbnail: image_id: '.$image_id.' -->'; // tft		
 		}
 		// +~+~+~+~+~+~+~+~+~+~+~+~+~+~+~+~+~+~+~+~+~+~+~+
 		
@@ -1099,7 +1100,7 @@ function build_item_arr ( $item = array(), $item_type = null, $aspect_ratio = nu
 		// Item URL
 		if ( $item_type == "page_link" ) {
 			$item_url = $item['page_link'];
-			//$item_ts_info .= '<!-- page_link item: <pre>'.print_r($item, true).'</pre> -->'; // tft
+			//$ts_info .= '<!-- page_link item: <pre>'.print_r($item, true).'</pre> -->'; // tft
 		} else {
 			$item_url = $item['item_url'];
 		}
@@ -1113,7 +1114,7 @@ function build_item_arr ( $item = array(), $item_type = null, $aspect_ratio = nu
 		// Item Image
 		if ( isset($item['item_image']) ) {
 			$image_id = $item['item_image']; //$image_id = $item['item_image']['id'];
-			//$item_ts_info .= '<!-- item_image: '.print_r($item['item_image'], true)." -->"; // tft
+			//$ts_info .= '<!-- item_image: '.print_r($item['item_image'], true)." -->"; // tft
 		}
 		
 		/* WIP
@@ -1131,12 +1132,12 @@ function build_item_arr ( $item = array(), $item_type = null, $aspect_ratio = nu
 	$link_target = ""; // init
 	if ( $collection_id && isset($item['item_link_target'] ) ) {
 		$item_link_target = $item['item_link_target'];
-		$item_ts_info .= '<!-- item_link_target: '.$item_link_target.' -->'; // tft
+		$ts_info .= '<!-- item_link_target: '.$item_link_target.' -->'; // tft
 	} else if ( $display_format == "table" ) {
 		$item_link_target = "_blank";
 	}
 	if ( !empty($item_link_target) ) { $link_target = ' target="'.$item_link_target.'"'; }
-	$item_ts_info .= '<!-- link_target: '.$link_target.' -->'; // tft
+	$ts_info .= '<!-- link_target: '.$link_target.' -->'; // tft
 	
 	// Style the title
 	if ( !empty($item_title) ) {
@@ -1157,15 +1158,15 @@ function build_item_arr ( $item = array(), $item_type = null, $aspect_ratio = nu
 	$item_image = ""; // init
 	if ( !empty($image_id) ) {
 	
-		$item_ts_info .= '<!-- image_id: '.print_r($image_id,true).' -->'; // tft
+		$ts_info .= '<!-- image_id: '.print_r($image_id,true).' -->'; // tft
 		
 		if ( $aspect_ratio == "square" ) {
 			$img_size = "grid_crop_square"; //$img_size = array(600, 600); //"medium_large"; //
 		} else {
 			$img_size = "grid_crop_rectangle";
 		}
-		$item_ts_info .= '<!-- aspect_ratio: '.$aspect_ratio.' -->'; // tft
-		$item_ts_info .= '<!-- img_size: '.print_r($img_size, true).' -->'; // tft		
+		$ts_info .= '<!-- aspect_ratio: '.$aspect_ratio.' -->'; // tft
+		$ts_info .= '<!-- img_size: '.print_r($img_size, true).' -->'; // tft		
 		//wp_get_attachment_image( int $attachment_id, string|int[] $size = 'thumbnail', bool $icon = false, string|array $attr = '' ): string
 		//$img_attr = array ( 'sizes' => "(max-width: 600px) 100vw, 100vw" );
 		$item_image = wp_get_attachment_image( $image_id, $img_size );
@@ -1180,7 +1181,7 @@ function build_item_arr ( $item = array(), $item_type = null, $aspect_ratio = nu
 		}
 		
 	} else {		
-		$item_ts_info .= '<!-- image_id NOT FOUND -->';
+		$ts_info .= '<!-- image_id NOT FOUND -->';
 		//$item_ts_info .= "item_arr: <pre>".print_r($item_arr, true)."</pre>";
 	}
 	
