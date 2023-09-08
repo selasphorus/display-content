@@ -1390,6 +1390,10 @@ function collection_header ( $display_format = null, $num_cols = 3, $aspect_rati
 	
 		$info .= '<ul>';
 		
+	} else if ( $display_format == "links" ) {
+	
+		//$info .= '';
+		
 	} else if ( $display_format == "excerpts" || $display_format == "archive" ) {
 	
 		$info .= '<div class="posts_archive">';
@@ -1901,7 +1905,7 @@ function birdhive_display_posts ( $atts = [] ) { //function birdhive_display_pos
         // This group_by is NOT the same as the wpq arg 'groupby' -- we're going to use it to retrieve posts group by group for display with headers... WIP
         'group_by'	=> null, // e.g. category, event-categories, link_category
         //
-        'return_format' => 'links', // other options: excerpts; archive (full post content); grid; table
+        'return_format' => 'list', // other options: links; excerpts; archive (full post content); grid; table
         
         // For grid return_format:
         'cols' => 4, // ***
