@@ -713,12 +713,19 @@ function get_post_links( $post_id = null ) {
 // Perhaps simply: $item = array()
 // Perhaps rework all of this to make it object-oriented, with an "item" class of objects?
 
-//function display_list_item ( $item = array() ) { // only two vars here, so array seems like an unnecessary extra step
-function display_list_item ( $item_str = null ) { // $item_url = null,  ...
+function display_link_item ( $item = array() ) {
+	
+	$info = "";
+	if ( isset($item['item_title']) ) { $info .= $item['item_title']; }
+	return $info;
+			
+}
+
+function display_list_item ( $item = array() ) {
 	
 	$info = "";
 	$info .= '<li>';
-	$info .= $item_str;
+	if ( isset($item['item_title']) ) { $info .= $item['item_title']; } //$info .= $item_str;
 	$info .= '</li>';
 	
 	return $info;
@@ -1311,8 +1318,11 @@ function birdhive_display_collection ( $args = array() ) {
 		// Display the item based on the item_arr
 		if ( $display_format == "links" ) {
 			
-			//$item_info .= display_list_item($item_title);
 			$item_info .= display_link_item($item_arr);
+			
+		} else if ( $display_format == "list" ) {
+		
+			$item_info .= display_list_item($item_arr);
 			
 		} else if ( $display_format == "excerpts" || $display_format == "archive" ) {
 			
