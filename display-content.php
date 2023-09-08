@@ -955,7 +955,7 @@ function display_grid_item ( $item = array(), $display_atts = array(), $ts_info 
 // * 
 
 // WIP build item_arr
-function build_item_arr ( $item = array(), $item_type = null, $aspect_ratio = null, $collection_id = null ) {
+function build_item_arr ( $item = array(), $item_type = null, $display_format = "list", $aspect_ratio = null, $collection_id = null ) {
 	
 	// Init vars
 	$item_arr = array();
@@ -1314,7 +1314,7 @@ function birdhive_display_collection ( $args = array() ) {
 		$item_ts_info .= "<!-- item_type: ".$item_type." -->";
 		
 		// Assemble the item_arr
-		$item_arr = build_item_arr ( $item, $item_type, $aspect_ratio, $collection_id );
+		$item_arr = build_item_arr ( $item, $item_type, $display_format, $aspect_ratio, $collection_id );
 		
 		// Display the item based on the item_arr
 		if ( $display_format == "links" ) {
