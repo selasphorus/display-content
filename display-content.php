@@ -1386,7 +1386,7 @@ function collection_header ( $display_format = null, $num_cols = 3, $aspect_rati
 	
 	$ts_info .= "+~+~+~+~+~+~+ collection_header +~+~+~+~+~+~+<br />";
 	
-	if ( $display_format == "links" ) {
+	if ( $display_format == "list" ) {
 	
 		$info .= '<ul>';
 		
@@ -1455,7 +1455,7 @@ function collection_footer ( $display_format = null ) {
 	$info = "";
 	//$info .= "+~+~+~+~+~+~+ collection_footer +~+~+~+~+~+~+<br />";
 	
-	if ( $display_format == "links" ) {
+	if ( $display_format == "list" ) {
 		//if ( ! is_archive() && ! is_category() ) { $info .= '<li>'.$category_link.'</li>'; }
 		$info .= '</ul>';
 	} else if ( $display_format == "excerpts" || $display_format == "archive" ) {
@@ -2013,8 +2013,8 @@ function birdhive_display_posts ( $atts = [] ) { //function birdhive_display_pos
     
     // Make sure the return_format is valid
     // TODO: revive/fix "archive" option -- deal w/ get_template_part issue...
-    if ( $return_format != "links" && $return_format != "table" && $return_format != "grid" && $return_format != "excerpts" && $return_format != "archive" ) {
-        $return_format = "links"; // default
+    if ( $return_format != "links" && $return_format != "list" && $return_format != "table" && $return_format != "grid" && $return_format != "excerpts" && $return_format != "archive" ) {
+        $return_format = "list"; // default
     }
     
     // Retrieve an array of posts matching the args supplied -- if we didn't already get the posts using EM
