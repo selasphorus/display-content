@@ -1267,15 +1267,53 @@ function birdhive_display_collection ( $args = array() ) {
 		$ts_info .= "table_headers: ".print_r($table_headers, true)."<br />";
 	}
 	
-	//$ts_info .= "num_cols: $num_cols<br />";
-	//?if ( $content_type == "posts" ) { $post_type = $args['post_type']; }
-	
 	// List/table/grid header or container
 	$info .= collection_header ( $display_format, $num_cols, $aspect_ratio, $table_fields, $table_headers );
 	
 	//$info .= "+~+~+~+~+~+~+ collection items +~+~+~+~+~+~+<br />";
 	
-	//if ( $group_by ) { $current_term_id = ""; } // init for displaying group_by headers -- WIP
+	// Two options, maybe: 
+	// 1. loop through categories -- build set of sorted relevant taxonomies and then get posts per term_id?
+	// 2. loop through items, get taxonomies display if new...
+	
+	// WIP group_by
+	if ( isset($arr_dpatts['group_by']) ) {
+		
+		$group_by = $arr_dpatts['group_by'];
+		
+		// Is the group_by by taxonomy?		
+		if ( taxonomy_exists($group_by) ) {
+		
+			//$taxonomy = $group_by;
+			$current_term_id = ""; // init
+		
+			//$info .= "group_by: $group_by<br />"; // tft
+			
+			// Get all non-empty terms for the given taxonomy, ordered by sort_num
+			$terms = get_terms( array( 'taxonomy' => $group_by, 'hide_empty' => true, 'orderby' => 'meta_value_num', 'meta_key' => 'sort_num' ) );
+			foreach ( $terms as $term ) {
+				$term_id = $term->term_id;
+				$info .= $term->name."<br />";
+				// Get posts per term_id
+				// The problem then is how to handle the group headers...
+				// Rather than a simple single posts array, have an array of post arrays? WIP...
+				//$posts_info = birdhive_get_posts( $args );
+				//$posts = $posts_info['arr_posts']->posts; 
+			}
+			
+			// Display group_by headers
+			
+			//$item_terms = wp_get_post_terms( $item_arr['post_id'], $taxonomy );
+			/*
+			// Display header for each new term
+			if ( $item_terms && $item_terms[0]->term_id !== $current_term_id ) {
+				echo '<h3>' . $terms[0]->name . '</h3>';
+				$current_term_id = $terms[0]->term_id;
+			}
+			*/
+		}			
+	}
+		
 	
 	// For each item, get content for display in appropriate form...
 	foreach ( $items as $item ) {
@@ -1285,7 +1323,7 @@ function birdhive_display_collection ( $args = array() ) {
 		$item_arr = array();
 		$image_id = null;
 		
-		$item_ts_info .= "item: <pre>".print_r($item, true)."</pre>";
+		//$item_ts_info .= "item: <pre>".print_r($item, true)."</pre>";
 		
 		if ( $content_type == "posts" ) {
 			$item_type = "post";
@@ -1301,44 +1339,6 @@ function birdhive_display_collection ( $args = array() ) {
 		//get content for display in appropriate form...
 		//$item_args = array( 'content_type' => $content_type, 'display_format' => $display_format, 'item' => $item );
 		//$info .= birdhive_display_item( $item_args );
-		
-		// WIP group_by -- this may not work. Instead, may need to build set of sorted relevant taxonomies and then get posts per term_id?
-		if ( isset($arr_dpatts['group_by']) ) {
-		//if ( $group_by ) { //&& $content_type == "posts"
-			
-			$group_by = $arr_dpatts['group_by'];
-			
-			// Is the group_by by taxonomy?
-			
-			if ( taxonomy_exists($group_by) ) {
-			
-				$taxonomy = $group_by;
-			
-				//$info .= "group_by: $group_by<br />"; // tft
-				
-				// Display group_by headers
-				
-				$item_terms = wp_get_post_terms( $item_arr['post_id'], $taxonomy );
-				/*
-				// Display header for each new term
-				if ( $item_terms && $item_terms[0]->term_id !== $current_term_id ) {
-					echo '<h3>' . $terms[0]->name . '</h3>';
-					$current_term_id = $terms[0]->term_id;
-				}
-				*/
-				/*
-				$terms = get_terms( array( 'taxonomy' => $group_by, 'hide_empty' => true, 'orderby' => 'meta_value_num', 'meta_key' => 'sort_num' ) );
-				foreach ( $terms as $term ) {
-					$term_id = $term->term_id;
-					// Get posts per term_id
-					// The problem then is how to handle the group headers...
-					// Rather than a simple single posts array, have an array of post arrays? WIP...
-					//$posts_info = birdhive_get_posts( $args );
-					//$posts = $posts_info['arr_posts']->posts; 
-				}
-				*/
-			}			
-		}
 		
 		// Display the item based on the item_arr
 		if ( $display_format == "links" ) {
