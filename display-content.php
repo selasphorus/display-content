@@ -1287,6 +1287,17 @@ function birdhive_display_collection ( $args = array() ) {
 		
 		$item_ts_info .= "item: <pre>".print_r($item, true)."</pre>";
 		
+		if ( $content_type == "posts" ) {
+			$item_type = "post";
+		} else {
+			$item_type = $item['item_type'];
+		}
+		
+		$item_ts_info .= "<!-- item_type: ".$item_type." -->";
+		
+		// Assemble the item_arr
+		$item_arr = build_item_arr ( $item, $item_type, $display_format, $aspect_ratio, $collection_id );
+		
 		//get content for display in appropriate form...
 		//$item_args = array( 'content_type' => $content_type, 'display_format' => $display_format, 'item' => $item );
 		//$info .= birdhive_display_item( $item_args );
@@ -1307,7 +1318,7 @@ function birdhive_display_collection ( $args = array() ) {
 				
 				// Display group_by headers
 				
-				$item_terms = wp_get_post_terms( $post_id, $taxonomy );
+				$item_terms = wp_get_post_terms( $item_arr['post_id'], $taxonomy );
 				/*
 				// Display header for each new term
 				if ( $item_terms && $item_terms[0]->term_id !== $current_term_id ) {
@@ -1328,17 +1339,6 @@ function birdhive_display_collection ( $args = array() ) {
 				*/
 			}			
 		}
-		
-		if ( $content_type == "posts" ) {
-			$item_type = "post";
-		} else {
-			$item_type = $item['item_type'];
-		}
-		
-		$item_ts_info .= "<!-- item_type: ".$item_type." -->";
-		
-		// Assemble the item_arr
-		$item_arr = build_item_arr ( $item, $item_type, $display_format, $aspect_ratio, $collection_id );
 		
 		// Display the item based on the item_arr
 		if ( $display_format == "links" ) {
