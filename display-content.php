@@ -1256,9 +1256,7 @@ function birdhive_display_collection ( $args = array() ) {
 		}
 		if ( $display_format == "grid" && isset($arr_dpatts['cols']) ) { $num_cols = $arr_dpatts['cols']; }
 		if ( isset($arr_dpatts['aspect_ratio']) ) { $aspect_ratio = $arr_dpatts['aspect_ratio']; } // TODO: either eliminate this, or make it so that aspect_ratio actually ever is passable as an arg, via mods to args array of display_posts, for example...
-		
-		//if ( isset($arr_dpatts['groupby']) ) { $groupby = $arr_dpatts['groupby']; } else { $groupby = null; }
-		
+				
 	}
 	
 	// Show TS info based on display_format (tft)
@@ -1277,7 +1275,7 @@ function birdhive_display_collection ( $args = array() ) {
 	
 	//$info .= "+~+~+~+~+~+~+ collection items +~+~+~+~+~+~+<br />";
 	
-	//if ( $groupby ) { $current_term_id = ""; } // init for displaying grouping headers -- WIP
+	//if ( $group_by ) { $current_term_id = ""; } // init for displaying group_by headers -- WIP
 	
 	// For each item, get content for display in appropriate form...
 	foreach ( $items as $item ) {
@@ -1293,17 +1291,16 @@ function birdhive_display_collection ( $args = array() ) {
 		//$item_args = array( 'content_type' => $content_type, 'display_format' => $display_format, 'item' => $item );
 		//$info .= birdhive_display_item( $item_args );
 		
-		// WIP grouping -- this may not work. Instead, may need to build set of sorted relevant taxonomies and then get posts per term_id?
-		if ( $grouping ) { //&& $content_type == "posts"
+		// WIP group_by -- this may not work. Instead, may need to build set of sorted relevant taxonomies and then get posts per term_id?
+		if ( $group_by ) { //&& $content_type == "posts"
 			
-			// Display grouping headers
+			// Display group_by headers
 			
-			// Is the grouping by taxonomy?
-			// Does a taxonomy term exist matching this grouping?
-			$taxonomy = term_exists( $grouping );
-			if ( $taxonomy ) {
+			// Is the group_by by taxonomy?
 			
-				$info .= "grouping == taxonomy: $taxonomy<br />"; // tft
+			if ( taxonomy_exists($group_by) ) {
+			
+				$info .= "group_by == taxonomy: $taxonomy<br />"; // tft
 				/*
 				$item_terms = wp_get_post_terms( $post_id, $taxonomy );
 
@@ -1313,7 +1310,17 @@ function birdhive_display_collection ( $args = array() ) {
 					$current_term_id = $terms[0]->term_id;
 				}
 				*/
-				
+				/*
+				$terms = get_terms( array( 'taxonomy' => $group_by, 'hide_empty' => true, 'orderby' => 'meta_value_num', 'meta_key' => 'sort_num' ) );
+				foreach ( $terms as $term ) {
+					$term_id = $term->term_id;
+					// Get posts per term_id
+					// The problem then is how to handle the group headers...
+					// Rather than a simple single posts array, have an array of post arrays? WIP...
+					//$posts_info = birdhive_get_posts( $args );
+					//$posts = $posts_info['arr_posts']->posts; 
+				}
+				*/
 			}
 			
 		}
@@ -1848,7 +1855,7 @@ function birdhive_get_posts ( $args = array() ) {
     // Groupby
     //if ( $groupby ) { $wp_args['groupby'] = $groupby; }
     
-    // Grouping -- as distinct from groupby -- option to group posts according to taxonomy, for example, and display the taxonomies as headers...
+    // group_by -- as distinct from groupby -- option to group posts according to taxonomy, for example, and display the taxonomies as headers...
     // WIP
     // TBD whether to sort posts in initial query or to sort array of posts after wp_query is complete
     
@@ -2045,6 +2052,7 @@ function birdhive_display_posts ( $atts = [] ) { //function birdhive_display_pos
     	
     	// If we've got a group_by value, then handle it
 		if ( $group_by ) {
+			/*
 			// First check to see if the group_by refers to a taxonomy
 			if ( taxonomy_exists($group_by) ) {
 				$terms = get_terms( array( 'taxonomy' => $group_by, 'hide_empty' => true, 'orderby' => 'meta_value_num', 'meta_key' => 'sort_num' ) );
@@ -2059,6 +2067,7 @@ function birdhive_display_posts ( $atts = [] ) { //function birdhive_display_pos
 			}
 			// If it's not a taxonomy, then what?
 			//
+			*/
 		}
 		
         $posts_info = birdhive_get_posts( $args );
