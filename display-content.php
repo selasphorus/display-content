@@ -1141,7 +1141,7 @@ function build_item_arr ( $item = array(), $item_type = null, $display_format = 
 	
 	// Style the title
 	if ( !empty($item_title) ) {
-		$item_title = '<span class="item_title">'.$item_title.'</span>';		
+		$item_title = '<span class="item_title">'.$item_title.'</span>';
 		// Wrap the title in a hyperlink, if a URL has been set	OR if the item is linked to modal content		
 		if ( $item_type == "modal" || $item_link_target == "modal" ) {
 			$dialog_id = sanitize_title($item_title); // tmp/wip
@@ -1294,16 +1294,29 @@ function birdhive_display_collection ( $args = array() ) {
 		//$info .= birdhive_display_item( $item_args );
 		
 		// WIP grouping -- this may not work. Instead, may need to build set of sorted relevant taxonomies and then get posts per term_id?
-		/*if ( $grouping && $content_type == "posts" ) {
+		if ( $grouping ) { //&& $content_type == "posts"
+			
 			// Display grouping headers
-			$item_terms = wp_get_post_terms( $post_id, 'category' ); // Replace 'category' with your desired taxonomy
+			
+			// Is the grouping by taxonomy?
+			// Does a taxonomy term exist matching this grouping?
+			$taxonomy = term_exists( $grouping );
+			if ( $taxonomy ) {
+			
+				$info .= "grouping == taxonomy: $taxonomy<br />"; // tft
+				/*
+				$item_terms = wp_get_post_terms( $post_id, $taxonomy );
 
-			// Display header for each new term
-			if ( $item_terms && $item_terms[0]->term_id !== $current_term_id ) {
-				echo '<h3>' . $terms[0]->name . '</h3>';
-				$current_term_id = $terms[0]->term_id;
+				// Display header for each new term
+				if ( $item_terms && $item_terms[0]->term_id !== $current_term_id ) {
+					echo '<h3>' . $terms[0]->name . '</h3>';
+					$current_term_id = $terms[0]->term_id;
+				}
+				*/
+				
 			}
-		}*/
+			
+		}
 		
 		if ( $content_type == "posts" ) {
 			$item_type = "post";
