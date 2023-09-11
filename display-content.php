@@ -1285,7 +1285,7 @@ function birdhive_display_collection ( $args = array() ) {
 		$item_arr = array();
 		$image_id = null;
 		
-		//$item_ts_info .= "item: <pre>".print_r($item, true)."</pre>";
+		$item_ts_info .= "item: <pre>".print_r($item, true)."</pre>";
 		
 		//get content for display in appropriate form...
 		//$item_args = array( 'content_type' => $content_type, 'display_format' => $display_format, 'item' => $item );
@@ -1297,16 +1297,18 @@ function birdhive_display_collection ( $args = array() ) {
 			
 			$group_by = $arr_dpatts['group_by'];
 			
-			// Display group_by headers
-			
 			// Is the group_by by taxonomy?
 			
 			if ( taxonomy_exists($group_by) ) {
 			
-				$info .= "group_by: $group_by<br />"; // tft
-				/*
+				$taxonomy = $group_by;
+			
+				//$info .= "group_by: $group_by<br />"; // tft
+				
+				// Display group_by headers
+				
 				$item_terms = wp_get_post_terms( $post_id, $taxonomy );
-
+				/*
 				// Display header for each new term
 				if ( $item_terms && $item_terms[0]->term_id !== $current_term_id ) {
 					echo '<h3>' . $terms[0]->name . '</h3>';
