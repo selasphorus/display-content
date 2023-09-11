@@ -1303,7 +1303,7 @@ function birdhive_display_collection ( $args = array() ) {
 			
 			if ( taxonomy_exists($group_by) ) {
 			
-				$info .= "group_by == taxonomy: $taxonomy<br />"; // tft
+				$info .= "group_by: $group_by<br />"; // tft
 				/*
 				$item_terms = wp_get_post_terms( $post_id, $taxonomy );
 
