@@ -1292,7 +1292,8 @@ function birdhive_display_collection ( $args = array() ) {
 		//$info .= birdhive_display_item( $item_args );
 		
 		// WIP group_by -- this may not work. Instead, may need to build set of sorted relevant taxonomies and then get posts per term_id?
-		if ( $group_by ) { //&& $content_type == "posts"
+		if ( isset($args['group_by']) ) {
+		//if ( $group_by ) { //&& $content_type == "posts"
 			
 			// Display group_by headers
 			
@@ -1321,8 +1322,7 @@ function birdhive_display_collection ( $args = array() ) {
 					//$posts = $posts_info['arr_posts']->posts; 
 				}
 				*/
-			}
-			
+			}			
 		}
 		
 		if ( $content_type == "posts" ) {
