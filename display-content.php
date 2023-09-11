@@ -1295,6 +1295,8 @@ function birdhive_display_collection ( $args = array() ) {
 		if ( isset($arr_dpatts['group_by']) ) {
 		//if ( $group_by ) { //&& $content_type == "posts"
 			
+			$group_by = $arr_dpatts['group_by'];
+			
 			// Display group_by headers
 			
 			// Is the group_by by taxonomy?
