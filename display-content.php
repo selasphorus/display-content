@@ -2032,6 +2032,7 @@ function birdhive_display_posts ( $atts = [] ) { //function birdhive_display_pos
 		// WIP group_by
 		if ( $group_by ) {
 			
+			$do_ts = true;
 			$args['do_ts'] = true;
 			
 			// Get posts per group
