@@ -1003,6 +1003,8 @@ function build_item_arr ( $item = array(), $item_type = null, $display_format = 
 			$post = $item;
 		} else if ( isset($item['post_object']) ) {
 			$post = $item['post_object'][0];
+		} else if ( isset($item['post_id']) ) {
+			$post = get_post( $item['post_id'] );
 		} else if ( is_numeric($item) ) {
 			$post = get_post( $item );
 		}
