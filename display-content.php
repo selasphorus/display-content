@@ -997,8 +997,6 @@ function build_item_arr ( $item = array(), $item_type = null, $display_format = 
 	$ts_info .= 'BIA -- item_type: '.$item_type.'<br />';
 	//$ts_info .= 'BIA -- item: '.print_r($item, true).'<br />';
 	$ts_info .= 'BIA -- item: <pre>'.print_r($item, true).'</pre><br />';
-		
-	if ( isset($item['header']) ) { $header = $item['header']; }
 	
 	if ( $item_type == "post" ) {
 		
@@ -1162,8 +1160,10 @@ function build_item_arr ( $item = array(), $item_type = null, $display_format = 
 	if ( !empty($item_link_target) ) { $link_target = ' target="'.$item_link_target.'"'; }
 	$ts_info .= 'BIA -- link_target: '.$link_target.'<br />';
 	
+	// Is this a header item?
+	if ( is_array($item) && isset($item['header']) ) { $header = $item['header']; }
+	
 	// Style the title
-	// TODO: incorporate "header" option
 	if ( !empty($item_title) ) {
 		$item_title = '<span class="item_title">'.$item_title.'</span>';
 		// Wrap the title in a hyperlink, if a URL has been set	OR if the item is linked to modal content		
