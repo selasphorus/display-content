@@ -715,17 +715,35 @@ function get_post_links( $post_id = null ) {
 
 function display_link_item ( $item = array() ) {
 	
+	// TS/logging setup
+    $do_ts = true; 
+    $do_log = false;
+    sdg_log( "divline2", $do_log );
+    
+    // Init vars
 	$info = "";
+	
 	if ( isset($item['item_title']) ) { $info .= $item['item_title']; }
+	
+	if ( $do_ts && isset($item['ts_info']) ) { $info .= '<div class="troubleshooting">'.$item['ts_info'].'</div>'; } 
+	
 	return $info;
 			
 }
 
 function display_list_item ( $item = array() ) {
 	
+	// TS/logging setup
+    $do_ts = true; 
+    $do_log = false;
+    sdg_log( "divline2", $do_log );
+    
+    // Init vars
 	$info = "";
+	
 	$info .= '<li>';
 	if ( isset($item['item_title']) ) { $info .= $item['item_title']; } //$info .= $item_str;
+	if ( $do_ts && isset($item['ts_info']) ) { $info .= '<div class="troubleshooting">'.$item['ts_info'].'</div>'; } 
 	$info .= '</li>';
 	
 	return $info;
@@ -984,22 +1002,22 @@ function build_item_arr ( $item = array(), $item_type = null, $display_format = 
 		} else if ( is_numeric($item) ) {
 			$post = get_post( $item );
 		} else {
-			$ts_info .= '<!-- BIA -- item: <pre>'.print_r($item, true).'</pre> -->';
+			$ts_info .= 'BIA -- item: <pre>'.print_r($item, true).'</pre><br />';
 		}
 		
 		if ( $post ) {
 			//$ts_info .= '<!-- post: <pre>'.print_r($post, true).'</pre> -->';
 			$post_type = $post->post_type;
 			$post_id = $post->ID;
-			$ts_info .= '<!-- BIA -- '.$post_type.' => post_id: '.$post_id." -->";
+			$ts_info .= 'BIA -- '.$post_type.' => post_id: '.$post_id."<br />";
 		}
 		
 		/*if ( post_type_exists('event') && $post_type == 'event' ) {
 			$post_id = $post->post_id;
-			$ts_info .= '<!-- Event post_id: '.$post_id." -->";
+			$ts_info .= 'BIA -- Event post_id: '.$post_id."<br />";
 		} else {
 			$post_id = $post->ID;
-			$ts_info .= '<!-- '.$post_type.' => post_id: '.$post_id." -->"; // tft
+			$ts_info .= 'BIA -- '.$post_type.' => post_id: '.$post_id."<br />"; // tft
 		}*/
 		
 		// Item Title
@@ -1042,7 +1060,7 @@ function build_item_arr ( $item = array(), $item_type = null, $display_format = 
 			}
 			$img_args = array( 'post_id' => $post_id, 'format' => 'excerpt', 'img_size' => $img_size, 'sources' => "all", 'echo' => false, 'return' => 'id' );
 			$image_id = sdg_post_thumbnail ( $img_args );
-			$ts_info .= '<!-- BIA -- sdg_post_thumbnail: image_id: '.$image_id.' -->'; // tft		
+			$ts_info .= 'BIA -- sdg_post_thumbnail: image_id: '.$image_id.'<br />'; // tft		
 		}
 		// +~+~+~+~+~+~+~+~+~+~+~+~+~+~+~+~+~+~+~+~+~+~+~+
 		
@@ -1136,12 +1154,12 @@ function build_item_arr ( $item = array(), $item_type = null, $display_format = 
 	$link_target = ""; // init
 	if ( $collection_id && isset($item['item_link_target'] ) ) {
 		$item_link_target = $item['item_link_target'];
-		$ts_info .= '<!-- BIA -- item_link_target: '.$item_link_target.' -->'; // tft
+		$ts_info .= 'BIA -- item_link_target: '.$item_link_target.'<br />'; // tft
 	} else if ( $display_format == "table" ) {
 		$item_link_target = "_blank";
 	}
 	if ( !empty($item_link_target) ) { $link_target = ' target="'.$item_link_target.'"'; }
-	$ts_info .= '<!-- BIA -- link_target: '.$link_target.' -->'; // tft
+	$ts_info .= 'BIA -- link_target: '.$link_target.'<br />'; // tft
 	
 	// Style the title
 	if ( !empty($item_title) ) {
@@ -1185,7 +1203,7 @@ function build_item_arr ( $item = array(), $item_type = null, $display_format = 
 		}
 		
 	} else {		
-		$ts_info .= '<!-- BIA -- image_id NOT FOUND -->';
+		$ts_info .= 'BIA -- image_id NOT FOUND<br />';
 		//$item_ts_info .= "item_arr: <pre>".print_r($item_arr, true)."</pre>";
 	}
 	
@@ -1197,6 +1215,7 @@ function build_item_arr ( $item = array(), $item_type = null, $display_format = 
 	$item_arr['item_subtitle'] = $item_subtitle;
 	$item_arr['item_text'] = $item_text;
 	$item_arr['item_image'] = $item_image;
+	$item_arr['ts_info'] = $ts_info;
 	
 	// Return the assembled item array
 	return $item_arr;
