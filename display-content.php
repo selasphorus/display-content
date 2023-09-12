@@ -716,7 +716,7 @@ function get_post_links( $post_id = null ) {
 function display_link_item ( $item = array() ) {
 	
 	// TS/logging setup
-    $do_ts = true; 
+    $do_ts = false; 
     $do_log = false;
     sdg_log( "divline2", $do_log );
     
@@ -725,7 +725,7 @@ function display_link_item ( $item = array() ) {
 	
 	if ( isset($item['item_title']) ) { $info .= $item['item_title']; }
 	
-	if ( $do_ts && isset($item['ts_info']) ) { $info .= '<div class="troubleshooting">'.$item['ts_info'].'</div>'; } 
+	//if ( $do_ts && isset($item['ts_info']) ) { $info .= '<div class="troubleshooting">'.$item['ts_info'].'</div>'; } 
 	
 	return $info;
 			
@@ -734,16 +734,16 @@ function display_link_item ( $item = array() ) {
 function display_list_item ( $item = array() ) {
 	
 	// TS/logging setup
-    $do_ts = true; 
+    $do_ts = false; 
     $do_log = false;
     sdg_log( "divline2", $do_log );
     
     // Init vars
 	$info = "";
 	
-	$info .= '<li>';
+	$info .= '<li class="cc_item">';
 	if ( isset($item['item_title']) ) { $info .= $item['item_title']; } //$info .= $item_str;
-	if ( $do_ts && isset($item['ts_info']) ) { $info .= '<div class="troubleshooting">'.$item['ts_info'].'</div>'; } 
+	//if ( $do_ts && isset($item['ts_info']) ) { $info .= '<div class="troubleshooting">'.$item['ts_info'].'</div>'; } 
 	$info .= '</li>';
 	
 	return $info;
@@ -760,7 +760,7 @@ function display_post_item ( $item = array() ) {
 	
 	// TODO: bring this more in alignment with theme template display? e.g. content-excerpt, content-sermon, content-event...
 	
-	$info .= '<article id="post-'.$post_id.'">'; // post_class()
+	$info .= '<article id="post-'.$post_id.'" class="cc_item">'; // post_class()
 	$info .= '<header class="entry-header">';
 	if ( isset($item['item_title']) ) { $info .= '<h2 class="entry-title">'.$item['item_title'].'</h2>'; }
 	// TODO: add subtitle?
@@ -804,7 +804,7 @@ function display_table_row ( $item = array(), $fields = array() ) {
 	//if ( isset($item['item_text']) ) { $item_text = $item['item_text']; } // TBD: build in possibility that one field value might be item_text?
 	
 	// Start building the rows
-	$info .= '<tr>';
+	$info .= '<tr class="cc_item">';
 	
 	// Make sure we've got a proper array of fields and then loop through them to accumulate the info for display
 	if ( !is_array($fields) ) { $arr_fields = explode(",",$fields); } else { $arr_fields = $fields; }
@@ -1200,10 +1200,11 @@ function build_item_arr ( $item = array(), $item_type = null, $display_format = 
 		//$item_image = '<img src="'.$image_url.'" alt="'.get_the_title($post_id).'" width="100%" height="100%" />';
 		
 		if ( !empty($item_image) ) {
+			$img_class = $display_format."_item_image";
 			if ( !empty($dialog_id) && ( $item_type == "modal" || $item_link_target == "modal" ) ) {
-				$item_image = '<a href="#!" id="dialog_handle_'.$dialog_id.'" class="dialog_handle">'.$item_image.'</a>'; 
+				$item_image = '<a href="#!" id="dialog_handle_'.$dialog_id.'" class="'.$img_class.' dialog_handle">'.$item_image.'</a>'; 
 			} else if ( !empty($item_url) ) { 
-				$item_image = '<a href="'.$item_url.'" rel="bookmark"'.$link_target.'>'.$item_image.'</a>';
+				$item_image = '<a href="'.$item_url.'" rel="bookmark"'.$link_target.' class="'.$img_class.'">'.$item_image.'</a>';
 			}
 		}
 		
