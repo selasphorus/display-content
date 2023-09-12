@@ -2032,6 +2032,8 @@ function birdhive_display_posts ( $atts = [] ) { //function birdhive_display_pos
 		// WIP group_by
 		if ( $group_by ) {
 			
+			$args['do_ts'] = true;
+			
 			// Get posts per group
 			//$info .= "group_by: $group_by<br />"; // tft
 			
@@ -2057,7 +2059,6 @@ function birdhive_display_posts ( $atts = [] ) { //function birdhive_display_pos
 					// Get posts per term_id
 					$args['taxonomy'] = $group_by;
 					$args['tax_terms'] = $term_id;
-					$args['do_ts'] = true;
 					
 					$posts_info = birdhive_get_posts( $args );
 					$posts = $posts_info['arr_posts']->posts; // Retrieves an array of WP_Post Objects
