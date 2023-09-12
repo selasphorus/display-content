@@ -1280,7 +1280,7 @@ function birdhive_display_collection ( $args = array() ) {
 		$item_arr = array();
 		$image_id = null;
 		
-		//$item_ts_info .= "item: <pre>".print_r($item, true)."</pre>";
+		$item_ts_info .= "item: <pre>".print_r($item, true)."</pre>";
 		
 		if ( $content_type == "posts" ) {
 			$item_type = "post";
