@@ -994,7 +994,8 @@ function build_item_arr ( $item = array(), $item_type = null, $display_format = 
 	// TODO: figure out how to handle it if post ALSO has a subtitle...
 	
 	$ts_info .= 'BIA -- item_type: '.$item_type.'<br />';
-	$ts_info .= 'BIA -- item: <pre>'.print_r($item, true).'</pre><br />';
+	$ts_info .= 'BIA -- item: '.print_r($item, true).'<br />';
+	//$ts_info .= 'BIA -- item: <pre>'.print_r($item, true).'</pre><br />';
 		
 	if ( $item_type == "post" ) {
 		
