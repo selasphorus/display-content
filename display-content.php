@@ -2093,7 +2093,7 @@ function birdhive_display_posts ( $atts = [] ) { //function birdhive_display_pos
     
     if ( $items ) {
         
-        //$ts_info .= '<pre>'.print_r($items, true).'</pre>'; // tft
+        $ts_info .= 'Items to be passed to birdhive_display_collection: <pre>'.print_r($items, true).'</pre>'; // tft
         
 		//if ($args['header'] == 'true') { $info .= '<h3>Latest '.$category.' Articles:</h3>'; } // WIP
 		$info .= '<div class="dsplycntnt-posts'.$class.'">';
