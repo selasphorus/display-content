@@ -1303,7 +1303,7 @@ function birdhive_display_collection ( $args = array() ) {
 		$item_arr = array();
 		$image_id = null;
 		
-		$item_ts_info .= "item: <pre>".print_r($item, true)."</pre>";
+		//$item_ts_info .= "item: <pre>".print_r($item, true)."</pre>";
 		
 		if ( isset($item['item_type']) ) {
 			$item_type = $item['item_type'];
