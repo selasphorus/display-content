@@ -2060,7 +2060,7 @@ function birdhive_display_posts ( $atts = [] ) { //function birdhive_display_pos
 					$wp_args['taxonomy'] = $group_by;
 					$wp_args['tax_terms'] = $term_id;
 					$wp_args['tax_field'] = 'term_id';
-					$wp_args['fields'] = 'ids';
+					$wp_args['return_fields'] = 'ids';
 					
 					$posts_info = birdhive_get_posts( $wp_args );
 					$posts = $posts_info['arr_posts']->posts; // Retrieves an array of WP_Post Objects
