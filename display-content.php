@@ -1304,10 +1304,12 @@ function birdhive_display_collection ( $args = array() ) {
 		
 		$item_ts_info .= "item: <pre>".print_r($item, true)."</pre>";
 		
-		if ( $content_type == "posts" ) {
+		if ( isset($item['item_type']) ) {
+			$item_type = $item['item_type'];
+		} else if ( $content_type == "posts" ) {
 			$item_type = "post";
 		} else {
-			$item_type = $item['item_type'];
+			$item_type = "UNKNOWN!";
 		}
 		
 		$item_ts_info .= "<!-- item_type: ".$item_type." -->";
