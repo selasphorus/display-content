@@ -2066,7 +2066,7 @@ function birdhive_display_posts ( $atts = [] ) { //function birdhive_display_pos
 					$ts_info .= $posts_info['ts_info'];
 					
 					// Add the found posts to the items array
-					array_push( $items, $posts );
+					array_merge( $items, $posts );
 					//$info .= $posts_info['info']; // obsolete(?)
 				}
 				
