@@ -2040,6 +2040,10 @@ function birdhive_display_posts ( $atts = [] ) { //function birdhive_display_pos
 					$ts_info .= $posts_info['ts_info'];
 				}
 				
+				// Reset args to be passed to birdhive_display_collection
+				$args['taxonomy'] = null;
+				$args['tax_terms'] = null;
+				
 			} else {
 				// If it's not a taxonomy, then what?
 			}
