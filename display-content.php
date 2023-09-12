@@ -986,6 +986,7 @@ function build_item_arr ( $item = array(), $item_type = null, $display_format = 
 	$item_subtitle = null;
 	$item_text = null;
 	$item_image = null;
+	$header = false;
 	//	
 	$item_url = null;
 	
@@ -997,6 +998,8 @@ function build_item_arr ( $item = array(), $item_type = null, $display_format = 
 	//$ts_info .= 'BIA -- item: '.print_r($item, true).'<br />';
 	$ts_info .= 'BIA -- item: <pre>'.print_r($item, true).'</pre><br />';
 		
+	if ( isset($item['header']) ) { $header = $item['header']; }
+	
 	if ( $item_type == "post" ) {
 		
 		if ( is_object($item) ) { // item is post object, e.g. when called via display_posts shortcode
@@ -1110,10 +1113,6 @@ function build_item_arr ( $item = array(), $item_type = null, $display_format = 
 			if ( $taxonomy_featured_image ) { $image_id = $taxonomy_featured_image; } else { $image_id = null; }
 		}
 		
-	} else if ( $item_type == "header" ) {
-		
-		// TBD/WIP
-		
 	} else { // if ( $item_type == ??? )
 	
 		$item_arr = $item; // init
@@ -1164,6 +1163,7 @@ function build_item_arr ( $item = array(), $item_type = null, $display_format = 
 	$ts_info .= 'BIA -- link_target: '.$link_target.'<br />';
 	
 	// Style the title
+	// TODO: incorporate "header" option
 	if ( !empty($item_title) ) {
 		$item_title = '<span class="item_title">'.$item_title.'</span>';
 		// Wrap the title in a hyperlink, if a URL has been set	OR if the item is linked to modal content		
@@ -1172,7 +1172,10 @@ function build_item_arr ( $item = array(), $item_type = null, $display_format = 
 			$item_title = '<a href="#!" id="dialog_handle_'.$dialog_id.'" class="dialog_handle">'.$item_title.'</a>'; 
 		} else {
 			if ( !empty($item_url) ) { $item_title = '<a href="'.$item_url.'" rel="bookmark"'.$link_target.'>'.$item_title.'</a>'; }
-		}		
+		}
+		if ( $header ) {
+			$item_title = '<h2 class="collection_group">'.$item_title.'</h2>';
+		}
 	}
 	
 	// Style the subtitle
@@ -2050,11 +2053,11 @@ function birdhive_display_posts ( $atts = [] ) { //function birdhive_display_pos
 				
 					$term_id = $term->term_id;
 					//$info .= $term->name."<br />";					
-					// TFT: get sort_num
+					// TFT: get sort_num -- because the orderby isn't working right
 					//get_postmeta.... WIP
 					
 					// WIP Add "tax_term" -- or more generically: "header"? -- item to array with term name as title
-					$term_item = array( 'item_type' => "tax_term", 'term_id' => $term_id );
+					$term_item = array( 'item_type' => "tax_term", 'term_id' => $term_id, 'header' => true );
 					array_push( $items, $term_item );
 					
 					// Get posts per term_id
