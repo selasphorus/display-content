@@ -102,6 +102,17 @@
     padding-top: 0.5rem;
 }
 
+/* --- WIP --- */
+.archive_item_image {
+	max-width: 250px;
+    float: left;
+}
+
+.cc_item img {
+	max-width: inherit;
+}
+/* --- END WIP --- */
+
 /*** Excerpts ***/
 
 .hide {
