@@ -2022,8 +2022,6 @@ function birdhive_display_posts ( $atts = [] ) { //function birdhive_display_pos
     	
     	// NOT events -- or: events in a series
     	
-    	if ( $args ) { $ts_info .= 'shortcode_atts as passed to birdhive_get_posts: <pre>'.print_r($args, true).'</pre>'; } // tft
-    	
     	// TODO: deal w/ events scope even if searching for series?
     	
     	// If we've got a group_by value, then handle it    	
@@ -2063,6 +2061,7 @@ function birdhive_display_posts ( $atts = [] ) { //function birdhive_display_pos
 					
 					$posts_info = birdhive_get_posts( $args );
 					$posts = $posts_info['arr_posts']->posts; // Retrieves an array of WP_Post Objects
+					$ts_info .= 'shortcode_atts as passed to birdhive_get_posts: <pre>'.print_r($args, true).'</pre>';
 					array_push( $items, $posts );
 					//$info .= $posts_info['info']; // obsolete(?)
 					$ts_info .= $posts_info['ts_info'];
@@ -2082,6 +2081,7 @@ function birdhive_display_posts ( $atts = [] ) { //function birdhive_display_pos
 			$posts_info = birdhive_get_posts( $args );
 			$items = $posts_info['arr_posts']->posts; // Retrieves an array of WP_Post Objects
 			//$info .= $posts_info['info']; // obsolete(?)
+			$ts_info .= 'shortcode_atts as passed to birdhive_get_posts: <pre>'.print_r($args, true).'</pre>';
 			$ts_info .= $posts_info['ts_info'];
 			
 		} // END if ( $group_by )
