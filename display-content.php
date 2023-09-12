@@ -2056,26 +2056,29 @@ function birdhive_display_posts ( $atts = [] ) { //function birdhive_display_pos
 					array_push( $items, $term_item );
 					
 					// Get posts per term_id
-					$args['taxonomy'] = $group_by;
-					$args['tax_terms'] = $term_id;
-					$args['tax_field'] = 'term_id';
+					$wp_args = $args;
+					$wp_args['taxonomy'] = $group_by;
+					$wp_args['tax_terms'] = $term_id;
+					$wp_args['tax_field'] = 'term_id';
+					$wp_args['fields'] = 'ids';
 					
-					$posts_info = birdhive_get_posts( $args );
+					$posts_info = birdhive_get_posts( $wp_args );
 					$posts = $posts_info['arr_posts']->posts; // Retrieves an array of WP_Post Objects
 					//$ts_info .= 'shortcode_atts as passed to birdhive_get_posts: <pre>'.print_r($args, true).'</pre>';
 					$ts_info .= $posts_info['ts_info'];
 					
 					// Add the found posts to the items array
-					foreach ( $posts as $post ) {
-						//array_push( $items, $post );
+					foreach ( $posts as $post_id ) {
+						$post_item = array( 'item_type' => "post", 'post_id' => $post_id );
+						array_push( $items, $post_item );
 					}
-					array_push( $items, $posts );
+					//array_push( $items, $posts );
 					//$info .= $posts_info['info']; // obsolete(?)
 				}
 				
 				// Reset args to be passed to birdhive_display_collection
-				$args['taxonomy'] = null;
-				$args['tax_terms'] = null;
+				//$args['taxonomy'] = null;
+				//$args['tax_terms'] = null;
 				
 			} else {
 				// If it's not a taxonomy, then what?
