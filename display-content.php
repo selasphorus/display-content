@@ -1849,7 +1849,7 @@ function birdhive_get_posts ( $args = array() ) {
     $ts_info .= "WP_Query run as follows:";
     $ts_info .= "<pre>args: ".print_r($wp_args, true)."</pre>"; // tft
     //$ts_info .= "<pre>meta_query: ".print_r($meta_query, true)."</pre>"; // tft
-	//$ts_info .= "<pre>arr_posts: ".print_r($arr_posts, true)."</pre>"; // tft
+	$ts_info .= "birdhive_get_posts <pre>arr_posts: ".print_r($arr_posts, true)."</pre>"; // tft
 
     $ts_info .= "birdhive_get_posts arr_posts->request<pre>".$arr_posts->request."</pre>"; // tft -- wip
     $ts_info .= "birdhive_get_posts last_query:<pre>".$wpdb->last_query."</pre>"; // tft
@@ -2061,10 +2061,12 @@ function birdhive_display_posts ( $atts = [] ) { //function birdhive_display_pos
 					
 					$posts_info = birdhive_get_posts( $args );
 					$posts = $posts_info['arr_posts']->posts; // Retrieves an array of WP_Post Objects
-					$ts_info .= 'shortcode_atts as passed to birdhive_get_posts: <pre>'.print_r($args, true).'</pre>';
+					//$ts_info .= 'shortcode_atts as passed to birdhive_get_posts: <pre>'.print_r($args, true).'</pre>';
+					$ts_info .= $posts_info['ts_info'];
+					
+					// Add the found posts to the items array
 					array_push( $items, $posts );
 					//$info .= $posts_info['info']; // obsolete(?)
-					$ts_info .= $posts_info['ts_info'];
 				}
 				
 				// Reset args to be passed to birdhive_display_collection
