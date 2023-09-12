@@ -984,14 +984,14 @@ function build_item_arr ( $item = array(), $item_type = null, $display_format = 
 		} else if ( is_numeric($item) ) {
 			$post = get_post( $item );
 		} else {
-			$ts_info .= '<!-- item: <pre>'.print_r($item, true).'</pre> -->';
+			$ts_info .= '<!-- BIA -- item: <pre>'.print_r($item, true).'</pre> -->';
 		}
 		
 		if ( $post ) {
 			//$ts_info .= '<!-- post: <pre>'.print_r($post, true).'</pre> -->';
 			$post_type = $post->post_type;
 			$post_id = $post->ID;
-			$ts_info .= '<!-- '.$post_type.' => post_id: '.$post_id." -->";
+			$ts_info .= '<!-- BIA -- '.$post_type.' => post_id: '.$post_id." -->";
 		}
 		
 		/*if ( post_type_exists('event') && $post_type == 'event' ) {
@@ -1042,7 +1042,7 @@ function build_item_arr ( $item = array(), $item_type = null, $display_format = 
 			}
 			$img_args = array( 'post_id' => $post_id, 'format' => 'excerpt', 'img_size' => $img_size, 'sources' => "all", 'echo' => false, 'return' => 'id' );
 			$image_id = sdg_post_thumbnail ( $img_args );
-			$ts_info .= '<!-- dsplycntnt sdg_post_thumbnail: image_id: '.$image_id.' -->'; // tft		
+			$ts_info .= '<!-- BIA -- sdg_post_thumbnail: image_id: '.$image_id.' -->'; // tft		
 		}
 		// +~+~+~+~+~+~+~+~+~+~+~+~+~+~+~+~+~+~+~+~+~+~+~+
 		
@@ -1136,12 +1136,12 @@ function build_item_arr ( $item = array(), $item_type = null, $display_format = 
 	$link_target = ""; // init
 	if ( $collection_id && isset($item['item_link_target'] ) ) {
 		$item_link_target = $item['item_link_target'];
-		$ts_info .= '<!-- item_link_target: '.$item_link_target.' -->'; // tft
+		$ts_info .= '<!-- BIA -- item_link_target: '.$item_link_target.' -->'; // tft
 	} else if ( $display_format == "table" ) {
 		$item_link_target = "_blank";
 	}
 	if ( !empty($item_link_target) ) { $link_target = ' target="'.$item_link_target.'"'; }
-	$ts_info .= '<!-- link_target: '.$link_target.' -->'; // tft
+	$ts_info .= '<!-- BIA -- link_target: '.$link_target.' -->'; // tft
 	
 	// Style the title
 	if ( !empty($item_title) ) {
@@ -1185,7 +1185,7 @@ function build_item_arr ( $item = array(), $item_type = null, $display_format = 
 		}
 		
 	} else {		
-		$ts_info .= '<!-- image_id NOT FOUND -->';
+		$ts_info .= '<!-- BIA -- image_id NOT FOUND -->';
 		//$item_ts_info .= "item_arr: <pre>".print_r($item_arr, true)."</pre>";
 	}
 	
