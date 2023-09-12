@@ -973,7 +973,7 @@ function build_item_arr ( $item = array(), $item_type = null, $display_format = 
 	// Some fields exist for content collection items ONLY, so set those directly from the item array
 	if ( !is_object($item) && isset($item['item_subtitle']) ) { $item_subtitle = $item['item_subtitle']; }
 	// TODO: figure out how to handle it if post ALSO has a subtitle...
-		
+	
 	if ( $item_type == "post" ) {
 		
 		if ( is_object($item) ) { // item is post object, e.g. when called via display_posts shortcode
@@ -1051,11 +1051,11 @@ function build_item_arr ( $item = array(), $item_type = null, $display_format = 
 			$item_text = get_the_excerpt( $post_id ); //$info .= $post->post_excerpt;
 		}
 	
-	} else if ( $item_type == "event_category" || $item_type == "post_category" ) {
+	} else if ( $item_type == "tax_term" || $item_type == "event_category" || $item_type == "post_category" ) {
 	
 		//$item_ts_info .= "item: <pre>".print_r($item, true)."</pre>";
 		
-		if ( $item_type == "event_category" ) { $term_id = $item['event_category']; } else { $term_id = $item['post_category']; }
+		if ( $item_type == "tax_term" ) { $term_id = $item['term_id']; } else if ( $item_type == "event_category" ) { $term_id = $item['event_category']; } else { $term_id = $item['post_category']; }
 		
 		// Get term
 		$term = get_term( $term_id ); // $term = get_term( $term_id, $taxonomy );
@@ -1085,10 +1085,10 @@ function build_item_arr ( $item = array(), $item_type = null, $display_format = 
 			$taxonomy_featured_image = get_term_meta( $term_id, 'taxonomy_featured_image', true );
 			if ( $taxonomy_featured_image ) { $image_id = $taxonomy_featured_image; } else { $image_id = null; }
 		}
-		// Event category
 		
-		// Posts category
+	} else if ( $item_type == "header" ) {
 		
+		// TBD/WIP
 		
 	} else { // if ( $item_type == ??? )
 	
@@ -1271,49 +1271,6 @@ function birdhive_display_collection ( $args = array() ) {
 	$info .= collection_header ( $display_format, $num_cols, $aspect_ratio, $table_fields, $table_headers );
 	
 	//$info .= "+~+~+~+~+~+~+ collection items +~+~+~+~+~+~+<br />";
-	
-	// Two options, maybe: 
-	// 1. loop through categories -- build set of sorted relevant taxonomies and then get posts per term_id?
-	// 2. loop through items, get taxonomies display if new...
-	
-	// WIP group_by
-	if ( isset($arr_dpatts['group_by']) ) {
-		
-		$group_by = $arr_dpatts['group_by'];
-		
-		// Is the group_by by taxonomy?		
-		if ( taxonomy_exists($group_by) ) {
-		
-			//$taxonomy = $group_by;
-			$current_term_id = ""; // init
-		
-			//$info .= "group_by: $group_by<br />"; // tft
-			
-			// Get all non-empty terms for the given taxonomy, ordered by sort_num
-			$terms = get_terms( array( 'taxonomy' => $group_by, 'hide_empty' => true, 'orderby' => 'meta_value_num', 'meta_key' => 'sort_num' ) );
-			foreach ( $terms as $term ) {
-				$term_id = $term->term_id;
-				$info .= $term->name."<br />";
-				// Get posts per term_id
-				// The problem then is how to handle the group headers...
-				// Rather than a simple single posts array, have an array of post arrays? WIP...
-				//$posts_info = birdhive_get_posts( $args );
-				//$posts = $posts_info['arr_posts']->posts; 
-			}
-			
-			// Display group_by headers
-			
-			//$item_terms = wp_get_post_terms( $item_arr['post_id'], $taxonomy );
-			/*
-			// Display header for each new term
-			if ( $item_terms && $item_terms[0]->term_id !== $current_term_id ) {
-				echo '<h3>' . $terms[0]->name . '</h3>';
-				$current_term_id = $terms[0]->term_id;
-			}
-			*/
-		}			
-	}
-		
 	
 	// For each item, get content for display in appropriate form...
 	foreach ( $items as $item ) {
@@ -1859,16 +1816,6 @@ function birdhive_get_posts ( $args = array() ) {
     // Groupby
     //if ( $groupby ) { $wp_args['groupby'] = $groupby; }
     
-    // group_by -- as distinct from groupby -- option to group posts according to taxonomy, for example, and display the taxonomies as headers...
-    // WIP
-    // TBD whether to sort posts in initial query or to sort array of posts after wp_query is complete
-    
-    /*
-    // TBD
-    if ( isset($name) ) {
-		$wp_args['name']     = $name;
-	}*/
-    
     // -------
     // Run the query
     // -------
@@ -2054,40 +2001,69 @@ function birdhive_display_posts ( $atts = [] ) { //function birdhive_display_pos
     	
     	// TODO: deal w/ events scope even if searching for series?
     	
-    	// If we've got a group_by value, then handle it
+    	// If we've got a group_by value, then handle it    	
+		// build set of sorted relevant taxonomies and then get posts per term_id
+	
+		// WIP group_by
 		if ( $group_by ) {
-			/*
+			
+			// Get posts per group
+			//$info .= "group_by: $group_by<br />"; // tft
+			
 			// First check to see if the group_by refers to a taxonomy
 			if ( taxonomy_exists($group_by) ) {
+				
+				$current_term_id = ""; // init
+				$items = array();
+				
+				// Get all non-empty terms for the given taxonomy, ordered by sort_num
 				$terms = get_terms( array( 'taxonomy' => $group_by, 'hide_empty' => true, 'orderby' => 'meta_value_num', 'meta_key' => 'sort_num' ) );
 				foreach ( $terms as $term ) {
+				
 					$term_id = $term->term_id;
+					//$info .= $term->name."<br />";					
+					// TFT: get sort_num
+					//get_postmeta.... WIP
+					
+					// WIP Add "tax_term" -- or more generically: "header"? -- item to array with term name as title
+					$term_item = array( 'item_type' => "tax_term", 'term_id' => $term_id );
+					array_push( $items, $term_item );
+					
 					// Get posts per term_id
-					// The problem then is how to handle the group headers...
-					// Rather than a simple single posts array, have an array of post arrays? WIP...
-					//$posts_info = birdhive_get_posts( $args );
-					//$posts = $posts_info['arr_posts']->posts; 
+					$args['taxonomy'] = $group_by;
+					$args['tax_terms'] = $term_id;
+					
+					$posts_info = birdhive_get_posts( $args );
+					$posts = $posts_info['arr_posts']->posts; // Retrieves an array of WP_Post Objects
+					array_push( $items, $posts );
+					//$info .= $posts_info['info']; // obsolete(?)
+					$ts_info .= $posts_info['ts_info'];
 				}
+				
+			} else {
+				// If it's not a taxonomy, then what?
 			}
-			// If it's not a taxonomy, then what?
-			//
-			*/
-		}
-		
-        $posts_info = birdhive_get_posts( $args );
-        $posts = $posts_info['arr_posts']->posts; // Retrieves an array of WP_Post Objects
-        //$info .= $posts_info['info']; // obsolete(?)
-        $ts_info .= $posts_info['ts_info'];
-    }
-    
-    if ( $posts ) {
+			
+		} else {
+			
+			// No groupings, just get one set of posts based on args
+			$posts_info = birdhive_get_posts( $args );
+			$items = $posts_info['arr_posts']->posts; // Retrieves an array of WP_Post Objects
+			//$info .= $posts_info['info']; // obsolete(?)
+			$ts_info .= $posts_info['ts_info'];
+			
+		} // END if ( $group_by )
         
-        //$ts_info .= '<pre>'.print_r($posts, true).'</pre>'; // tft
+    } // END if ( empty($posts) )
+    
+    if ( $items ) {
+        
+        //$ts_info .= '<pre>'.print_r($items, true).'</pre>'; // tft
         
 		//if ($args['header'] == 'true') { $info .= '<h3>Latest '.$category.' Articles:</h3>'; } // WIP
 		$info .= '<div class="dsplycntnt-posts'.$class.'">';
 		// TODO: modify the following to pass only subset of args? Much of the info is not needed for the display_collection fcn
-		$display_args = array( 'content_type' => 'posts', 'display_format' => $return_format, 'items' => $posts, 'arr_dpatts' => $args );
+		$display_args = array( 'content_type' => 'posts', 'display_format' => $return_format, 'items' => $items, 'arr_dpatts' => $args );
         $info .= birdhive_display_collection( $display_args );
 		
         $info .= '</div>'; // end div class="dsplycntnt-posts" (wrapper)
