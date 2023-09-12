@@ -993,6 +993,9 @@ function build_item_arr ( $item = array(), $item_type = null, $display_format = 
 	if ( !is_object($item) && isset($item['item_subtitle']) ) { $item_subtitle = $item['item_subtitle']; }
 	// TODO: figure out how to handle it if post ALSO has a subtitle...
 	
+	$ts_info .= 'BIA -- item_type: '.$item_type.'<br />';
+	$ts_info .= 'BIA -- item: <pre>'.print_r($item, true).'</pre><br />';
+		
 	if ( $item_type == "post" ) {
 		
 		if ( is_object($item) ) { // item is post object, e.g. when called via display_posts shortcode
@@ -1001,8 +1004,6 @@ function build_item_arr ( $item = array(), $item_type = null, $display_format = 
 			$post = $item['post_object'][0];
 		} else if ( is_numeric($item) ) {
 			$post = get_post( $item );
-		} else {
-			$ts_info .= 'BIA -- item: <pre>'.print_r($item, true).'</pre><br />';
 		}
 		
 		if ( $post ) {
@@ -1074,9 +1075,6 @@ function build_item_arr ( $item = array(), $item_type = null, $display_format = 
 		}
 	
 	} else if ( $item_type == "tax_term" || $item_type == "event_category" || $item_type == "post_category" ) {
-	
-		$ts_info .= 'BIA -- item_type: '.$item_type.'<br />';
-		$ts_info .= "BIA -- item: <pre>".print_r($item, true)."</pre>";
 		
 		if ( $item_type == "tax_term" ) { $term_id = $item['term_id']; } else if ( $item_type == "event_category" ) { $term_id = $item['event_category']; } else { $term_id = $item['post_category']; }
 		
