@@ -1075,7 +1075,8 @@ function build_item_arr ( $item = array(), $item_type = null, $display_format = 
 	
 	} else if ( $item_type == "tax_term" || $item_type == "event_category" || $item_type == "post_category" ) {
 	
-		//$item_ts_info .= "item: <pre>".print_r($item, true)."</pre>";
+		$ts_info .= 'BIA -- item_type: '.$item_type.'<br />';
+		$ts_info .= "BIA -- item: <pre>".print_r($item, true)."</pre>";
 		
 		if ( $item_type == "tax_term" ) { $term_id = $item['term_id']; } else if ( $item_type == "event_category" ) { $term_id = $item['event_category']; } else { $term_id = $item['post_category']; }
 		
@@ -1154,12 +1155,12 @@ function build_item_arr ( $item = array(), $item_type = null, $display_format = 
 	$link_target = ""; // init
 	if ( $collection_id && isset($item['item_link_target'] ) ) {
 		$item_link_target = $item['item_link_target'];
-		$ts_info .= 'BIA -- item_link_target: '.$item_link_target.'<br />'; // tft
+		$ts_info .= 'BIA -- item_link_target: '.$item_link_target.'<br />';
 	} else if ( $display_format == "table" ) {
 		$item_link_target = "_blank";
 	}
 	if ( !empty($item_link_target) ) { $link_target = ' target="'.$item_link_target.'"'; }
-	$ts_info .= 'BIA -- link_target: '.$link_target.'<br />'; // tft
+	$ts_info .= 'BIA -- link_target: '.$link_target.'<br />';
 	
 	// Style the title
 	if ( !empty($item_title) ) {
