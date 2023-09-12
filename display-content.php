@@ -1520,6 +1520,7 @@ function birdhive_get_posts ( $args = array() ) {
 		'slugs'				=> null,
 		'taxonomy'			=> null,
 		'tax_terms'			=> null,
+		'tax_field'			=> 'slug', // init -- in some cases will want to use term_id
 		'category'			=> null,
 		'meta_key'			=> null,
 		'meta_value'		=> null,
@@ -1582,7 +1583,6 @@ function birdhive_get_posts ( $args = array() ) {
     if ( !$get_by_ids && !$get_by_slugs ) {
         
         // Deal w/ taxonomy args
-        $tax_field = 'slug'; // init -- in some cases will want to use term_id
         if ( $category && empty($taxonomy) ) {
             $taxonomy = 'category';
             $tax_terms = $category;
@@ -2058,6 +2058,7 @@ function birdhive_display_posts ( $atts = [] ) { //function birdhive_display_pos
 					// Get posts per term_id
 					$args['taxonomy'] = $group_by;
 					$args['tax_terms'] = $term_id;
+					$args['tax_field'] = 'term_id';
 					
 					$posts_info = birdhive_get_posts( $args );
 					$posts = $posts_info['arr_posts']->posts; // Retrieves an array of WP_Post Objects
