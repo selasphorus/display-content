@@ -961,6 +961,7 @@ function build_item_arr ( $item = array(), $item_type = null, $display_format = 
 	$item_arr = array();
 	$ts_info = "";
 	//
+	$post = null;
 	$post_id = null;
 	$post_type = null;
 	$item_title = null;
@@ -983,12 +984,15 @@ function build_item_arr ( $item = array(), $item_type = null, $display_format = 
 		} else if ( is_numeric($item) ) {
 			$post = get_post( $item );
 		} else {
-			$ts_info .= '<!-- post: <pre>'.print_r($post, true).'</pre> -->';
+			$ts_info .= '<!-- item: <pre>'.print_r($item, true).'</pre> -->';
 		}
 		
-		$post_type = $post->post_type;
-		$post_id = $post->ID;
-		$ts_info .= '<!-- '.$post_type.' => post_id: '.$post_id." -->";
+		if ( $post ) {
+			//$ts_info .= '<!-- post: <pre>'.print_r($post, true).'</pre> -->';
+			$post_type = $post->post_type;
+			$post_id = $post->ID;
+			$ts_info .= '<!-- '.$post_type.' => post_id: '.$post_id." -->";
+		}
 		
 		/*if ( post_type_exists('event') && $post_type == 'event' ) {
 			$post_id = $post->post_id;
