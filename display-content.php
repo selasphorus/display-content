@@ -1851,7 +1851,7 @@ function birdhive_get_posts ( $args = array() ) {
     //$ts_info .= "<pre>meta_query: ".print_r($meta_query, true)."</pre>"; // tft
 	$ts_info .= "birdhive_get_posts <pre>arr_posts: ".print_r($arr_posts, true)."</pre>"; // tft
 
-    $ts_info .= "birdhive_get_posts arr_posts->request<pre>".$arr_posts->request."</pre>"; // tft -- wip
+    //$ts_info .= "birdhive_get_posts arr_posts->request<pre>".$arr_posts->request."</pre>"; // tft -- wip
     $ts_info .= "birdhive_get_posts last_query:<pre>".$wpdb->last_query."</pre>"; // tft
     
     //$ts_info = '<div class="troubleshooting">'.$ts_info.'</div>';
