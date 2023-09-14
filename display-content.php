@@ -1928,7 +1928,8 @@ function birdhive_display_posts ( $atts = [] ) { //function birdhive_display_pos
 	global $wpdb;
 	$info = "";
 	$ts_info = "";
-	$posts = array();
+	$posts = array(); 
+	$items = array(); // post items -- may be simple array of post objects, or mixed array of headers and post ids
 
 	$args = shortcode_atts( array(
         
@@ -2026,10 +2027,10 @@ function birdhive_display_posts ( $atts = [] ) { //function birdhive_display_pos
 			}
 			if ( $em_args ) { $ts_info .= 'shortcode_atts as passed to EM_Events::get <pre>'.print_r($em_args, true).'</pre>'; } // tft
 		
-			$posts = EM_Events::get( $em_args ); // Retrieves an array of EM_Event Objects
+			$items = EM_Events::get( $em_args ); // Retrieves an array of EM_Event Objects
 		
 			/*$ts_info .= 'Posts retrieved using EM_Events::get: <pre>';		
-			foreach ( $posts as $post ) {
+			foreach ( $items as $post ) {
 				//$ts_info .= "post: ".print_r($post, true)."<br />";
 				$ts_info .= "post_id: ".$post->post_id."<br />";
 				//$ts_info .= "event_attributes: ".print_r($post->event_attributes, true)."<br />";
@@ -2069,7 +2070,7 @@ function birdhive_display_posts ( $atts = [] ) { //function birdhive_display_pos
     }
     
     // Retrieve an array of posts matching the args supplied -- if we didn't already get the posts using EM
-    if ( empty($posts) ) {
+    if ( empty($items) ) {
     	
     	// NOT events -- or: events in a series
     	
@@ -2146,6 +2147,10 @@ function birdhive_display_posts ( $atts = [] ) { //function birdhive_display_pos
 			
 		} // END if ( $group_by )
         
+    } else {
+    
+    	$items = $posts;
+    	
     } // END if ( empty($posts) )
     
     if ( $items ) {
@@ -2164,7 +2169,7 @@ function birdhive_display_posts ( $atts = [] ) { //function birdhive_display_pos
     
     }  else {
         
-        $ts_info .= "No posts found!";
+        $ts_info .= "No post items found!";
         
     } // END if posts
     
