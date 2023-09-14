@@ -713,6 +713,48 @@ function get_post_links( $post_id = null ) {
 // Perhaps simply: $item = array()
 // Perhaps rework all of this to make it object-oriented, with an "item" class of objects?
 
+function display_item ( $display_format = "links", $item_arr = array(), $display_atts = null, $item_ts_info = null ) {
+
+	$info = "";
+	//$ts_info = "";
+	
+	if ( $display_format == "links" ) {
+			
+		$info .= display_link_item($item_arr);
+		
+	} else if ( $display_format == "list" ) {
+	
+		$info .= display_list_item($item_arr);
+		
+	} else if ( $display_format == "excerpts" || $display_format == "archive" ) {
+		
+		$info .= display_post_item($item_arr);
+		/*if ( $item_type == "post" ) {
+			$info .= display_post_item($item_arr);
+		} else {
+			// ??? -- These format options are only relevant for posts, not for other content types (?)
+		}*/
+		
+	} else if ( $display_format == "table" ) {
+	
+		//$ts_info .= '<!-- table_fields: '.print_r($table_fields,true).' -->';
+		$info .= display_table_row($item_arr, $table_fields);
+		
+	} else if ( $display_format == "grid" ) {
+	
+		if ( $item_type != "post" ) {
+			//$info .= "post_id: ".$post_id."<br />";
+			//$ts_info .= "item_title: ".$item_title."<br />";
+			//$info .= "item_url: ".$item_url."<br />";
+		}
+		$info .= display_grid_item($item_arr, $display_atts, $item_ts_info);
+		
+	}
+	
+	return $info;
+
+}
+
 function display_link_item ( $item = array() ) {
 	
 	// TS/logging setup
@@ -1242,7 +1284,7 @@ function birdhive_display_collection ( $args = array() ) {
 	$ts_info = "";
 	//
 	// DP stands for "display posts" -- i.e. special attributes if this fcn has been called via the display_posts shortcode -- TODO: simplify?
-	if ( isset($args['arr_dpatts']) ) { $arr_dpatts = $args['arr_dpatts']; } else { $arr_dpatts = array(); }
+	if ( isset($args['display_atts']) ) { $display_atts = $args['display_atts']; } else { $display_atts = array(); }
 	$collection_id = null;
 	//
 	$table_fields = array();
@@ -1251,7 +1293,7 @@ function birdhive_display_collection ( $args = array() ) {
 	$aspect_ratio = "square";
 	//
 	//$ts_info .= "args: <pre>".print_r($args, true)."</pre>";
-	$ts_info .= "arr_dpatts: <pre>".print_r($arr_dpatts, true)."</pre>";
+	$ts_info .= "display_atts: <pre>".print_r($display_atts, true)."</pre>";
 	
 	// Get args from array
 	if ( isset($args['collection_id']) ) {
@@ -1279,12 +1321,12 @@ function birdhive_display_collection ( $args = array() ) {
 		$display_format = $args['display_format'];
 		$items = $args['items'];
 		
-		if ( $display_format == "table" && isset($arr_dpatts['fields']) ) {
-			$table_fields = $arr_dpatts['fields'];
-			$table_headers = $arr_dpatts['headers'];
+		if ( $display_format == "table" && isset($display_atts['fields']) ) {
+			$table_fields = $display_atts['fields'];
+			$table_headers = $display_atts['headers'];
 		}
-		if ( $display_format == "grid" && isset($arr_dpatts['cols']) ) { $num_cols = $arr_dpatts['cols']; }
-		if ( isset($arr_dpatts['aspect_ratio']) ) { $aspect_ratio = $arr_dpatts['aspect_ratio']; } // TODO: either eliminate this, or make it so that aspect_ratio actually ever is passable as an arg, via mods to args array of display_posts, for example...
+		if ( $display_format == "grid" && isset($display_atts['cols']) ) { $num_cols = $display_atts['cols']; }
+		if ( isset($display_atts['aspect_ratio']) ) { $aspect_ratio = $display_atts['aspect_ratio']; } // TODO: either eliminate this, or make it so that aspect_ratio actually ever is passable as an arg, via mods to args array of display_posts, for example...
 				
 	}
 	
@@ -1326,8 +1368,10 @@ function birdhive_display_collection ( $args = array() ) {
 		
 		//get content for display in appropriate form...
 		//$item_args = array( 'content_type' => $content_type, 'display_format' => $display_format, 'item' => $item );
-		//$info .= birdhive_display_item( $item_args );
+		//$item_info .= display_item($item_args);
+		$item_info .= display_item($display_format, $item_arr, $display_atts, $item_ts_info);
 		
+		/*
 		// Display the item based on the item_arr
 		if ( $display_format == "links" ) {
 			
@@ -1358,9 +1402,10 @@ function birdhive_display_collection ( $args = array() ) {
 				//$item_ts_info .= "item_title: ".$item_title."<br />";
 				//$item_info .= "item_url: ".$item_url."<br />";
 			}
-			$item_info .= display_grid_item($item_arr, $arr_dpatts, $item_ts_info);
+			$item_info .= display_grid_item($item_arr, $display_atts, $item_ts_info);
 			
 		}
+		*/
 		
 		// Add the item_info to the info for return/display		
 		$info .= $item_info;
@@ -2110,7 +2155,7 @@ function birdhive_display_posts ( $atts = [] ) { //function birdhive_display_pos
 		//if ($args['header'] == 'true') { $info .= '<h3>Latest '.$category.' Articles:</h3>'; } // WIP
 		$info .= '<div class="dsplycntnt-posts'.$class.'">';
 		// TODO: modify the following to pass only subset of args? Much of the info is not needed for the display_collection fcn
-		$display_args = array( 'content_type' => 'posts', 'display_format' => $return_format, 'items' => $items, 'arr_dpatts' => $args );
+		$display_args = array( 'content_type' => 'posts', 'display_format' => $return_format, 'items' => $items, 'display_atts' => $args );
         $info .= birdhive_display_collection( $display_args );
 		
         $info .= '</div>'; // end div class="dsplycntnt-posts" (wrapper)
