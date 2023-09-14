@@ -713,7 +713,7 @@ function get_post_links( $post_id = null ) {
 // Perhaps simply: $item = array()
 // Perhaps rework all of this to make it object-oriented, with an "item" class of objects?
 
-function display_item ( $display_format = "links", $item_arr = array(), $display_atts = null, $item_ts_info = null ) {
+function display_item ( $display_format = "links", $item_arr = array(), $display_atts = null, $table_fields = null, $item_ts_info = null ) {
 
 	$info = "";
 	//$ts_info = "";
@@ -1369,7 +1369,7 @@ function birdhive_display_collection ( $args = array() ) {
 		//get content for display in appropriate form...
 		//$item_args = array( 'content_type' => $content_type, 'display_format' => $display_format, 'item' => $item );
 		//$item_info .= display_item($item_args);
-		$item_info .= display_item($display_format, $item_arr, $display_atts, $item_ts_info);
+		$item_info .= display_item($display_format, $item_arr, $display_atts, $table_fields, $item_ts_info);
 		
 		/*
 		// Display the item based on the item_arr
