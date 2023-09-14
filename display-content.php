@@ -1277,7 +1277,7 @@ function build_item_arr ( $item = array(), $item_type = null, $display_format = 
 function birdhive_display_collection ( $args = array() ) {
 
 	// TS/logging setup
-    $do_ts = true; 
+    $do_ts = false; 
     $do_log = false;
     sdg_log( "divline2", $do_log );
 
@@ -2101,9 +2101,11 @@ function birdhive_display_posts ( $atts = [] ) { //function birdhive_display_pos
 				foreach ( $terms as $term ) {
 				
 					$term_id = $term->term_id;
-					//$info .= $term->name."<br />";					
+					//$info .= $term->name."<br />";
 					// TFT: get sort_num -- because the orderby isn't working right
 					//get_postmeta.... WIP
+					$sort_num = get_field('sort_num', $term_id, false);
+					$ts_info .= "term_id: ".$term_id."/sort_num: ".$sort_num."<br />"; // $term->name.
 					
 					// WIP Add "tax_term" -- or more generically: "header"? -- item to array with term name as title
 					$term_item = array( 'item_type' => "tax_term", 'term_id' => $term_id, 'header' => true );
