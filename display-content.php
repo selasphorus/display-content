@@ -2097,7 +2097,7 @@ function birdhive_display_posts ( $atts = [] ) { //function birdhive_display_pos
 				$items = array();
 				
 				// Get all non-empty terms for the given taxonomy, ordered by sort_num
-				$terms = get_terms( array( 'taxonomy' => $group_by, 'hide_empty' => true, 'orderby' => 'meta_value_num', 'meta_key' => 'sort_num' ) );
+				$terms = get_terms( array( 'taxonomy' => $group_by, 'hide_empty' => true, 'orderby' => 'meta_value_num', 'meta_key' => 'sort_num', 'parent' => 0 ) );
 				foreach ( $terms as $term ) {
 				
 					$term_id = $term->term_id;
