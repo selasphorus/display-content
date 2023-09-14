@@ -1952,9 +1952,9 @@ function birdhive_display_posts ( $atts = [] ) { //function birdhive_display_pos
         // This group_by is NOT the same as the wpq arg 'groupby' -- we're going to use it to retrieve posts group by group for display with headers... WIP
         'group_by'	=> null, // e.g. category, event-categories, link_category
         //
-        'return_format' => 'list', // other options: links; excerpts; archive (full post content); grid; table
+        'display_format' => 'list', // other options: links; excerpts; archive (full post content); grid; table
         
-        // For grid return_format:
+        // For grid display_format:
         'cols' => 4, // ***
         'spacing' => 'spaced', // ***
         'header' => false,
@@ -1974,7 +1974,7 @@ function birdhive_display_posts ( $atts = [] ) { //function birdhive_display_pos
         // For Events or Sermons
         'series' => false,
         
-        // For table return_format
+        // For table display_format
         'fields'  => null, // ***
         'headers'  => null, // ***
         
@@ -1989,7 +1989,7 @@ function birdhive_display_posts ( $atts = [] ) { //function birdhive_display_pos
 	$ts_info .= 'extracted args <pre>'.print_r($args, true).'</pre>';
 	$ts_info .= "post_type: ".$post_type."<br />";
     
-    if ( $return_format == "table" ) { $do_ts = true; $args['do_ts'] = $do_ts; } // tft
+    if ( $display_format == "table" ) { $do_ts = true; $args['do_ts'] = $do_ts; } // tft
     
     //
     // TODO: 'category' applies to pages and posts only, but it's an easy mistake to use that attribute for events too => correct for that possibility
@@ -2009,7 +2009,7 @@ function birdhive_display_posts ( $atts = [] ) { //function birdhive_display_pos
     		}
     		
 			// TODO: deal w/ taxonomy parameters -- how to translate these properly for EM?
-			// Deal w/ other args...: meta_key, meta_value, name, taxonomy, tax_terms, return_format, cols...
+			// Deal w/ other args...: meta_key, meta_value, name, taxonomy, tax_terms, display_format, cols...
 		
 			// Create array of args relevant to EM search attributes
 			$em_args = array();
@@ -2060,12 +2060,12 @@ function birdhive_display_posts ( $atts = [] ) { //function birdhive_display_pos
     // Clean up the array
     if ( $post_type !== "event" ) { unset($args["scope"]); }
     if ( $post_type !== "event" && $post_type !== "sermon" ) { unset($args["series"]); }
-    if ( $return_format != "grid" ) { unset($args["cols"]); unset($args["spacing"]); unset($args["overlay"]); }
+    if ( $display_format != "grid" ) { unset($args["cols"]); unset($args["spacing"]); unset($args["overlay"]); }
     
-    // Make sure the return_format is valid
+    // Make sure the display_format is valid
     // TODO: revive/fix "archive" option -- deal w/ get_template_part issue...
-    if ( $return_format != "links" && $return_format != "list" && $return_format != "table" && $return_format != "grid" && $return_format != "excerpts" && $return_format != "archive" ) {
-        $return_format = "list"; // default
+    if ( $display_format != "links" && $display_format != "list" && $display_format != "table" && $display_format != "grid" && $display_format != "excerpts" && $display_format != "archive" ) {
+        $display_format = "list"; // default
     }
     
     // Retrieve an array of posts matching the args supplied -- if we didn't already get the posts using EM
@@ -2155,7 +2155,7 @@ function birdhive_display_posts ( $atts = [] ) { //function birdhive_display_pos
 		//if ($args['header'] == 'true') { $info .= '<h3>Latest '.$category.' Articles:</h3>'; } // WIP
 		$info .= '<div class="dsplycntnt-posts'.$class.'">';
 		// TODO: modify the following to pass only subset of args? Much of the info is not needed for the display_collection fcn
-		$display_args = array( 'content_type' => 'posts', 'display_format' => $return_format, 'items' => $items, 'display_atts' => $args );
+		$display_args = array( 'content_type' => 'posts', 'display_format' => $display_format, 'items' => $items, 'display_atts' => $args );
         $info .= birdhive_display_collection( $display_args );
 		
         $info .= '</div>'; // end div class="dsplycntnt-posts" (wrapper)
@@ -2579,7 +2579,7 @@ function birdhive_search_form ($atts = [], $content = null, $tag = '') {
                     if ( $field_type !== "text" && $field_type !== "taxonomy" ) {
                         //$field_info .= "field: <pre>".print_r($field,true)."</pre>"; // tft
                         //$field_info .= "field key: ".$field['key']."<br />";
-                        //$field_info .= "field return_format: ".$field['return_format']."<br />";
+                        //$field_info .= "field display_format: ".$field['display_format']."<br />";
                     }                    
                     
                     //if ( ( $field_name == "post_title" || $field_name == "title_clean" ) && !empty($field_value) ) {
