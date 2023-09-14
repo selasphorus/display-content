@@ -765,7 +765,9 @@ function display_link_item ( $item = array() ) {
     // Init vars
 	$info = "";
 	
-	if ( isset($item['item_title']) ) { $info .= $item['item_title']; }
+	if ( isset($item['item_title']) ) { 
+		$info .= $item['item_title'];
+	}
 	
 	//if ( $do_ts && isset($item['ts_info']) ) { $info .= '<div class="troubleshooting">'.$item['ts_info'].'</div>'; } 
 	
@@ -2156,6 +2158,8 @@ function birdhive_display_posts ( $atts = [] ) { //function birdhive_display_pos
     if ( $items ) {
         
         $ts_info .= 'Items to be passed to birdhive_display_collection: <pre>'.print_r($items, true).'</pre>'; // tft
+        
+        $class = " ".$display_format; // wip
         
 		//if ($args['header'] == 'true') { $info .= '<h3>Latest '.$category.' Articles:</h3>'; } // WIP
 		$info .= '<div class="dsplycntnt-posts'.$class.'">';
