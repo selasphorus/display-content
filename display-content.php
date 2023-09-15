@@ -2080,6 +2080,9 @@ function birdhive_display_posts ( $atts = [] ) { //function birdhive_display_pos
     	
     	// If we've got a group_by value, then handle it    	
 		// build set of sorted relevant taxonomies and then get posts per term_id
+		
+		// Init index
+		$index = "";
 	
 		// WIP group_by
 		if ( $group_by ) {
@@ -2105,11 +2108,21 @@ function birdhive_display_posts ( $atts = [] ) { //function birdhive_display_pos
 					// TFT: get sort_num -- because the orderby isn't working right
 					//get_postmeta.... WIP
 					$sort_num = get_field('sort_num', $term_id, false);
-					$ts_info .= "term_id: ".$term_id."/sort_num: ".$sort_num."<br />"; // $term->name.
+					$ts_info .= "term_id: ".$term_id."/sort_num: ".$sort_num."<br />";
+					$index .= $term->name."<br />";
 					
 					// WIP Add "tax_term" -- or more generically: "header"? -- item to array with term name as title
 					$term_item = array( 'item_type' => "tax_term", 'term_id' => $term_id, 'header' => true );
 					array_push( $items, $term_item );
+					
+					// WIP: get term children, if any, and the childrens' links...
+					$child_terms = get_terms( array( 'taxonomy' => $group_by, 'hide_empty' => true, 'child_of' => $term_id ) );
+					foreach ( $child_terms as $child_term ) {				
+						$child_term_id = $child_term->term_id;
+						$index .= $child_term->name."<br />";
+						$child_term_item = array( 'item_type' => "tax_term", 'term_id' => $child_term_id, 'header' => true );
+						array_push( $items, $child_term_item );
+					}
 					
 					// Get posts per term_id
 					$wp_args = $args;
@@ -2165,6 +2178,7 @@ function birdhive_display_posts ( $atts = [] ) { //function birdhive_display_pos
         
 		//if ($args['header'] == 'true') { $info .= '<h3>Latest '.$category.' Articles:</h3>'; } // WIP
 		$info .= '<div class="dsplycntnt-posts'.$class.'">';
+		$info .= $index."<hr />";
 		// TODO: modify the following to pass only subset of args? Much of the info is not needed for the display_collection fcn
 		$display_args = array( 'content_type' => 'posts', 'display_format' => $display_format, 'items' => $items, 'display_atts' => $args );
         $info .= birdhive_display_collection( $display_args );
