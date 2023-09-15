@@ -2123,7 +2123,7 @@ function birdhive_display_posts ( $atts = [] ) { //function birdhive_display_pos
 						$child_term_item = array( 'item_type' => "tax_term", 'term_id' => $child_term_id, 'header' => true );
 						array_push( $items, $child_term_item );
 						//
-						$tertiary_terms = get_terms( array( 'taxonomy' => $group_by, 'hide_empty' => true, 'child_of' => $child_term_id ) );
+						$tertiary_terms = get_terms( array( 'taxonomy' => $group_by, 'child_of' => $child_term_id ) ); //, 'hide_empty' => true
 						foreach ( $tertiary_terms as $tertiary_term ) {				
 							$tertiary_term_id = $tertiary_term->term_id;
 							$index .= "=>=> ".$tertiary_term->name."<br />";
