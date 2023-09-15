@@ -2119,7 +2119,7 @@ function birdhive_display_posts ( $atts = [] ) { //function birdhive_display_pos
 					$child_terms = get_terms( array( 'taxonomy' => $group_by, 'hide_empty' => true, 'child_of' => $term_id ) );
 					foreach ( $child_terms as $child_term ) {				
 						$child_term_id = $child_term->term_id;
-						$index .= $child_term->name."<br />";
+						$index .= "=> ".$child_term->name."<br />";
 						$child_term_item = array( 'item_type' => "tax_term", 'term_id' => $child_term_id, 'header' => true );
 						array_push( $items, $child_term_item );
 					}
