@@ -2131,7 +2131,7 @@ function birdhive_display_posts ( $atts = [] ) { //function birdhive_display_pos
 								$tertiary_term_item = array( 'item_type' => "tax_term", 'term_id' => $tertiary_term_id, 'header' => true );
 								array_push( $items, $tertiary_term_item );
 							}
-						}
+						//}
 					}
 					
 					// Get posts per term_id
