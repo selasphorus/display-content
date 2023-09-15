@@ -2122,6 +2122,14 @@ function birdhive_display_posts ( $atts = [] ) { //function birdhive_display_pos
 						$index .= "=> ".$child_term->name."<br />";
 						$child_term_item = array( 'item_type' => "tax_term", 'term_id' => $child_term_id, 'header' => true );
 						array_push( $items, $child_term_item );
+						if ( $tertiary_terms = get_term_children( $child_term_id, $group_by ) ) {
+							foreach ( $tertiary_terms as $tertiary_term ) {				
+								$tertiary_term_id = $tertiary_term->term_id;
+								$index .= "=>=> ".$tertiary_term->name."<br />";
+								$tertiary_term_item = array( 'item_type' => "tax_term", 'term_id' => $tertiary_term_id, 'header' => true );
+								array_push( $items, $tertiary_term_item );
+							}
+						}
 					}
 					
 					// Get posts per term_id
