@@ -2096,8 +2096,10 @@ function birdhive_display_posts ( $atts = [] ) { //function birdhive_display_pos
 				$ts_info .= "multiple group_by parameters!<br />";
 				$arr_groups = explode(",",$group_by);
 				$group_by = $arr_groups[0];
+				$ts_info .= "group_by: $group_by<br />";
 				//if ( $arr_groups[1] ) { $group_by_secondary = $arr_groups[1]; }
 				$group_by_secondary = $arr_groups[1];
+				$ts_info .= "group_by_secondary: $group_by_secondary<br />";
 			}
 			
 			// Get posts per group
