@@ -2109,6 +2109,8 @@ function birdhive_display_posts ( $atts = [] ) { //function birdhive_display_pos
 						// is $group_by_secondary a meta_key?
 						// if so...
 						// orderby meta_value
+					} else {
+						$ts_info .= "group_by_secondary is neither a taxonomy nor a registered_meta_key<br />";
 					}
 				}
 				
