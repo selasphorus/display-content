@@ -2104,7 +2104,7 @@ function birdhive_display_posts ( $atts = [] ) { //function birdhive_display_pos
 				if ( $group_by_secondary ) {
 					if ( taxonomy_exists($group_by_secondary) ) {
 						$ts_info .= "group_by_secondary is a taxonomy";
-					} else if ( registered_meta_key_exists( 'link', $group_by_secondary ) ) {
+					} else if ( registered_meta_key_exists( 'post', $group_by_secondary ) ) {
 						$ts_info .= "group_by_secondary is a registered_meta_key";
 						// is $group_by_secondary a meta_key?
 						// if so...
