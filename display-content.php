@@ -1902,7 +1902,7 @@ function birdhive_get_posts ( $args = array() ) {
     $ts_info .= "WP_Query run as follows:";
     $ts_info .= "<pre>args: ".print_r($wp_args, true)."</pre>"; // tft
     //$ts_info .= "<pre>meta_query: ".print_r($meta_query, true)."</pre>"; // tft
-	$ts_info .= "birdhive_get_posts <pre>arr_posts: ".print_r($arr_posts, true)."</pre>"; // tft
+	//$ts_info .= "birdhive_get_posts arr_posts: <pre>".print_r($arr_posts, true)."</pre>"; // tft
 
     //$ts_info .= "birdhive_get_posts arr_posts->request<pre>".$arr_posts->request."</pre>"; // tft -- wip
     //$ts_info .= "birdhive_get_posts last_query:<pre>".$wpdb->last_query."</pre>"; // tft
@@ -2116,7 +2116,7 @@ function birdhive_display_posts ( $atts = [] ) { //function birdhive_display_pos
 					// TFT: get sort_num -- because the orderby isn't working right
 					//get_postmeta.... WIP
 					$sort_num = get_field('sort_num', $term_id, false);
-					$ts_info .= "term_id: ".$term_id."/sort_num: ".$sort_num."<br />";
+					//$ts_info .= "term_id: ".$term_id."/sort_num: ".$sort_num."<br />";
 					$index .= $term->name."<br />";
 					
 					// WIP Add "tax_term" -- or more generically: "header"? -- item to array with term name as title
