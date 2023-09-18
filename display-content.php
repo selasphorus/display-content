@@ -742,11 +742,11 @@ function display_item ( $display_format = "links", $item_arr = array(), $display
 		
 	} else if ( $display_format == "grid" ) {
 	
-		if ( $item_type != "post" ) {
+		/*if ( $item_type != "post" ) {
 			//$info .= "post_id: ".$post_id."<br />";
 			//$ts_info .= "item_title: ".$item_title."<br />";
 			//$info .= "item_url: ".$item_url."<br />";
-		}
+		}*/
 		$info .= display_grid_item($item_arr, $display_atts, $item_ts_info);
 		
 	}
@@ -2120,6 +2120,10 @@ function birdhive_display_posts ( $atts = [] ) { //function birdhive_display_pos
 					foreach ( $child_terms as $child_term ) {				
 						$child_term_id = $child_term->term_id;
 						$index .= "=> ".$child_term->name."<br />";
+						// If term_name like "International" or "North America", then get list of regions, nations -- hierarchy of categories...
+						// How to generalize this? Very ago-specific WIP...
+						// Perhaps a separate function to build the hierarchical array of taxonomy terms to be retrieved?
+						// ...
 						$child_term_item = array( 'item_type' => "tax_term", 'term_id' => $child_term_id, 'header' => true );
 						array_push( $items, $child_term_item );
 						//
