@@ -2089,6 +2089,14 @@ function birdhive_display_posts ( $atts = [] ) { //function birdhive_display_pos
 			
 			$do_ts = true;
 			$args['do_ts'] = true;
+			$group_by_secondary = null;
+			
+			// Is it a single or multiple group_by value?
+			if ( str_contains($group_by, "," ) ) {
+				$arr_groups = explode(",",$group_by);
+				$group_by = $arr_groups[0];
+				if ( $arr_groups[1] ) { $group_by_secondary = $arr_groups[1]; }
+			}
 			
 			// Get posts per group
 			//$info .= "group_by: $group_by<br />"; // tft
@@ -2115,6 +2123,7 @@ function birdhive_display_posts ( $atts = [] ) { //function birdhive_display_pos
 					$term_item = array( 'item_type' => "tax_term", 'term_id' => $term_id, 'header' => true );
 					array_push( $items, $term_item );
 					
+					/*
 					// WIP: get term children, if any, and the childrens' links...
 					$child_terms = get_terms( array( 'taxonomy' => $group_by, 'hide_empty' => true, 'child_of' => $term_id ) );
 					foreach ( $child_terms as $child_term ) {				
@@ -2137,6 +2146,7 @@ function birdhive_display_posts ( $atts = [] ) { //function birdhive_display_pos
 						//if ( $tertiary_terms = get_term_children( $child_term_id, $group_by ) ) {
 						//}
 					}
+					*/
 					
 					// Get posts per term_id
 					$wp_args = $args;
@@ -2144,6 +2154,12 @@ function birdhive_display_posts ( $atts = [] ) { //function birdhive_display_pos
 					$wp_args['tax_terms'] = $term_id;
 					$wp_args['tax_field'] = 'term_id';
 					$wp_args['return_fields'] = 'ids';
+					
+					if ( $group_by_secondary ) {
+						// is $group_by_secondary a meta_key?
+						// if so...
+						// orderby meta_value
+					}
 					
 					$posts_info = birdhive_get_posts( $wp_args );
 					$posts = $posts_info['arr_posts']->posts; // Retrieves an array of WP_Post Objects
