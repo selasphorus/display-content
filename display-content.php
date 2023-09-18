@@ -2100,6 +2100,18 @@ function birdhive_display_posts ( $atts = [] ) { //function birdhive_display_pos
 				//if ( $arr_groups[1] ) { $group_by_secondary = $arr_groups[1]; }
 				$group_by_secondary = $arr_groups[1];
 				$ts_info .= "group_by_secondary: $group_by_secondary<br />";
+					
+				if ( $group_by_secondary ) {
+					if ( taxonomy_exists($group_by_secondary) ) {
+						$ts_info .= "group_by_secondary is a taxonomy";
+					} else if ( registered_meta_key_exists( 'link', $group_by_secondary ) ) {
+						$ts_info .= "group_by_secondary is a registered_meta_key";
+						// is $group_by_secondary a meta_key?
+						// if so...
+						// orderby meta_value
+					}
+				}
+				
 			}
 			
 			// Get posts per group
@@ -2158,17 +2170,6 @@ function birdhive_display_posts ( $atts = [] ) { //function birdhive_display_pos
 					$wp_args['tax_terms'] = $term_id;
 					$wp_args['tax_field'] = 'term_id';
 					$wp_args['return_fields'] = 'ids';
-					
-					if ( $group_by_secondary ) {
-						if ( taxonomy_exists($group_by_secondary) ) {
-							$ts_info .= "group_by_secondary is a taxonomy";
-						} else if ( registered_meta_key_exists( 'link', $group_by_secondary ) ) {
-							$ts_info .= "group_by_secondary is a registered_meta_key";
-							// is $group_by_secondary a meta_key?
-							// if so...
-							// orderby meta_value
-						}
-					}
 					
 					$posts_info = birdhive_get_posts( $wp_args );
 					$posts = $posts_info['arr_posts']->posts; // Retrieves an array of WP_Post Objects
