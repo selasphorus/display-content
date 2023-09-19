@@ -1032,7 +1032,7 @@ function build_item_arr ( $item = array(), $item_type = null, $display_format = 
 	$item_subtitle = null;
 	$item_text = null;
 	$item_image = null;
-	$header = false;
+	$hlevel = 0;
 	//	
 	$item_url = null;
 	
@@ -1212,8 +1212,7 @@ function build_item_arr ( $item = array(), $item_type = null, $display_format = 
 	$ts_info .= 'BIA -- link_target: '.$link_target.'<br />';
 	
 	// Is this a header item?
-	if ( is_array($item) && isset($item['header']) ) { $header = $item['header']; }
-	if ( $item_type == "subheader" ) { $header = true; $hlevel = 3; } else { $hlevel = 2; }
+	if ( is_array($item) && isset($item['hlevel']) ) { $hlevel = $item['hlevel']; }
 	
 	// Style the title
 	if ( !empty($item_title) ) {
@@ -1225,7 +1224,7 @@ function build_item_arr ( $item = array(), $item_type = null, $display_format = 
 		} else {
 			if ( !empty($item_url) ) { $item_title = '<a href="'.$item_url.'" rel="bookmark"'.$link_target.'>'.$item_title.'</a>'; }
 		}
-		if ( $header ) {
+		if ( $hlevel ) {
 			$item_title = '<h'.$hlevel.' id="'.$item_id.'" class="collection_group">'.$item_title.'</h'.$hlevel.'>';
 			if ( $hlevel >= 2 ) { $item_title = anchor_link_top().$item_title; }
 		}
@@ -2156,7 +2155,7 @@ function birdhive_display_posts ( $atts = [] ) { //function birdhive_display_pos
 					
 					// WIP Add "tax_term" -- or more generically: "header"? -- item to array with term name as title
 					// WIP -- add anchor for header items
-					$term_item = array( 'item_type' => "tax_term", 'term_id' => $term_id, 'item_id' => $item_id, 'header' => true );
+					$term_item = array( 'item_type' => "tax_term", 'term_id' => $term_id, 'item_id' => $item_id, 'hlevel' => 2 );
 					array_push( $items, $term_item );
 					
 					
@@ -2169,14 +2168,14 @@ function birdhive_display_posts ( $atts = [] ) { //function birdhive_display_pos
 						//$index .= "=> ".$child_term->name."<br />";
 						// How to generalize this? Perhaps a separate function to build the hierarchical array of taxonomy terms to be retrieved?
 						// ...
-						$child_term_item = array( 'item_type' => "tax_term", 'term_id' => $child_term_id, 'item_id' => $item_id, 'header' => true );
+						$child_term_item = array( 'item_type' => "tax_term", 'term_id' => $child_term_id, 'item_id' => $item_id, 'hlevel' => 3 );
 						array_push( $items, $child_term_item );
 						//
 						/*$tertiary_terms = get_terms( array( 'taxonomy' => $group_by, 'child_of' => $child_term_id ) ); //, 'hide_empty' => true
 						foreach ( $tertiary_terms as $tertiary_term ) {				
 							$tertiary_term_id = $tertiary_term->term_id;
 							$index .= "=>=> ".$tertiary_term->name."<br />";
-							$tertiary_term_item = array( 'item_type' => "tax_term", 'term_id' => $tertiary_term_id, 'header' => true );
+							$tertiary_term_item = array( 'item_type' => "tax_term", 'term_id' => $tertiary_term_id, 'hlevel' => true );
 							array_push( $items, $tertiary_term_item );
 						}*/
 						//if ( $tertiary_terms = get_term_children( $child_term_id, $group_by ) ) {}
@@ -2197,8 +2196,11 @@ function birdhive_display_posts ( $atts = [] ) { //function birdhive_display_pos
 					//$ts_info .= 'shortcode_atts as passed to birdhive_get_posts: <pre>'.print_r($args, true).'</pre>';
 					$ts_info .= $posts_info['ts_info'];
 					
-					// Init var to check for new subheader, for group_by_secondary
-					$current_sub = "";
+					//
+					if ( $group_by_secondary ) {
+						$current_sub = "";
+						if ( $child_terms ) { $hlevel = 4; }
+					}					
 					
 					// Add the found posts to the items array
 					foreach ( $posts as $post_id ) {
@@ -2214,7 +2216,7 @@ function birdhive_display_posts ( $atts = [] ) { //function birdhive_display_pos
 							//$ts_info .= "got subheader/item_title: ".$subheader."<br />";
 							if ( $subheader && $subheader != $current_sub && $subheader != '---' ) {
 								// WIP -- add anchor for header items
-								$gbs_item = array( 'item_type' => "subheader", 'item_title' => $subheader, 'item_id' => $item_id, 'header' => true );
+								$gbs_item = array( 'item_type' => "subheader", 'item_title' => $subheader, 'item_id' => $item_id, 'hlevel' => $hlevel );
 								array_push( $items, $gbs_item );
 								$current_sub = $subheader;
 								// Add item to index
