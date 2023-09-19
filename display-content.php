@@ -2191,6 +2191,11 @@ function birdhive_display_posts ( $atts = [] ) { //function birdhive_display_pos
 					
 					// Add the found posts to the items array
 					foreach ( $posts as $post_id ) {
+						if ( $group_by_secondary ) {
+							$subheader = get_post_meta( $post_id, $group_by_secondary, true );
+							$gbs_item = array( 'item_type' => "subheader", 'item_title' => $subheader, 'header' => true );
+							array_push( $items, $gbs_item );
+						}
 						$post_item = array( 'item_type' => "post", 'post_id' => $post_id );
 						array_push( $items, $post_item );
 					}
