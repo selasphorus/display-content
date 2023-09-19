@@ -1573,15 +1573,19 @@ function birdhive_get_posts ( $args = array() ) {
 		'order'				=> null,
 		'orderby'			=> null,
 		'groupby'			=> null,
+		//
 		'meta_query'        => array(),
 		'tax_query'			=> array(),
 		'return_fields'		=> 'all',
 		//
 		'ids'				=> null,
 		'slugs'				=> null,
+		//
 		'taxonomy'			=> null,
 		'tax_terms'			=> null,
 		'tax_field'			=> 'slug', // init -- in some cases will want to use term_id
+		'include_children'	=> true,
+		//
 		'category'			=> null,
 		'meta_key'			=> null,
 		'meta_value'		=> null,
@@ -1803,6 +1807,7 @@ function birdhive_get_posts ( $args = array() ) {
                     'taxonomy'  => $taxonomy,
                     'field'     => $tax_field,
                     'terms'     => $tax_terms,
+                    'include_children' => $include_children,
                     'operator'  => $tax_operator,
                 )
             );
@@ -2170,8 +2175,10 @@ function birdhive_display_posts ( $atts = [] ) { //function birdhive_display_pos
 					$wp_args['taxonomy'] = $group_by;
 					$wp_args['tax_terms'] = $term_id;
 					$wp_args['tax_field'] = 'term_id';
+					$wp_args['include_children'] = false;
 					$wp_args['return_fields'] = 'ids';
 					if ( $group_by_secondary ) {
+						// WIP: fix this so it sorts by child terms first, then by secondary field
 						$wp_args['orderby'] = $group_by_secondary;
 					}
 					$posts_info = birdhive_get_posts( $wp_args );
