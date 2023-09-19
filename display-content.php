@@ -1159,21 +1159,20 @@ function build_item_arr ( $item = array(), $item_type = null, $display_format = 
 	
 		$item_arr = $item; // init
 		//
-		$item_title = $item['item_title'];
-		$item_subtitle = $item['item_subtitle'];
+		if ( isset($item['item_title']) ) { $item_title = $item['item_title']; }
+		if ( isset($item['item_subtitle']) ) { $item_subtitle = $item['item_subtitle']; }
 		
 		// Item URL
-		if ( $item_type == "page_link" ) {
+		if ( $item_type == "page_link" && isset($item['page_link']) ) {
 			$item_url = $item['page_link'];
 			//$ts_info .= '<!-- page_link item: <pre>'.print_r($item, true).'</pre> -->'; // tft
-		} else {
-			$item_url = $item['item_url'];
-		}
-		if ( $item_type == "email" ) {
+		} else if ( $item_type == "email" && isset($item['item_email']) ) {
 			$item_email = $item['item_email'];
 			if ( !empty($item_email) ) {
 				$item_url = "mailto:".$item_email;
 			}
+		} else if ( isset($item['item_url']) ) { 
+			$item_url = $item['item_url'];
 		}
 		
 		// Item Image
@@ -2192,6 +2191,7 @@ function birdhive_display_posts ( $atts = [] ) { //function birdhive_display_pos
 					// Add the found posts to the items array
 					foreach ( $posts as $post_id ) {
 						if ( $group_by_secondary ) {
+							// WIP 09/18/23
 							$subheader = get_post_meta( $post_id, $group_by_secondary, true );
 							$gbs_item = array( 'item_type' => "subheader", 'item_title' => $subheader, 'header' => true );
 							array_push( $items, $gbs_item );
