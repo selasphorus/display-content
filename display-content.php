@@ -2188,14 +2188,19 @@ function birdhive_display_posts ( $atts = [] ) { //function birdhive_display_pos
 					//$ts_info .= 'shortcode_atts as passed to birdhive_get_posts: <pre>'.print_r($args, true).'</pre>';
 					$ts_info .= $posts_info['ts_info'];
 					
+					// Init var to check for new subheader, for group_by_secondary
+					$current_sub = "";
+					
 					// Add the found posts to the items array
 					foreach ( $posts as $post_id ) {
 						if ( $group_by_secondary ) {
-							// WIP 09/18/23
 							$subheader = get_post_meta( $post_id, $group_by_secondary, true );
-							$ts_info .= "got subheader/item_title: ".$subheader."<br />";
-							$gbs_item = array( 'item_type' => "subheader", 'item_title' => $subheader, 'header' => true );
-							array_push( $items, $gbs_item );
+							//$ts_info .= "got subheader/item_title: ".$subheader."<br />";
+							if ( $subheader && $subheader != $current_sub ) {
+								$gbs_item = array( 'item_type' => "subheader", 'item_title' => $subheader, 'header' => true );
+								array_push( $items, $gbs_item );
+								$current_sub = $subheader;
+							}
 						}
 						$post_item = array( 'item_type' => "post", 'post_id' => $post_id );
 						array_push( $items, $post_item );
