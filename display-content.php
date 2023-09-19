@@ -2186,6 +2186,31 @@ function birdhive_display_posts ( $atts = [] ) { //function birdhive_display_pos
 					$posts = $posts_info['arr_posts']->posts;
 					//$ts_info .= 'shortcode_atts as passed to birdhive_get_posts: <pre>'.print_r($args, true).'</pre>';
 					$ts_info .= $posts_info['ts_info'];
+
+					// Add the posts to the items array
+					$current_sub = ""; // init for group_by_secondary
+					$hlevel = 3;
+					foreach ( $posts as $post_id ) {
+						if ( $group_by_secondary ) {
+							$subheader = null;
+							$item_id = null;
+							$arr_subheader = get_field($group_by_secondary, $post_id); // acf
+							if ( is_array($arr_subheader) ) {
+								if ( isset($arr_subheader['label']) ) { $subheader = $arr_subheader['label']; }
+								if ( isset($arr_subheader['value']) ) { $item_id = $arr_subheader['value']; }
+							}
+							if ( $subheader && $subheader != $current_sub && $subheader != '---' ) {
+								// WIP -- add anchor for header items
+								$gbs_item = array( 'item_type' => "subheader", 'item_title' => $subheader, 'item_id' => $item_id, 'hlevel' => $hlevel );
+								array_push( $items, $gbs_item );
+								$current_sub = $subheader;
+								// Add item to index
+								$index .= '&bull; <a href="#'.$item_id.'" class="index_anchor secondary">'.$subheader.'</a><br />';
+							}
+						}
+						$post_item = array( 'item_type' => "post", 'post_id' => $post_id );
+						array_push( $items, $post_item );
+					}
 					
 					// WIP: get term children, if any, and the childrens' links...
 					$child_terms = get_terms( array( 'taxonomy' => $group_by, 'hide_empty' => true, 'child_of' => $term_id ) );
@@ -2202,27 +2227,40 @@ function birdhive_display_posts ( $atts = [] ) { //function birdhive_display_pos
 						// How to generalize this? Perhaps a separate function to build the hierarchical array of taxonomy terms to be retrieved?
 						// ...
 						$child_term_item = array( 'item_type' => "tax_term", 'term_id' => $child_term_id, 'item_id' => $item_id, 'hlevel' => $hlevel );
-						array_push( $items, $child_term_item );
+						array_push( $items, $child_term_item ); // WIP -- this ends up in the wrong place -- needs to be a subheader, like w/ group_by_secondary...
 						// Modify parent wp_args to use child_term_id
 						$wp_args['tax_terms'] = $child_term_id;
 						// Get posts per child_term_id
 						$posts_info = birdhive_get_posts( $wp_args );
 						$child_posts = $posts_info['arr_posts']->posts;
-						// Merge child posts into parent posts array
-						$ts_info .= "[".count($posts)."] posts and [".count($child_posts)."] before merge.<br />";
-						$posts = array_merge($posts, $child_posts);
-						$ts_info .= "[".count($posts)."] after merge.<br />";
-						//$ts_info .= 'shortcode_atts as passed to birdhive_get_posts: <pre>'.print_r($args, true).'</pre>';
-						$ts_info .= $posts_info['ts_info'];
 						
-						/*$tertiary_terms = get_terms( array( 'taxonomy' => $group_by, 'child_of' => $child_term_id ) ); //, 'hide_empty' => true
-						foreach ( $tertiary_terms as $tertiary_term ) {				
-							$tertiary_term_id = $tertiary_term->term_id;
-							$index .= "=>=> ".$tertiary_term->name."<br />";
-							$tertiary_term_item = array( 'item_type' => "tax_term", 'term_id' => $tertiary_term_id, 'hlevel' => true );
-							array_push( $items, $tertiary_term_item );
-						}*/
-						//if ( $tertiary_terms = get_term_children( $child_term_id, $group_by ) ) {}
+						//$ts_info .= 'shortcode_atts as passed to birdhive_get_posts: <pre>'.print_r($args, true).'</pre>';
+						$ts_info .= $posts_info['ts_info']; 
+						
+						// Add the posts to the items array
+						$current_sub = ""; // init for group_by_secondary
+						$hlevel = 4;
+						foreach ( $child_posts as $post_id ) {
+							if ( $group_by_secondary ) {
+								$subheader = null;
+								$item_id = null;
+								$arr_subheader = get_field($group_by_secondary, $post_id); // acf
+								if ( is_array($arr_subheader) ) {
+									if ( isset($arr_subheader['label']) ) { $subheader = $arr_subheader['label']; }
+									if ( isset($arr_subheader['value']) ) { $item_id = $arr_subheader['value']; }
+								}
+								if ( $subheader && $subheader != $current_sub && $subheader != '---' ) {
+									// WIP -- add anchor for header items
+									$gbs_item = array( 'item_type' => "subheader", 'item_title' => $subheader, 'item_id' => $item_id, 'hlevel' => $hlevel );
+									array_push( $items, $gbs_item );
+									$current_sub = $subheader;
+									// Add item to index
+									$index .= '&bull; <a href="#'.$item_id.'" class="index_anchor secondary">'.$subheader.'</a><br />';
+								}
+							}
+							$post_item = array( 'item_type' => "post", 'post_id' => $post_id );
+							array_push( $items, $post_item );
+						}
 					}
 					
 					/*
@@ -2244,38 +2282,7 @@ function birdhive_display_posts ( $atts = [] ) { //function birdhive_display_pos
 					$posts = $posts_info['arr_posts']->posts; // Retrieves an array of WP_Post Objects
 					//$ts_info .= 'shortcode_atts as passed to birdhive_get_posts: <pre>'.print_r($args, true).'</pre>';
 					$ts_info .= $posts_info['ts_info'];
-					*/
-					
-					//
-					if ( $group_by_secondary ) {
-						$current_sub = "";
-						if ( $child_terms ) { $hlevel = 4; } else { $hlevel = 3; }
-					}					
-					
-					// Add the found posts to the items array
-					foreach ( $posts as $post_id ) {
-						if ( $group_by_secondary ) {
-							$subheader = null;
-							$item_id = null;
-							$arr_subheader = get_field($group_by_secondary, $post_id); // acf
-							if ( is_array($arr_subheader) ) {
-								if ( isset($arr_subheader['label']) ) { $subheader = $arr_subheader['label']; }
-								if ( isset($arr_subheader['value']) ) { $item_id = $arr_subheader['value']; }
-							}
-							//$subheader = get_post_meta( $post_id, $group_by_secondary, true );
-							//$ts_info .= "got subheader/item_title: ".$subheader."<br />";
-							if ( $subheader && $subheader != $current_sub && $subheader != '---' ) {
-								// WIP -- add anchor for header items
-								$gbs_item = array( 'item_type' => "subheader", 'item_title' => $subheader, 'item_id' => $item_id, 'hlevel' => $hlevel );
-								array_push( $items, $gbs_item );
-								$current_sub = $subheader;
-								// Add item to index
-								$index .= '&bull; <a href="#'.$item_id.'" class="index_anchor secondary">'.$subheader.'</a><br />';
-							}
-						}
-						$post_item = array( 'item_type' => "post", 'post_id' => $post_id );
-						array_push( $items, $post_item );
-					}
+					*/		
 					//array_push( $items, $posts );
 					//$info .= $posts_info['info']; // obsolete(?)
 				}
