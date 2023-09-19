@@ -2143,6 +2143,8 @@ function birdhive_display_posts ( $atts = [] ) { //function birdhive_display_pos
 				$terms = get_terms( array( 'taxonomy' => $group_by, 'hide_empty' => true, 'orderby' => 'meta_value_num', 'meta_key' => 'sort_num', 'parent' => 0 ) );
 				foreach ( $terms as $term ) {
 				
+					$hlevel = 2;
+					
 					$term_id = $term->term_id;
 					//$info .= $term->name."<br />";
 					// TFT: get sort_num -- because the orderby isn't working right
@@ -2150,25 +2152,29 @@ function birdhive_display_posts ( $atts = [] ) { //function birdhive_display_pos
 					$sort_num = get_field('sort_num', $term_id, false);
 					//$ts_info .= "term_id: ".$term_id."/sort_num: ".$sort_num."<br />";
 					$item_id = $term->slug;
+					
 					// Add item to index
 					$index .= '<a href="#'.$item_id.'" class="index_anchor primary">'.$term->name.'</a><br />';
 					
 					// WIP Add "tax_term" -- or more generically: "header"? -- item to array with term name as title
 					// WIP -- add anchor for header items
-					$term_item = array( 'item_type' => "tax_term", 'term_id' => $term_id, 'item_id' => $item_id, 'hlevel' => 2 );
-					array_push( $items, $term_item );
 					
+					$term_item = array( 'item_type' => "tax_term", 'term_id' => $term_id, 'item_id' => $item_id, 'hlevel' => $hlevel );
+					array_push( $items, $term_item );					
 					
 					// WIP: get term children, if any, and the childrens' links...
 					$child_terms = get_terms( array( 'taxonomy' => $group_by, 'hide_empty' => true, 'child_of' => $term_id ) );
-					foreach ( $child_terms as $child_term ) {				
+					foreach ( $child_terms as $child_term ) {		
+					
+						$hlevel = 3;
+								
 						$child_term_id = $child_term->term_id;
 						$item_id = $child_term->slug;
-						$index .= '<a href="#'.$item_id.'" class="index_anchor primary">'.$child_term->name.'</a><br />';
+						$index .= '<a href="#'.$item_id.'" class="index_anchor secondary">'.$child_term->name.'</a><br />';
 						//$index .= "=> ".$child_term->name."<br />";
 						// How to generalize this? Perhaps a separate function to build the hierarchical array of taxonomy terms to be retrieved?
 						// ...
-						$child_term_item = array( 'item_type' => "tax_term", 'term_id' => $child_term_id, 'item_id' => $item_id, 'hlevel' => 3 );
+						$child_term_item = array( 'item_type' => "tax_term", 'term_id' => $child_term_id, 'item_id' => $item_id, 'hlevel' => $hlevel );
 						array_push( $items, $child_term_item );
 						//
 						/*$tertiary_terms = get_terms( array( 'taxonomy' => $group_by, 'child_of' => $child_term_id ) ); //, 'hide_empty' => true
