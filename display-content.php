@@ -2265,6 +2265,7 @@ function birdhive_display_posts ( $atts = [] ) { //function birdhive_display_pos
 		$info .= '<div class="dsplycntnt-posts'.$class.'">';
 		if ( $index ) {
 			$info .= '<div class="dsplycntnt index">';
+			$info .= '<h2>Index</h2>';
 			$info .= $index;
 			$info .= '</div>'; 
 		}
