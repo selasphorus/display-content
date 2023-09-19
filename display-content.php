@@ -1026,6 +1026,8 @@ function build_item_arr ( $item = array(), $item_type = null, $display_format = 
 	$post = null;
 	$post_id = null;
 	$post_type = null;
+	//	
+	$item_id = null;
 	$item_title = null;
 	$item_subtitle = null;
 	$item_text = null;
@@ -1041,6 +1043,11 @@ function build_item_arr ( $item = array(), $item_type = null, $display_format = 
 	$ts_info .= 'BIA -- item_type: '.$item_type.'<br />';
 	//$ts_info .= 'BIA -- item: '.print_r($item, true).'<br />';
 	$ts_info .= 'BIA -- item: <pre>'.print_r($item, true).'</pre><br />';
+	
+	// If this is a header or subheader, make sure there's an item_id to use for internal page links, as needed
+	if ( is_array($item) && isset($item['item_id']) ) { 
+		$item_id = $item['item_id'];
+	}
 	
 	if ( $item_type == "post" ) {
 		
@@ -1128,6 +1135,7 @@ function build_item_arr ( $item = array(), $item_type = null, $display_format = 
 		
 		// Get term
 		$term = get_term( $term_id ); // $term = get_term( $term_id, $taxonomy );
+		if ( !$item_id ) { $item_id = $term->slug; }
 		
 		// If there's a title override, use it. Otherwise, use the taxonomy term name.
 		if ( isset($item['item_title']) && !empty($item['item_title']) ) { 
@@ -1218,7 +1226,7 @@ function build_item_arr ( $item = array(), $item_type = null, $display_format = 
 			if ( !empty($item_url) ) { $item_title = '<a href="'.$item_url.'" rel="bookmark"'.$link_target.'>'.$item_title.'</a>'; }
 		}
 		if ( $header ) {
-			$item_title = '<h'.$hlevel.' id="'.$item_title.'" class="collection_group">'.$item_title.'</h'.$hlevel.'>';
+			$item_title = '<h'.$hlevel.' id="'.$item_id.'" class="collection_group">'.$item_title.'</h'.$hlevel.'>';
 		}
 	}
 	
@@ -2191,18 +2199,22 @@ function birdhive_display_posts ( $atts = [] ) { //function birdhive_display_pos
 					
 					// Init var to check for new subheader, for group_by_secondary
 					$current_sub = "";
-					$subheader = null;
 					
 					// Add the found posts to the items array
 					foreach ( $posts as $post_id ) {
 						if ( $group_by_secondary ) {
+							$subheader = null;
+							$item_id = null;
 							$arr_subheader = get_field($group_by_secondary, $post_id); // acf
-							if ( is_array($arr_subheader) && isset($arr_subheader['label']) ) { $subheader = $arr_subheader['label']; }
+							if ( is_array($arr_subheader) ) {
+								if ( isset($arr_subheader['label']) ) { $subheader = $arr_subheader['label']; }
+								if ( isset($arr_subheader['value']) ) { $item_id = $arr_subheader['value']; }
+							}
 							//$subheader = get_post_meta( $post_id, $group_by_secondary, true );
 							//$ts_info .= "got subheader/item_title: ".$subheader."<br />";
 							if ( $subheader && $subheader != $current_sub && $subheader != '---' ) {
 								// WIP -- add anchor for header items
-								$gbs_item = array( 'item_type' => "subheader", 'item_title' => $subheader, 'header' => true );
+								$gbs_item = array( 'item_type' => "subheader", 'item_title' => $subheader, 'item_id' => $item_id, 'header' => true );
 								array_push( $items, $gbs_item );
 								$current_sub = $subheader;
 								$index .= "=> ".$subheader."<br />";
