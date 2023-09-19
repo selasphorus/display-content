@@ -765,9 +765,8 @@ function display_link_item ( $item = array() ) {
     // Init vars
 	$info = "";
 	
-	if ( isset($item['item_title']) ) { 
-		$info .= $item['item_title'];
-	}
+	if ( isset($item['item_title']) ) { $info .= $item['item_title']; }
+	if ( isset($item['item_text']) )  { $info .= $item['item_text']; }
 	
 	//if ( $do_ts && isset($item['ts_info']) ) { $info .= '<div class="troubleshooting">'.$item['ts_info'].'</div>'; } 
 	
@@ -1121,13 +1120,23 @@ function build_item_arr ( $item = array(), $item_type = null, $display_format = 
 		// +~+~+~+~+~+~+~+~+~+~+~+~+~+~+~+~+~+~+~+~+~+~+~+
 		
 		// Item Excerpt/Text
-		if ( function_exists('is_dev_site') && is_dev_site() ) {
+		$item_text = get_the_excerpt( $post_id );
+		if ( empty($item_text) ) {
+			// WIP
+			if ( $post_type == "link" ) {
+				$item_text = get_field( 'description', $post_id );
+				if ( empty($item_text) ) {
+					$item_text = get_field( 'location', $post_id );
+				}
+			}
+		}
+		/*if ( function_exists('is_dev_site') && is_dev_site() ) {
 			$exp_args = array( 'post_id' => $post_id ); // $exp_args = array( 'text' => $text, 'post_id' => $post_id, 'text_length' => $text_length, 'preview_length' => $preview_length );
 			$item_text = expandable_text( $exp_args );
 			//$info .= dsplycntnt_get_excerpt( array('post_id' => $post_id, 'expandable' => $expandable, 'text_length' => $text_length, 'preview_length' => $preview_length ) );				
 		} else {
 			$item_text = get_the_excerpt( $post_id ); //$info .= $post->post_excerpt;
-		}
+		}*/
 	
 	} else if ( $item_type == "tax_term" || $item_type == "event_category" || $item_type == "post_category" ) {
 		
