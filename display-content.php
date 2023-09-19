@@ -2179,8 +2179,9 @@ function birdhive_display_posts ( $atts = [] ) { //function birdhive_display_pos
 					$wp_args['tax_field'] = 'term_id';
 					$wp_args['return_fields'] = 'ids';
 					if ( $group_by_secondary ) {
-						$wp_args['orderby'] = 'meta_value';
-						$wp_args['meta_key'] = $group_by_secondary;
+						$wp_args['orderby'] = $group_by_secondary;
+						//$wp_args['orderby'] = 'meta_value';
+						//$wp_args['meta_key'] = $group_by_secondary;
 					}
 					
 					$posts_info = birdhive_get_posts( $wp_args );
