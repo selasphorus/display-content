@@ -1098,7 +1098,9 @@ function build_item_arr ( $item = array(), $item_type = null, $display_format = 
 		}
 		
 		// Item URL
-		$item_url = get_the_permalink( $post_id );
+		// TODO: deal w/ possibility of multiple external URLs
+		if ( $post_type == "link" ) { $item_url = get_field( 'url', $post_id ); }
+		if ( empty($item_url) ) { $item_url = get_the_permalink( $post_id ); }
 		
 		// +~+~+~+~+~+~+~+~+~+~+~+~+~+~+~+~+~+~+~+~+~+~+~+
 		// Item Image
@@ -1157,6 +1159,7 @@ function build_item_arr ( $item = array(), $item_type = null, $display_format = 
 		} else {
 			$item_title = $term->name;	
 		}
+		// TODO: append term description, if any?
 		
 		$item_url = get_term_link( $term_id) ;
 		
@@ -2218,7 +2221,8 @@ function birdhive_display_posts ( $atts = [] ) { //function birdhive_display_pos
 								if ( isset($arr_subheader['value']) ) { $item_id = $arr_subheader['value']; }
 							}
 							if ( $subheader && $subheader != $current_sub && $subheader != '---' ) {
-								// WIP -- add anchor for header items
+								// Add anchor for header items
+								// WIP: figure out how NOT to add the header item if all the posts have the same subheader...
 								$gbs_item = array( 'item_type' => "subheader", 'item_title' => $subheader, 'item_id' => $item_id, 'hlevel' => $hlevel );
 								array_push( $items, $gbs_item );
 								$current_sub = $subheader;
@@ -2268,7 +2272,8 @@ function birdhive_display_posts ( $atts = [] ) { //function birdhive_display_pos
 									if ( isset($arr_subheader['value']) ) { $item_id = $arr_subheader['value']; }
 								}
 								if ( $subheader && $subheader != $current_sub && $subheader != '---' ) {
-									// WIP -- add anchor for header items
+									// Add anchor for header items
+									// WIP: figure out how NOT to add the header item if all the posts have the same subheader...
 									$gbs_item = array( 'item_type' => "subheader", 'item_title' => $subheader, 'item_id' => $item_id, 'hlevel' => $hlevel );
 									array_push( $items, $gbs_item );
 									$current_sub = $subheader;
