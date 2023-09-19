@@ -2200,6 +2200,7 @@ function birdhive_display_posts ( $atts = [] ) { //function birdhive_display_pos
 								$gbs_item = array( 'item_type' => "subheader", 'item_title' => $subheader, 'header' => true );
 								array_push( $items, $gbs_item );
 								$current_sub = $subheader;
+								$index .= "=> ".$subheader."<br />";
 							}
 						}
 						$post_item = array( 'item_type' => "post", 'post_id' => $post_id );
