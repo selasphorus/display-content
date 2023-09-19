@@ -1914,7 +1914,7 @@ function birdhive_get_posts ( $args = array() ) {
     
     $ts_info .= "WP_Query run as follows:";
     $ts_info .= "<pre>args: ".print_r($wp_args, true)."</pre>";
-    $ts_info .= "[".count($arr_posts)."] posts found.<br />";
+    $ts_info .= "[".count($arr_posts->posts)."] posts found.<br />";
     //$ts_info .= "<pre>meta_query: ".print_r($meta_query, true)."</pre>";
 	//$ts_info .= "birdhive_get_posts arr_posts: <pre>".print_r($arr_posts, true)."</pre>";
 
