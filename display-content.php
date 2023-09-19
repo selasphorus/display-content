@@ -2104,7 +2104,7 @@ function birdhive_display_posts ( $atts = [] ) { //function birdhive_display_pos
 				if ( $group_by_secondary ) {
 					if ( taxonomy_exists($group_by_secondary) ) {
 						$ts_info .= "group_by_secondary is a taxonomy";
-					} else if ( get_field_object('my_field') ) {
+					} else if ( get_field_object($group_by_secondary) ) {
 						$ts_info .= "group_by_secondary is an ACF field";
 					} else if ( registered_meta_key_exists( 'post', $group_by_secondary ) ) {
 						$ts_info .= "group_by_secondary is a registered_meta_key";
@@ -2112,7 +2112,7 @@ function birdhive_display_posts ( $atts = [] ) { //function birdhive_display_pos
 						// if so...
 						// orderby meta_value
 					} else {
-						$ts_info .= "group_by_secondary is neither a taxonomy nor a registered_meta_key<br />";
+						$ts_info .= "group_by_secondary is neither a taxonomy, nor an ACF field, nor a registered_meta_key<br />";
 					}
 				}
 				
