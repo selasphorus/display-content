@@ -2195,7 +2195,7 @@ function birdhive_display_posts ( $atts = [] ) { //function birdhive_display_pos
 					foreach ( $posts as $post_id ) {
 						if ( $group_by_secondary ) {
 							$arr_subheader = get_field($group_by_secondary, $post_id); // acf
-							$subheader = $subheader['label'];
+							$subheader = $arr_subheader['label'];
 							//$subheader = get_post_meta( $post_id, $group_by_secondary, true );
 							//$ts_info .= "got subheader/item_title: ".$subheader."<br />";
 							if ( $subheader && $subheader != $current_sub ) {
