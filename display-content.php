@@ -2149,12 +2149,13 @@ function birdhive_display_posts ( $atts = [] ) { //function birdhive_display_pos
 					//get_postmeta.... WIP
 					$sort_num = get_field('sort_num', $term_id, false);
 					//$ts_info .= "term_id: ".$term_id."/sort_num: ".$sort_num."<br />";
-					// make_link anchor
-					$index .= $term->name."<br />";
+					$item_id = $term->slug;
+					// Add item to index
+					$index .= '<a href="#'.$item_id.'">'.$term->name.'</a><br />';
 					
 					// WIP Add "tax_term" -- or more generically: "header"? -- item to array with term name as title
 					// WIP -- add anchor for header items
-					$term_item = array( 'item_type' => "tax_term", 'term_id' => $term_id, 'header' => true );
+					$term_item = array( 'item_type' => "tax_term", 'term_id' => $term_id, 'item_id' => $item_id, 'header' => true );
 					array_push( $items, $term_item );
 					
 					/*
@@ -2217,7 +2218,8 @@ function birdhive_display_posts ( $atts = [] ) { //function birdhive_display_pos
 								$gbs_item = array( 'item_type' => "subheader", 'item_title' => $subheader, 'item_id' => $item_id, 'header' => true );
 								array_push( $items, $gbs_item );
 								$current_sub = $subheader;
-								$index .= "=> ".$subheader."<br />";
+								// Add item to index
+								$index .= '&bull; <a href="#'.$item_id.'">'.$subheader.'</a><br />';
 							}
 						}
 						$post_item = array( 'item_type' => "post", 'post_id' => $post_id );
