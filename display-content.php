@@ -767,7 +767,7 @@ function display_link_item ( $item = array() ) {
 	
 	if ( isset($item['item_title']) ) { 
 		$info .= $item['item_title'];
-		if ( isset($item['item_text']) )  { $info .= '&nbsp;<span class="description">'.$item['item_text'].'</span>'; }
+		if ( isset($item['item_text']) )  { $info .= '&nbsp;&mdash;&nbsp;<span class="description">'.$item['item_text'].'</span>'; }
 	}
 	
 	
