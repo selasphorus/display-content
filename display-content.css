@@ -280,6 +280,10 @@ table.posts_archive tr td {
 
 /*** Groupings **/
 
+.dsplycntnt.index {
+	columns: 250px 4;
+}
+
 .collection-group {
     padding-top: 1rem;
 	border-top: 1px solid;
