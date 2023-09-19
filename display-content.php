@@ -2264,8 +2264,8 @@ function birdhive_display_posts ( $atts = [] ) { //function birdhive_display_pos
 		//if ($args['header'] == 'true') { $info .= '<h3>Latest '.$category.' Articles:</h3>'; } // WIP
 		$info .= '<div class="dsplycntnt-posts'.$class.'">';
 		if ( $index ) {
-			$info .= '<div class="dsplycntnt index">';
 			$info .= '<h2>Index</h2>';
+			$info .= '<div class="dsplycntnt index">';
 			$info .= $index;
 			$info .= '</div>'; 
 		}
