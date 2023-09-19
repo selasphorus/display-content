@@ -289,6 +289,13 @@ h2.collection_group {
 	border-top: 1px solid;
 }
 
+.index_anchor.primary {
+	display: inline-block;
+	font-weight: bold;
+	margin: 0.5rem 0;
+    padding: 0;
+}
+
 /*** Hover Capability ***/
 /* Primary input mechanism system can 
    hover over elements with ease */
