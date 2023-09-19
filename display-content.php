@@ -1543,8 +1543,10 @@ function collection_footer ( $display_format = null ) {
 	if ( $display_format == "list" ) {
 		//if ( ! is_archive() && ! is_category() ) { $info .= '<li>'.$category_link.'</li>'; }
 		$info .= '</ul>';
+		$info .= anchor_link_top();
 	} else if ( $display_format == "excerpts" || $display_format == "archive" ) {
 		$info .= '</div>';
+		$info .= anchor_link_top();
 	} else if ( $display_format == "table" ) {
 		$info .= '</table>';
 	} else if ( $display_format == "grid" ) {
