@@ -2159,30 +2159,28 @@ function birdhive_display_posts ( $atts = [] ) { //function birdhive_display_pos
 					$term_item = array( 'item_type' => "tax_term", 'term_id' => $term_id, 'item_id' => $item_id, 'header' => true );
 					array_push( $items, $term_item );
 					
-					/*
+					
 					// WIP: get term children, if any, and the childrens' links...
 					$child_terms = get_terms( array( 'taxonomy' => $group_by, 'hide_empty' => true, 'child_of' => $term_id ) );
 					foreach ( $child_terms as $child_term ) {				
 						$child_term_id = $child_term->term_id;
-						$index .= "=> ".$child_term->name."<br />";
-						// If term_name like "International" or "North America", then get list of regions, nations -- hierarchy of categories...
-						// How to generalize this? Very ago-specific WIP...
-						// Perhaps a separate function to build the hierarchical array of taxonomy terms to be retrieved?
+						$item_id = $child_term->slug;
+						$index .= '<a href="#'.$item_id.'" class="index_anchor primary">'.$child_term->name.'</a><br />';
+						//$index .= "=> ".$child_term->name."<br />";
+						// How to generalize this? Perhaps a separate function to build the hierarchical array of taxonomy terms to be retrieved?
 						// ...
-						$child_term_item = array( 'item_type' => "tax_term", 'term_id' => $child_term_id, 'header' => true );
+						$child_term_item = array( 'item_type' => "tax_term", 'term_id' => $child_term_id, 'item_id' => $item_id, 'header' => true );
 						array_push( $items, $child_term_item );
 						//
-						$tertiary_terms = get_terms( array( 'taxonomy' => $group_by, 'child_of' => $child_term_id ) ); //, 'hide_empty' => true
+						/*$tertiary_terms = get_terms( array( 'taxonomy' => $group_by, 'child_of' => $child_term_id ) ); //, 'hide_empty' => true
 						foreach ( $tertiary_terms as $tertiary_term ) {				
 							$tertiary_term_id = $tertiary_term->term_id;
 							$index .= "=>=> ".$tertiary_term->name."<br />";
 							$tertiary_term_item = array( 'item_type' => "tax_term", 'term_id' => $tertiary_term_id, 'header' => true );
 							array_push( $items, $tertiary_term_item );
-						}
-						//if ( $tertiary_terms = get_term_children( $child_term_id, $group_by ) ) {
-						//}
+						}*/
+						//if ( $tertiary_terms = get_term_children( $child_term_id, $group_by ) ) {}
 					}
-					*/
 					
 					// Get posts per term_id
 					$wp_args = $args;
