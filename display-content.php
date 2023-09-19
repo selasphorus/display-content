@@ -1913,12 +1913,13 @@ function birdhive_get_posts ( $args = array() ) {
 	$arr_posts = new WP_Query( $wp_args );
     
     $ts_info .= "WP_Query run as follows:";
-    $ts_info .= "<pre>args: ".print_r($wp_args, true)."</pre>"; // tft
-    //$ts_info .= "<pre>meta_query: ".print_r($meta_query, true)."</pre>"; // tft
-	//$ts_info .= "birdhive_get_posts arr_posts: <pre>".print_r($arr_posts, true)."</pre>"; // tft
+    $ts_info .= "<pre>args: ".print_r($wp_args, true)."</pre>";
+    $ts_info .= "[".count($arr_posts)."] posts found.<br />";
+    //$ts_info .= "<pre>meta_query: ".print_r($meta_query, true)."</pre>";
+	//$ts_info .= "birdhive_get_posts arr_posts: <pre>".print_r($arr_posts, true)."</pre>";
 
-    //$ts_info .= "birdhive_get_posts arr_posts->request<pre>".$arr_posts->request."</pre>"; // tft -- wip
-    //$ts_info .= "birdhive_get_posts last_query:<pre>".$wpdb->last_query."</pre>"; // tft
+    //$ts_info .= "birdhive_get_posts arr_posts->request<pre>".$arr_posts->request."</pre>";
+    //$ts_info .= "birdhive_get_posts last_query:<pre>".$wpdb->last_query."</pre>";
     
     //$ts_info = '<div class="troubleshooting">'.$ts_info.'</div>';
     
@@ -2208,7 +2209,7 @@ function birdhive_display_posts ( $atts = [] ) { //function birdhive_display_pos
 						$posts_info = birdhive_get_posts( $wp_args );
 						$child_posts = $posts_info['arr_posts']->posts;
 						// Merge child posts into parent posts array
-						array_merge($posts,$child_posts);
+						array_merge($posts, $child_posts);
 						//$ts_info .= 'shortcode_atts as passed to birdhive_get_posts: <pre>'.print_r($args, true).'</pre>';
 						$ts_info .= $posts_info['ts_info'];
 						
