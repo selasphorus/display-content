@@ -2152,7 +2152,7 @@ function birdhive_display_posts ( $atts = [] ) { //function birdhive_display_pos
 					//$ts_info .= "term_id: ".$term_id."/sort_num: ".$sort_num."<br />";
 					$item_id = $term->slug;
 					// Add item to index
-					$index .= '<a href="#'.$item_id.'">'.$term->name.'</a><br />';
+					$index .= '<a href="#'.$item_id.'" class="index_anchor primary">'.$term->name.'</a><br />';
 					
 					// WIP Add "tax_term" -- or more generically: "header"? -- item to array with term name as title
 					// WIP -- add anchor for header items
@@ -2220,7 +2220,7 @@ function birdhive_display_posts ( $atts = [] ) { //function birdhive_display_pos
 								array_push( $items, $gbs_item );
 								$current_sub = $subheader;
 								// Add item to index
-								$index .= '&bull; <a href="#'.$item_id.'">'.$subheader.'</a><br />';
+								$index .= '&bull; <a href="#'.$item_id.'" class="index_anchor secondary">'.$subheader.'</a><br />';
 							}
 						}
 						$post_item = array( 'item_type' => "post", 'post_id' => $post_id );
