@@ -767,7 +767,7 @@ function display_link_item ( $item = array() ) {
 	
 	if ( isset($item['item_title']) ) { 
 		$info .= $item['item_title'];
-		if ( isset($item['item_text']) )  { $info .= '&nbsp;&mdash;&nbsp;<span class="description">'.$item['item_text'].'</span>'; }
+		if ( isset($item['item_text']) && !empty($item['item_text']) )  { $info .= '&nbsp;&mdash;&nbsp;<span class="description">'.$item['item_text'].'</span>'; }
 	}
 	
 	
@@ -1240,7 +1240,7 @@ function build_item_arr ( $item = array(), $item_type = null, $display_format = 
 		}
 		if ( $hlevel ) {
 			$item_title = '<h'.$hlevel.' id="'.$item_id.'" class="collection_group">'.$item_title.'</h'.$hlevel.'>';
-			if ( $hlevel >= 2 ) { $item_title = anchor_link_top().$item_title; }
+			if ( $hlevel <= 2 ) { $item_title = anchor_link_top().$item_title; }
 		}
 	}
 	
