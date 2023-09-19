@@ -2209,7 +2209,9 @@ function birdhive_display_posts ( $atts = [] ) { //function birdhive_display_pos
 						$posts_info = birdhive_get_posts( $wp_args );
 						$child_posts = $posts_info['arr_posts']->posts;
 						// Merge child posts into parent posts array
+						$ts_info .= "[".count($posts)."] posts and [".count($child_posts)."] before merge.<br />";
 						array_merge($posts, $child_posts);
+						$ts_info .= "[".count($posts)."] after merge.<br />";
 						//$ts_info .= 'shortcode_atts as passed to birdhive_get_posts: <pre>'.print_r($args, true).'</pre>';
 						$ts_info .= $posts_info['ts_info'];
 						
