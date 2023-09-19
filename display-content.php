@@ -2163,7 +2163,21 @@ function birdhive_display_posts ( $atts = [] ) { //function birdhive_display_pos
 					// WIP -- add anchor for header items
 					
 					$term_item = array( 'item_type' => "tax_term", 'term_id' => $term_id, 'item_id' => $item_id, 'hlevel' => $hlevel );
-					array_push( $items, $term_item );					
+					array_push( $items, $term_item );	
+					
+					// Get posts per term_id
+					$wp_args = $args;
+					$wp_args['taxonomy'] = $group_by;
+					$wp_args['tax_terms'] = $term_id;
+					$wp_args['tax_field'] = 'term_id';
+					$wp_args['return_fields'] = 'ids';
+					if ( $group_by_secondary ) {
+						$wp_args['orderby'] = $group_by_secondary;
+					}
+					$posts_info = birdhive_get_posts( $wp_args );
+					$posts = $posts_info['arr_posts']->posts;
+					//$ts_info .= 'shortcode_atts as passed to birdhive_get_posts: <pre>'.print_r($args, true).'</pre>';
+					$ts_info .= $posts_info['ts_info'];
 					
 					// WIP: get term children, if any, and the childrens' links...
 					$child_terms = get_terms( array( 'taxonomy' => $group_by, 'hide_empty' => true, 'child_of' => $term_id ) );
@@ -2181,7 +2195,16 @@ function birdhive_display_posts ( $atts = [] ) { //function birdhive_display_pos
 						// ...
 						$child_term_item = array( 'item_type' => "tax_term", 'term_id' => $child_term_id, 'item_id' => $item_id, 'hlevel' => $hlevel );
 						array_push( $items, $child_term_item );
-						//
+						// Modify parent wp_args to use child_term_id
+						$wp_args['tax_terms'] = $child_term_id;
+						// Get posts per child_term_id
+						$posts_info = birdhive_get_posts( $wp_args );
+						$child_posts = $posts_info['arr_posts']->posts;
+						// Merge child posts into parent posts array
+						array_merge($posts,$child_posts);
+						//$ts_info .= 'shortcode_atts as passed to birdhive_get_posts: <pre>'.print_r($args, true).'</pre>';
+						$ts_info .= $posts_info['ts_info'];
+						
 						/*$tertiary_terms = get_terms( array( 'taxonomy' => $group_by, 'child_of' => $child_term_id ) ); //, 'hide_empty' => true
 						foreach ( $tertiary_terms as $tertiary_term ) {				
 							$tertiary_term_id = $tertiary_term->term_id;
@@ -2192,13 +2215,17 @@ function birdhive_display_posts ( $atts = [] ) { //function birdhive_display_pos
 						//if ( $tertiary_terms = get_term_children( $child_term_id, $group_by ) ) {}
 					}
 					
+					/*
 					// Get posts per term_id
 					$wp_args = $args;
 					$wp_args['taxonomy'] = $group_by;
-					$wp_args['tax_terms'] = $tax_terms;
+					$wp_args['tax_terms'] = $tax_terms; //wip... how to properly loop in child_terms and THEN group_by_secondary...
 					//$wp_args['tax_terms'] = $term_id;
 					$wp_args['tax_field'] = 'term_id';
 					$wp_args['return_fields'] = 'ids';
+					if ( $child_terms ) {
+						//$wp_args['orderby'] = parent, term_id, group_by_secondary
+					}
 					if ( $group_by_secondary ) {
 						$wp_args['orderby'] = $group_by_secondary;
 					}
@@ -2207,6 +2234,7 @@ function birdhive_display_posts ( $atts = [] ) { //function birdhive_display_pos
 					$posts = $posts_info['arr_posts']->posts; // Retrieves an array of WP_Post Objects
 					//$ts_info .= 'shortcode_atts as passed to birdhive_get_posts: <pre>'.print_r($args, true).'</pre>';
 					$ts_info .= $posts_info['ts_info'];
+					*/
 					
 					//
 					if ( $group_by_secondary ) {
