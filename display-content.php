@@ -2138,6 +2138,7 @@ function birdhive_display_posts ( $atts = [] ) { //function birdhive_display_pos
 				
 				$current_term_id = ""; // init
 				$items = array();
+				$tax_terms = array();
 				
 				// Get all non-empty terms for the given taxonomy, ordered by sort_num
 				$terms = get_terms( array( 'taxonomy' => $group_by, 'hide_empty' => true, 'orderby' => 'meta_value_num', 'meta_key' => 'sort_num', 'parent' => 0 ) );
@@ -2146,6 +2147,8 @@ function birdhive_display_posts ( $atts = [] ) { //function birdhive_display_pos
 					$hlevel = 2;
 					
 					$term_id = $term->term_id;
+					$tax_terms[] = $term_id;
+					
 					//$info .= $term->name."<br />";
 					// TFT: get sort_num -- because the orderby isn't working right
 					//get_postmeta.... WIP
@@ -2169,6 +2172,8 @@ function birdhive_display_posts ( $atts = [] ) { //function birdhive_display_pos
 						$hlevel = 3;
 								
 						$child_term_id = $child_term->term_id;
+						$tax_terms[] = $child_term_id;
+						
 						$item_id = $child_term->slug;
 						$index .= '<a href="#'.$item_id.'" class="index_anchor secondary">'.$child_term->name.'</a><br />';
 						//$index .= "=> ".$child_term->name."<br />";
@@ -2190,7 +2195,8 @@ function birdhive_display_posts ( $atts = [] ) { //function birdhive_display_pos
 					// Get posts per term_id
 					$wp_args = $args;
 					$wp_args['taxonomy'] = $group_by;
-					$wp_args['tax_terms'] = $term_id;
+					$wp_args['tax_terms'] = $tax_terms;
+					//$wp_args['tax_terms'] = $term_id;
 					$wp_args['tax_field'] = 'term_id';
 					$wp_args['return_fields'] = 'ids';
 					if ( $group_by_secondary ) {
