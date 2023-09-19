@@ -1540,7 +1540,9 @@ function collection_footer ( $display_format = null ) {
 	$info = "";
 	//$info .= "+~+~+~+~+~+~+ collection_footer +~+~+~+~+~+~+<br />";
 	
-	if ( $display_format == "list" ) {
+	if ( $display_format == "links" ) {
+		$info .= anchor_link_top();
+	} else if ( $display_format == "list" ) {
 		//if ( ! is_archive() && ! is_category() ) { $info .= '<li>'.$category_link.'</li>'; }
 		$info .= '</ul>';
 		$info .= anchor_link_top();
