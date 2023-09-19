@@ -2199,7 +2199,7 @@ function birdhive_display_posts ( $atts = [] ) { //function birdhive_display_pos
 					//
 					if ( $group_by_secondary ) {
 						$current_sub = "";
-						if ( $child_terms ) { $hlevel = 4; }
+						if ( $child_terms ) { $hlevel = 4; } else { $hlevel = 3; }
 					}					
 					
 					// Add the found posts to the items array
