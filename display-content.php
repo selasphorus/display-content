@@ -1205,6 +1205,7 @@ function build_item_arr ( $item = array(), $item_type = null, $display_format = 
 	
 	// Is this a header item?
 	if ( is_array($item) && isset($item['header']) ) { $header = $item['header']; }
+	if ( $item_type == "subheader" ) { $header = true; $hlevel = 3; } else { $hlevel = 2; }
 	
 	// Style the title
 	if ( !empty($item_title) ) {
@@ -1217,7 +1218,7 @@ function build_item_arr ( $item = array(), $item_type = null, $display_format = 
 			if ( !empty($item_url) ) { $item_title = '<a href="'.$item_url.'" rel="bookmark"'.$link_target.'>'.$item_title.'</a>'; }
 		}
 		if ( $header ) {
-			$item_title = '<h2 class="collection_group">'.$item_title.'</h2>';
+			$item_title = '<h'.$hlevel.' class="collection_group">'.$item_title.'</h'.$hlevel.'>';
 		}
 	}
 	
