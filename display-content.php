@@ -1699,7 +1699,7 @@ function birdhive_get_posts ( $args = array() ) {
 					} else {
 						$wp_args['orderby'] = 'meta_value';
 					}
-					$wp_args['meta_key'] = $orderby;
+					$wp_args['meta_key'] = $orderby; // TODO: figure out how to opt to also include items WITHOUT this meta key...
                 
                 } else {
                 	$wp_args['orderby'] = $orderby;
@@ -2195,10 +2195,10 @@ function birdhive_display_posts ( $atts = [] ) { //function birdhive_display_pos
 					foreach ( $posts as $post_id ) {
 						if ( $group_by_secondary ) {
 							$arr_subheader = get_field($group_by_secondary, $post_id); // acf
-							$subheader = $arr_subheader['label'];
+							if ( isset($arr_subheader['label']) ) { $subheader = $arr_subheader['label']; }
 							//$subheader = get_post_meta( $post_id, $group_by_secondary, true );
 							//$ts_info .= "got subheader/item_title: ".$subheader."<br />";
-							if ( $subheader && $subheader != $current_sub ) {
+							if ( $subheader && $subheader != $current_sub && $subheader != 'NULL' ) {
 								$gbs_item = array( 'item_type' => "subheader", 'item_title' => $subheader, 'header' => true );
 								array_push( $items, $gbs_item );
 								$current_sub = $subheader;
