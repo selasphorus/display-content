@@ -2100,7 +2100,8 @@ function birdhive_display_posts ( $atts = [] ) { //function birdhive_display_pos
 				//if ( $arr_groups[1] ) { $group_by_secondary = $arr_groups[1]; }
 				$group_by_secondary = $arr_groups[1];
 				$ts_info .= "group_by_secondary: $group_by_secondary<br />";
-					
+				
+				// WIP!
 				if ( $group_by_secondary ) {
 				
 					$field = get_field_object($group_by_secondary);
@@ -2109,7 +2110,7 @@ function birdhive_display_posts ( $atts = [] ) { //function birdhive_display_pos
 						$ts_info .= "'$group_by_secondary' is a taxonomy<br />";
 					//} else if ( get_field_object($group_by_secondary) ) {
 						//$ts_info .= "'$group_by_secondary' is an ACF field";
-					} else if ( registered_meta_key_exists( 'post', $group_by_secondary, 'link' ) ) {
+					} else if ( registered_meta_key_exists( 'post', $group_by_secondary, 'link' ) || registered_meta_key_exists( 'post', $group_by_secondary ) ) {
 						$ts_info .= "'$group_by_secondary' is a registered_meta_key<br />";
 						// is $group_by_secondary a meta_key?
 						// if so...
@@ -2177,6 +2178,10 @@ function birdhive_display_posts ( $atts = [] ) { //function birdhive_display_pos
 					$wp_args['tax_terms'] = $term_id;
 					$wp_args['tax_field'] = 'term_id';
 					$wp_args['return_fields'] = 'ids';
+					if ( $group_by_secondary ) {
+						$wp_args['orderby'] = 'meta_value';
+						$wp_args['meta_key'] = $group_by_secondary;
+					}
 					
 					$posts_info = birdhive_get_posts( $wp_args );
 					$posts = $posts_info['arr_posts']->posts; // Retrieves an array of WP_Post Objects
