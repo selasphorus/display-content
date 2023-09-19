@@ -2103,7 +2103,7 @@ function birdhive_display_posts ( $atts = [] ) { //function birdhive_display_pos
 				// WIP!
 				if ( $group_by_secondary ) {
 				
-					$field = get_field_object($group_by_secondary);
+					//$field = get_field_object($group_by_secondary); // this won't work here because there's no object instance to check
 					
 					if ( taxonomy_exists($group_by_secondary) ) {
 						$ts_info .= "'$group_by_secondary' is a taxonomy<br />";
@@ -2111,7 +2111,7 @@ function birdhive_display_posts ( $atts = [] ) { //function birdhive_display_pos
 						//$ts_info .= "'$group_by_secondary' is an ACF field";
 					} else if ( registered_meta_key_exists( 'post', $group_by_secondary, 'link' ) || registered_meta_key_exists( 'post', $group_by_secondary ) ) {
 						$ts_info .= "'$group_by_secondary' is a registered_meta_key<br />";
-						// is $group_by_secondary a meta_key?
+						// is $group_by_secondary a meta_key? -- why doesn't this work? are ACF fields not officially registered as meta keys? why not?
 						// if so...
 						// orderby meta_value
 					} else {
@@ -2194,10 +2194,11 @@ function birdhive_display_posts ( $atts = [] ) { //function birdhive_display_pos
 					// Add the found posts to the items array
 					foreach ( $posts as $post_id ) {
 						if ( $group_by_secondary ) {
-							$subheader = get_post_meta( $post_id, $group_by_secondary, true );
+							$subheader = get_field($group_by_secondary, $post_id); // acf
+							//$subheader = get_post_meta( $post_id, $group_by_secondary, true );
 							//$ts_info .= "got subheader/item_title: ".$subheader."<br />";
 							if ( $subheader && $subheader != $current_sub ) {
-								$gbs_item = array( 'item_type' => "subheader", 'item_title' => $subheader, 'header' => true );
+								$gbs_item = array( 'item_type' => "subheader", 'item_title' => $subheader['label'], 'header' => true );
 								array_push( $items, $gbs_item );
 								$current_sub = $subheader;
 								$index .= "=> ".$subheader."<br />";
