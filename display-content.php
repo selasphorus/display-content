@@ -1224,6 +1224,8 @@ function build_item_arr ( $item = array(), $item_type = null, $display_format = 
 		$ts_info .= 'BIA -- item_link_target: '.$item_link_target.'<br />';
 	} else if ( $display_format == "table" ) {
 		$item_link_target = "_blank";
+	} else if ( $post_type == "link" ) {
+		$item_link_target = "_blank";
 	}
 	if ( !empty($item_link_target) ) { $link_target = ' target="'.$item_link_target.'"'; }
 	$ts_info .= 'BIA -- link_target: '.$link_target.'<br />';
