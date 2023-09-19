@@ -1218,7 +1218,7 @@ function build_item_arr ( $item = array(), $item_type = null, $display_format = 
 			if ( !empty($item_url) ) { $item_title = '<a href="'.$item_url.'" rel="bookmark"'.$link_target.'>'.$item_title.'</a>'; }
 		}
 		if ( $header ) {
-			$item_title = '<h'.$hlevel.' class="collection_group">'.$item_title.'</h'.$hlevel.'>';
+			$item_title = '<h'.$hlevel.' id="'.$item_title.'" class="collection_group">'.$item_title.'</h'.$hlevel.'>';
 		}
 	}
 	
@@ -2141,9 +2141,11 @@ function birdhive_display_posts ( $atts = [] ) { //function birdhive_display_pos
 					//get_postmeta.... WIP
 					$sort_num = get_field('sort_num', $term_id, false);
 					//$ts_info .= "term_id: ".$term_id."/sort_num: ".$sort_num."<br />";
+					// make_link anchor
 					$index .= $term->name."<br />";
 					
 					// WIP Add "tax_term" -- or more generically: "header"? -- item to array with term name as title
+					// WIP -- add anchor for header items
 					$term_item = array( 'item_type' => "tax_term", 'term_id' => $term_id, 'header' => true );
 					array_push( $items, $term_item );
 					
@@ -2199,6 +2201,7 @@ function birdhive_display_posts ( $atts = [] ) { //function birdhive_display_pos
 							//$subheader = get_post_meta( $post_id, $group_by_secondary, true );
 							//$ts_info .= "got subheader/item_title: ".$subheader."<br />";
 							if ( $subheader && $subheader != $current_sub && $subheader != '---' ) {
+								// WIP -- add anchor for header items
 								$gbs_item = array( 'item_type' => "subheader", 'item_title' => $subheader, 'header' => true );
 								array_push( $items, $gbs_item );
 								$current_sub = $subheader;
