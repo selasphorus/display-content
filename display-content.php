@@ -2199,7 +2199,7 @@ function birdhive_display_posts ( $atts = [] ) { //function birdhive_display_pos
 							if ( is_array($arr_subheader) && isset($arr_subheader['label']) ) { $subheader = $arr_subheader['label']; }
 							//$subheader = get_post_meta( $post_id, $group_by_secondary, true );
 							//$ts_info .= "got subheader/item_title: ".$subheader."<br />";
-							if ( $subheader && $subheader != $current_sub && $subheader != 'NULL' ) {
+							if ( $subheader && $subheader != $current_sub && $subheader != '---' ) {
 								$gbs_item = array( 'item_type' => "subheader", 'item_title' => $subheader, 'header' => true );
 								array_push( $items, $gbs_item );
 								$current_sub = $subheader;
