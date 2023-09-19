@@ -278,6 +278,12 @@ table.posts_archive tr td {
 	text-align: left;
 }
 
+/*** Groupings **/
+
+.collection-group {
+    padding-top: 1rem;
+	border-top: 1px solid;
+}
 
 /*** Hover Capability ***/
 /* Primary input mechanism system can 
