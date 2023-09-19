@@ -2180,8 +2180,6 @@ function birdhive_display_posts ( $atts = [] ) { //function birdhive_display_pos
 					$wp_args['return_fields'] = 'ids';
 					if ( $group_by_secondary ) {
 						$wp_args['orderby'] = $group_by_secondary;
-						//$wp_args['orderby'] = 'meta_value';
-						//$wp_args['meta_key'] = $group_by_secondary;
 					}
 					
 					$posts_info = birdhive_get_posts( $wp_args );
@@ -2241,13 +2239,17 @@ function birdhive_display_posts ( $atts = [] ) { //function birdhive_display_pos
     
     if ( $items ) {
         
-        $ts_info .= 'Items to be passed to birdhive_display_collection: <pre>'.print_r($items, true).'</pre>'; // tft
+        //$ts_info .= 'Items to be passed to birdhive_display_collection: <pre>'.print_r($items, true).'</pre>'; // tft
         
         $class = " ".$display_format; // wip
         
 		//if ($args['header'] == 'true') { $info .= '<h3>Latest '.$category.' Articles:</h3>'; } // WIP
 		$info .= '<div class="dsplycntnt-posts'.$class.'">';
-		$info .= $index."<hr />";
+		if ( $index ) {
+			$info .= '<div class="dsplycntnt index">';
+			$info .= $index;
+			$info .= '</div>'; 
+		}
 		// TODO: modify the following to pass only subset of args? Much of the info is not needed for the display_collection fcn
 		$display_args = array( 'content_type' => 'posts', 'display_format' => $display_format, 'items' => $items, 'display_atts' => $args );
         $info .= birdhive_display_collection( $display_args );
