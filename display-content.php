@@ -1226,7 +1226,8 @@ function build_item_arr ( $item = array(), $item_type = null, $display_format = 
 			if ( !empty($item_url) ) { $item_title = '<a href="'.$item_url.'" rel="bookmark"'.$link_target.'>'.$item_title.'</a>'; }
 		}
 		if ( $header ) {
-			$item_title = anchor_link_top().'<h'.$hlevel.' id="'.$item_id.'" class="collection_group">'.$item_title.'</h'.$hlevel.'>';
+			$item_title = '<h'.$hlevel.' id="'.$item_id.'" class="collection_group">'.$item_title.'</h'.$hlevel.'>';
+			if ( $hlevel >= 2 ) { $item_title = anchor_link_top().$item_title; }
 		}
 	}
 	
