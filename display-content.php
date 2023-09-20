@@ -714,6 +714,8 @@ function get_post_links( $post_id = null ) {
 			$url = get_field( 'url', $link_id );
 			$text = get_field( 'link_text', $link_id );
 			$title = $text; // wip
+			$target = "_blank";
+			$class = null; // tft
 			if ( $dashicon ) { $text = $dashicon; }
 			$info .= make_link( $url, $text, $title, $class, $target); // This is an SDG fcn -- TODO: check to make sure fcn exists // set up plugin dependency
 		}
