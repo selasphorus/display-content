@@ -713,8 +713,8 @@ function get_post_links( $post_id = null ) {
 			$url = get_field( 'url', $link_id );
 			$text = get_field( 'link_text', $link_id );
 			$title = $text; // wip
+			$class = "related"; // tft
 			$target = "_blank";
-			$class = null; // tft
 			if ( $icon ) { $text = $icon; }
 			$info .= make_link( $url, $text, $title, $class, $target); // This is an SDG fcn -- TODO: check to make sure fcn exists // set up plugin dependency
 		}
