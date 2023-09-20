@@ -283,9 +283,9 @@ a.icon {
 	font-size: 2.5rem;
 	text-decoration: none;
 	line-height: normal;
-	margin: 0;
-	padding: 0;
 	background: transparent;
+	/*margin: 0;
+	padding: 0;*/
 }
 
 a.icon .dashicons {
