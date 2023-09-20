@@ -695,6 +695,7 @@ function get_post_links( $post_id = null ) {
 	
 	$related_links = get_field( 'related_links', $post_id );
 	if ( $related_links ) {
+		$info .= '<div class="related_links">';
 		foreach ( $related_links as $link_id ) {
 			// get terms for $link_id
 			$terms = get_the_terms( $link_id, 'link_category' );
@@ -718,6 +719,7 @@ function get_post_links( $post_id = null ) {
 			if ( $icon ) { $text = $icon; $class .= " icon"; }
 			$info .= make_link( $url, $text, $title, $class, $target); // This is an SDG fcn -- TODO: check to make sure fcn exists // set up plugin dependency
 		}
+		$info .= '</div>';
 	}
 	
 	return $info;
