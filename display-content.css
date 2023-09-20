@@ -221,8 +221,8 @@
     transition: transform .8s cubic-bezier(.05,0.2,.1,1);
 }
 
-.overlay .flex-img,
-.overlay .flex-img img {
+.overlaid .flex-img,
+.overlaid .flex-img img {
 	border-radius: 9px;
     -moz-border-radius: 9px;
     -webkit-border-radius: 9px;
