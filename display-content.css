@@ -280,6 +280,10 @@ a.icon {
 	text-decoration: none;
 }
 
+a.icon .dashicons {
+	font-size: inherit;
+}
+
 /*** Tables ***/
 
 table.posts_archive {
