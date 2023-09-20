@@ -994,8 +994,8 @@ function display_grid_item ( $item = array(), $display_atts = array(), $ts_info 
 	if ( !empty($spacing) ) { $flex_box_classes .= " ".$spacing; }
 	if ( $overlay == "true" || $overlay == "fullover" ) {
 		$overclass = "overlay";
+		$flex_box_classes .= " ".$overclass; // only add basic overlay class to the box
 		if ( $overlay == "fullover" ) { $overclass .= " fullover"; }
-		$flex_box_classes .= " ".$overclass;
 	} else {
 		$overclass = null;
 	}
