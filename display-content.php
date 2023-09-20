@@ -1720,9 +1720,7 @@ function birdhive_get_posts ( $args = array() ) {
 			}
 			
             $standard_orderby_values = array( 'none', 'ID', 'author', 'title', 'name', 'type', 'date', 'modified', 'parent', 'rand', 'comment_count', 'relevance', 'menu_order', 'meta_value', 'meta_value_num', 'post__in', 'post_name__in', 'post_parent__in' );
-            
-            // TODO: set default orderby per post_type(?)
-            
+                        
             // determine if orderby is actually meta_value or meta_value_num with orderby $args value to be used as meta_key
             if ( !is_array($orderby) ) {
                 
