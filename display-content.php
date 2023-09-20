@@ -993,7 +993,8 @@ function display_grid_item ( $item = array(), $display_atts = array(), $ts_info 
 	$flex_box_classes = "flex-box ".$aspect_ratio;
 	if ( !empty($spacing) ) { $flex_box_classes .= " ".$spacing; }
 	if ( $overlay == "true" || $overlay == "fullover" ) {
-		if ( $overlay == "fullover" ) { $overclass .= " fullover"; } else { $overclass = "overlay"; }
+		$overclass = "overlay";
+		if ( $overlay == "fullover" ) { $overclass .= " fullover"; }
 		$flex_box_classes .= " ".$overclass;
 	} else {
 		$overclass = null;
