@@ -701,7 +701,6 @@ function get_post_links( $post_id = null ) {
             //$info .= "<!-- terms: ".print_r($terms, true)." -->"; // tft
             $icon = null;
             if ( $terms ) {
-            	$info .= '&nbsp;<span class="terms smaller green">';
                 foreach ( $terms as $term ) {
                 	// Does this term have a dashicon assigned?
                     $icon = get_term_meta($term->term_id, 'dashicon', true);
