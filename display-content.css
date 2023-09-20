@@ -282,10 +282,11 @@ div.related_links {
 a.icon {
 	font-size: 2.5rem;
 	text-decoration: none;
-	line-height: normal;
+	line-height: inherit;
 	background: transparent;
-	/*margin: 0;
-	padding: 0;*/
+	margin: 0.25rem;
+    padding: 0.5rem;
+    border: 1px solid grey;
 }
 
 a.icon .dashicons {
