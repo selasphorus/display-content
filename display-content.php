@@ -697,6 +697,10 @@ function get_post_links( $post_id = null ) {
 	if ( $related_links ) {
 		$info .= '<div class="related_links">';
 		foreach ( $related_links as $link_id ) {
+			$show = get_field( 'show_in_grid', $link_id );
+			if ( !$show ) {
+				continue;
+			}
 			// get terms for $link_id
 			$terms = get_the_terms( $link_id, 'link_category' );
             //$info .= "<!-- terms: ".print_r($terms, true)." -->"; // tft
