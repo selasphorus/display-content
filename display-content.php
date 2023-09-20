@@ -693,7 +693,15 @@ function get_post_links( $post_id = null ) {
 	$info = "";
 	//$ts_info = "";
 	
-	//
+	$related_links = get_field( 'related_links', $post_id );
+	if ( $related_links ) {
+		foreach ( $related_links as $link_id ) {
+			$url = get_field( 'url', $link_id );
+			$info .= $url;
+		}
+	}
+	
+	return $info;
 		
 }
 
