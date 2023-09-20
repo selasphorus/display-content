@@ -708,7 +708,7 @@ function get_post_links( $post_id = null ) {
                     //$info .= "<!-- term: ".$term->slug." :: dashicon: ".$dashicon." -->"; // tft
                     //$info .= "term: ".print_r($term, true)." "; // tft
                     //$info .= $term->name;
-                    if ( !empty($icon) ) { break; }
+                    if ( !empty($icon) ) { $icon = '<span class="dashicons '.$icon.'"></span>'; break; }
                 }
             }
 			$url = get_field( 'url', $link_id );
