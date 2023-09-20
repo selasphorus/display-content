@@ -696,8 +696,26 @@ function get_post_links( $post_id = null ) {
 	$related_links = get_field( 'related_links', $post_id );
 	if ( $related_links ) {
 		foreach ( $related_links as $link_id ) {
+			// get terms for $link_id
+			$terms = get_the_terms( $link_id, 'link_category' );
+            //$info .= "<!-- terms: ".print_r($terms, true)." -->"; // tft
+            if ( $terms ) {
+            	$info .= '&nbsp;<span class="terms smaller green">';
+                $icon = null;
+                foreach ( $terms as $term ) {
+                	// Does this term have a dashicon assigned?
+                    $dashicon = get_term_meta($term->term_id, 'dashicon', true);
+                    //$info .= "<!-- term: ".$term->slug." :: dashicon: ".$dashicon." -->"; // tft
+                    //$info .= "term: ".print_r($term, true)." "; // tft
+                    //$info .= $term->name;
+                    if ( !empty($dashicon) ) { break; }
+                }
+            }
 			$url = get_field( 'url', $link_id );
-			$info .= $url;
+			$text = get_field( 'link_text', $link_id );
+			$title = $text; // wip
+			if ( $dashicon ) { $text = $dashicon; }
+			$info .= make_link( $url, $text, $title, $class, $target); // This is an SDG fcn -- TODO: check to make sure fcn exists // set up plugin dependency
 		}
 	}
 	
