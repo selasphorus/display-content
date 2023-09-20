@@ -278,10 +278,12 @@
 a.icon {
 	font-size: 2.5rem;
 	text-decoration: none;
+	line-height: normal;
 }
 
 a.icon .dashicons {
 	font-size: inherit;
+	line-height: inherit;
 	height: fit-content;
 	width: fit-content;
 }
