@@ -992,7 +992,12 @@ function display_grid_item ( $item = array(), $display_atts = array(), $ts_info 
 	
 	$flex_box_classes = "flex-box ".$aspect_ratio;
 	if ( !empty($spacing) ) { $flex_box_classes .= " ".$spacing; }
-	
+	if ( $overlay == "true" || $overlay == "fullover" ) {
+		if ( $overlay == "fullover" ) { $overclass .= " fullover"; } else { $overclass = "overlay"; }
+		$flex_box_classes .= " ".$overclass;
+	} else {
+		$overclass = null;
+	}
 	$info .= '<div class="'.$flex_box_classes.'">';
 	//
 	if ( $overlay == "false" && $aspect_ratio != "square" ) {
@@ -1003,9 +1008,7 @@ function display_grid_item ( $item = array(), $display_atts = array(), $ts_info 
 	$info .= $item_image;
 	$info .= '</div>';
 	//
-	if ( $overlay == "true" || $overlay == "fullover" ) {
-		$overclass = "overlay";
-		if ( $overlay == "fullover" ) { $overclass .= " fullover"; }
+	if ( $overclass ) {
 		$info .= '<div class="'.$overclass.'">'.$item_info.'</div>';
 	} else if ( $aspect_ratio == "square" ) {
 		$info .= '<div class="item_info">'.$item_info.'</div>';

@@ -211,6 +211,7 @@
 	/*padding: 0.25rem;*/
 	overflow: hidden;
 }
+
 .flex-img,
 .flex-img img {
 	border-radius: 9px 9px 0 0;
@@ -218,6 +219,13 @@
     -webkit-border-radius: 9px 9px 0 0;
 	-webkit-transition: transform .8s cubic-bezier(.05,0.2,.1,1);
     transition: transform .8s cubic-bezier(.05,0.2,.1,1);
+}
+
+.overlay .flex-img,
+.overlay .flex-img img {
+	border-radius: 9px;
+    -moz-border-radius: 9px;
+    -webkit-border-radius: 9px;
 }
 
 /*.flex-container.rectangle .flex-img,*/
