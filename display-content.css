@@ -282,6 +282,8 @@ a.icon {
 
 a.icon .dashicons {
 	font-size: inherit;
+	height: fit-content;
+	width: fit-content;
 }
 
 /*** Tables ***/
