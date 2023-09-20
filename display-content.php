@@ -713,7 +713,7 @@ function get_post_links( $post_id = null ) {
             }
 			$url = get_field( 'url', $link_id );
 			$text = get_field( 'link_text', $link_id );
-			if ( $text ) { $title = $text; } else { $title = get_the_title( $link_id ); } // wip
+			if ( $text ) { $title = $text; } else { $title = get_the_title( $link_id ); $text = $title; } // wip
 			$class = "related"; // tft
 			$target = "_blank";
 			if ( $icon ) { $text = $icon; $class .= " icon"; }
