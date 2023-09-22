@@ -2035,6 +2035,7 @@ function birdhive_display_posts ( $atts = [] ) { //function birdhive_display_pos
         'group_by'	=> null, // e.g. category, event-categories, link_category
         //
         'display_format' => 'list', // other options: links; excerpts; archive (full post content); grid; table
+        'return_format' => null, // deprecated -- TODO: remove this extra attribute as soon as updates are complete on all sites (STC, AGO)
         
         // For grid display_format:
         'cols' => 4, // ***
@@ -2071,6 +2072,7 @@ function birdhive_display_posts ( $atts = [] ) { //function birdhive_display_pos
 	$ts_info .= 'extracted args <pre>'.print_r($args, true).'</pre>';
 	$ts_info .= "post_type: ".$post_type."<br />";
     
+    if ( $return_format ) { $display_format = $return_format; } // deal w/ deprecated attribute
     if ( $display_format == "table" ) { $do_ts = true; $args['do_ts'] = $do_ts; } // tft
     
     //
