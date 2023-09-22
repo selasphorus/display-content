@@ -157,7 +157,10 @@ function dsplycntnt_scripts_method() {
     wp_enqueue_style( 'dsplycntnt-style', plugin_dir_url( __FILE__ ) . 'display-content.css', NULL, $ver );
     
     wp_register_script('dsplycntnt-js', plugin_dir_url( __FILE__ ) . 'js/dc.js', array( 'jquery' ) );
-	wp_enqueue_script('dsplycntnt-js');	
+	wp_enqueue_script('dsplycntnt-js');
+	
+	// Enqueue Font Awesome 5
+	// WIP
 
 }
 
@@ -712,7 +715,7 @@ function get_post_links( $post_id = null ) {
                     //$info .= "<!-- term: ".$term->slug." :: dashicon: ".$dashicon." -->"; // tft
                     //$info .= "term: ".print_r($term, true)." "; // tft
                     //$info .= $term->name;
-                    if ( !empty($icon) ) { $icon = '<span class="dashicons '.$icon.'"></span>'; break; }
+                    if ( !empty($icon) ) { $icon = '<span class="icons '.$icon.'"></span>'; break; }
                 }
             }
 			$url = get_field( 'url', $link_id );
