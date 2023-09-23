@@ -2153,6 +2153,9 @@ function birdhive_display_posts ( $atts = [] ) { //function birdhive_display_pos
         $display_format = "list"; // default
     }
     
+	// Init index
+	$index = "";
+	
     // Retrieve an array of posts matching the args supplied -- if we didn't already get the posts using EM
     if ( empty($items) ) {
     	
@@ -2162,9 +2165,6 @@ function birdhive_display_posts ( $atts = [] ) { //function birdhive_display_pos
     	
     	// If we've got a group_by value, then handle it    	
 		// build set of sorted relevant taxonomies and then get posts per term_id
-		
-		// Init index
-		$index = "";
 	
 		// WIP group_by
 		if ( $group_by ) {
