@@ -807,6 +807,7 @@ function display_link_item ( $item = array() ) {
 	
 	if ( isset($item['item_title']) ) { 
 		$info .= $item['item_title'];
+		// TODO: fine-tune text -- option to show excerpts or not -- e.g. ago board page
 		if ( isset($item['item_text']) && !empty($item['item_text']) )  { $info .= '&nbsp;&mdash;&nbsp;<span class="description">'.$item['item_text'].'</span>'; }
 	}
 	
@@ -2377,7 +2378,7 @@ function birdhive_display_posts ( $atts = [] ) { //function birdhive_display_pos
         
     } else {
     
-    	$items = $posts;
+    	//$items = $posts;
     	
     } // END if ( empty($posts) )
     
