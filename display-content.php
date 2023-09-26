@@ -811,6 +811,10 @@ function display_link_item ( $item = array() ) {
 		if ( isset($item['item_text']) && !empty($item['item_text']) )  { $info .= '&nbsp;&mdash;&nbsp;<span class="description">'.$item['item_text'].'</span>'; }
 	}
 	
+	// Date_Str?
+	if ( $item_date_str ) {
+		$info .= $item_date_str;
+	}
 	
 	if ( $info ) { $info = '<div class="cc_item">'.$info.'</div>'; }
 	
@@ -984,9 +988,11 @@ function display_grid_item ( $item = array(), $display_atts = array(), $ts_info 
 	}
 	// Get Title/Subtitle via sdg_post_title fcn for proper formatting -- WIP
 	
+	// TODO: make this more efficient -- via item obj?
 	if ( isset($item['item_title']) ) { $item_title = $item['item_title']; } else { $item_title = null; }
 	if ( isset($item['item_subtitle']) ) { $item_subtitle = $item['item_subtitle']; } else { $item_subtitle = null; }
 	if ( isset($item['item_image']) ) { $item_image = $item['item_image']; } else { $item_image = null; }
+	if ( isset($item['item_date_str']) ) { $item_date_str = $item['item_date_str']; } else { $item_date_str = null; }
 	
 	// Get/set display vars
 	if ( isset($display_atts['spacing']) ) { $spacing = $display_atts['spacing']; } else { $spacing = ""; }
@@ -1002,23 +1008,10 @@ function display_grid_item ( $item = array(), $display_atts = array(), $ts_info 
 	}
 	$item_info .= $item_title;
 	
-	if ( $post_id ) {	
-		// For events, also display the date/time
-		if ( post_type_exists('event') && $post_type == 'event' ) { 
-			$event_start_datetime = get_post_meta( $post_id, '_event_start_local', true );
-			//$event_start_time = get_post_meta( $post_id, '_event_start_date', true );
-			if ( $event_start_datetime ) {
-				//$item_info .= "[".$event_start_datetime."]"; // tft
-				$date_str = date_i18n( "l, F d, Y \@ g:i a", strtotime($event_start_datetime) );
-				$date_str = str_replace(array('am','pm'),array('a.m.','p.m.'),$date_str);
-				if ( $aspect_ratio == "square" ) { $item_info .="<br />"; }
-				$item_info .= $date_str;
-			} else {
-				$ts_info .= "<!-- No event_start_datetime found. -->"; // tft
-			}
-		} else {
-			$ts_info .= "<!-- post_type: $post_type -->"; // tft
-		}
+	// Date_Str?
+	if ( $item_date_str ) {
+		if ( $aspect_ratio == "square" ) { $item_info .="<br />"; }
+		$item_info .= $item_date_str;
 	}
 	
 	// Subtitle?
@@ -1081,6 +1074,7 @@ function build_item_arr ( $item = array(), $item_type = null, $display_format = 
 	$item_subtitle = null;
 	$item_text = null;
 	$item_image = null;
+	$item_date_str = null;
 	$hlevel = 0;
 	//	
 	$item_url = null;
@@ -1329,6 +1323,22 @@ function build_item_arr ( $item = array(), $item_type = null, $display_format = 
 		//$item_ts_info .= "item_arr: <pre>".print_r($item_arr, true)."</pre>";
 	}
 	
+	// Item Date
+	if ( $post_id ) {	
+		// For events, also display the date/time
+		if ( post_type_exists('event') && $post_type == 'event' ) { 
+			$event_start_datetime = get_post_meta( $post_id, '_event_start_local', true );
+			if ( $event_start_datetime ) {
+				$item_date_str = date_i18n( "l, F d, Y \@ g:i a", strtotime($event_start_datetime) );
+				$item_date_str = str_replace(array('am','pm'),array('a.m.','p.m.'),$date_str);
+			} else {
+				//$ts_info .= "<!-- No event_start_datetime found. -->"; // tft
+			}
+		} else {
+			//$ts_info .= "<!-- post_type: $post_type -->"; // tft
+		}
+	}
+	
 	// Set the array values based on what we've found
 	// Some of the values will be null, but that will prevent undefined index errors
 	$item_arr['post_id'] = $post_id;
@@ -1337,6 +1347,7 @@ function build_item_arr ( $item = array(), $item_type = null, $display_format = 
 	$item_arr['item_subtitle'] = $item_subtitle;
 	$item_arr['item_text'] = $item_text;
 	$item_arr['item_image'] = $item_image;
+	$item_arr['item_date_str'] = $item_date_str;
 	$item_arr['ts_info'] = $ts_info;
 	
 	// Return the assembled item array
