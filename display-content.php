@@ -1330,7 +1330,7 @@ function build_item_arr ( $item = array(), $item_type = null, $display_format = 
 			$event_start_datetime = get_post_meta( $post_id, '_event_start_local', true );
 			if ( $event_start_datetime ) {
 				$item_date_str = date_i18n( "l, F d, Y \@ g:i a", strtotime($event_start_datetime) );
-				$item_date_str = str_replace(array('am','pm'),array('a.m.','p.m.'),$item_date_str);
+				$item_date_str = str_replace(array('am','pm'),array('a.m.','p.m.'),$item_date_str); // STC >> TODO: generalize formatting options
 			} else {
 				//$ts_info .= "<!-- No event_start_datetime found. -->"; // tft
 			}
