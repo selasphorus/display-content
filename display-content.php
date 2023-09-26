@@ -812,8 +812,8 @@ function display_link_item ( $item = array() ) {
 	}
 	
 	// Date_Str?
-	if ( $item_date_str ) {
-		$info .= $item_date_str;
+	if ( isset($item['item_date_str']) ) {
+		$info .= $item['item_date_str'];
 	}
 	
 	if ( $info ) { $info = '<div class="cc_item">'.$info.'</div>'; }
