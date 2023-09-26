@@ -768,12 +768,11 @@ function display_item ( $display_format = "links", $item_arr = array(), $display
 		
 	} else if ( $display_format == "excerpts" || $display_format == "archive" ) {
 		
-		$info .= display_post_item($item_arr);
-		/*if ( $item_type == "post" ) {
-			$info .= display_post_item($item_arr);
+		if ( isset($item_arr['post_type']) && $item['post_type'] == "event" ) {
+			$info .= display_event_item($item_arr);
 		} else {
-			// ??? -- These format options are only relevant for posts, not for other content types (?)
-		}*/
+			$info .= display_post_item($item_arr);
+		}
 		
 	} else if ( $display_format == "table" ) {
 	
@@ -866,6 +865,52 @@ function display_post_item ( $item = array() ) {
 	$info .= birdhive_entry_meta( $post_id );
 	$info .= '</footer><!-- .entry-footer -->';
 	$info .= '</article><!-- #post-'.$post_id.' -->';
+
+	// WIP is it possible to use template parts in this context?
+	//$info .= get_template_part( 'template-parts/content', 'excerpt', array('post_id' => $post_id ) ); // 
+	//$post_type_for_template = birdhive_get_type_for_template();
+	//get_template_part( 'template-parts/content', $post_type_for_template );
+	//$info .= get_template_part( 'template-parts/content', $post_type );
+	
+	return $info;
+			
+}
+
+function display_event_item ( $item = array() ) {
+	
+	// Init vars
+	$info = "";
+	
+	// Post ID?
+	if ( isset($item['post_id']) ) { $post_id = $item['post_id']; } else { $post_id = null; }
+	
+	// TODO: bring this more in alignment with theme template display? e.g. content-excerpt, content-sermon, content-event...
+	
+	$info .= '<article id="post-'.$post_id.'" class="cc_item">'; // post_class()
+	$info .= '<header class="entry-header">';
+	if ( isset($item['item_title']) ) { $info .= '<h2 class="entry-title">'.$item['item_title'].'</h2>'; }
+	// TODO: add subtitle?
+	$info .= '</header><!-- .entry-header -->';
+	$info .= '<div class="entry-content">';
+	if ( isset($item['item_image']) ) { $info .= $item['item_image']; }
+	if ( isset($item['item_text']) ) { $info .= $item['item_text']; }
+	$info .= '</div><!-- .entry-content -->';
+	$info .= '<footer class="entry-footer">';
+	$info .= birdhive_entry_meta( $post_id );
+	$info .= '</footer><!-- .entry-footer -->';
+	$info .= '</article><!-- #post-'.$post_id.' -->';
+	
+	/*
+	<div class="em_event event">
+	#_EVENTIMAGE{250,250}
+	<span class="event_title">#_EVENTLINK{has_category_canceled}<span class="warning"> — CANCELED</span>{/has_category_canceled}</span> <span class="edit_link">#_EDITEVENTLINK</span><span class="troubleshooting inline">[display_event_stats post_id="#_EVENTPOSTID"]</span>{has_category_webcasts}<img src="/wp-content/themes/apostle/graphics/listen-icon-sm.gif" alt="speaker icon" />{/has_category_webcasts}<br />
+	<span class="event_time">#_EVENTTIMES</span>{has_location} | <span class="event_location">#_LOCATIONNAME</span>{/has_location}
+	<p>#_EVENTEXCERPT{55,...}</p>
+	{bookings_open}<a href="#!" id="dialog_handle_#_EVENTID" class="dialog_handle marginup button">Register for this Event</a>
+	<div id="dialog_content_#_EVENTID" class="dialog dialog_content booking_form"><h2 autofocus class="" style="text-transform: none;">Registration for #_EVENTNAME, #_EVENTDATES</h2>#_BOOKINGFORM</div>{/bookings_open}
+	<!--[run_post_updates post_id="#_EVENTPOSTID"]-->
+</div>
+*/
 
 	// WIP is it possible to use template parts in this context?
 	//$info .= get_template_part( 'template-parts/content', 'excerpt', array('post_id' => $post_id ) ); // 
