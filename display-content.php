@@ -805,15 +805,16 @@ function display_link_item ( $item = array() ) {
     // Init vars
 	$info = "";
 	
+	// Date_Str?
+	if ( isset($item['item_date_str']) ) {
+		$info .= $item['item_date_str'];
+	}
+	
+	// Item Title
 	if ( isset($item['item_title']) ) { 
 		$info .= $item['item_title'];
 		// TODO: fine-tune text -- option to show excerpts or not -- e.g. ago board page
 		if ( isset($item['item_text']) && !empty($item['item_text']) )  { $info .= '&nbsp;&mdash;&nbsp;<span class="description">'.$item['item_text'].'</span>'; }
-	}
-	
-	// Date_Str?
-	if ( isset($item['item_date_str']) ) {
-		$info .= $item['item_date_str'];
 	}
 	
 	if ( $info ) { $info = '<div class="cc_item">'.$info.'</div>'; }
