@@ -879,7 +879,8 @@ function display_post_item ( $item = array() ) {
 
 function display_event_list_item ( $EM_Event ) {
 	
-	$info = $EM_Event->output(get_option('dbem_event_list_item_format'));
+	// Use category list item version so as to include date (as opposed to grouped version) -- see EM settings in CMS
+	$info = $EM_Event->output(get_option('dbem_category_event_list_item_format')); //$info = $EM_Event->output(get_option('dbem_event_list_item_format'));
 	return $info;
 			
 }
