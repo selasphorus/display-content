@@ -768,11 +768,12 @@ function display_item ( $display_format = "links", $item_arr = array(), $display
 		
 	} else if ( $display_format == "excerpts" || $display_format == "archive" ) {
 		
-		if ( isset($item_arr['post_type']) && $item_arr['post_type'] == "event" ) {
+		$info .= display_post_item($item_arr);
+		/*if ( isset($item_arr['post_type']) && $item_arr['post_type'] == "event" ) {
 			$info .= display_event_item($item_arr);
 		} else {
 			$info .= display_post_item($item_arr);
-		}
+		}*/
 		
 	} else if ( $display_format == "table" ) {
 	
@@ -876,32 +877,9 @@ function display_post_item ( $item = array() ) {
 			
 }
 
-function display_event_item ( $item = array() ) {
+function display_event_list_item ( $EM_Event ) {
 	
-	// Init vars
-	$info = "";
-	
-	// Post ID?
-	if ( isset($item['post_id']) ) { $post_id = $item['post_id']; } else { $post_id = null; }
-	
-	// TODO: bring this more in alignment with theme template display? e.g. content-excerpt, content-sermon, content-event...
-	
-	$info .= '<div class="em_event event">';
-	if ( isset($item['item_date_str']) ) { $info .= $item['item_date_str']; }
-	if ( isset($item['item_image']) ) { $info .= $item['item_image']; } //#_EVENTIMAGE{250,250}
-	if ( isset($item['item_title']) ) { $info .= '<span class="event_title">'.$item['item_title'].'</span>'; }
-	//<span class="event_title">#_EVENTLINK{has_category_canceled}<span class="warning"> — CANCELED</span>{/has_category_canceled}</span>
-	//<span class="event_time">#_EVENTTIMES</span>{has_location} | <span class="event_location">#_LOCATIONNAME</span>{/has_location}
-	//<p>#_EVENTEXCERPT{55,...}</p>
-	//{bookings_open}<a href="#!" id="dialog_handle_#_EVENTID" class="dialog_handle marginup button">Register for this Event</a><div id="dialog_content_#_EVENTID" class="dialog dialog_content booking_form"><h2 autofocus class="" style="text-transform: none;">Registration for #_EVENTNAME, #_EVENTDATES</h2>#_BOOKINGFORM</div>{/bookings_open}
-	$info .= '</div>';
-	
-	// WIP is it possible to use template parts in this context?
-	//$info .= get_template_part( 'template-parts/content', 'excerpt', array('post_id' => $post_id ) ); // 
-	//$post_type_for_template = birdhive_get_type_for_template();
-	//get_template_part( 'template-parts/content', $post_type_for_template );
-	//$info .= get_template_part( 'template-parts/content', $post_type );
-	
+	$info = $EM_Event->output(get_option('dbem_event_list_item_format'));
 	return $info;
 			
 }
@@ -1088,6 +1066,7 @@ function display_grid_item ( $item = array(), $display_atts = array(), $ts_info 
 // * 
 
 // WIP build item_arr
+// TODO: simplify -- item atts, display atts -- don't need all of them for every display_format etc.
 function build_item_arr ( $item = array(), $item_type = null, $display_format = "list", $aspect_ratio = null, $collection_id = null ) {
 	
 	// Init vars
@@ -1471,55 +1450,28 @@ function birdhive_display_collection ( $args = array() ) {
 			$item_type = $item['item_type'];
 		} else if ( $content_type == "posts" ) {
 			$item_type = "post";
+		} else if ( $content_type == "events" ) {
+			$item_type = "event";
 		} else {
 			$item_type = "UNKNOWN!";
 		}
 		
 		$item_ts_info .= "<!-- item_type: ".$item_type." -->";
 		
-		// Assemble the item_arr
-		$item_arr = build_item_arr ( $item, $item_type, $display_format, $aspect_ratio, $collection_id );
+		if ( $item_type == "event" && ( $display_format == "excerpts" || $display_format == "archive" ) ) {
 		
-		//get content for display in appropriate form...
-		//$item_args = array( 'content_type' => $content_type, 'display_format' => $display_format, 'item' => $item );
-		//$item_info .= display_item($item_args);
-		$item_info .= display_item($display_format, $item_arr, $display_atts, $table_fields, $item_ts_info);
+			$item_info .= display_event_list_item( $item );
+			
+		} else {
 		
-		/*
-		// Display the item based on the item_arr
-		if ( $display_format == "links" ) {
-			
-			$item_info .= display_link_item($item_arr);
-			
-		} else if ( $display_format == "list" ) {
+			// Assemble the item_arr
+			$item_arr = build_item_arr ( $item, $item_type, $display_format, $aspect_ratio, $collection_id );
 		
-			$item_info .= display_list_item($item_arr);
-			
-		} else if ( $display_format == "excerpts" || $display_format == "archive" ) {
-			
-			if ( $item_type == "post" ) {
-				$item_ts_info .= '<!-- '.$display_format.' -->';
-				$item_info .= display_post_item($item_arr);
-			} else {
-				// ??? -- These format options are only relevant for posts, not for other content types (?)
-			}
-			
-		} else if ( $display_format == "table" ) {
+			//get content for display in appropriate form...
+			//$item_args = array( 'content_type' => $content_type, 'display_format' => $display_format, 'item' => $item );
+			$item_info .= display_item($display_format, $item_arr, $display_atts, $table_fields, $item_ts_info); //$item_info .= display_item($item_args);
 		
-			$item_ts_info .= '<!-- table_fields: '.print_r($table_fields,true).' -->';
-			$item_info .= display_table_row($item_arr, $table_fields);
-			
-		} else if ( $display_format == "grid" ) {
-		
-			if ( $item_type != "post" ) {
-				//$item_info .= "post_id: ".$post_id."<br />";
-				//$item_ts_info .= "item_title: ".$item_title."<br />";
-				//$item_info .= "item_url: ".$item_url."<br />";
-			}
-			$item_info .= display_grid_item($item_arr, $display_atts, $item_ts_info);
-			
 		}
-		*/
 		
 		// Add the item_info to the info for return/display		
 		$info .= $item_info;
@@ -2437,7 +2389,9 @@ function birdhive_display_posts ( $atts = [] ) { //function birdhive_display_pos
 			$info .= '</div>'; 
 		}
 		// TODO: modify the following to pass only subset of args? Much of the info is not needed for the display_collection fcn
-		$display_args = array( 'content_type' => 'posts', 'display_format' => $display_format, 'items' => $items, 'display_atts' => $args );
+		// TODO: check for existence of EM plugin in case some other event CPT is in use
+		if ( $post_type == "event" ) { $content_type = 'events'; } else { $content_type = 'posts'; }
+		$display_args = array( 'content_type' => $content_type, 'display_format' => $display_format, 'items' => $items, 'display_atts' => $args );
         $info .= birdhive_display_collection( $display_args );
 		
         $info .= '</div>'; // end div class="dsplycntnt-posts" (wrapper)
