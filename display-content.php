@@ -1176,6 +1176,7 @@ function build_item_arr ( $item = array(), $item_type = null, $display_format = 
 		// +~+~+~+~+~+~+~+~+~+~+~+~+~+~+~+~+~+~+~+~+~+~+~+
 		
 		// Item Excerpt/Text
+		// TODO: check for show_excerpts option
 		$item_text = get_the_excerpt( $post_id );
 		if ( empty($item_text) ) {
 			// WIP
@@ -2041,6 +2042,7 @@ function birdhive_display_posts ( $atts = [] ) { //function birdhive_display_pos
         'has_image' => false, // set to true to ONLY return posts with features images
         'class' => null, // for additional styling
         'show_images' => false,
+        'show_excerpts' => false,
         'expandable' => false, // for excerpts
         'text_length' => 'excerpt', // excerpt or full length
         'preview_length' => '55',
