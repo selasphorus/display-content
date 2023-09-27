@@ -1101,7 +1101,7 @@ function build_item_arr ( $item = array(), $item_type = null, $display_format = 
 		$item_id = $item['item_id'];
 	}
 	
-	if ( $item_type == "post" ) {
+	if ( $item_type == "post" || $item_type == "event" ) {
 		
 		if ( is_object($item) ) { // item is post object, e.g. when called via display_posts shortcode
 			$post = $item;
