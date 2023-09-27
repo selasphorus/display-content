@@ -1,6 +1,10 @@
 @charset "UTF-8";
 /* CSS Document */
 
+.posts_archive {
+	display: flow-root;
+}
+
 /*** GRID & FLEX layouts -- for events, landing pages, &c. ***/
 
 .grid-container {
