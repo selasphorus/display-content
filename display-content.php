@@ -1303,14 +1303,13 @@ function birdhive_display_collection ( $args = array() ) {
 	$info = "";
 	$ts_info = "";
 	//
-	/*$collection_id = null;
+	$collection_id = null;
 	$table_fields = array();
 	$table_headers = array();
 	$num_cols = "3";
-	$aspect_ratio = "square";*/
-	
-	extract( $args );
+	$aspect_ratio = "square";
 	//
+	extract( $args );
 	//
 	//$ts_info .= "args: <pre>".print_r($args, true)."</pre>";
 	//$ts_info .= "display_atts: <pre>".print_r($display_atts, true)."</pre>";
