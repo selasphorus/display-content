@@ -1303,22 +1303,21 @@ function birdhive_display_collection ( $args = array() ) {
 	$info = "";
 	$ts_info = "";
 	//
-	// DP stands for "display posts" -- i.e. special attributes if this fcn has been called via the display_posts shortcode -- TODO: simplify?
-	if ( isset($args['display_atts']) ) { $display_atts = $args['display_atts']; } else { $display_atts = array(); }
-	$collection_id = null;
-	//
+	/*$collection_id = null;
 	$table_fields = array();
 	$table_headers = array();
 	$num_cols = "3";
-	$aspect_ratio = "square";
+	$aspect_ratio = "square";*/
+	
+	extract( $args );
+	//
 	//
 	//$ts_info .= "args: <pre>".print_r($args, true)."</pre>";
-	$ts_info .= "display_atts: <pre>".print_r($display_atts, true)."</pre>";
+	//$ts_info .= "display_atts: <pre>".print_r($display_atts, true)."</pre>";
 	
 	// Get args from array
-	if ( isset($args['collection_id']) ) {
+	if ( isset($collection_id) ) {
 		
-		$collection_id = $args['collection_id'];	
 		$ts_info .= "collection_id: $collection_id<br />";
 		
 		$content_type = "mixed"; // tft
@@ -1336,10 +1335,6 @@ function birdhive_display_collection ( $args = array() ) {
 	} else {
 	
 		$ts_info .= "No collection_id set<br />";
-		
-		$content_type = $args['content_type'];
-		$display_format = $args['display_format'];
-		$items = $args['items'];
 		
 		if ( $display_format == "table" && isset($display_atts['fields']) ) {
 			$table_fields = $display_atts['fields'];
@@ -2280,10 +2275,6 @@ function birdhive_display_posts ( $atts = [] ) { //function birdhive_display_pos
 					//array_push( $items, $posts );
 					//$info .= $posts_info['info']; // obsolete(?)
 				}
-				
-				// Reset args to be passed to birdhive_display_collection
-				//$args['taxonomy'] = null;
-				//$args['tax_terms'] = null;
 				
 			} else {
 				// If it's not a taxonomy, then what?
