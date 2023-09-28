@@ -1295,7 +1295,7 @@ function build_item_arr ( $item, $arr_styling = array() ) { // TODO: come up wit
 function birdhive_display_collection ( $args = array() ) {
 
 	// TS/logging setup
-    $do_ts = false; 
+    $do_ts = true; 
     $do_log = false;
     sdg_log( "divline2", $do_log );
 
@@ -1309,9 +1309,9 @@ function birdhive_display_collection ( $args = array() ) {
 	$num_cols = "3";
 	$aspect_ratio = "square";
 	//
+	$ts_info .= "birdhive_display_collection >> args: <pre>".print_r($args, true)."</pre>";
 	extract( $args );
 	//
-	//$ts_info .= "args: <pre>".print_r($args, true)."</pre>";
 	//$ts_info .= "display_atts: <pre>".print_r($display_atts, true)."</pre>";
 	
 	// Get args from array
@@ -1999,7 +1999,7 @@ function birdhive_display_posts ( $atts = [] ) { //function birdhive_display_pos
     // NB we'll only do this if NOT searching for events in a series, because in that case we're running a NON-EM get
     
     // Events are a special case...
-    if ( post_type_exists('event') && $post_type == "event" ) {    
+    if ( post_type_exists('event') && $post_type == "event" ) {
     	
     	if ( empty($series) ) {
     	
@@ -2290,10 +2290,6 @@ function birdhive_display_posts ( $atts = [] ) { //function birdhive_display_pos
 			
 		} // END if ( $group_by )
         
-    } else {
-    
-    	//$items = $posts;
-    	
     } // END if ( empty($posts) )
     
     if ( $items ) {
