@@ -1055,7 +1055,7 @@ function build_item_arr ( $item, $arr_styling = array() ) { // TODO: come up wit
 	
 		extract( $item );
 	
-		if ( $post_object ) {
+		if ( isset($post_object) ) {
 			$post = $post_object[0];
 		} else if ( $post_id ) {
 			$post = get_post( $post_id );
@@ -1066,7 +1066,8 @@ function build_item_arr ( $item, $arr_styling = array() ) { // TODO: come up wit
 	
 	// Item Image
 	// If this is a post via a collection, check to see if there's an image override
-	if ( !empty($item_image) ) { $image_id = $item_image; }	
+	if ( !empty($item_image) ) { $image_id = $item_image; }
+	if ( !isset($aspect_ratio) ) { $aspect_ratio == "square" ); }
 	
 	$ts_info .= 'BIA -- item_type: '.$item_type.'<br />';
 	//$ts_info .= 'BIA -- item: '.print_r($item, true).'<br />';
@@ -1117,10 +1118,12 @@ function build_item_arr ( $item, $arr_styling = array() ) { // TODO: come up wit
 		// +~+~+~+~+~+~+~+~+~+~+~+~+~+~+~+~+~+~+~+~+~+~+~+
 		
 		// Item Excerpt/Text
-		if ( $show_excerpts == 'excerpts' ) {
-			$item_text = get_the_excerpt( $post_id );
-		} else if ( $show_excerpts == 'full' ) {
-			$item_text = get_the_content( $post_id );
+		if ( isset($show_content) ) {
+			if ( $show_content == 'excerpts' ) {
+				$item_text = get_the_excerpt( $post_id );
+			} else if ( $show_content == 'full' ) {
+				$item_text = get_the_content( $post_id );
+			}
 		}
 		
 		if ( empty($item_text) ) {
@@ -1962,7 +1965,7 @@ function birdhive_display_posts ( $atts = [] ) { //function birdhive_display_pos
         'has_image' => false, // set to true to ONLY return posts with features images
         'class' => null, // for additional styling
         'show_images' => false,
-        'show_excerpts' => false,
+        'show_content' => 'excerpts',
         'expandable' => false, // for excerpts
         'text_length' => 'excerpt', // excerpt or full length
         'preview_length' => '55',
