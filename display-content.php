@@ -1102,7 +1102,6 @@ function build_item_arr ( $item, $arr_styling = array() ) { // TODO: come up wit
 		
 		// +~+~+~+~+~+~+~+~+~+~+~+~+~+~+~+~+~+~+~+~+~+~+~+
 		
-		
 		// No collection image? Then look for a image via the post record
 		if ( ! $image_id ) {
 			// WIP
@@ -1118,8 +1117,12 @@ function build_item_arr ( $item, $arr_styling = array() ) { // TODO: come up wit
 		// +~+~+~+~+~+~+~+~+~+~+~+~+~+~+~+~+~+~+~+~+~+~+~+
 		
 		// Item Excerpt/Text
-		// TODO: check for show_excerpts option
-		$item_text = get_the_excerpt( $post_id );
+		if ( $show_excerpts == 'excerpts' ) {
+			$item_text = get_the_excerpt( $post_id );
+		} else if ( $show_excerpts == 'full' ) {
+			$item_text = get_the_content( $post_id );
+		}
+		
 		if ( empty($item_text) ) {
 			// WIP
 			if ( $post_type == "link" ) {
