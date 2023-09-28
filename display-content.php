@@ -1309,7 +1309,7 @@ function birdhive_display_collection ( $args = array() ) {
 	$num_cols = "3";
 	$aspect_ratio = "square";
 	//
-	$ts_info .= "birdhive_display_collection >> args: <pre>".print_r($args, true)."</pre>";
+	//$ts_info .= "birdhive_display_collection >> args: <pre>".print_r($args, true)."</pre>";
 	extract( $args );
 	//
 	//$ts_info .= "display_atts: <pre>".print_r($display_atts, true)."</pre>";
@@ -1386,7 +1386,7 @@ function birdhive_display_collection ( $args = array() ) {
 		} else {
 		
 			// Assemble the array of styling parameters
-			$arr_styling = array( 'item_type' => $item_type, 'display_format' => $display_format, 'aspect_ratio' => $aspect_ratio, 'collection_id' => $collection_id ); // wip
+			$arr_styling = array( 'item_type' => $item_type, 'display_format' => $display_format, 'show_content' => $show_content, 'aspect_ratio' => $aspect_ratio, 'collection_id' => $collection_id ); // wip
 			
 			// Assemble the arr_item
 			$arr_item = build_item_arr ( $item, $arr_styling );
