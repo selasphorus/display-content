@@ -1123,8 +1123,11 @@ function build_item_arr ( $item, $arr_styling = array() ) { // TODO: come up wit
 			if ( $show_content == 'excerpts' ) {
 				$item_text = get_the_excerpt( $post_id );
 			} else if ( $show_content == 'full' ) {
-				$item_text = "TEST [post_id: $post_id]";
+				//$item_text = "TEST [post_id: $post_id]";
 				//$item_text = get_the_content( $post_id );
+				if ( $post ) {
+					$item_text = $post->post_content;
+				}
 			}
 		}
 		
