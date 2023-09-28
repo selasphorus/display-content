@@ -867,6 +867,8 @@ function display_table_row ( $arr_item = array(), $arr_styling = array() ) {
 	// Init vars
 	$info = "";
 	$ts_info = "";
+	$fields = null;
+	
 	extract( $arr_item );
 	extract( $arr_styling );
 	
@@ -881,6 +883,7 @@ function display_table_row ( $arr_item = array(), $arr_styling = array() ) {
 	
 	// Make sure we've got a proper array of fields and then loop through them to accumulate the info for display
 	if ( !is_array($fields) ) { $arr_fields = explode(",",$fields); } else { $arr_fields = $fields; }
+	
 	if ( $arr_fields ) { 
 		
 		foreach ( $arr_fields as $field_name ) {
@@ -1386,7 +1389,7 @@ function birdhive_display_collection ( $args = array() ) {
 		} else {
 		
 			// Assemble the array of styling parameters
-			$arr_styling = array( 'item_type' => $item_type, 'display_format' => $display_format, 'show_content' => $show_content, 'aspect_ratio' => $aspect_ratio, 'collection_id' => $collection_id ); // wip
+			$arr_styling = array( 'item_type' => $item_type, 'display_format' => $display_format, 'show_content' => $show_content, 'aspect_ratio' => $aspect_ratio, 'table_fields' => $table_fields, 'collection_id' => $collection_id ); // wip
 			
 			// Assemble the arr_item
 			$arr_item = build_item_arr ( $item, $arr_styling );
