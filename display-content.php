@@ -1067,6 +1067,7 @@ function build_item_arr ( $item, $arr_styling = array() ) { // TODO: come up wit
 	// Item Image
 	// If this is a post via a collection, check to see if there's an image override
 	if ( !empty($item_image) ) { $image_id = $item_image; }
+	//
 	if ( !isset($aspect_ratio) ) { $aspect_ratio = "square"; }
 	
 	$ts_info .= 'BIA -- item_type: '.$item_type.'<br />';
