@@ -942,7 +942,7 @@ function display_table_row ( $arr_item = array(), $arr_styling = array() ) {
 	
 	$info .= '</tr>';
 	
-	if ( $do_ts ) { $info .= $ts_info; } //if ( $do_ts ) { $info .= '<div class="troubleshooting">'.$ts_info.'</div>'; }
+	//if ( $do_ts ) { $info .= $ts_info; } //if ( $do_ts ) { $info .= '<div class="troubleshooting">'.$ts_info.'</div>'; }
 
 	return $info;
 	
