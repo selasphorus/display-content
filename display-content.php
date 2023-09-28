@@ -882,7 +882,7 @@ function display_table_row ( $arr_item = array(), $arr_styling = array() ) {
 	$info .= '<tr class="cc_item">';
 	
 	// Make sure we've got a proper array of fields and then loop through them to accumulate the info for display
-	if ( !is_array($fields) ) { $arr_fields = explode(",",$fields); } else { $arr_fields = $fields; }
+	if ( !is_array($table_fields) ) { $arr_fields = explode(",",$table_fields); } else { $arr_fields = $table_fields; }
 	
 	if ( $arr_fields ) { 
 		
