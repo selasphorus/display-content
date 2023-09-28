@@ -2320,7 +2320,8 @@ function birdhive_display_posts ( $atts = [] ) { //function birdhive_display_pos
 		// TODO: modify the following to pass only subset of args? Much of the info is not needed for the display_collection fcn
 		// TODO: check for existence of EM plugin in case some other event CPT is in use
 		if ( $post_type == "event" ) { $content_type = 'events'; } else { $content_type = 'posts'; }
-		$display_args = array( 'content_type' => $content_type, 'display_format' => $display_format, 'items' => $items, 'display_atts' => $args );
+		// TODO: revise args to fit new setup for item arrays etc.
+		$display_args = array( 'content_type' => $content_type, 'display_format' => $display_format, 'show_content' => $show_content, 'items' => $items, 'display_atts' => $args );
         $info .= birdhive_display_collection( $display_args );
 		
         $info .= '</div>'; // end div class="dsplycntnt-posts" (wrapper)
