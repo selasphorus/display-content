@@ -964,7 +964,7 @@ function display_grid_item ( $arr_item = array(), $arr_styling = array() ) {
 	
 	// Post Type?
 	if ( $post_id ) { $post_type = get_post_type($post_id); }
-	$ts_info .= "<!-- overlay: $overlay -->"; // tft
+	if ( isset($overlay) ) { $ts_info .= "<!-- overlay: $overlay -->"; } else { $overlay = null; }
 	
 	// Begin building item_info
 	if ( $aspect_ratio != "square" ) {
@@ -1307,6 +1307,7 @@ function birdhive_display_collection ( $args = array() ) {
 	$ts_info = "";
 	//
 	$collection_id = null;
+	$show_content = null;
 	$table_fields = array();
 	$table_headers = array();
 	$num_cols = "3";
