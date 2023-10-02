@@ -991,9 +991,6 @@ function display_grid_item ( $arr_item = array(), $arr_styling = array() ) {
 	$links = get_post_links( $post_id );
 	if ( $links ) { $item_info .= $links; }
 	
-	// Troubleshooting info
-	if ( $do_ts && !empty($ts_info) ) { $item_info .= $ts_info; }
-	
 	$flex_box_classes = "flex-box ".$aspect_ratio;
 	if ( !empty($spacing) ) { $flex_box_classes .= " ".$spacing; }
 	if ( $overlay == "true" || $overlay == "fullover" ) {
@@ -1020,6 +1017,8 @@ function display_grid_item ( $arr_item = array(), $arr_styling = array() ) {
 	}
 	$info .= '</div>';
 	
+	// Troubleshooting info
+	//if ( $do_ts && !empty($ts_info) ) { $item_info .= $ts_info; }	
 	if ( $do_ts ) { $info .= '<div class="troubleshooting">'.$ts_info.'</div>'; } //if ( $do_ts ) { $info .= $ts_info; }
 	
 	return $info;
