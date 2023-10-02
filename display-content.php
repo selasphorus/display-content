@@ -859,7 +859,7 @@ function display_event_list_item ( $EM_Event ) {
 function display_table_row ( $arr_item = array(), $arr_styling = array() ) {
 	
 	// TS/logging setup
-    $do_ts = true; 
+    $do_ts = false; 
     $do_log = false;
     sdg_log( "divline2", $do_log );
     sdg_log( "function called: display_table_row", $do_log );
@@ -951,7 +951,7 @@ function display_table_row ( $arr_item = array(), $arr_styling = array() ) {
 function display_grid_item ( $arr_item = array(), $arr_styling = array() ) {
 
 	// TS/logging setup
-    $do_ts = true; 
+    $do_ts = false; 
     $do_log = false;
     sdg_log( "divline2", $do_log );
     sdg_log( "function called: display_grid_item", $do_log );
@@ -1303,7 +1303,7 @@ function build_item_arr ( $item, $arr_styling = array() ) { // TODO: come up wit
 function birdhive_display_collection ( $args = array() ) {
 
 	// TS/logging setup
-    $do_ts = true; 
+    $do_ts = false; 
     $do_log = false;
     sdg_log( "divline2", $do_log );
 
