@@ -1404,7 +1404,8 @@ function birdhive_display_collection ( $args = array() ) {
 		
 		// Add the item_info to the info for return/display		
 		$info .= $item_info;
-		if ( $do_ts ) { $info .= $item_ts_info; }
+		$ts_info .= $item_ts_info;
+		//if ( $do_ts ) { $info .= $item_ts_info; }
 		
 		if ( isset( $arr_item['item_content'] ) && $item_type == "modal" || ( isset( $arr_item['item_link_target'] ) && $arr_item['item_link_target'] == "modal" ) ) { 
 			// modal_content...
