@@ -951,7 +951,7 @@ function display_table_row ( $arr_item = array(), $arr_styling = array() ) {
 function display_grid_item ( $arr_item = array(), $arr_styling = array() ) {
 
 	// TS/logging setup
-    $do_ts = false; 
+    $do_ts = true; 
     $do_log = false;
     sdg_log( "divline2", $do_log );
     sdg_log( "function called: display_grid_item", $do_log );
@@ -959,8 +959,12 @@ function display_grid_item ( $arr_item = array(), $arr_styling = array() ) {
 	// Init vars
 	$info = "";
 	$item_info = "";
+	$ts_info = "";
 	extract( $arr_item );
 	extract( $arr_styling );
+	
+	$ts_info .= "item: <pre>".print_r($arr_item, true)."</pre>";
+	$ts_info .= "arr_styling: <pre>".print_r($arr_styling, true)."</pre>";
 	
 	// Post Type?
 	if ( $post_id ) { $post_type = get_post_type($post_id); }
@@ -969,8 +973,8 @@ function display_grid_item ( $arr_item = array(), $arr_styling = array() ) {
 	// Begin building item_info
 	if ( $aspect_ratio != "square" ) {
 		$hclass = "grid_rect";
-		if ( !empty($item_subtitle) ) { $hclass .= " with-subtitle"; $item_subtitle = '<h4 class="subtitle">'.$item_subtitle.'</h4>'; }
 		$item_title = '<h3 class="'.$hclass.'">'.$item_title.'</h3>';
+		if ( !empty($item_subtitle) ) { $hclass .= " with-subtitle"; $item_subtitle = '<h4 class="subtitle">'.$item_subtitle.'</h4>'; }
 	}
 	$item_info .= $item_title;
 	
@@ -1001,7 +1005,7 @@ function display_grid_item ( $arr_item = array(), $arr_styling = array() ) {
 	}
 	$info .= '<div class="'.$flex_box_classes.'">';
 	//
-	if ( $overlay == "false" && $aspect_ratio != "square" ) {
+	if ( !($overlay) && $aspect_ratio != "square" ) {
 		$info .= '<div class="item_info">'.$item_info.'</div>';
 	}
 	// Show the item image
@@ -1015,6 +1019,8 @@ function display_grid_item ( $arr_item = array(), $arr_styling = array() ) {
 		$info .= '<div class="item_info">'.$item_info.'</div>';
 	}
 	$info .= '</div>';
+	
+	if ( $do_ts ) { $info .= $ts_info; }
 	
 	return $info;
 	
@@ -1391,8 +1397,8 @@ function birdhive_display_collection ( $args = array() ) {
 		
 			// Assemble the array of styling parameters
 			$arr_styling = array( 'item_type' => $item_type, 'display_format' => $display_format, 'show_content' => $show_content, 'aspect_ratio' => $aspect_ratio, 'table_fields' => $table_fields, 'collection_id' => $collection_id ); // wip
-			$item_ts_info .= "item: <pre>".print_r($item, true)."</pre>";
-			$item_ts_info .= "arr_styling: <pre>".print_r($arr_styling, true)."</pre>";
+			//$item_ts_info .= "item: <pre>".print_r($item, true)."</pre>";
+			//$item_ts_info .= "arr_styling: <pre>".print_r($arr_styling, true)."</pre>";
 			
 			// Assemble the arr_item
 			$arr_item = build_item_arr ( $item, $arr_styling );
