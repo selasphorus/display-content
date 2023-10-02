@@ -1381,7 +1381,7 @@ function birdhive_display_collection ( $args = array() ) {
 			$item_type = "UNKNOWN!";
 		}
 		
-		$item_ts_info .= "<!-- item_type: ".$item_type." -->";
+		$item_ts_info .= "item_type: ".$item_type."<br />"; //$item_ts_info .= "<!-- item_type: ".$item_type." -->";
 		
 		if ( $item_type == "event" && ( $display_format == "excerpts" || $display_format == "archive" ) ) {
 		
@@ -1391,6 +1391,8 @@ function birdhive_display_collection ( $args = array() ) {
 		
 			// Assemble the array of styling parameters
 			$arr_styling = array( 'item_type' => $item_type, 'display_format' => $display_format, 'show_content' => $show_content, 'aspect_ratio' => $aspect_ratio, 'table_fields' => $table_fields, 'collection_id' => $collection_id ); // wip
+			$item_ts_info .= "item: <pre>".print_r($item, true)."</pre>";
+			$item_ts_info .= "arr_styling: <pre>".print_r($arr_styling, true)."</pre>";
 			
 			// Assemble the arr_item
 			$arr_item = build_item_arr ( $item, $arr_styling );
