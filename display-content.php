@@ -1020,7 +1020,7 @@ function display_grid_item ( $arr_item = array(), $arr_styling = array() ) {
 	}
 	$info .= '</div>';
 	
-	if ( $do_ts ) { $info .= $ts_info; }
+	if ( $do_ts ) { $info .= '<div class="troubleshooting">'.$ts_info.'</div>'; } //if ( $do_ts ) { $info .= $ts_info; }
 	
 	return $info;
 	
