@@ -1417,6 +1417,7 @@ function birdhive_display_collection ( $args = array() ) {
 		if ( isset( $arr_item['item_content'] ) && $item_type == "modal" || ( isset( $arr_item['item_link_target'] ) && $arr_item['item_link_target'] == "modal" ) ) { 
 			// modal_content...
 			//<div id="dialog_content_contact_us" class="dialog dialog_content"></div>
+			$dialog_id = sanitize_title($arr_item['item_title']); // wip 
 			$info .= '<div id="dialog_content_'.$dialog_id.'" class="dialog dialog_content">'.$arr_item['item_content'].'</div>';
 		}
 		
