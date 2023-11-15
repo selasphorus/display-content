@@ -1063,7 +1063,7 @@ function build_item_arr ( $item, $arr_styling = array() ) { // TODO: come up wit
 	
 		extract( $item );
 	
-		if ( isset($post_object) ) {
+		if ( isset($post_object) && isset($post_object[0]) ) {
 			$post = $post_object[0];
 		} else if ( $post_id ) {
 			$post = get_post( $post_id );
