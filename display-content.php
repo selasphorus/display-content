@@ -2353,9 +2353,10 @@ function birdhive_content_collection ( $atts = [] ) {
         'id' => null,
     ), $atts );
     
-    $collection_id = $args['id'];
+    // Extract
+	extract( $args );
     
-    $info .= birdhive_display_collection( array('collection_id' => $collection_id) );
+    $info .= birdhive_display_collection( array('collection_id' => $id) );
     
     $info .= '<div class="troubleshooting">'.$ts_info.'</div>';
     
@@ -2447,9 +2448,8 @@ function birdhive_search_form ($atts = [], $content = null, $tag = '') {
         'limit'        => '-1'
     ), $atts );
     
-    $post_type = $args['post_type'];
-    $form_type = $args['form_type'];
-    $limit = $args['limit'];
+    // Extract
+	extract( $args );
     
     //$info .= "form_type: $form_type<br />"; // tft
 
@@ -2499,10 +2499,10 @@ function birdhive_search_form ($atts = [], $content = null, $tag = '') {
     $query_assignment = "primary"; // init -- each field pertains to either primary or related query
     
     // Check to see if any fields have been designated via the shortcode attributes
-    if ( $args['fields'] ) {
+    if ( $fields ) {
         
         // Turn the fields list into an array
-        $arr_fields = birdhive_att_explode( $args['fields'] ); //if ( function_exists('sdg_att_explode') ) { }
+        $arr_fields = birdhive_att_explode( $fields ); //if ( function_exists('sdg_att_explode') ) { }
         //$info .= print_r($arr_fields, true); // tft
         
         // e.g. http://stthomas.choirplanner.com/library/search.php?workQuery=Easter&composerQuery=Williams
