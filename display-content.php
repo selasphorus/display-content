@@ -2040,7 +2040,7 @@ function birdhive_display_posts ( $atts = [] ) { //function birdhive_display_pos
 				$ts_info .= "Getting posts by IDs: ".$ids."<br />";				
 				$posts_in = array_map( 'intval', birdhive_att_explode( $ids ) );
 				if ( count($posts_in) > 1 ) {
-					$em_args['post__in'] = $posts_in;
+					$em_args['post_id'] = $posts_in; //$em_args['post__in'] = $posts_in;
 				} else {
 					$em_args['post_id'] = $ids;
 				}
