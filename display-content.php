@@ -1984,7 +1984,7 @@ function birdhive_display_posts ( $atts = [] ) { //function birdhive_display_pos
         //'aspect_ratio' => 'square', // TBD whether to activate this or not... probably better to simplify args array
         
         // For post_type 'event'
-        'scope' => 'upcoming',
+        'scope' => 'all', //'upcoming',
         
         // For Events or Sermons
         'series' => false,
