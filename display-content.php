@@ -2037,8 +2037,14 @@ function birdhive_display_posts ( $atts = [] ) { //function birdhive_display_pos
 		
 			// Posts by ID -- translate to fit EM search attributes (https://wp-events-plugin.com/documentation/event-search-attributes/)
 			if ( !empty($ids) ) {
-				$ts_info .= "Getting posts by IDs: ".$ids."<br />";
-				$em_args['post_id'] = $ids;
+				$ts_info .= "Getting posts by IDs: ".$ids."<br />";				
+				$posts_in = array_map( 'intval', birdhive_att_explode( $ids ) );
+				if ( count($posts_in) > 1 ) {
+					$em_args['post__in'] = $posts_in;
+				} else {
+					$em_args['post_id'] = $ids;
+				}
+				//$em_args['post_id'] = $ids;
 			}
 			if ( $em_args ) { $ts_info .= 'shortcode_atts as passed to EM_Events::get <pre>'.print_r($em_args, true).'</pre>'; } // tft
 		
@@ -2051,6 +2057,7 @@ function birdhive_display_posts ( $atts = [] ) { //function birdhive_display_pos
 				$ts_info .= "post_id: ".$obj->post_id."<br />";
 				$ts_info .= "event_id: ".$obj->event_id."<br />";
 				$ts_info .= "event_name: ".$obj->event_name."<br />";
+				$ts_info .= "-------<br />";
 				//$ts_info .= "event_attributes: ".print_r($post->event_attributes, true)."<br />";
 				//if ( isset($post->event_attributes['event_series']) ) { $ts_info .= "event_series: ".$post->event_attributes['event_series']."<br />"; }
 			}
