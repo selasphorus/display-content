@@ -2001,7 +2001,7 @@ function birdhive_display_posts ( $atts = [] ) { //function birdhive_display_pos
     // Extract
 	extract( $args );
 	
-	$ts_info .= 'extracted args <pre>'.print_r($args, true).'</pre>';
+	$ts_info .= 'extracted args: <pre>'.print_r($args, true).'</pre>';
 	$ts_info .= "post_type: ".$post_type."<br />";
     
     if ( $return_format ) { $display_format = $return_format; } // deal w/ deprecated attribute
@@ -2043,16 +2043,17 @@ function birdhive_display_posts ( $atts = [] ) { //function birdhive_display_pos
 			if ( $em_args ) { $ts_info .= 'shortcode_atts as passed to EM_Events::get <pre>'.print_r($em_args, true).'</pre>'; } // tft
 		
 			$items = EM_Events::get( $em_args ); // Retrieves an array of EM_Event Objects
-		
+			$ts_info .= "EM items retrieved: <pre>".print_r($items, true)."</pre>";
+			
 			/*$ts_info .= 'Posts retrieved using EM_Events::get: <pre>';		
 			foreach ( $items as $post ) {
 				//$ts_info .= "post: ".print_r($post, true)."<br />";
 				$ts_info .= "post_id: ".$post->post_id."<br />";
 				//$ts_info .= "event_attributes: ".print_r($post->event_attributes, true)."<br />";
 				if ( isset($post->event_attributes['event_series']) ) { $ts_info .= "event_series: ".$post->event_attributes['event_series']."<br />"; }
-			}*/
+			}
 			//$ts_info .= 'last_query: '.print_r( $wpdb->last_query, true); // '<pre></pre>'
-			$ts_info .= '</pre>'; // tft
+			$ts_info .= '</pre>';*/ // tft
         
     	} else {
     	
