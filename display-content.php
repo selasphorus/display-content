@@ -1107,8 +1107,8 @@ function build_item_arr ( $item, $arr_styling = array() ) { // TODO: come up wit
 		
 		// Item URL
 		// TODO: deal w/ possibility of multiple external URLs
-		if ( $post_type == "link" ) { $item_url = get_field( 'url', $post_id ); }
-		if ( empty($item_url) ) { $item_url = get_the_permalink( $post_id ); }
+		// WIP 231127
+		$item_url = get_the_permalink( $post_id ); //if ( empty($item_url) ) { $item_url = get_the_permalink( $post_id ); }
 		
 		// +~+~+~+~+~+~+~+~+~+~+~+~+~+~+~+~+~+~+~+~+~+~+~+
 		
@@ -1212,6 +1212,8 @@ function build_item_arr ( $item, $arr_styling = array() ) { // TODO: come up wit
 			if ( !empty($item_email) ) {
 				$item_url = "mailto:".$item_email;
 			}
+		} else if ( $item_type == "link" ) { 
+			$item_url = get_field( 'url', $post_id );
 		}
 		
 		/* WIP
