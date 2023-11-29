@@ -2010,6 +2010,7 @@ function birdhive_display_posts ( $atts = [] ) { //function birdhive_display_pos
     
     if ( $return_format ) { $display_format = $return_format; } // deal w/ deprecated attribute
     if ( $display_format == "table" ) { $do_ts = true; $args['do_ts'] = $do_ts; } // tft
+    if ( $show_subtitles == "false" ) { $show_subtitles = false; }
     
     //
     // TODO: 'category' applies to pages and posts only, but it's an easy mistake to use that attribute for events too => correct for that possibility
