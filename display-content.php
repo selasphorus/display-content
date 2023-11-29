@@ -1098,7 +1098,8 @@ function build_item_arr ( $item, $arr_styling = array() ) { // TODO: come up wit
 			if ( $short_title ) { 
 				$item_title = $short_title;
 			} else if ( function_exists( 'sdg_post_title' ) ) {
-				$title_args = array( 'post' => $post_id, 'line_breaks' => true, 'show_subtitle' => true, 'echo' => false, 'hlevel' => 0, 'hlevel_sub' => 0 );
+				if ( !isset($show_subtitle) ) { $show_subtitle = true; }
+				$title_args = array( 'post' => $post_id, 'line_breaks' => true, 'show_subtitle' => $show_subtitle, 'echo' => false, 'hlevel' => 0, 'hlevel_sub' => 0 );
 				$item_title = sdg_post_title( $title_args );
 			} else {
 				$item_title = get_the_title($post_id);
@@ -1397,7 +1398,7 @@ function birdhive_display_collection ( $args = array() ) {
 		} else {
 		
 			// Assemble the array of styling parameters
-			$arr_styling = array( 'item_type' => $item_type, 'display_format' => $display_format, 'show_content' => $show_content, 'aspect_ratio' => $aspect_ratio, 'table_fields' => $table_fields, 'collection_id' => $collection_id ); // wip
+			$arr_styling = array( 'item_type' => $item_type, 'display_format' => $display_format, 'show_subtitle' => $show_subtitles, 'show_content' => $show_content, 'aspect_ratio' => $aspect_ratio, 'table_fields' => $table_fields, 'collection_id' => $collection_id ); // wip
 			//$item_ts_info .= "item: <pre>".print_r($item, true)."</pre>";
 			//$item_ts_info .= "arr_styling: <pre>".print_r($arr_styling, true)."</pre>";
 			
@@ -1623,8 +1624,8 @@ function birdhive_get_posts ( $args = array() ) {
         $ts_info .= "Getting posts by IDs: ".$ids."<br />";
         
         // Turn the list of IDs into a proper array
-		$posts_in         = array_map( 'intval', birdhive_att_explode( $ids ) );
-		$wp_args['post__in'] = $posts_in;
+		$post_ids         = array_map( 'intval', birdhive_att_explode( $ids ) );
+		$wp_args['post__in'] = $post_ids;
         $wp_args['orderby']  = 'post__in';
         $get_by_ids = true;
         
@@ -1637,8 +1638,8 @@ function birdhive_get_posts ( $args = array() ) {
         $ts_info .= "Getting posts by slugs: ".$slugs;
         
         // Turn the list of slugs into a proper array
-		$posts_in = birdhive_att_explode( $slugs );
-		$wp_args['post_name__in'] = $posts_in;
+		$post_slugs = birdhive_att_explode( $slugs );
+		$wp_args['post_name__in'] = $post_slugs;
         $wp_args['orderby'] = 'post_name__in';
         $get_by_slugs = true;
         
@@ -1979,6 +1980,7 @@ function birdhive_display_posts ( $atts = [] ) { //function birdhive_display_pos
         'has_image' => false, // set to true to ONLY return posts with features images
         'class' => null, // for additional styling
         'show_images' => false,
+        'show_subtitles' => true,
         'show_content' => 'excerpts',
         'expandable' => false, // for excerpts
         'text_length' => 'excerpt', // excerpt or full length
@@ -2040,9 +2042,9 @@ function birdhive_display_posts ( $atts = [] ) { //function birdhive_display_pos
 			// Posts by ID -- translate to fit EM search attributes (https://wp-events-plugin.com/documentation/event-search-attributes/)
 			if ( !empty($ids) ) {
 				$ts_info .= "Getting posts by IDs: ".$ids."<br />";				
-				$posts_in = array_map( 'intval', birdhive_att_explode( $ids ) );
-				if ( count($posts_in) > 1 ) {
-					$em_args['post_id'] = $posts_in; //$em_args['post__in'] = $posts_in;
+				$post_ids = array_map( 'intval', birdhive_att_explode( $ids ) );
+				if ( count($post_ids) > 1 ) {
+					$em_args['post_id'] = $post_ids; //$em_args['post__in'] = $post_ids;
 				} else {
 					$em_args['post_id'] = $ids;
 				}
@@ -2335,7 +2337,7 @@ function birdhive_display_posts ( $atts = [] ) { //function birdhive_display_pos
 		// TODO: check for existence of EM plugin in case some other event CPT is in use
 		if ( $post_type == "event" ) { $content_type = 'events'; } else { $content_type = 'posts'; }
 		// TODO: revise args to fit new setup for item arrays etc.
-		$display_args = array( 'content_type' => $content_type, 'display_format' => $display_format, 'show_content' => $show_content, 'items' => $items, 'display_atts' => $args );
+		$display_args = array( 'content_type' => $content_type, 'display_format' => $display_format, 'show_subtitles' => $show_subtitles, 'show_content' => $show_content, 'items' => $items, 'display_atts' => $args );
         $info .= birdhive_display_collection( $display_args );
 		
         $info .= '</div>'; // end div class="dsplycntnt-posts" (wrapper)
