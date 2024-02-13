@@ -884,7 +884,9 @@ function display_table_row ( $arr_item = array(), $arr_styling = array() ) {
 	// Make sure we've got a proper array of fields and then loop through them to accumulate the info for display
 	if ( !is_array($table_fields) ) { $arr_fields = explode(",",$table_fields); } else { $arr_fields = $table_fields; }
 	
-	if ( $arr_fields ) { 
+	if ( $arr_fields ) {
+	
+		//if ( !is_array($field_values) ) { $arr_field_values = explode(",",$field_values); } else { $arr_field_values = $field_values; }
 		
 		foreach ( $arr_fields as $field_name ) {
 		
@@ -895,7 +897,10 @@ function display_table_row ( $arr_item = array(), $arr_styling = array() ) {
 				$info .= '<td>';				
 				//$info .= "[".$field_name."] "; // tft
 				
-				if ( $field_name == "title" && !empty($item_title) ) {
+				// Check for corresponding field value passed with item
+				if ( isset($field_values[$field_name]) ) {
+					$field_value = $field_values[$field_name];
+				} else if ( $field_name == "title" && !empty($item_title) ) {
 					$field_value = $item_title; // WIP!!!
 				} else {
 					$field_value = get_post_meta( $post_id, $field_name, true );
@@ -1072,7 +1077,9 @@ function build_item_arr ( $item, $arr_styling = array() ) { // TODO: come up wit
 		}
 		
 	} else if ( is_numeric($item) ) {
+	
 		$post = get_post( $item );
+		
 	}
 	
 	// Item Image
@@ -1298,6 +1305,7 @@ function build_item_arr ( $item, $arr_styling = array() ) { // TODO: come up wit
 	$arr_item['item_image'] = $item_image;
 	$arr_item['item_date_str'] = $item_date_str;
 	$arr_item['ts_info'] = $ts_info;
+	$arr_item['field_values'] = $field_values;
 	
 	// Return the assembled item array
 	return $arr_item;
@@ -1406,9 +1414,13 @@ function birdhive_display_collection ( $args = array() ) {
 			//$item_ts_info .= "arr_styling: <pre>".print_r($arr_styling, true)."</pre>";
 			
 			// Assemble the arr_item
-			$arr_item = build_item_arr ( $item, $arr_styling );
-		
-			//get content for display in appropriate form...
+			if ( $item_type == "custom_item" ) {
+				$arr_item = $item;
+			} else {
+				$arr_item = build_item_arr ( $item, $arr_styling );
+			}
+			
+			// Get content for display in appropriate form...
 			//$item_args = array( 'content_type' => $content_type, 'display_format' => $display_format, 'item' => $item );
 			//$item_info .= display_item($display_format, $arr_item, $display_atts, $table_fields, $item_ts_info); //$item_info .= display_item($item_args);
 			$item_info .= display_item ( $arr_item, $arr_styling );
