@@ -1478,13 +1478,15 @@ function collection_header ( $display_format = null, $num_cols = 3, $aspect_rati
 		
 			$info .= "<tr>"; // prep the header row
 		
-			// make array from fields string
-			if ( !is_array($fields) ) { $arr_fields = explode(",",$fields); } else { $arr_fields = $fields; }
+			// Create array from fields string, as needed
+			if ( is_array($fields) ) { $arr_fields = $fields; } else { $arr_fields = explode(",",$fields); }
 			//$info .= "<td>".$fields."</td>"; // tft
 			//$info .= "<td><pre>".print_r($arr_fields, true)."</pre></td>"; // tft
 		
 			if ( !empty($headers) ) {
-				$arr_headers = explode(",",$headers);
+			
+				// Create array from headers string, as needed
+				if ( is_array($headers) ) { $arr_headers = $headers; } else { $arr_headers = explode(",",$headers); }
 			
 				foreach ( $arr_headers as $header ) {
 					$header = trim($header);
