@@ -1054,7 +1054,7 @@ function build_item_arr ( $item, $arr_styling = array() ) { // TODO: come up wit
 	$image_id = null;
 	$hlevel = 0;
 	
-	// Is the $item a post object or an array?
+	// Is the $item a post object, an array, or simply an ID?
 	if ( is_object($item) ) { // item is post object, e.g. when called via display_posts shortcode
 	
 		$post = $item;
@@ -1070,6 +1070,9 @@ function build_item_arr ( $item, $arr_styling = array() ) { // TODO: come up wit
 		} else if ( is_numeric($item) ) {
 			$post = get_post( $item );
 		}
+		
+	} else if ( is_numeric($item) ) {
+		$post = get_post( $item );
 	}
 	
 	// Item Image
@@ -1377,7 +1380,7 @@ function birdhive_display_collection ( $args = array() ) {
 		$arr_item = array();
 		$image_id = null;
 		
-		//$item_ts_info .= "item: <pre>".print_r($item, true)."</pre>";
+		$item_ts_info .= "item: <pre>".print_r($item, true)."</pre>";
 		
 		if ( is_array($item) && isset($item['item_type']) ) {
 			$item_type = $item['item_type'];
@@ -1932,6 +1935,15 @@ function birdhive_get_posts ( $args = array() ) {
 
 // Function for display of posts in various formats -- links, grid, &c.
 // This shortcode is in use on numerous Pages, as well as via the archive.php page template
+// Examples:
+/* ********
+Table display:
+-------------
+[display_posts post_type="person" taxonomy="person_category" tax_terms="dca" orderby="meta_value" order="ASC" meta_key="award_year_dca" limit="-1" display_format="table" fields="award_year_dca,title,recital_venue_dca" headers="-,Recipient,Presentation Venue"]
+
+
+**********
+*/
 add_shortcode('display_posts', 'birdhive_display_posts');
 function birdhive_display_posts ( $atts = [] ) { //function birdhive_display_posts ( $args = array() ) {
 
