@@ -1053,6 +1053,7 @@ function build_item_arr ( $item, $arr_styling = array() ) { // TODO: come up wit
 	$item_text = null;
 	$item_image = null;
 	$item_date_str = null;
+	$field_values = array();
 	//
 	$item_url = null;
 	$item_link_target = null;
