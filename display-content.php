@@ -1410,7 +1410,7 @@ function birdhive_display_collection ( $args = array() ) {
 		} else {
 		
 			// Assemble the array of styling parameters
-			$arr_styling = array( 'item_type' => $item_type, 'display_format' => $display_format, 'show_subtitle' => $show_subtitles, 'show_content' => $show_content, 'aspect_ratio' => $aspect_ratio, 'table_fields' => $table_fields, 'collection_id' => $collection_id ); // wip
+			$arr_styling = array( 'item_type' => $item_type, 'display_format' => $display_format, 'show_subtitles' => $show_subtitles, 'show_content' => $show_content, 'aspect_ratio' => $aspect_ratio, 'table_fields' => $table_fields, 'collection_id' => $collection_id ); // wip
 			//$item_ts_info .= "item: <pre>".print_r($item, true)."</pre>";
 			//$item_ts_info .= "arr_styling: <pre>".print_r($arr_styling, true)."</pre>";
 			
