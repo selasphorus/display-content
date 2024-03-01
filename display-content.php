@@ -820,7 +820,22 @@ function display_post_item ( $arr_item = array() ) {
 	
 	// Init vars
 	$info = "";
+	$item_content = "";
 	extract( $arr_item );
+	
+	// WIP
+	if ( $post_id && empty($item_title) && empty($item_text) ) {
+		$item_content = get_the_content( $post_id );
+	} else {
+		$info .= $item_image;
+		$info .= $item_text;
+	}
+	/*
+	if ( $post && isset($show_content) && $show_content == 'full' ) {
+		//$item_text = get_the_content( $post->ID );
+		//$item_text = $post->post_content; // WIP: formatting is off
+	}	
+	*/
 	
 	// TODO: bring this more in alignment with theme template display? e.g. content-excerpt, content-sermon, content-event...
 	
@@ -830,8 +845,7 @@ function display_post_item ( $arr_item = array() ) {
 	// TODO: add subtitle?
 	$info .= '</header><!-- .entry-header -->';
 	$info .= '<div class="entry-content">';
-	$info .= $item_image;
-	$info .= $item_text;
+	$info .= $item_content;
 	$info .= '</div><!-- .entry-content -->';
 	$info .= '<footer class="entry-footer">';
 	$info .= birdhive_entry_meta( $post_id );
@@ -1093,7 +1107,12 @@ function build_item_arr ( $item, $arr_styling = array() ) { // TODO: come up wit
 	//$ts_info .= 'BIA -- item: '.print_r($item, true).'<br />';
 	$ts_info .= 'BIA -- item: <pre>'.print_r($item, true).'</pre><br />';
 	
-	if ( $post && ( $item_type == "post" || $item_type == "event" ) ) {
+	if ( $post && isset($show_content) && $show_content == 'full' ) {
+		$post_id = $post->ID;
+		
+		//$item_text = get_the_content( $post->ID );
+		//$item_text = $post->post_content; // WIP: formatting is off
+	} else if ( $post && ( $item_type == "post" || $item_type == "event" ) ) {
 
 		//$ts_info .= '<!-- post: <pre>'.print_r($post, true).'</pre> -->';
 		$post_type = $post->post_type;
@@ -1139,17 +1158,8 @@ function build_item_arr ( $item, $arr_styling = array() ) { // TODO: come up wit
 		// +~+~+~+~+~+~+~+~+~+~+~+~+~+~+~+~+~+~+~+~+~+~+~+
 		
 		// Item Excerpt/Text
-		if ( isset($show_content) ) {
-			if ( $show_content == 'excerpts' ) {
-				$item_text = get_the_excerpt( $post_id );
-			} else if ( $show_content == 'full' ) {
-				//$item_text = "TEST [post_id: $post_id]";
-				//$item_text = get_the_content( $post_id );
-				if ( $post ) {
-					$item_text = get_the_content( $post->ID );
-					//$item_text = $post->post_content; // WIP: formatting is off
-				}
-			}
+		if ( isset($show_content) && $show_content == 'excerpts' ) {
+			$item_text = get_the_excerpt( $post_id );
 		}
 		
 		if ( empty($item_text) ) {
