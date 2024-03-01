@@ -826,7 +826,8 @@ function display_post_item ( $arr_item = array() ) {
 	// WIP
 	if ( $post_id && empty($item_title) && empty($item_text) ) {
 		//$item_content = "TEST";
-		$item_content = get_the_content( $post_id );
+		//$item_content = get_the_content( $post_id );
+		$item_content = "post_id: $post_id";
 	} else {
 		$info .= $item_image;
 		$info .= $item_text;
