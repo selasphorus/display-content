@@ -1252,7 +1252,7 @@ function build_item_arr ( $item, $arr_styling = array() ) { // TODO: come up wit
 	if ( empty($item_link_target) ) {
 		if ( $display_format == "table" ) {
 			$item_link_target = "_blank";
-		} else if ( $post && $post_type == "link" ) {
+		} else if ( $post && $item_type == "link" ) {
 			$item_link_target = "_blank";
 		}
 	}
