@@ -821,27 +821,18 @@ function display_post_item ( $arr_item = array() ) {
 	// Init vars
 	$info = "";
 	$item_content = "";
+	$full_content = false;
 	extract( $arr_item );
 	
 	// WIP
 	if ( $post_id && empty($item_title) && empty($item_text) ) {
-		//$item_content = "TEST";
-		//$item_content = get_the_content( $post_id );
-		//$item_content = "post_id: $post_id";
-		$post = get_post($post_id);
-		$img_args = array( 'post_id' => $post_id, 'img_size' => "full", 'sources' => array("featured", "gallery"), 'echo' => false );
-		$item_content .= sdg_post_thumbnail( $img_args );
+		$full_content = true;
+		$post = get_post($post_id);		
 		$item_content .= apply_filters('the_content', $post->post_content);
 	} else {
 		$info .= $item_image;
 		$info .= $item_text;
 	}
-	/*
-	if ( $post && isset($show_content) && $show_content == 'full' ) {
-		//$item_text = get_the_content( $post->ID );
-		//$item_text = $post->post_content; // WIP: formatting is off
-	}	
-	*/
 	
 	// TODO: bring this more in alignment with theme template display? e.g. content-excerpt, content-sermon, content-event...
 	
@@ -850,6 +841,10 @@ function display_post_item ( $arr_item = array() ) {
 	if ( isset($item_title) ) { $info .= '<h2 class="entry-title">'.$item_title.'</h2>'; }
 	// TODO: add subtitle?
 	$info .= '</header><!-- .entry-header -->';
+	if ( $full_content ) {
+		$img_args = array( 'post_id' => $post_id, 'img_size' => "full", 'sources' => array("featured", "gallery"), 'echo' => false );
+		$info .= sdg_post_thumbnail( $img_args );
+	}
 	$info .= '<div class="entry-content">';
 	$info .= $item_content;
 	$info .= '</div><!-- .entry-content -->';
