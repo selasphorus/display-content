@@ -1075,6 +1075,8 @@ function build_item_arr ( $item, $arr_styling = array() ) { // TODO: come up wit
 	$image_id = null;
 	$hlevel = 0;
 	
+	if ( !isset($show_content) ) { $show_content = null; }
+	
 	// Is the $item a post object, an array, or simply an ID?
 	if ( is_object($item) ) { // item is post object, e.g. when called via display_posts shortcode
 	
@@ -1108,9 +1110,9 @@ function build_item_arr ( $item, $arr_styling = array() ) { // TODO: come up wit
 	//$ts_info .= 'BIA -- item: '.print_r($item, true).'<br />';
 	$ts_info .= 'BIA -- item: <pre>'.print_r($item, true).'</pre><br />';
 	
-	if ( $post && isset($show_content) && $show_content == 'full' ) {
+	if ( $post && $show_content == 'full' ) {
 		$post_id = $post->ID;
-		
+		$ts_info .= "show_content=full<br />";
 		//$item_text = get_the_content( $post->ID );
 		//$item_text = $post->post_content; // WIP: formatting is off
 	} else if ( $post && ( $item_type == "post" || $item_type == "event" ) ) {
