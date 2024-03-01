@@ -821,11 +821,10 @@ function display_post_item ( $arr_item = array() ) {
 	// Init vars
 	$info = "";
 	$item_content = "";
-	$full_content = false;
 	extract( $arr_item );
 	
 	// WIP
-	if ( $post_id && empty($item_title) && empty($item_text) ) {
+	if ( $post_id && $show_content == 'full' ) {
 		$full_content = true;
 		$post = get_post($post_id);		
 		$item_content .= apply_filters('the_content', $post->post_content);
@@ -836,12 +835,17 @@ function display_post_item ( $arr_item = array() ) {
 	
 	// TODO: bring this more in alignment with theme template display? e.g. content-excerpt, content-sermon, content-event...
 	
-	$info .= '<article id="post-'.$post_id.'" class="cc_item">'; // post_class()
+	$article_class = 'cc_item';
+	if ( $show_content == 'full' ) {
+		$article_class .= "full";
+	}
+	
+	$info .= '<article id="post-'.$post_id.'" class="'.$article_class.'">'; // post_class()
 	$info .= '<header class="entry-header">';
 	if ( isset($item_title) ) { $info .= '<h2 class="entry-title">'.$item_title.'</h2>'; }
 	// TODO: add subtitle?
 	$info .= '</header><!-- .entry-header -->';
-	if ( $full_content ) {
+	if ( $show_content == 'full' ) {
 		$img_args = array( 'post_id' => $post_id, 'img_size' => "full", 'sources' => array("featured", "gallery"), 'echo' => false );
 		$info .= sdg_post_thumbnail( $img_args );
 	}
@@ -1110,12 +1114,7 @@ function build_item_arr ( $item, $arr_styling = array() ) { // TODO: come up wit
 	//$ts_info .= 'BIA -- item: '.print_r($item, true).'<br />';
 	$ts_info .= 'BIA -- item: <pre>'.print_r($item, true).'</pre><br />';
 	
-	if ( $post && $show_content == 'full' ) {
-		$post_id = $post->ID;
-		$ts_info .= "show_content=full<br />";
-		//$item_text = get_the_content( $post->ID );
-		//$item_text = $post->post_content; // WIP: formatting is off
-	} else if ( $post && ( $item_type == "post" || $item_type == "event" ) ) {
+	if ( $post && ( $item_type == "post" || $item_type == "event" ) ) {
 
 		//$ts_info .= '<!-- post: <pre>'.print_r($post, true).'</pre> -->';
 		$post_type = $post->post_type;
@@ -1314,6 +1313,7 @@ function build_item_arr ( $item, $arr_styling = array() ) { // TODO: come up wit
 	// Set the array values based on what we've found
 	// Some of the values will be null, but that will prevent undefined index errors
 	$arr_item['post_id'] = $post_id;
+	$arr_item['show_content'] = $show_content;
 	$arr_item['item_title'] = $item_title;
 	$arr_item['item_subtitle'] = $item_subtitle;
 	$arr_item['item_text'] = $item_text;
