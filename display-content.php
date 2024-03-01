@@ -827,7 +827,9 @@ function display_post_item ( $arr_item = array() ) {
 	if ( $post_id && empty($item_title) && empty($item_text) ) {
 		//$item_content = "TEST";
 		//$item_content = get_the_content( $post_id );
-		$item_content = "post_id: $post_id";
+		//$item_content = "post_id: $post_id";
+		$post = get_post($post_id);
+		$item_content = apply_filters('the_content', $post->post_content);
 	} else {
 		$info .= $item_image;
 		$info .= $item_text;
