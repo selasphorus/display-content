@@ -1146,7 +1146,8 @@ function build_item_arr ( $item, $arr_styling = array() ) { // TODO: come up wit
 				//$item_text = "TEST [post_id: $post_id]";
 				//$item_text = get_the_content( $post_id );
 				if ( $post ) {
-					$item_text = $post->post_content;
+					$item_text = get_the_content( $post_id );
+					//$item_text = $post->post_content; // WIP: formatting is off
 				}
 			}
 		}
