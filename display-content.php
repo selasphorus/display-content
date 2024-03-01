@@ -829,7 +829,9 @@ function display_post_item ( $arr_item = array() ) {
 		//$item_content = get_the_content( $post_id );
 		//$item_content = "post_id: $post_id";
 		$post = get_post($post_id);
-		$item_content = apply_filters('the_content', $post->post_content);
+		$img_args = array( 'post_id' => $post_id, 'img_size' => "full", 'sources' => array("featured", "gallery"), 'echo' => false );
+		$item_content .= sdg_post_thumbnail( $img_args );
+		$item_content .= apply_filters('the_content', $post->post_content);
 	} else {
 		$info .= $item_image;
 		$info .= $item_text;
