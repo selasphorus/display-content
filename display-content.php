@@ -1238,7 +1238,7 @@ function build_item_arr ( $item, $arr_styling = array() ) { // TODO: come up wit
 				$item_url = "mailto:".$item_email;
 			}
 		} else if ( $item_type == "link" ) { 
-			$item_url = get_field( 'url', $post_id );
+			$item_url = get_field( 'item_url', $post_id );
 		}
 		
 		/* WIP
