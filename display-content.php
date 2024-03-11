@@ -1110,9 +1110,9 @@ function build_item_arr ( $item, $arr_styling = array() ) { // TODO: come up wit
 	//
 	if ( !isset($aspect_ratio) ) { $aspect_ratio = "square"; }
 	
-	$ts_info .= 'BIA -- item_type: '.$item_type.'<br />';
-	//$ts_info .= 'BIA -- item: '.print_r($item, true).'<br />';
 	$ts_info .= 'BIA -- item: <pre>'.print_r($item, true).'</pre><br />';
+	//$ts_info .= 'BIA -- item: '.print_r($item, true).'<br />';
+	$ts_info .= 'BIA -- item_type: '.$item_type.'<br />';
 	
 	if ( $post && ( $item_type == "post" || $item_type == "event" ) ) {
 
@@ -1237,8 +1237,9 @@ function build_item_arr ( $item, $arr_styling = array() ) { // TODO: come up wit
 			if ( !empty($item_email) ) {
 				$item_url = "mailto:".$item_email;
 			}
-		} else if ( $item_type == "link" ) { 
-			$item_url = get_field( 'item_url', $post_id );
+		} else if ( $item_type == "link" ) {
+			//$item_url = get_field( 'item_url', $post_id );
+			$ts_info .= 'item_url: '.$item_url.'<br />';
 		}
 		
 		/* WIP
