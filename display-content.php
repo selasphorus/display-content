@@ -1350,6 +1350,7 @@ function birdhive_display_collection ( $args = array() ) {
 	//
 	//$ts_info .= "birdhive_display_collection >> args: <pre>".print_r($args, true)."</pre>";
 	extract( $args );
+	extract( $display_atts ); // one of args 
 	//
 	//$ts_info .= "display_atts: <pre>".print_r($display_atts, true)."</pre>";
 	
