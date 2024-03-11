@@ -1350,7 +1350,7 @@ function birdhive_display_collection ( $args = array() ) {
 	//
 	//$ts_info .= "birdhive_display_collection >> args: <pre>".print_r($args, true)."</pre>";
 	extract( $args );
-	//extract( $display_atts ); // one of args 
+	if ( is_array($display_atts) ) { extract( $display_atts ); } // one of args 
 	//
 	//$ts_info .= "display_atts: <pre>".print_r($display_atts, true)."</pre>";
 	
@@ -2409,12 +2409,13 @@ function birdhive_content_collection ( $atts = [] ) {
 	
 	$args = shortcode_atts( array(
         'id' => null,
+        'do_ts' => false,
     ), $atts );
     
     // Extract
 	extract( $args );
     
-    $info .= birdhive_display_collection( array('collection_id' => $id) );
+    $info .= birdhive_display_collection( array('collection_id' => $id, 'display_atts' => array('do_ts' => $do_ts) ) );
     
     $info .= '<div class="troubleshooting">'.$ts_info.'</div>';
     
