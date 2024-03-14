@@ -2049,7 +2049,7 @@ function birdhive_display_posts ( $atts = [] ) { //function birdhive_display_pos
 	$ts_info .= 'extracted args: <pre>'.print_r($args, true).'</pre>';
 	$ts_info .= "post_type: ".$post_type."<br />";
     
-    if ( $return_format ) { $display_format = $return_format; } // deal w/ deprecated attribute
+    if ( $return_format ) { $display_format = $return_format; $args['display_format'] = $display_format; } // deal w/ deprecated attribute
     if ( $display_format == "table" ) { $do_ts = true; $args['do_ts'] = $do_ts; } // tft
     if ( $show_subtitles == "false" ) { $show_subtitles = false; }
     
