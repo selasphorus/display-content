@@ -2136,9 +2136,10 @@ function birdhive_display_posts ( $atts = [] ) { //function birdhive_display_pos
     
     // Make sure the display_format is valid
     // TODO: revive/fix "archive" option -- deal w/ get_template_part issue...
-    if ( $display_format != "links" && $display_format != "list" && $display_format != "table" && $display_format != "grid" && $display_format != "excerpts" && $display_format != "archive" ) {
+    /*if ( $display_format != "links" && $display_format != "list" && $display_format != "table" && $display_format != "grid" && $display_format != "excerpts" && $display_format != "archive" ) {
         $display_format = "list"; // default
-    }
+    }*/
+    $ts_info .= "display_format: ".$display_format."<br />";
     
 	// Init index
 	$index = "";
