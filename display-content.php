@@ -1796,7 +1796,7 @@ function birdhive_get_posts ( $args = array() ) {
 			
 			$wp_args['tax_query'] = $tax_query;
 			
-		} else if ( is_category() ) {
+		} else if ( is_category() && $category != "all") {
 
             // Post category archive
             $ts_info .= "is_category (archive)<br />";
@@ -1814,21 +1814,22 @@ function birdhive_get_posts ( $args = array() ) {
             }
 
             $tax_field = 'term_id';
-
-            $wp_args['tax_query'] = array(
-                'relation' => 'AND',
-                array(
+            
+            $wp_args['tax_query'] = array();
+            if ( $tax_terms ) {
+            	$wp_args['tax_query']['relation'] = 'AND';
+            	$wp_args['tax_query'][] = array(
                     'taxonomy' => 'category',
                     'field'    => $tax_field,
                     'terms'    => array( $tax_terms ),
-                ),
-                array(
-                    'taxonomy' => 'category',
-                    'field'    => 'term_id',
-                    'terms'    => array( $archive_cat_id),
-                    'operator' => 'NOT IN',
-                ),
-            );
+                );
+            }
+            $wp_args['tax_query'][] = array(
+				'taxonomy' => 'category',
+				'field'    => 'term_id',
+				'terms'    => array( $archive_cat_id),
+				'operator' => 'NOT IN',
+			);
 
         } else if ( $taxonomy && $tax_terms ) {
 
