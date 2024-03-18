@@ -1681,7 +1681,7 @@ function birdhive_get_posts ( $args = array() ) {
     if ( !$get_by_ids && !$get_by_slugs ) {
         
         // Deal w/ taxonomy args
-        if ( $category && empty($taxonomy) ) {
+        if ( $category && $category != "all" && empty($taxonomy) ) {
             $taxonomy = 'category';
             $tax_terms = $category;
         }
@@ -1796,7 +1796,7 @@ function birdhive_get_posts ( $args = array() ) {
 			
 			$wp_args['tax_query'] = $tax_query;
 			
-		} else if ( is_category() && $category != "all") {
+		} else if ( is_category() && $category != "all" ) {
 
             // Post category archive
             $ts_info .= "is_category (archive)<br />";
