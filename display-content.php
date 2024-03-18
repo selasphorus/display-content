@@ -1702,7 +1702,8 @@ function birdhive_get_posts ( $args = array() ) {
         }
 
         // Post default category, if applicable -- WIP
-        if ( $post_type == 'post' && ( empty($taxonomy) || $taxonomy == 'category' ) && empty($tax_terms) ) {
+        // TMP disabled -- was messing up recent posts snippet
+        /*if ( $post_type == 'post' && ( empty($taxonomy) || $taxonomy == 'category' ) && empty($tax_terms) ) {
             $category = birdhive_get_default_category();
             if ( !empty($category) ) {
                 $tax_terms = $category;
@@ -1714,7 +1715,7 @@ function birdhive_get_posts ( $args = array() ) {
             } else {
                 $tax_terms = null;
             }
-        }
+        }*/
         
         // If terms, check to see if array or string; build tax_query accordingly
         //if ( !empty($terms) ) { } // TBD
