@@ -2051,8 +2051,7 @@ function birdhive_display_posts ( $atts = [] ) { //function birdhive_display_pos
 	$ts_info .= "post_type: ".$post_type."<br />";
     
     if ( $return_format ) { $display_format = $return_format; $args['display_format'] = $display_format; } // deal w/ deprecated attribute
-    if ( $display_format == "table" ) { $do_ts = true; $args['do_ts'] = $do_ts; } // tft
-    if ( $show_subtitles == "false" ) { $show_subtitles = false; } else { $show_subtitles = true; }
+    if ( $show_subtitles == "false" ) { $show_subtitles = false; $ts_info .= "show_subtitles: false<br />"; } else { $show_subtitles = true; $ts_info .= "show_subtitles: true<br />"; }
     
     //
     // TODO: 'category' applies to pages and posts only, but it's an easy mistake to use that attribute for events too => correct for that possibility
