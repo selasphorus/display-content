@@ -1479,7 +1479,7 @@ function collection_header ( $display_format = null, $num_cols = 3, $aspect_rati
 	$info = "";
 	$ts_info = "";
 	
-	$ts_info .= "+~+~+~+~+~+~+ collection_header +~+~+~+~+~+~+<br />";
+	$ts_info .= "<!-- +~+~+~+~+~+~+ collection_header +~+~+~+~+~+~+ -->";
 	
 	if ( $display_format == "list" ) {
 	
