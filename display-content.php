@@ -1125,6 +1125,7 @@ function build_item_arr ( $item, $arr_styling = array() ) { // TODO: come up wit
 		// If there was no title override set via collection, then get a title
 		// TODO: deal w/ prefix/suffix options?
 		if ( empty($item_title) ) {
+			$ts_info .= 'BIA -- get item_title<br />';
 			// If a short_title is set, use it. If not, use the post_title
 			$short_title = get_post_meta( $post_id, 'short_title', true );
 			if ( $short_title ) { 
@@ -1139,7 +1140,7 @@ function build_item_arr ( $item, $arr_styling = array() ) { // TODO: come up wit
 				if ( !empty($item_subtitle) ) { $item_subtitle = '<span class="item_subtitle">'.$item_subtitle.'</span>'; }
 			}
 		}
-		$ts_info .= 'BIA -- '.$item_title.': '.$item_title."<br />";
+		$ts_info .= 'BIA -- item_title: '.$item_title."<br />";
 		
 		// Item URL
 		// TODO: deal w/ possibility of multiple external URLs
