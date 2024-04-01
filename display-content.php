@@ -937,7 +937,7 @@ function display_table_row ( $arr_item = array(), $arr_styling = array() ) {
 							
 							// Get post_title
 							if ( function_exists( 'sdg_post_title' ) ) {
-								$title_args = array( 'post' => $field_value[0], 'line_breaks' => false, 'show_subtitles' => false, 'hlevel' => 0, 'echo' => false, 'do_ts' => false );
+								$title_args = array( 'post' => $field_value[0], 'line_breaks' => false, 'show_subtitle' => false, 'hlevel' => 0, 'echo' => false, 'do_ts' => false );
 								$value = sdg_post_title( $title_args );
 								if ( empty($value) ) {
 									$info .= "no title found using sdg_post_title with title_args: <pre>".print_r($title_args, true)."</pre>";
@@ -1130,8 +1130,8 @@ function build_item_arr ( $item, $arr_styling = array() ) { // TODO: come up wit
 			if ( $short_title ) { 
 				$item_title = $short_title;
 			} else if ( function_exists( 'sdg_post_title' ) ) {
-				if ( !isset($show_subtitles) ) { $show_subtitles = true; }
-				$title_args = array( 'post' => $post_id, 'line_breaks' => true, 'show_subtitles' => $show_subtitles, 'echo' => false, 'hlevel' => 0, 'hlevel_sub' => 0 ); //, 'do_ts' => $do_ts
+				if ( !isset($show_subtitle) ) { $show_subtitle = true; }
+				$title_args = array( 'post' => $post_id, 'line_breaks' => true, 'show_subtitle' => $show_subtitle, 'echo' => false, 'hlevel' => 0, 'hlevel_sub' => 0 ); //, 'do_ts' => $do_ts
 				$item_title = sdg_post_title( $title_args );
 			} else {
 				$item_title = get_the_title($post_id);// Retrieve and style the subtitle
@@ -3172,7 +3172,7 @@ function birdhive_search_form ($atts = [], $content = null, $tag = '') {
                                         $options[$id] = $option_name;
                                         // TODO: deal w/ possibility that last_name, first_name fields are empty
                                     } else if ( function_exists( 'sdg_post_title' ) ) {
-										$title_args = array( 'post' => $post_id, 'line_breaks' => true, 'show_subtitles' => true, 'echo' => false, 'hlevel' => 0, 'hlevel_sub' => 0 );
+										$title_args = array( 'post' => $post_id, 'line_breaks' => true, 'show_subtitle' => true, 'echo' => false, 'hlevel' => 0, 'hlevel_sub' => 0 );
 										$options[$id] = sdg_post_title( $title_args );
 									} else {
 										$options[$id] = get_the_title($id);
