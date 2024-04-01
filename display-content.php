@@ -1131,6 +1131,7 @@ function build_item_arr ( $item, $arr_styling = array() ) { // TODO: come up wit
 			if ( $short_title ) { 
 				$item_title = $short_title;
 			} else if ( function_exists( 'sdg_post_title' ) ) {
+				$ts_info .= ' >> sdg_post_title<br />';
 				if ( !isset($show_subtitle) ) { $show_subtitle = true; }
 				$title_args = array( 'post' => $post_id, 'line_breaks' => true, 'show_subtitle' => $show_subtitle, 'echo' => false, 'hlevel' => 0, 'hlevel_sub' => 0 ); //, 'do_ts' => $do_ts
 				$item_title = sdg_post_title( $title_args );
