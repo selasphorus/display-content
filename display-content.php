@@ -987,8 +987,8 @@ function display_grid_item ( $arr_item = array(), $arr_styling = array() ) {
 	extract( $arr_item );
 	extract( $arr_styling );
 	
-	$ts_info .= "item: <pre>".print_r($arr_item, true)."</pre>";
-	$ts_info .= "arr_styling: <pre>".print_r($arr_styling, true)."</pre>";
+	//$ts_info .= "item: <pre>".print_r($arr_item, true)."</pre>";
+	//$ts_info .= "arr_styling: <pre>".print_r($arr_styling, true)."</pre>";
 	
 	// Post Type?
 	if ( $post_id ) { $post_type = get_post_type($post_id); }
@@ -1110,7 +1110,7 @@ function build_item_arr ( $item, $arr_styling = array() ) { // TODO: come up wit
 	//
 	if ( !isset($aspect_ratio) ) { $aspect_ratio = "square"; }
 	
-	$ts_info .= 'BIA -- item: <pre>'.print_r($item, true).'</pre><br />';
+	//$ts_info .= 'BIA -- item: <pre>'.print_r($item, true).'</pre><br />';
 	//$ts_info .= 'BIA -- item: '.print_r($item, true).'<br />';
 	$ts_info .= 'BIA -- item_type: '.$item_type.'<br />';
 	
