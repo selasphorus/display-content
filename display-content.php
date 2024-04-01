@@ -1275,7 +1275,7 @@ function build_item_arr ( $item, $arr_styling = array() ) { // TODO: come up wit
 	}
 	
 	// Retrieve and style the subtitle
-	if ( empty($item_subtitle) ) { $item_subtitle = get_post_meta( $post_id, 'short_title', true ); }
+	if ( empty($item_subtitle) ) { $item_subtitle = get_post_meta( $post_id, 'item_subtitle', true ); }
 	if ( !empty($item_subtitle) ) { $item_subtitle = '<span class="item_subtitle">'.$item_subtitle.'</span>'; }
 	
 	// Finalize the item image html based on the image_id, if any
