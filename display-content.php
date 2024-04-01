@@ -1133,6 +1133,7 @@ function build_item_arr ( $item, $arr_styling = array() ) { // TODO: come up wit
 				if ( !isset($show_subtitle) ) { $show_subtitle = true; }
 				$title_args = array( 'post' => $post_id, 'line_breaks' => true, 'show_subtitle' => $show_subtitle, 'echo' => false, 'hlevel' => 0, 'hlevel_sub' => 0 ); //, 'do_ts' => $do_ts
 				$item_title = sdg_post_title( $title_args );
+				$ts_info .= 'BIA -- '.$item_title.': '.$item_title."<br />";
 			} else {
 				$item_title = get_the_title($post_id);// Retrieve and style the subtitle
 				if ( empty($item_subtitle) ) { $item_subtitle = get_post_meta( $post_id, 'subtitle', true ); }
