@@ -11,7 +11,7 @@ Plugin URI:
 Description: Display content of all types in a variety of formats using shortcodes.
 Author: Alison C.
 Author URI: http://birdhive.com
-Text Domain: display-content
+Text Domain: dsplycntnt
 */
 
 /*********
@@ -53,7 +53,7 @@ $plugin_path = plugin_dir_path( __FILE__ );
 function dsplycntnt_settings_init() {
 
 	// TS/logging setup
-    $do_ts = false; 
+    $do_ts = devmode_active(); 
     $do_log = false;
     sdg_log( "divline2", $do_log );
 
@@ -686,7 +686,7 @@ function birdhive_get_default_category () {
 function get_post_links( $post_id = null ) {
 
 	// TS/logging setup
-    $do_ts = false; 
+    $do_ts = devmode_active();
     $do_log = false;
     sdg_log( "divline2", $do_log );
 
@@ -773,7 +773,7 @@ function display_item ( $arr_item = array(), $arr_styling = array() ) {
 function display_link_item ( $arr_item = array() ) {
 	
 	// TS/logging setup
-    $do_ts = false; 
+    $do_ts = devmode_active();
     $do_log = false;
     sdg_log( "divline2", $do_log );
     
@@ -800,7 +800,7 @@ function display_link_item ( $arr_item = array() ) {
 function display_list_item ( $arr_item = array() ) {
 	
 	// TS/logging setup
-    $do_ts = false; 
+    $do_ts = devmode_active();
     $do_log = false;
     sdg_log( "divline2", $do_log );
     
@@ -878,7 +878,7 @@ function display_event_list_item ( $EM_Event ) {
 function display_table_row ( $arr_item = array(), $arr_styling = array() ) {
 	
 	// TS/logging setup
-    $do_ts = false; 
+    $do_ts = devmode_active();
     $do_log = false;
     sdg_log( "divline2", $do_log );
     sdg_log( "function called: display_table_row", $do_log );
@@ -975,7 +975,7 @@ function display_table_row ( $arr_item = array(), $arr_styling = array() ) {
 function display_grid_item ( $arr_item = array(), $arr_styling = array() ) {
 
 	// TS/logging setup
-    $do_ts = false; 
+    $do_ts = devmode_active();
     $do_log = false;
     sdg_log( "divline2", $do_log );
     sdg_log( "function called: display_grid_item", $do_log );
@@ -1131,7 +1131,7 @@ function build_item_arr ( $item, $arr_styling = array() ) { // TODO: come up wit
 				$item_title = $short_title;
 			} else if ( function_exists( 'sdg_post_title' ) ) {
 				if ( !isset($show_subtitles) ) { $show_subtitles = true; }
-				$title_args = array( 'post' => $post_id, 'line_breaks' => true, 'show_subtitles' => $show_subtitles, 'echo' => false, 'hlevel' => 0, 'hlevel_sub' => 0 );
+				$title_args = array( 'post' => $post_id, 'line_breaks' => true, 'show_subtitles' => $show_subtitles, 'echo' => false, 'hlevel' => 0, 'hlevel_sub' => 0 ); //, 'do_ts' => $do_ts
 				$item_title = sdg_post_title( $title_args );
 			} else {
 				$item_title = get_the_title($post_id);
@@ -1274,7 +1274,8 @@ function build_item_arr ( $item, $arr_styling = array() ) { // TODO: come up wit
 		}
 	}
 	
-	// Style the subtitle
+	// Retrieve and style the subtitle
+	if ( empty($item_subtitle) ) { $item_subtitle = get_post_meta( $post_id, 'short_title', true ); }
 	if ( !empty($item_subtitle) ) { $item_subtitle = '<span class="item_subtitle">'.$item_subtitle.'</span>'; }
 	
 	// Finalize the item image html based on the image_id, if any
@@ -1330,7 +1331,7 @@ function build_item_arr ( $item, $arr_styling = array() ) { // TODO: come up wit
 function birdhive_display_collection ( $args = array() ) {
 
 	// TS/logging setup
-    $do_ts = false; 
+    $do_ts = devmode_active();
     $do_log = false;
     sdg_log( "divline2", $do_log );
 
@@ -1470,7 +1471,7 @@ function birdhive_display_collection ( $args = array() ) {
 function collection_header ( $display_format = null, $num_cols = 3, $aspect_ratio = "square", $fields = null, $headers = null ) {
 
 	// TS/logging setup
-    $do_ts = false;
+    $do_ts = devmode_active();
     $do_log = false;
     sdg_log( "divline2", $do_log );
 
@@ -1579,7 +1580,7 @@ function collection_footer ( $display_format = null ) {
 function birdhive_get_posts ( $args = array() ) {
 
 	// TS/logging setup
-    $do_ts = false; 
+    $do_ts = devmode_active();
     $do_log = false;
     sdg_log( "divline2", $do_log );
     
@@ -1979,7 +1980,7 @@ add_shortcode('display_posts', 'birdhive_display_posts');
 function birdhive_display_posts ( $atts = [] ) { //function birdhive_display_posts ( $args = array() ) {
 
 	// TS/logging setup
-    $do_ts = false; 
+    $do_ts = devmode_active();
     $do_log = false;
     sdg_log( "divline2", $do_log );
 	
@@ -2488,7 +2489,7 @@ add_shortcode('birdhive_search_form', 'birdhive_search_form');
 function birdhive_search_form ($atts = [], $content = null, $tag = '') {
 
 	// TS/logging setup
-    $do_ts = false; 
+    $do_ts = devmode_active();
     $do_log = false;
     sdg_log( "divline2", $do_log );
 	
