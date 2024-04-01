@@ -1336,19 +1336,24 @@ function birdhive_display_collection ( $args = array() ) {
 	// Init vars
 	$info = "";
 	$ts_info = "";
-	// TODO: alter to set defaults more efficiently
-	$collection_id = null;
-	$show_subtitles = null;
-	$show_content = null;
-	$table_fields = array();
-	$table_headers = array();
-	$num_cols = "3";
-	$aspect_ratio = "square";
-	//
-	//$ts_info .= "birdhive_display_collection >> args: <pre>".print_r($args, true)."</pre>";
+	
+	// Defaults
+	$defaults = array(
+		'collection_id'		=> null,
+		'show_subtitles'	=> null,
+		'show_content'		=> null,
+		'table_fields'		=> array(),
+		'table_headers'		=> array(),
+		'num_cols'			=> "3",
+		'aspect_ratio'		=> "square",
+	);
+	
+    // Parse & Extract args
+	$args = wp_parse_args( $args, $defaults );
 	extract( $args );
-	if ( is_array($display_atts) ) { extract( $display_atts ); } // one of args 
-	//
+	//$ts_info .= "birdhive_display_collection >> args: <pre>".print_r($args, true)."</pre>";
+
+	if ( is_array($display_atts) ) { extract( $display_atts ); } // one of args
 	//$ts_info .= "display_atts: <pre>".print_r($display_atts, true)."</pre>";
 	
 	// Get args from array
@@ -2048,7 +2053,13 @@ function birdhive_display_posts ( $atts = [] ) { //function birdhive_display_pos
 	$ts_info .= "post_type: ".$post_type."<br />";
     
     if ( $return_format ) { $display_format = $return_format; $args['display_format'] = $display_format; } // deal w/ deprecated attribute
-    if ( $show_subtitles == "false" ) { $show_subtitles = false; $ts_info .= "show_subtitles: false<br />"; } else { $show_subtitles = true; $ts_info .= "show_subtitles: true<br />"; }
+    if ( $show_subtitles == "false" ) {
+    	$show_subtitles = false;
+    	$ts_info .= "show_subtitles: false<br />";
+    } else {
+    	$show_subtitles = true;
+    	$ts_info .= "show_subtitles: true<br />";
+    }
     
     //
     // TODO: 'category' applies to pages and posts only, but it's an easy mistake to use that attribute for events too => correct for that possibility
