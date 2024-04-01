@@ -1128,7 +1128,8 @@ function build_item_arr ( $item, $arr_styling = array() ) { // TODO: come up wit
 			$ts_info .= 'BIA -- get item_title<br />';
 			// If a short_title is set, use it. If not, use the post_title
 			$short_title = get_post_meta( $post_id, 'short_title', true );
-			if ( $short_title ) { 
+			if ( $short_title ) {
+				$ts_info .= ' >> use short_title<br />';
 				$item_title = $short_title;
 			} else if ( function_exists( 'sdg_post_title' ) ) {
 				$ts_info .= ' >> sdg_post_title<br />';
@@ -1136,6 +1137,7 @@ function build_item_arr ( $item, $arr_styling = array() ) { // TODO: come up wit
 				$title_args = array( 'post' => $post_id, 'line_breaks' => true, 'show_subtitle' => $show_subtitle, 'echo' => false, 'hlevel' => 0, 'hlevel_sub' => 0 ); //, 'do_ts' => $do_ts
 				$item_title = sdg_post_title( $title_args );
 			} else {
+				$ts_info .= ' >> use get_the_title()<br />';
 				$item_title = get_the_title($post_id);// Retrieve and style the subtitle
 				if ( empty($item_subtitle) ) { $item_subtitle = get_post_meta( $post_id, 'subtitle', true ); }
 				if ( !empty($item_subtitle) ) { $item_subtitle = '<span class="item_subtitle">'.$item_subtitle.'</span>'; }
