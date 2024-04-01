@@ -2039,9 +2039,6 @@ function birdhive_display_posts ( $atts = [] ) { //function birdhive_display_pos
         'fields'  => null, // ***
         'headers'  => null, // ***
         
-        // TS
-        'do_ts'  => false,
-        
     ), $atts );
     
     // Extract
