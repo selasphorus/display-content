@@ -1134,7 +1134,9 @@ function build_item_arr ( $item, $arr_styling = array() ) { // TODO: come up wit
 				$title_args = array( 'post' => $post_id, 'line_breaks' => true, 'show_subtitles' => $show_subtitles, 'echo' => false, 'hlevel' => 0, 'hlevel_sub' => 0 ); //, 'do_ts' => $do_ts
 				$item_title = sdg_post_title( $title_args );
 			} else {
-				$item_title = get_the_title($post_id);
+				$item_title = get_the_title($post_id);// Retrieve and style the subtitle
+				if ( empty($item_subtitle) ) { $item_subtitle = get_post_meta( $post_id, 'subtitle', true ); }
+				if ( !empty($item_subtitle) ) { $item_subtitle = '<span class="item_subtitle">'.$item_subtitle.'</span>'; }
 			}
 		}
 		
@@ -1273,10 +1275,6 @@ function build_item_arr ( $item, $arr_styling = array() ) { // TODO: come up wit
 			if ( $hlevel <= 2 ) { $item_title = anchor_link_top().$item_title; }
 		}
 	}
-	
-	// Retrieve and style the subtitle
-	if ( empty($item_subtitle) ) { $item_subtitle = get_post_meta( $post_id, 'subtitle', true ); }
-	if ( !empty($item_subtitle) ) { $item_subtitle = '<span class="item_subtitle">'.$item_subtitle.'</span>'; }
 	
 	// Finalize the item image html based on the image_id, if any
 	$item_image = ""; // init
@@ -1425,7 +1423,7 @@ function birdhive_display_collection ( $args = array() ) {
 		} else {
 		
 			// Assemble the array of styling parameters
-			$arr_styling = array( 'item_type' => $item_type, 'display_format' => $display_format, 'show_subtitles' => $show_subtitles, 'show_content' => $show_content, 'aspect_ratio' => $aspect_ratio, 'table_fields' => $table_fields, 'collection_id' => $collection_id, 'do_ts' => $do_ts ); // wip
+			$arr_styling = array( 'item_type' => $item_type, 'display_format' => $display_format, 'show_subtitle' => $show_subtitles, 'show_content' => $show_content, 'aspect_ratio' => $aspect_ratio, 'table_fields' => $table_fields, 'collection_id' => $collection_id, 'do_ts' => $do_ts ); // wip
 			//$item_ts_info .= "item: <pre>".print_r($item, true)."</pre>";
 			//$item_ts_info .= "arr_styling: <pre>".print_r($arr_styling, true)."</pre>";
 			
