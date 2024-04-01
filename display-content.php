@@ -1129,7 +1129,7 @@ function build_item_arr ( $item, $arr_styling = array() ) { // TODO: come up wit
 			// If a short_title is set, use it. If not, use the post_title
 			$short_title = get_post_meta( $post_id, 'short_title', true );
 			if ( !empty($short_title) ) {
-				$ts_info .= ' >> use short_title: $short_title<br />';
+				$ts_info .= ' >> use short_title: '.$short_title.'<br />';
 				$item_title = $short_title;
 			} else if ( function_exists( 'sdg_post_title' ) ) {
 				$ts_info .= ' >> sdg_post_title<br />';
