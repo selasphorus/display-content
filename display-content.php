@@ -1610,7 +1610,7 @@ function birdhive_get_posts ( $args = array() ) {
 		'posts_per_page'  	=> -1,
 		'_search_title'		=> null, // The search_title is a special placeholder field handled by the birdhive_posts_where fcn
 		'_meta_or_tax'		=> null, // TODO: deal w/ underscore?
-		'post_type'			=> 'post',
+		'post_type'			=> null,
 		'post_status'		=> 'publish',
 		'order'				=> null,
 		'orderby'			=> null,
@@ -1642,6 +1642,13 @@ function birdhive_get_posts ( $args = array() ) {
     
     // Limit, aka posts_per_page, aka num posts to retrieve
     if ( !empty($limit) ) { $posts_per_page = $limit; }
+    if ( empty($post_type) ) {
+    	if ( !empty($ids) ) {
+    		$post_type = 'any';
+    	} else {
+    		$post_type = 'post';
+    	}
+    }
     
     // Set up basic query args
     $wp_args = array(
@@ -2039,8 +2046,9 @@ function birdhive_display_posts ( $atts = [] ) { //function birdhive_display_pos
         'preview_length' => '55',
         //'aspect_ratio' => 'square', // TBD whether to activate this or not... probably better to simplify args array
         
-        // For post_type 'event'
+        // For post_type 'event' -- and others, wip
         'scope' => 'all', //'upcoming',
+        //'date_field' => 'event_start', // WIP -- default -- applies to events -- other possibilities include sermon_date, transaction_date...
         
         // For Events or Sermons
         'series' => false,
@@ -2143,7 +2151,7 @@ function birdhive_display_posts ( $atts = [] ) { //function birdhive_display_pos
     }
     
     // Clean up the array
-    if ( $post_type !== "event" ) { unset($args["scope"]); }
+    if ( $post_type !== "event" ) { unset($args["scope"]); } // WIP
     if ( $post_type !== "event" && $post_type !== "sermon" ) { unset($args["series"]); }
     if ( $display_format != "grid" ) { unset($args["cols"]); unset($args["spacing"]); unset($args["overlay"]); }
     
