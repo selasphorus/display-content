@@ -1503,7 +1503,7 @@ function birdhive_display_collection ( $args = array() ) {
 	
 	}
 	
-	if ( $do_ts ) { $info .= '<div class="troubleshooting">'.$ts_info.'</div>'; } //if ( $do_ts ) { $info .= $ts_info; } //
+	if ( $do_ts ) { $info .= $ts_info; } //if ( $do_ts ) { $info .= '<div class="troubleshooting">'.$ts_info.'</div>'; } //
 	
 	// Return info for display
 	return $info;
