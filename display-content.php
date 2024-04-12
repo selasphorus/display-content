@@ -1496,6 +1496,8 @@ function birdhive_display_collection ( $args = array() ) {
 	if ( !empty($col_totals) ) {
 		// WIP
 		$info .= print_r($col_totals);
+	} else {
+	
 	}
 	
 	if ( $do_ts ) { $info .= '<div class="troubleshooting">'.$ts_info.'</div>'; } //if ( $do_ts ) { $info .= $ts_info; } //
@@ -1536,6 +1538,7 @@ function collection_header ( $display_format = null, $num_cols = 3, $aspect_rati
 		//$do_ts = true;
 		$ts_info .= "fields: <pre>".print_r($fields, true)."</pre>";
 		$ts_info .= "headers: <pre>".print_r($headers, true)."</pre>";
+		$ts_info .= "totals: <pre>".print_r($totals, true)."</pre>";
 		
 		$info .= '<table class="posts_archive">'; //$info .= '<table class="posts_archive '.$class.'">';
 		
