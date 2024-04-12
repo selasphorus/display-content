@@ -1467,13 +1467,13 @@ function birdhive_display_collection ( $args = array() ) {
 		$col_totals = array();
 		if ( !empty($table_totals) ) {
 			foreach ( $table_totals as $field_name ) {		
-				$item_ts_info .= "table_totals field_name '".$field_name."<br />";		
-				if ( isset( $arr_item[$field_name] ) ) {
-					$item_ts_info .= "item value for field_name '".$field_name."': ".$arr_item[$field_name]."<br />";
+				$item_ts_info .= "table_totals field_name '".$field_name."'<br />";		
+				if ( isset( $arr_item['field_values'][$field_name] ) ) { // isset( $arr_item[$field_name] ) || 
+					$item_ts_info .= "item value for field_name '".$field_name."': ".$arr_item['field_values'][$field_name]."<br />";
 					if ( isset($col_totals[$field_name]) ) {
-						$col_totals[$field_name] += $arr_item[$field_name];
+						$col_totals[$field_name] += $arr_item['field_values'][$field_name];
 					} else {
-						$col_totals[$field_name] = $arr_item[$field_name];
+						$col_totals[$field_name] = $arr_item['field_values'][$field_name];
 					}
 				}
 			}
