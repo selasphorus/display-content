@@ -1455,10 +1455,6 @@ function birdhive_display_collection ( $args = array() ) {
 		
 		}
 		
-		// Add the item_info to the info for return/display		
-		$info .= $item_info;
-		$ts_info .= $item_ts_info;
-		//if ( $do_ts ) { $info .= $item_ts_info; }
 		
 		if ( isset( $arr_item['item_content'] ) && $item_type == "modal" || ( isset( $arr_item['item_link_target'] ) && $arr_item['item_link_target'] == "modal" ) ) { 
 			// modal_content...
@@ -1472,14 +1468,20 @@ function birdhive_display_collection ( $args = array() ) {
 		if ( !empty($table_totals) ) {
 			foreach ( $table_totals as $field_name ) {				
 				if ( isset( $arr_item[$field_name] ) ) {
+					$item_ts_info .= "item value for field_name '".$field_name."': ".$arr_item[$field_name]."<br />";
 					if ( isset($col_totals[$field_name]) ) {
 						$col_totals[$field_name] += $arr_item[$field_name];
 					} else {
 						$col_totals[$field_name] = $arr_item[$field_name];
 					}
 				}
-			}			
+			}
 		}
+		
+		// Add the item_info to the info for return/display		
+		$info .= $item_info;
+		$ts_info .= $item_ts_info;
+		//if ( $do_ts ) { $info .= $item_ts_info; }
 		
 	} // END foreach items as item
 	
@@ -1536,9 +1538,8 @@ function collection_header ( $display_format = null, $num_cols = 3, $aspect_rati
 	} else if ( $display_format == "table" ) {
 	
 		//$do_ts = true;
-		$ts_info .= "fields: <pre>".print_r($fields, true)."</pre>";
-		$ts_info .= "headers: <pre>".print_r($headers, true)."</pre>";
-		$ts_info .= "totals: <pre>".print_r($totals, true)."</pre>";
+		//$ts_info .= "fields: <pre>".print_r($fields, true)."</pre>";
+		//$ts_info .= "headers: <pre>".print_r($headers, true)."</pre>";
 		
 		$info .= '<table class="posts_archive">'; //$info .= '<table class="posts_archive '.$class.'">';
 		
@@ -1607,7 +1608,8 @@ function collection_footer ( $display_format = null ) {
 		$info .= '</div>';
 		$info .= anchor_link_top();
 	} else if ( $display_format == "table" ) {
-		$info .= '</table>';
+		$info .= '</table>';		
+		$ts_info .= "totals: <pre>".print_r($totals, true)."</pre>";
 	} else if ( $display_format == "grid" ) {
 		$info .= '</div>';
 	}
