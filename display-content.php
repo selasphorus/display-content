@@ -1349,6 +1349,7 @@ function birdhive_display_collection ( $args = array() ) {
 		'show_content'		=> null,
 		'table_fields'		=> array(),
 		'table_headers'		=> array(),
+		'table_totals'		=> array(), // field names
 		'num_cols'			=> "3",
 		'aspect_ratio'		=> "square",
 	);
@@ -1374,6 +1375,7 @@ function birdhive_display_collection ( $args = array() ) {
 		if ( $display_format == "table" ) { 
 			$table_fields = get_field('table_fields', $collection_id);
 			$table_headers = get_field('table_headers', $collection_id);
+			$table_totals = get_field('table_totals', $collection_id);
 		}
 		if ( $display_format == "grid" ) { $num_cols = get_field('num_cols', $collection_id); }
 		//$content_type = $args['content_type']; -- probably mixed, but could be posts or whatever, collection of single type of items -- would have to loop to determine
@@ -1385,6 +1387,7 @@ function birdhive_display_collection ( $args = array() ) {
 		if ( $display_format == "table" && isset($display_atts['fields']) ) {
 			$table_fields = $display_atts['fields'];
 			$table_headers = $display_atts['headers'];
+			$table_totals = $display_atts['totals'];
 		}
 		if ( $display_format == "grid" && isset($display_atts['cols']) ) { $num_cols = $display_atts['cols']; }
 		if ( isset($display_atts['aspect_ratio']) ) { $aspect_ratio = $display_atts['aspect_ratio']; } // TODO: either eliminate this, or make it so that aspect_ratio actually ever is passable as an arg, via mods to args array of display_posts, for example...
@@ -1397,6 +1400,7 @@ function birdhive_display_collection ( $args = array() ) {
 		$ts_info .= "display_format: $display_format<br />";
 		$ts_info .= "table_fields: ".print_r($table_fields, true)."<br />";
 		$ts_info .= "table_headers: ".print_r($table_headers, true)."<br />";
+		$ts_info .= "table_totals: ".print_r($table_totals, true)."<br />";
 	}
 	
 	// List/table/grid header or container
@@ -1463,10 +1467,36 @@ function birdhive_display_collection ( $args = array() ) {
 			$info .= '<div id="dialog_content_'.$dialog_id.'" class="dialog dialog_content">'.$arr_item['item_content'].'</div>';
 		}
 		
+		//
+		$col_totals = array();
+		if ( !empty($table_totals) ) {
+			foreach ( $table_totals as $field_name ) {				
+				if ( isset( $arr_item[$field_name] ) ) {
+					if ( isset($col_totals[$field_name]) ) {
+						$col_totals[$field_name] += $arr_item[$field_name];
+					} else {
+						$col_totals[$field_name] = $arr_item[$field_name];
+					}
+				}
+			}			
+		}
+		
 	} // END foreach items as item
+	
+	// Display column totals, if applicable
+	/*if ( !empty($col_totals) ) {
+		// WIP
+		$info .= print_r($col_totals);
+	}*/	
 	
 	// List/table/grid footer or close container
 	$info .= collection_footer ( $display_format );
+	
+	// Display column totals, if applicable
+	if ( !empty($col_totals) ) {
+		// WIP
+		$info .= print_r($col_totals);
+	}
 	
 	if ( $do_ts ) { $info .= '<div class="troubleshooting">'.$ts_info.'</div>'; } //if ( $do_ts ) { $info .= $ts_info; } //
 	
