@@ -1398,7 +1398,7 @@ function birdhive_display_collection ( $args = array() ) {
 	}
 	
 	// Show TS info based on display_format (tft)
-	if ( $display_format == "table" ) { 
+	if ( $display_format == "table" ) {
 		//$do_ts = true;
 		$ts_info .= "display_format: $display_format<br />";
 		$ts_info .= "table_fields: ".print_r($table_fields, true)."<br />";
@@ -1410,6 +1410,9 @@ function birdhive_display_collection ( $args = array() ) {
 	// List/table/grid header or container
 	$info .= collection_header ( $display_format, $num_cols, $aspect_ratio, $table_fields, $table_headers );
 	
+	if ( $display_format == "table" ) {
+		$info .= '<tbody>';
+	}
 	//$info .= "+~+~+~+~+~+~+ collection items +~+~+~+~+~+~+<br />";
 	
 	// For each item, get content for display in appropriate form...
@@ -1491,12 +1494,17 @@ function birdhive_display_collection ( $args = array() ) {
 		
 	} // END foreach items as item
 	
+	if ( $display_format == "table" ) {
+		$info .= '</tbody>';
+	}
+		
 	// Display column totals, if applicable
-	if ( !empty($col_totals) ) {
+	if ( $display_format == "table" && !empty($col_totals) ) {
 		// WIP
 		//$info .= "col_totals: <pre>".print_r($col_totals, true)."</pre>";
 		if ( is_array($table_fields) ) { $arr_fields = $table_fields; } else { $arr_fields = explode(",",$table_fields); }
-		$info .= "<tr>";
+		$info .= '<tfoot>';
+		$info .= '<tr class="totals">';
 		foreach ( $table_fields as $field_name ) {		
 			if ( array_key_exists( $field_name, $col_totals ) ) {
 				$col_value = $col_totals[$field_name];
@@ -1506,9 +1514,8 @@ function birdhive_display_collection ( $args = array() ) {
 				$info .= "<td>--</td>"; // ".$field_name."
 			}
 		}
-		$info .= "</tr>";
-	} else {
-	
+		$info .= '</tr>';
+		$info .= '</tfoot>';
 	}
 	
 	// List/table/grid footer or close container
