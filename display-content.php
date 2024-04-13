@@ -937,7 +937,7 @@ function display_table_row ( $arr_item = array(), $arr_styling = array() ) {
 							
 							// Get post_title
 							if ( function_exists( 'sdg_post_title' ) ) {
-								$title_args = array( 'post' => $field_value[0], 'line_breaks' => false, 'show_subtitle' => false, 'hlevel' => 0, 'echo' => false, 'do_ts' => false );
+								$title_args = array( 'post' => $field_value[0], 'line_breaks' => false, 'show_subtitle' => false, 'hlevel' => 0, 'echo' => false, 'do_ts' => $do_ts );
 								$value = sdg_post_title( $title_args );
 								if ( empty($value) ) {
 									$info .= "no title found using sdg_post_title with title_args: <pre>".print_r($title_args, true)."</pre>";
@@ -1399,7 +1399,6 @@ function birdhive_display_collection ( $args = array() ) {
 	
 	// Show TS info based on display_format (tft)
 	if ( $display_format == "table" ) {
-		//$do_ts = true;
 		$ts_info .= "display_format: $display_format<br />";
 		$ts_info .= "table_fields: ".print_r($table_fields, true)."<br />";
 		$ts_info .= "table_headers: ".print_r($table_headers, true)."<br />";
@@ -1490,7 +1489,6 @@ function birdhive_display_collection ( $args = array() ) {
 		// Add the item_info to the info for return/display		
 		$info .= $item_info;
 		$ts_info .= $item_ts_info;
-		//if ( $do_ts ) { $info .= $item_ts_info; }
 		
 	} // END foreach items as item
 	
@@ -2482,7 +2480,7 @@ function birdhive_content_collection ( $atts = [] ) {
 	
 	$args = shortcode_atts( array(
         'id' => null,
-        'do_ts' => false,
+        'do_ts' => $do_ts,
     ), $atts );
     
     // Extract
