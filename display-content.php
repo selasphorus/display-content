@@ -1496,10 +1496,10 @@ function birdhive_display_collection ( $args = array() ) {
 	$info .= collection_footer ( $display_format );
 	
 	// Display column totals, if applicable
-	$info .= "col_totals: <pre>".print_r($col_totals)."</pre>";
+	$info .= "col_totals: <pre>".print_r($col_totals, true)."</pre>";
 	if ( !empty($col_totals) ) {
 		// WIP
-		$info .= print_r($col_totals);
+		//$info .= "col_totals: <pre>".print_r($col_totals, true)."</pre>";
 	} else {
 	
 	}
