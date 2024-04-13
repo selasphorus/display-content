@@ -1487,22 +1487,25 @@ function birdhive_display_collection ( $args = array() ) {
 	} // END foreach items as item
 	
 	// Display column totals, if applicable
-	/*if ( !empty($col_totals) ) {
-		// WIP
-		$info .= print_r($col_totals);
-	}*/	
-	
-	// List/table/grid footer or close container
-	$info .= collection_footer ( $display_format );
-	
-	// Display column totals, if applicable
-	$info .= "col_totals: <pre>".print_r($col_totals, true)."</pre>";
 	if ( !empty($col_totals) ) {
 		// WIP
 		//$info .= "col_totals: <pre>".print_r($col_totals, true)."</pre>";
+		if ( is_array($table_fields) ) { $arr_fields = $table_fields; } else { $arr_fields = explode(",",$table_fields); }
+		$info .= "<tr>";
+		foreach ( $table_fields as $field_name ) {		
+			if ( in_array( $field_name, $col_totals ) ) {
+				$info .= "<td>".$col_totals[$field_name]."</td>";
+			} else {
+				$info .= "<td>--</td>";
+			}
+		}
+		$info .= "</tr>";
 	} else {
 	
 	}
+	
+	// List/table/grid footer or close container
+	$info .= collection_footer ( $display_format );
 	
 	if ( $do_ts ) { $info .= $ts_info; } //if ( $do_ts ) { $info .= '<div class="troubleshooting">'.$ts_info.'</div>'; } //
 	
@@ -1610,8 +1613,7 @@ function collection_footer ( $display_format = null ) {
 		$info .= '</div>';
 		$info .= anchor_link_top();
 	} else if ( $display_format == "table" ) {
-		$info .= '</table>';		
-		$ts_info .= "totals: <pre>".print_r($totals, true)."</pre>";
+		$info .= '</table>';
 	} else if ( $display_format == "grid" ) {
 		$info .= '</div>';
 	}
