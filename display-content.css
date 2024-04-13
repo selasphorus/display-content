@@ -312,6 +312,10 @@ table.posts_archive tr td {
 	text-align: left;
 }
 
+table tfoot {
+	font-weight: 700;
+}
+
 /*** Groupings **/
 
 .dsplycntnt.index {
