@@ -1499,7 +1499,9 @@ function birdhive_display_collection ( $args = array() ) {
 		$info .= "<tr>";
 		foreach ( $table_fields as $field_name ) {		
 			if ( array_key_exists( $field_name, $col_totals ) ) {
-				$info .= "<td>".$col_totals[$field_name]."</td>";
+				$col_value = $col_totals[$field_name];
+				if ( is_numeric($col_value) ) { $col_value = number_format_i18n($col_value); }
+				$info .= "<td>".$col_value."</td>";
 			} else {
 				$info .= "<td>--</td>"; // ".$field_name."
 			}
