@@ -955,6 +955,9 @@ function display_table_row ( $arr_item = array(), $arr_styling = array() ) {
 					}
 					
 				} else {
+					if ( is_numeric($field_value) ) {
+						$field_value = number_format_i18n($field_value);
+					}
 					$info .= $field_value;
 				}
 				
@@ -1475,7 +1478,7 @@ function birdhive_display_collection ( $args = array() ) {
 						$item_ts_info .= "add to total: ".(float) $arr_item['field_values'][$field_name]."<br />";
 					} else {
 						$col_totals[$field_name] = (float) $arr_item['field_values'][$field_name];
-						$item_ts_info .= "set col_totals field_name: ".(float) $arr_item['field_values'][$field_name]."<br />";
+						$item_ts_info .= "set col_totals $field_name: ".(float) $arr_item['field_values'][$field_name]."<br />";
 					}
 				}
 			}
