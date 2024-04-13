@@ -1493,10 +1493,10 @@ function birdhive_display_collection ( $args = array() ) {
 		if ( is_array($table_fields) ) { $arr_fields = $table_fields; } else { $arr_fields = explode(",",$table_fields); }
 		$info .= "<tr>";
 		foreach ( $table_fields as $field_name ) {		
-			if ( in_array( $field_name, $col_totals ) ) {
+			if ( array_key_exists( $field_name, $col_totals ) ) {
 				$info .= "<td>".$col_totals[$field_name]."</td>";
 			} else {
-				$info .= "<td>--</td>";
+				$info .= "<td>--".$field_name."</td>";
 			}
 		}
 		$info .= "</tr>";
