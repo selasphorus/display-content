@@ -955,7 +955,7 @@ function display_table_row ( $arr_item = array(), $arr_styling = array() ) {
 					}
 					
 				} else {
-					if ( is_numeric($field_value) ) {
+					if ( is_numeric($field_value) && !strpos( $field_name, "year" ) ) {
 						$field_value = number_format_i18n($field_value);
 					}
 					$info .= $field_value;
