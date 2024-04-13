@@ -1402,6 +1402,7 @@ function birdhive_display_collection ( $args = array() ) {
 		$ts_info .= "table_headers: ".print_r($table_headers, true)."<br />";
 		$ts_info .= "table_totals: ".print_r($table_totals, true)."<br />";
 	}
+	$col_totals = array();
 	
 	// List/table/grid header or container
 	$info .= collection_header ( $display_format, $num_cols, $aspect_ratio, $table_fields, $table_headers );
@@ -1464,7 +1465,6 @@ function birdhive_display_collection ( $args = array() ) {
 		}
 		
 		//
-		$col_totals = array();
 		if ( !empty($table_totals) ) {
 			foreach ( $table_totals as $field_name ) {		
 				//$item_ts_info .= "table_totals field_name '".$field_name."'<br />";		
@@ -1496,7 +1496,7 @@ function birdhive_display_collection ( $args = array() ) {
 			if ( array_key_exists( $field_name, $col_totals ) ) {
 				$info .= "<td>".$col_totals[$field_name]."</td>";
 			} else {
-				$info .= "<td>--".$field_name."</td>";
+				$info .= "<td>--</td>"; // ".$field_name."
 			}
 		}
 		$info .= "</tr>";
