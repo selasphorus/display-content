@@ -1653,7 +1653,7 @@ function birdhive_get_posts ( $args = array() ) {
     $get_by_slugs = false;
     $category_link = null;
     //
-    $ts_info .= "args as passed to birdhive_get_posts: <pre>".print_r($args,true)."</pre>";
+    $ts_info .= "[bgp] args as passed to birdhive_get_posts: <pre>".print_r($args,true)."</pre>";
 
     // Defaults
 	$defaults = array(
@@ -2038,7 +2038,7 @@ function birdhive_get_posts ( $args = array() ) {
     // -------
 	$arr_posts = new WP_Query( $wp_args );
     
-    $ts_info .= "WP_Query run as follows:";
+    $ts_info .= "[bgp] WP_Query run as follows:";
     $ts_info .= "<pre>args: ".print_r($wp_args, true)."</pre>";
     $ts_info .= "[".count($arr_posts->posts)."] posts found.<br />";
     //$ts_info .= "<pre>meta_query: ".print_r($meta_query, true)."</pre>";
@@ -2052,7 +2052,7 @@ function birdhive_get_posts ( $args = array() ) {
     $arr_info['arr_posts'] = $arr_posts;
     $arr_info['args'] = $wp_args;
     $arr_info['category_link'] = $category_link;
-    if ( $do_ts ) { $arr_info['ts_info'] = $ts_info; } else { $arr_info['ts_info'] = null; }
+    $arr_info['ts_info'] = $ts_info; //if ( $do_ts ) { $arr_info['ts_info'] = $ts_info; } else { $arr_info['ts_info'] = null; }
     
     return $arr_info;
 }
