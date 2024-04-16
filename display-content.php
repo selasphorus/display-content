@@ -1684,6 +1684,9 @@ function birdhive_get_posts ( $args = array() ) {
 		'meta_value'		=> null,
 		'series'			=> null, // For Events & Sermons, if those post_types exist for the current application
 		//
+		'scope'				=> null,
+		'date_field'		=> null, // e.g. sermon_date, transaction_date...
+		//
 		'do_ts'				=> false,
 	);
 	
@@ -1917,6 +1920,7 @@ function birdhive_get_posts ( $args = array() ) {
         // Meta Query
 		if ( empty($meta_query) ) {
 			
+			// If meta_query was NOT set already via query args, then build it based on other args, as needed
 			$meta_query_components = array();
         
 			// Featured Image restrictions?
@@ -1928,12 +1932,34 @@ function birdhive_get_posts ( $args = array() ) {
 						'compare' => 'EXISTS'
 					);
 			}
-
-			// WIP/TODO: check to see if meta_query was set already via query args...
-			//if ( !isset($args['meta_query']) )  {
-
+			
+			// Scope restrictions? WIP
+			if ( $scope && $date_field ) {
+				// wip
+				// Check to make sure the date_field is a registered meta field
+				if ( registered_meta_key_exists( 'post', $date_field, $post_type ) ) {
+					//
+					//
+					$scope_dates = sdg_scope_dates($scope);
+					$start_date = $scope_dates['start'];
+					$end_date = $scope_dates['end'];
+					
+					$meta_query_components[] = 
+						array(
+							'key' => $date_field,
+							'value' => array( $start_date, $end_date ),
+							'type'    => 'numeric',
+							'compare'   => 'BETWEEN',
+						);
+					
+				} else {
+					// ???
+				}
+			}
+			
+			// Designated meta_key/meta_value?
 			if ( ( $meta_key && $meta_value ) ) {
-
+				// meta_key and meta_value both specified
 				$meta_query_components[] = 
 					array(
 						'key' => $meta_key,
@@ -1941,7 +1967,6 @@ function birdhive_get_posts ( $args = array() ) {
 						'compare' => '=',
 					);
 			} else if ( ( $meta_key ) ) {
-
                 // meta_key specified, but no value
 				$meta_query_components[] = 
 					array(
@@ -1951,9 +1976,9 @@ function birdhive_get_posts ( $args = array() ) {
 					);
 			}
 
-			// Sermon series?
+			// Series?
 			if ( post_type_exists('sermon') && $post_type == 'sermon' && $series ) {
-
+				// Sermon series
 				$meta_query_components[] = 
 					array(
 						'key' => 'sermons_series',
@@ -1961,7 +1986,7 @@ function birdhive_get_posts ( $args = array() ) {
                         'compare' => 'LIKE'	
 					);
 			} else if ( post_type_exists('event') && $post_type == 'event' && $series ) {
-
+				// Event series
 				$meta_query_components[] = 
 					array(
 						'key' => 'events_series',
@@ -1970,6 +1995,7 @@ function birdhive_get_posts ( $args = array() ) {
 					);
 			}
 
+			// Finalize meta_query based on number of components
 			if ( count($meta_query_components) > 1 ) {
 				$meta_query['relation'] = 'AND';
 				foreach ( $meta_query_components AS $component ) {
@@ -2076,7 +2102,7 @@ function birdhive_display_posts ( $atts = [] ) { //function birdhive_display_pos
         'tax_terms'  => null,
         //
         // This group_by is NOT the same as the wpq arg 'groupby' -- we're going to use it to retrieve posts group by group for display with headers... WIP
-        'group_by'	=> null, // e.g. category, event-categories, link_category
+        'group_by'	=> null, // e.g. category, event-categories, link_category -- for queries using scope, TODO: also build in options to group_by month, etc.
         //
         'display_format' => 'list', // other options: links; excerpts; archive (full post content); grid; table
         'return_format' => null, // deprecated -- TODO: remove this extra attribute as soon as updates are complete on all sites (STC, AGO)
@@ -2097,9 +2123,9 @@ function birdhive_display_posts ( $atts = [] ) { //function birdhive_display_pos
         'preview_length' => '55',
         //'aspect_ratio' => 'square', // TBD whether to activate this or not... probably better to simplify args array
         
-        // For post_type 'event' -- and others, wip
+        // For post_type 'event' -- and others, wip (e.g. transactions -- any post type with event fields)
         'scope' => 'all', //'upcoming',
-        //'date_field' => 'event_start', // WIP -- default -- applies to events -- other possibilities include sermon_date, transaction_date...
+        'date_field' => null, // WIP -- maybe default to 'event_start'? -- applies to events -- other possibilities include sermon_date, transaction_date...
         
         // For Events or Sermons
         'series' => false,
@@ -2200,9 +2226,9 @@ function birdhive_display_posts ( $atts = [] ) { //function birdhive_display_pos
     	}
     	
     }
-    
+        
     // Clean up the array
-    if ( $post_type !== "event" ) { unset($args["scope"]); } // WIP
+    if ( $post_type !== "event" && !$date_field ) { unset($args["scope"]); }
     if ( $post_type !== "event" && $post_type !== "sermon" ) { unset($args["series"]); }
     if ( $display_format != "grid" ) { unset($args["cols"]); unset($args["spacing"]); unset($args["overlay"]); }
     
@@ -2427,7 +2453,7 @@ function birdhive_display_posts ( $atts = [] ) { //function birdhive_display_pos
 			$posts_info = birdhive_get_posts( $args );
 			$items = $posts_info['arr_posts']->posts; // Retrieves an array of WP_Post Objects
 			//$info .= $posts_info['info']; // obsolete(?)
-			$ts_info .= 'shortcode_atts as passed to birdhive_get_posts: <pre>'.print_r($args, true).'</pre>';
+			$ts_info .= 'args as passed to birdhive_get_posts: <pre>'.print_r($args, true).'</pre>';
 			$ts_info .= $posts_info['ts_info'];
 			
 		} // END if ( $group_by )
