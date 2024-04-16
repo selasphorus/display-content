@@ -1966,7 +1966,7 @@ function birdhive_get_posts ( $args = array() ) {
 						'value'   => $meta_value,
 						'compare' => '=',
 					);
-			} else if ( ( $meta_key ) ) {
+			} else if ( ( $meta_key && $meta_key != $date_field) ) {
                 // meta_key specified, but no value
 				$meta_query_components[] = 
 					array(
@@ -2045,7 +2045,7 @@ function birdhive_get_posts ( $args = array() ) {
 	//$ts_info .= "birdhive_get_posts arr_posts: <pre>".print_r($arr_posts, true)."</pre>";
 
     //$ts_info .= "birdhive_get_posts arr_posts->request<pre>".$arr_posts->request."</pre>";
-    //$ts_info .= "birdhive_get_posts last_query:<pre>".$wpdb->last_query."</pre>";
+    $ts_info .= "birdhive_get_posts last_query:<pre>".$wpdb->last_query."</pre>";
     
     //$ts_info = '<div class="troubleshooting">'.$ts_info.'</div>';
     
@@ -2139,7 +2139,7 @@ function birdhive_display_posts ( $atts = [] ) { //function birdhive_display_pos
     // Extract
 	extract( $args );
 	
-	$ts_info .= 'extracted args: <pre>'.print_r($args, true).'</pre>';
+	//$ts_info .= 'extracted args: <pre>'.print_r($args, true).'</pre>';
 	$ts_info .= "post_type: ".$post_type."<br />";
     
     if ( $return_format ) { $display_format = $return_format; $args['display_format'] = $display_format; } // deal w/ deprecated attribute
