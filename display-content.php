@@ -1935,14 +1935,14 @@ function birdhive_get_posts ( $args = array() ) {
 			
 			// Scope restrictions? WIP
 			if ( $scope && $date_field ) {
-				// wip
+				$ts_info .= "query by scope/date_field<br />";
 				// Check to make sure the date_field is a registered meta field
 				if ( registered_meta_key_exists( 'post', $date_field, $post_type ) ) {
-					//
 					//
 					$scope_dates = sdg_scope_dates($scope);
 					$start_date = $scope_dates['start'];
 					$end_date = $scope_dates['end'];
+					$ts_info .= "start_date: $start_date; end_date: $end_date<br />";
 					
 					$meta_query_components[] = 
 						array(
@@ -1953,7 +1953,7 @@ function birdhive_get_posts ( $args = array() ) {
 						);
 					
 				} else {
-					// ???
+					$ts_info .= "No registered meta_key with key: '$date_field' for post_type '$post_type'<br />";
 				}
 			}
 			
