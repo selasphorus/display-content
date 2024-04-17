@@ -218,6 +218,7 @@ function birdhive_posts_where( $where, $wp_query ) {
 /*** MISC ***/
 
 // Add custom query vars
+// TBD -- IMPORTANT: will this cause issues with EM?
 add_filter( 'query_vars', 'sdg_query_vars' );
 function dsplycntnt_query_vars( $qvars ) {
 	$qvars[] = 'scope';
