@@ -217,6 +217,13 @@ function birdhive_posts_where( $where, $wp_query ) {
 
 /*** MISC ***/
 
+// Add custom query vars
+add_filter( 'query_vars', 'sdg_query_vars' );
+function dsplycntnt_query_vars( $qvars ) {
+	$qvars[] = 'scope';
+    return $qvars;
+}
+
 /**
  * Explode list using "," and ", ".
  *
