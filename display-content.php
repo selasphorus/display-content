@@ -2144,6 +2144,8 @@ function birdhive_display_posts ( $atts = [] ) { //function birdhive_display_pos
 	if ( get_query_var('scope') ) {
 		$scope = get_query_var('scope');
 		$info .= "scope via query_var: ".$scope."<br />";
+	} else {
+		$info .= "scope query_var not set<br />";
 	}
 	
 	//$ts_info .= 'extracted args: <pre>'.print_r($args, true).'</pre>';
