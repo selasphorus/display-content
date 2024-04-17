@@ -2143,7 +2143,7 @@ function birdhive_display_posts ( $atts = [] ) { //function birdhive_display_pos
 	// WIP -- all override for ALL args? or just specific ones?0
 	if ( get_query_var('scope') ) {
 		$scope = get_query_var('scope');
-		$ts_info .= "scope via query_var: ".$scope."<br />";
+		$info .= "scope via query_var: ".$scope."<br />";
 	}
 	
 	//$ts_info .= 'extracted args: <pre>'.print_r($args, true).'</pre>';
