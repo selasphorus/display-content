@@ -2181,7 +2181,7 @@ function birdhive_display_posts ( $atts = [] ) { //function birdhive_display_pos
 			// TODO: check to see if EM plugin is installed and active?
     	
     		// If ordering is setup by meta_key, translate that for EM
-    		if ( ( empty($orderby) && str_contains($meta_key, "event_start" ) ) || str_contains($orderby, "event_start" )) { 
+    		if ( $orderby == "date" || ( empty($orderby) && str_contains($meta_key, "event_start" ) ) || str_contains($orderby, "event_start" )) { 
     			$orderby = "event_start";
     		}
     		
@@ -2222,7 +2222,7 @@ function birdhive_display_posts ( $atts = [] ) { //function birdhive_display_pos
 				//$ts_info .= "event_attributes: ".print_r($post->event_attributes, true)."<br />";
 				//if ( isset($post->event_attributes['event_series']) ) { $ts_info .= "event_series: ".$post->event_attributes['event_series']."<br />"; }
 			}
-			//$ts_info .= 'last_query: '.print_r( $wpdb->last_query, true); // '<pre></pre>'
+			$ts_info .= 'last_query: '.print_r( $wpdb->last_query, true); // '<pre></pre>'
 			$ts_info .= '</pre>'; // tft
         
     	} else {
