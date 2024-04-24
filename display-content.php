@@ -2517,6 +2517,11 @@ function birdhive_display_posts ( $atts = [] ) { //function birdhive_display_pos
 add_shortcode('content_collection', 'birdhive_content_collection');
 function birdhive_content_collection ( $atts = [] ) {
 
+	// TS/logging setup
+    $do_ts = devmode_active();
+    $do_log = false;
+    sdg_log( "divline2", $do_log );
+    
 	global $wpdb;
 	$info = "";
 	$ts_info = "";
