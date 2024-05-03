@@ -1772,7 +1772,7 @@ function birdhive_get_posts ( $args = array() ) {
         }
 
         // Taxonomy operator
-        if ( strpos($tax_terms,"NOT-") !== false ) {
+        if ( $tax_terms && strpos($tax_terms,"NOT-") !== false ) {
             $tax_terms = str_replace("NOT-","",$tax_terms);
             $tax_operator = 'NOT IN';
         } else {
