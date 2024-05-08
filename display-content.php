@@ -1444,7 +1444,7 @@ function birdhive_display_collection ( $args = array() ) {
 		
 		//$item_ts_info .= "item_type: ".$item_type."<br />"; //$item_ts_info .= "<!-- item_type: ".$item_type." -->";
 		
-		if ( $item_type == "event" && ( $display_format == "excerpts" || $display_format == "archive" ) ) {
+		if ( $item_type == "event" && ( $display_format == "excerpts" || ( $display_format == "archive" && $show_content != 'full' ) ) ) {
 		
 			$item_info .= display_event_list_item( $item );
 			
