@@ -836,9 +836,14 @@ function display_post_item ( $arr_item = array() ) {
 		$full_content = true;
 		$post = get_post($post_id);		
 		$item_content .= apply_filters('the_content', $post->post_content);
+		// For event posts, get date/location info for header
+		if ( $item_type == 'event' ) {
+			$item_meta = "TESTING<br />";
+		}
 	} else {
 		$info .= $item_image;
 		$info .= $item_text;
+		$item_meta = null;
 	}
 	
 	// TODO: bring this more in alignment with theme template display? e.g. content-excerpt, content-sermon, content-event...
@@ -851,6 +856,7 @@ function display_post_item ( $arr_item = array() ) {
 	$info .= '<article id="post-'.$post_id.'" class="'.$article_class.'">'; // post_class()
 	$info .= '<header class="entry-header">';
 	if ( isset($item_title) ) { $info .= '<h2 class="entry-title">'.$item_title.'</h2>'; }
+	if ( isset($item_meta) ) { $info .= '<div class="entry-meta">'.$item_meta.'</div>'; }
 	// TODO: add subtitle?
 	$info .= '</header><!-- .entry-header -->';
 	if ( $show_content == 'full' ) {
