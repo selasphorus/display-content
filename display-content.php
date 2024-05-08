@@ -2255,6 +2255,7 @@ function birdhive_display_posts ( $atts = [] ) { //function birdhive_display_pos
         $display_format = "list"; // default
     }*/
     $ts_info .= "display_format: ".$display_format."<br />";
+    $ts_info .= "show_content: ".$show_content."<br />";
     
 	// Init index
 	$index = "";
