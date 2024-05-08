@@ -838,7 +838,7 @@ function display_post_item ( $arr_item = array() ) {
 		$item_content .= apply_filters('the_content', $post->post_content);
 		// For event posts, get date/location info for header
 		if ( get_post_type($post_id) == 'event' ) {
-			$item_meta = do_shortcode('[event post_id="'.$post_id.'"]#_EVENTDATES[/event]');
+			$item_meta = do_shortcode('[event post_id="'.$post_id.'"]#_EVENTDATES<br /><span class="event_time">#_EVENTTIMES</span>[/event]');
 		}
 	} else {
 		$info .= $item_image;
