@@ -837,7 +837,7 @@ function display_post_item ( $arr_item = array() ) {
 		$post = get_post($post_id);		
 		$item_content .= apply_filters('the_content', $post->post_content);
 		// For event posts, get date/location info for header
-		if ( $item_type == 'event' ) {
+		if ( get_post_type($post_id) == 'event' ) {
 			$item_meta = "TESTING<br />";
 		}
 	} else {
