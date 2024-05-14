@@ -1077,7 +1077,10 @@ function build_item_arr ( $item, $arr_styling = array() ) { // TODO: come up wit
 	
 	// Init vars
 	$arr_item = array();
-	$ts_info = "";	
+	$ts_info = "";
+	//
+	$display_format = null;
+	$aspect_ratio = 'square';
 	extract( $arr_styling );
 	//
 	$post = null; // is this necessary?
@@ -1885,17 +1888,17 @@ function birdhive_get_posts ( $args = array() ) {
             // Post category archive
             $ts_info .= "is_category (archive)<br />";
 
-            // Get archive cat_id
+            // Get archive term_id from slug
+            $archive_term = term_exists( "archives", "category" );
+            if ( !$archive_term ) { $archive_term = term_exists( "website-archives", "category" ); }
+			if ( $archive_term ) {
+				$archive_cat_id = $archive_term['term_id'];
+			} else {
+				$archive_cat_id = 99999; // tft
+			}
             // TODO: designate instead via CMS options?
-            $archive_term = get_term_by('slug', 'website-archives', 'category');
-            if ( !$archive_term ) {
-            	$archive_term = get_term_by('slug', 'archives', 'category');
-            }
-            if ( $archive_term ) {
-            	$archive_cat_id = $archive_term->term_id;
-            } else {
-            	$archive_cat_id = 99999; // tft
-            }
+            //$archive_term = get_term_by('slug', 'website-archives', 'category');
+            //if ( $archive_term ) { $archive_cat_id = $archive_term->term_id; }
 
             $tax_field = 'term_id';
             
