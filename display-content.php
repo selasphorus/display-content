@@ -1305,7 +1305,7 @@ function build_item_arr ( $item, $arr_styling = array() ) { // TODO: come up wit
 		}
 		if ( !empty($hlevel) ) { // empty($image_id)
 			$item_title = '<h'.$hlevel.' id="'.$item_id.'" class="collection_group">'.$item_title.'</h'.$hlevel.'>';
-			if ( $hlevel <= 2 ) { $item_title = anchor_link_top().$item_title; }
+			if ( $hlevel <= 3 ) { $item_title = anchor_link_top().$item_title; } // was $hlevel <= 3
 		}
 	}
 	
