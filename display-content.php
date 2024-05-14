@@ -1048,6 +1048,7 @@ function display_grid_item ( $arr_item = array(), $arr_styling = array() ) {
 	$info .= '<div class="'.$flex_box_classes.'">';
 	//
 	if ( !($overlay) && $aspect_ratio != "square" ) {
+		if ( !empty($item_text) ) { $item_info .= $item_text; }
 		$info .= '<div class="item_info">'.$item_info.'</div>';
 	}
 	// Show the item image
