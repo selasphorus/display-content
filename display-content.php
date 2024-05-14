@@ -1106,6 +1106,8 @@ function build_item_arr ( $item, $arr_styling = array() ) { // TODO: come up wit
 	$item_link_target = null;
 	$image_id = null;
 	$hlevel = null;
+	//
+	$set_anchors = false; // wip
 	
 	if ( !isset($show_content) ) { $show_content = null; }
 	if ( !isset($aspect_ratio) ) { $aspect_ratio = "square"; }
@@ -1305,7 +1307,7 @@ function build_item_arr ( $item, $arr_styling = array() ) { // TODO: come up wit
 		}
 		if ( !empty($hlevel) ) { // empty($image_id)
 			$item_title = '<h'.$hlevel.' id="'.$item_id.'" class="collection_group">'.$item_title.'</h'.$hlevel.'>';
-			if ( $hlevel > 2 ) { $item_title = anchor_link_top().$item_title; } // was $hlevel <= 2
+			if ( $hlevel <= 2 && $set_anchors == true ) { $item_title = anchor_link_top().$item_title; }
 		}
 	}
 	
