@@ -1117,7 +1117,7 @@ function build_item_arr ( $item, $arr_styling = array() ) { // TODO: come up wit
 		
 	} else if ( is_array($item) ) {
 	
-		$ts_info .= '[BIA] extract item<br />';
+		$ts_info .= '[bia] extract item<br />';
 		extract( $item );
 	
 		if ( isset($post_object) && isset($post_object[0]) ) {
@@ -1141,20 +1141,20 @@ function build_item_arr ( $item, $arr_styling = array() ) { // TODO: come up wit
 	
 	//$ts_info .= 'BIA -- item: <pre>'.print_r($item, true).'</pre><br />';
 	//$ts_info .= 'BIA -- item: '.print_r($item, true).'<br />';
-	$ts_info .= 'BIA -- item_type: '.$item_type.'<br />';
+	$ts_info .= '[bia] item_type: '.$item_type.'<br />';
 	
 	if ( $post && ( $item_type == "post" || $item_type == "event" ) ) {
 
 		//$ts_info .= '<!-- post: <pre>'.print_r($post, true).'</pre> -->';
 		$post_type = $post->post_type;
 		$post_id = $post->ID;
-		$ts_info .= 'BIA -- '.$post_type.' => post_id: '.$post_id."<br />";
+		$ts_info .= '[bia] '.$post_type.' => post_id: '.$post_id."<br />";
 		
 		// Item Title
 		// If there was no title override set via collection, then get a title
 		// TODO: deal w/ prefix/suffix options?
 		if ( empty($item_title) ) {
-			$ts_info .= 'BIA -- get item_title<br />';
+			$ts_info .= '[bia] get item_title<br />';
 			// If a short_title is set, use it. If not, use the post_title
 			$short_title = get_post_meta( $post_id, 'short_title', true );
 			if ( !empty($short_title) ) {
@@ -1172,7 +1172,6 @@ function build_item_arr ( $item, $arr_styling = array() ) { // TODO: come up wit
 				if ( !empty($item_subtitle) ) { $item_subtitle = '<span class="item_subtitle">'.$item_subtitle.'</span>'; }
 			}
 		}
-		$ts_info .= 'BIA -- item_title: '.$item_title."<br />";
 		
 		// Item URL
 		// TODO: deal w/ possibility of multiple external URLs
@@ -1191,7 +1190,7 @@ function build_item_arr ( $item, $arr_styling = array() ) { // TODO: come up wit
 			}
 			$img_args = array( 'post_id' => $post_id, 'format' => 'excerpt', 'img_size' => $img_size, 'sources' => "all", 'echo' => false, 'return' => 'id' );
 			$image_id = sdg_post_thumbnail ( $img_args );
-			$ts_info .= 'BIA -- sdg_post_thumbnail: image_id: '.$image_id.'<br />'; // tft		
+			$ts_info .= '[bia] sdg_post_thumbnail: image_id: '.$image_id.'<br />'; // tft		
 		}
 		// +~+~+~+~+~+~+~+~+~+~+~+~+~+~+~+~+~+~+~+~+~+~+~+
 		
@@ -1294,6 +1293,7 @@ function build_item_arr ( $item, $arr_styling = array() ) { // TODO: come up wit
 	$link_target = ' target="'.$item_link_target.'"';
 	
 	// Style the title
+	$ts_info .= '[bia] item_title (before styling): '.$item_title."<br />";
 	if ( !empty($item_title) ) {
 		$item_title = '<span class="item_title">'.$item_title.'</span>';
 		// Wrap the title in a hyperlink, if a URL has been set	OR if the item is linked to modal content		
@@ -1313,15 +1313,15 @@ function build_item_arr ( $item, $arr_styling = array() ) { // TODO: come up wit
 	$item_image = ""; // init
 	if ( !empty($image_id) ) {
 	
-		$ts_info .= '<!-- image_id: '.print_r($image_id,true).' -->'; // tft
+		$ts_info .= '[bia] image_id: '.print_r($image_id,true).'<br />'; // tft
 		
 		if ( $aspect_ratio == "square" ) {
 			$img_size = "grid_crop_square"; //$img_size = array(600, 600); //"medium_large"; //
 		} else {
 			$img_size = "grid_crop_rectangle";
 		}
-		$ts_info .= '<!-- aspect_ratio: '.$aspect_ratio.' -->'; // tft
-		$ts_info .= '<!-- img_size: '.print_r($img_size, true).' -->'; // tft		
+		$ts_info .= '[bia] aspect_ratio: '.$aspect_ratio.'<br />'; // tft
+		$ts_info .= '[bia] img_size: '.print_r($img_size, true).'<br />'; // tft		
 		//wp_get_attachment_image( int $attachment_id, string|int[] $size = 'thumbnail', bool $icon = false, string|array $attr = '' ): string
 		//$img_attr = array ( 'sizes' => "(max-width: 600px) 100vw, 100vw" );
 		$item_image = wp_get_attachment_image( $image_id, $img_size );
@@ -1336,7 +1336,7 @@ function build_item_arr ( $item, $arr_styling = array() ) { // TODO: come up wit
 		}
 		
 	} else {		
-		$ts_info .= 'BIA -- image_id NOT FOUND<br />';
+		$ts_info .= '[bia] image_id NOT FOUND<br />';
 		//$item_ts_info .= "arr_item: <pre>".print_r($arr_item, true)."</pre>";
 	}
 	
