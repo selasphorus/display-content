@@ -1032,6 +1032,9 @@ function display_grid_item ( $arr_item = array(), $arr_styling = array() ) {
 	// Subtitle?
 	if ( !empty($item_subtitle) ) { $item_info .= $item_subtitle; } //"<br />".
 	
+	// Text/Content
+	if ( !empty($item_text) ) { $item_info .= $item_text; }
+	
 	// Links?
 	$links = get_post_links( $post_id );
 	if ( $links ) { $item_info .= $links; }
@@ -1048,7 +1051,6 @@ function display_grid_item ( $arr_item = array(), $arr_styling = array() ) {
 	$info .= '<div class="'.$flex_box_classes.'">';
 	//
 	if ( !($overlay) && $aspect_ratio != "square" ) {
-		if ( !empty($item_text) ) { $item_info .= $item_text; }
 		$info .= '<div class="item_info">'.$item_info.'</div>';
 	}
 	// Show the item image
@@ -1076,6 +1078,7 @@ function display_grid_item ( $arr_item = array(), $arr_styling = array() ) {
 // * 
 
 // WIP build item_arr
+// TODO: streamline and generalize so that it's possible (e.g.) to pass just item_title, item_text for grid display
 // TODO: simplify -- item atts, display atts -- don't need all of them for every display_format etc.
 //function build_item_arr ( $item = array(), $item_type = null, $display_format = "list", $aspect_ratio = null, $collection_id = null ) {
 function build_item_arr ( $item, $arr_styling = array() ) { // TODO: come up with better name for $arr_styling -- which also includes atts like collection_id, not just styling atts like aspect_ratio
@@ -1105,6 +1108,7 @@ function build_item_arr ( $item, $arr_styling = array() ) { // TODO: come up wit
 	$hlevel = 0;
 	
 	if ( !isset($show_content) ) { $show_content = null; }
+	if ( !isset($aspect_ratio) ) { $aspect_ratio = "square"; }
 	
 	// Is the $item a post object, an array, or simply an ID?
 	if ( is_object($item) ) { // item is post object, e.g. when called via display_posts shortcode
@@ -1133,7 +1137,6 @@ function build_item_arr ( $item, $arr_styling = array() ) { // TODO: come up wit
 	// If this is a post via a collection, check to see if there's an image override
 	if ( !empty($item_image) ) { $image_id = $item_image; }
 	//
-	if ( !isset($aspect_ratio) ) { $aspect_ratio = "square"; }
 	
 	//$ts_info .= 'BIA -- item: <pre>'.print_r($item, true).'</pre><br />';
 	//$ts_info .= 'BIA -- item: '.print_r($item, true).'<br />';
@@ -1192,11 +1195,10 @@ function build_item_arr ( $item, $arr_styling = array() ) { // TODO: come up wit
 		// +~+~+~+~+~+~+~+~+~+~+~+~+~+~+~+~+~+~+~+~+~+~+~+
 		
 		// Item Excerpt/Text
-		if ( isset($show_content) && $show_content == 'excerpts' ) {
-			$item_text = get_the_excerpt( $post_id );
-		}
-		
-		if ( empty($item_text) ) {
+		if ( empty($item_text) ) {		
+			if ( isset($show_content) && $show_content == 'excerpts' ) {
+				$item_text = get_the_excerpt( $post_id );
+			}
 			// WIP
 			if ( $post_type == "link" ) {
 				$item_text = get_field( 'description', $post_id );
