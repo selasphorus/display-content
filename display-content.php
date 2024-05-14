@@ -1001,6 +1001,10 @@ function display_grid_item ( $arr_item = array(), $arr_styling = array() ) {
 	$info = "";
 	$item_info = "";
 	$ts_info = "";
+	//
+	$display_format = null;
+	$aspect_ratio = 'square';
+	//
 	extract( $arr_item );
 	extract( $arr_styling );
 	
