@@ -1105,7 +1105,7 @@ function build_item_arr ( $item, $arr_styling = array() ) { // TODO: come up wit
 	$item_url = null;
 	$item_link_target = null;
 	$image_id = null;
-	$hlevel = 0;
+	$hlevel = null;
 	
 	if ( !isset($show_content) ) { $show_content = null; }
 	if ( !isset($aspect_ratio) ) { $aspect_ratio = "square"; }
@@ -1117,6 +1117,7 @@ function build_item_arr ( $item, $arr_styling = array() ) { // TODO: come up wit
 		
 	} else if ( is_array($item) ) {
 	
+		$ts_info .= '[BIA] extract item<br />';
 		extract( $item );
 	
 		if ( isset($post_object) && isset($post_object[0]) ) {
@@ -1302,7 +1303,7 @@ function build_item_arr ( $item, $arr_styling = array() ) { // TODO: come up wit
 		} else {
 			if ( !empty($item_url) ) { $item_title = '<a href="'.$item_url.'" rel="bookmark"'.$link_target.'>'.$item_title.'</a>'; }
 		}
-		if ( !empty($hlevel) ) {
+		if ( !empty($hlevel) ) { // empty($image_id)
 			$item_title = '<h'.$hlevel.' id="'.$item_id.'" class="collection_group">'.$item_title.'</h'.$hlevel.'>';
 			if ( $hlevel <= 2 ) { $item_title = anchor_link_top().$item_title; }
 		}
