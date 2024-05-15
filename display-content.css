@@ -1,6 +1,11 @@
 @charset "UTF-8";
 /* CSS Document */
 
+
+.alignleft {
+	text-align: left;
+}
+
 .posts_archive {
 	display: flow-root;
 }
@@ -40,6 +45,10 @@
     border: 1px solid #eee;
     border-radius: 9px 9px 0 0;
     margin-bottom: 1rem;
+}
+
+.flex-box.mini {
+	min-width: 100px;
 }
 
 .flex-container.borderless .flex-box,
