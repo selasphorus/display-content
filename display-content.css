@@ -51,6 +51,10 @@
 	min-width: 100px;
 }
 
+.flex-box.alignleft {
+	text-align: left;
+}
+
 .flex-container.borderless .flex-box,
 .flex-box.rectangle {
     border: none;
