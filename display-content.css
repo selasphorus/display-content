@@ -49,6 +49,8 @@
 
 .flex-box.mini {
 	min-width: 100px;
+	max-width: 50%;
+	border: none;
 }
 
 .flex-box.alignleft {
