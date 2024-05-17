@@ -51,6 +51,7 @@
 	min-width: 100px;
 	max-width: 50%;
 	border: none;
+	padding: 0;
 }
 
 .flex-box.alignleft {
