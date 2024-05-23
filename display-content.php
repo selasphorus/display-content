@@ -2623,7 +2623,7 @@ function match_group_field ( $field_groups, $field_name ) {
 // TODO: generalize the following to make this functionality not so repertoire-specific
 // https://www.advancedcustomfields.com/resources/creating-wp-archive-custom-field-filter/
 add_shortcode('birdhive_search_form', 'birdhive_search_form');
-function birdhive_search_form ($atts = array() [], $content = null, $tag = '') {
+function birdhive_search_form ( $atts = array(), $content = null, $tag = '' ) {
 
 	// TS/logging setup
     $do_ts = devmode_active();
