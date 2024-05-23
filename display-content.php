@@ -2535,7 +2535,7 @@ function birdhive_display_posts ( $atts = array() ) { //function birdhive_displa
 }
 
 add_shortcode('content_collection', 'birdhive_content_collection');
-function birdhive_content_collection ( $atts = array() [] ) {
+function birdhive_content_collection ( $atts = array() ) {
 
 	// TS/logging setup
     $do_ts = devmode_active();
