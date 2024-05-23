@@ -2096,7 +2096,7 @@ Table display:
 **********
 */
 add_shortcode('display_posts', 'birdhive_display_posts');
-function birdhive_display_posts ( $atts = [] ) { //function birdhive_display_posts ( $args = array() ) {
+function birdhive_display_posts ( $atts = array() ) { //function birdhive_display_posts ( $args = array() ) {
 
 	// TS/logging setup
     $do_ts = devmode_active();
@@ -2535,7 +2535,7 @@ function birdhive_display_posts ( $atts = [] ) { //function birdhive_display_pos
 }
 
 add_shortcode('content_collection', 'birdhive_content_collection');
-function birdhive_content_collection ( $atts = [] ) {
+function birdhive_content_collection ( $atts = array() [] ) {
 
 	// TS/logging setup
     $do_ts = devmode_active();
@@ -2623,7 +2623,7 @@ function match_group_field ( $field_groups, $field_name ) {
 // TODO: generalize the following to make this functionality not so repertoire-specific
 // https://www.advancedcustomfields.com/resources/creating-wp-archive-custom-field-filter/
 add_shortcode('birdhive_search_form', 'birdhive_search_form');
-function birdhive_search_form ($atts = [], $content = null, $tag = '') {
+function birdhive_search_form ($atts = array() [], $content = null, $tag = '') {
 
 	// TS/logging setup
     $do_ts = devmode_active();
