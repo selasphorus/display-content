@@ -2528,7 +2528,8 @@ function birdhive_display_posts ( $atts = array() ) { //function birdhive_displa
         
     } // END if posts
     
-    if ( $do_ts && !empty($ts_info) ) { $info .= '<div class="troubleshooting">'.$ts_info.'</div>'; }
+    //$do_ts && 
+    if ( !empty($ts_info) ) { $info .= '<div class="troubleshooting">'.$ts_info.'</div>'; }
     
     return $info;
     
