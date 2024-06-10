@@ -2273,6 +2273,8 @@ function birdhive_display_posts ( $atts = array() ) { //function birdhive_displa
     /*if ( $display_format != "links" && $display_format != "list" && $display_format != "table" && $display_format != "grid" && $display_format != "excerpts" && $display_format != "archive" ) {
         $display_format = "list"; // default
     }*/
+    if ( $display_format == "excerpts" && $show_content == null ) { $show_content = 'excerpts'; }
+    //
     $ts_info .= "display_format: ".$display_format."<br />";
     $ts_info .= "show_content: ".$show_content."<br />";
     
