@@ -872,9 +872,9 @@ function display_post_item ( $arr_item = array() ) {
 	$info .= '<div class="entry-content">';
 	//if ( $post_type == 'event' ) { $info .= do_shortcode('[event post_id="'.$post_id.'"]#_EVENTDATES<br /><span class="event_time">#_EVENTTIMES</span>[/event]'); }
 	//if ( $post_type == 'event' ) { $info .= display_media_player( 'post_id' => $post_id, 'position' => 'above' ); }
-	if ( $post_id ) { $info .= display_media_player( 'post_id' => $post_id, 'position' => 'above' ); }
+	if ( $post_id ) { $info .= display_media_player( array('post_id' => $post_id, 'position' => 'above') ); }
 	$info .= $item_content;
-	if ( $post_id ) { $info .= display_media_player( 'post_id' => $post_id, 'position' => 'below' ); }
+	if ( $post_id ) { $info .= display_media_player( array('post_id' => $post_id, 'position' => 'below') ); }
 	$info .= '</div><!-- .entry-content -->';
 	$info .= '<footer class="entry-footer">';
 	$info .= birdhive_entry_meta( $post_id );
