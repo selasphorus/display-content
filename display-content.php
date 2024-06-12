@@ -829,21 +829,27 @@ function display_post_item ( $arr_item = array() ) {
 	// Init vars
 	$info = "";
 	$item_content = "";
+	$item_meta = null;
 	extract( $arr_item );
 	
 	// WIP
+	if ( $post_id ) {
+		$post_type = get_post_type($post_id);
+	} else {
+		$post_type = null;
+	}
+	
 	if ( $post_id && $show_content == 'full' ) {
 		$full_content = true;
 		$post = get_post($post_id);		
 		$item_content .= apply_filters('the_content', $post->post_content);
 		// For event posts, get date/location info for header
-		if ( get_post_type($post_id) == 'event' ) {
+		if ( $post_type == 'event' ) {
 			$item_meta = do_shortcode('[event post_id="'.$post_id.'"]#_EVENTDATES<br /><span class="event_time">#_EVENTTIMES</span>[/event]');
 		}
 	} else {
 		$info .= $item_image;
 		$info .= $item_text;
-		$item_meta = null;
 	}
 	
 	// TODO: bring this more in alignment with theme template display? e.g. content-excerpt, content-sermon, content-event...
@@ -864,6 +870,9 @@ function display_post_item ( $arr_item = array() ) {
 		$info .= sdg_post_thumbnail( $img_args );
 	}
 	$info .= '<div class="entry-content">';
+	//if ( $post_type == 'event' ) { $info .= do_shortcode('[event post_id="'.$post_id.'"]#_EVENTDATES<br /><span class="event_time">#_EVENTTIMES</span>[/event]'); }
+	if ( $post_type == 'event' ) { $info .= display_media_player( 'post_id' => $post_id, 'position' => 'above' ); }
+	//
 	$info .= $item_content;
 	$info .= '</div><!-- .entry-content -->';
 	$info .= '<footer class="entry-footer">';
