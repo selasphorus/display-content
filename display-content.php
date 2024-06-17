@@ -847,9 +847,10 @@ function display_post_item ( $arr_item = array() ) {
 	
 	$ts_info .= ">>> display_post_item <<<<br />";
 	$ts_info .= "post_id: ".$post_id."<br />";
-	$ts_info .= "arr_item: <pre>".print_r($arr_item,true)."</pre>";
+	//$ts_info .= "arr_item: <pre>".print_r($arr_item,true)."</pre>";
 	
-	if ( $post_id && $show_content == 'full' ) {
+	if ( $post_id && $show_content == "full" ) {
+		$ts_info .= "Show full content<br />";
 		$full_content = true;
 		$post = get_post($post_id);		
 		$item_content .= apply_filters('the_content', $post->post_content);
@@ -865,7 +866,7 @@ function display_post_item ( $arr_item = array() ) {
 	// TODO: bring this more in alignment with theme template display? e.g. content-excerpt, content-sermon, content-event...
 	
 	$article_class = 'cc_item';
-	if ( $show_content == 'full' ) {
+	if ( $show_content == "full" ) {
 		$article_class .= "full";
 	}
 	
@@ -875,7 +876,7 @@ function display_post_item ( $arr_item = array() ) {
 	if ( isset($item_meta) ) { $info .= '<div class="entry-meta">'.$item_meta.'</div>'; }
 	// TODO: add subtitle?
 	$info .= '</header><!-- .entry-header -->';
-	if ( $show_content == 'full' ) {
+	if ( $show_content == "full" ) {
 		$img_args = array( 'post_id' => $post_id, 'img_size' => "full", 'sources' => array("featured", "gallery"), 'echo' => false );
 		$info .= sdg_post_thumbnail( $img_args );
 	}
