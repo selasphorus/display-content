@@ -401,16 +401,16 @@ function dsplycntnt_get_excerpt( $args = array() ) {
 	
 	// Defaults
 	$defaults = array(
-		'post'            => '',
-		'post_id'         => null,
-		'preview_length'  => 55, // num words to display as preview text
-		'readmore'        => false,
-		'readmore_text'   => esc_html__( 'Read more...', 'dsplycntnt' ),
-		'readmore_after'  => '',
-		'custom_excerpts' => true,
-		'disable_more'    => false,
-		'expandable'    => false,
-		'text_length'    => 'excerpt',
+		'post'            	=> '',
+		'post_id'         	=> null,
+		'preview_length'  	=> 55, // num words to display as preview text
+		'readmore'        	=> false,
+		'readmore_text'   	=> esc_html__( 'Read more...', 'dsplycntnt' ),
+		'readmore_after'  	=> '',
+		'custom_excerpts' 	=> true,
+		'disable_more'    	=> false,
+		'expandable'		=> false,
+		'text_length'		=> 'excerpt',
 	);
 
 	// Apply filters
@@ -826,8 +826,14 @@ function display_list_item ( $arr_item = array() ) {
 
 function display_post_item ( $arr_item = array() ) {
 	
+	// TS/logging setup
+    $do_ts = devmode_active();
+    $do_log = false;
+    sdg_log( "divline2", $do_log );
+
 	// Init vars
 	$info = "";
+	$ts_info = "";
 	$item_content = "";
 	$item_meta = null;
 	extract( $arr_item );
@@ -838,6 +844,10 @@ function display_post_item ( $arr_item = array() ) {
 	} else {
 		$post_type = null;
 	}
+	
+	$ts_info .= ">>> display_post_item <<<<br />";
+	$ts_info .= "post_id: ".$post_id."<br />";
+	$ts_info .= "arr_item: <pre>".print_r($arr_item,true)."</pre>";
 	
 	if ( $post_id && $show_content == 'full' ) {
 		$full_content = true;
@@ -886,6 +896,8 @@ function display_post_item ( $arr_item = array() ) {
 	//$post_type_for_template = birdhive_get_type_for_template();
 	//get_template_part( 'template-parts/content', $post_type_for_template );
 	//$info .= get_template_part( 'template-parts/content', $post_type );
+	
+	if ( $do_ts && !empty($ts_info) ) { $info .= $ts_info; }
 	
 	return $info;
 			
@@ -2283,7 +2295,7 @@ function birdhive_display_posts ( $atts = array() ) { //function birdhive_displa
     /*if ( $display_format != "links" && $display_format != "list" && $display_format != "table" && $display_format != "grid" && $display_format != "excerpts" && $display_format != "archive" ) {
         $display_format = "list"; // default
     }*/
-    if ( $display_format == "excerpts" && $show_content == null ) { $show_content = 'excerpts'; }
+    if ( ( $display_format == "excerpts" || $display_format == "archive" ) && $show_content == null ) { $show_content = 'excerpts'; }
     //
     $ts_info .= "display_format: ".$display_format."<br />";
     $ts_info .= "show_content: ".$show_content."<br />";
