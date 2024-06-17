@@ -847,6 +847,7 @@ function display_post_item ( $arr_item = array() ) {
 	
 	$ts_info .= ">>> display_post_item <<<<br />";
 	$ts_info .= "post_id: ".$post_id."<br />";
+	$ts_info .= "show_content: ".$show_content."<br />";
 	//$ts_info .= "arr_item: <pre>".print_r($arr_item,true)."</pre>";
 	
 	if ( $post_id && $show_content == "full" ) {
