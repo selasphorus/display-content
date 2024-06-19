@@ -841,17 +841,18 @@ function display_post_item ( $arr_item = array() ) {
 	// WIP
 	if ( $post_id ) {
 		$post_type = get_post_type($post_id);
+		$ts_info .= "post_id: ".$post_id."<br />";
+		$ts_info .= "post_type: ".$post_type."<br />";
 	} else {
 		$post_type = null;
 	}
 	
 	$ts_info .= ">>> display_post_item <<<<br />";
-	$ts_info .= "post_id: ".$post_id."<br />";
 	$ts_info .= "show_content: ".$show_content."<br />";
 	//$ts_info .= "arr_item: <pre>".print_r($arr_item,true)."</pre>";
 	
 	if ( $post_id && $show_content == "full" ) {
-		$ts_info .= "Show full content<br />";
+		//$ts_info .= "Show full content<br />";
 		$full_content = true;
 		$post = get_post($post_id);		
 		$item_content .= apply_filters('the_content', $post->post_content);
@@ -1209,7 +1210,9 @@ function build_item_arr ( $item, $arr_styling = array() ) { // TODO: come up wit
 		// No collection image? Then look for a image via the post record
 		if ( ! $image_id ) {
 			// WIP
-			if ( $aspect_ratio == "square" ) {
+			if ( $display_format == "excerpts" || $display_format == "archive" ) {
+				$img_size = "post-thumbnail";
+			} else if ( $aspect_ratio == "square" ) {
 				$img_size = "grid_crop_square";
 			} else {
 				$img_size = "grid_crop_rectangle";
