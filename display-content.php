@@ -878,7 +878,7 @@ function display_post_item ( $arr_item = array() ) {
 	if ( isset($item_meta) ) { $info .= '<div class="entry-meta">'.$item_meta.'</div>'; }
 	// TODO: add subtitle?
 	$info .= '</header><!-- .entry-header -->';
-	if ( $show_content == "full" ) {
+	if ( empty($item_image) && $show_content == "full" ) {
 		$img_args = array( 'post_id' => $post_id, 'img_size' => "full", 'sources' => array("featured", "gallery"), 'echo' => false );
 		$info .= sdg_post_thumbnail( $img_args );
 	}
@@ -886,6 +886,9 @@ function display_post_item ( $arr_item = array() ) {
 	//if ( $post_type == 'event' ) { $info .= do_shortcode('[event post_id="'.$post_id.'"]#_EVENTDATES<br /><span class="event_time">#_EVENTTIMES</span>[/event]'); }
 	//if ( $post_type == 'event' ) { $info .= display_media_player( 'post_id' => $post_id, 'position' => 'above' ); }
 	if ( $post_id ) { $info .= display_media_player( array('post_id' => $post_id, 'position' => 'above') ); }
+	if ( $item_image ) {
+		$info .= $item_image;
+	}
 	$info .= $item_content;
 	if ( $post_id ) { $info .= display_media_player( array('post_id' => $post_id, 'position' => 'below') ); }
 	$info .= '</div><!-- .entry-content -->';
