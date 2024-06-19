@@ -1822,8 +1822,54 @@ function birdhive_get_posts ( $args = array() ) {
 
         // Taxonomy operator
         if ( $tax_terms && strpos($tax_terms,"NOT-") !== false ) {
-            $tax_terms = str_replace("NOT-","",$tax_terms);
-            $tax_operator = 'NOT IN';
+        	// WIP
+        	// What if there are multiple terms, and not all are negated?
+        	if ( strpos($tax_terms,",") !== false ) {
+        		
+        		// Group together terms to include/exclude
+        		$arr_terms = explode(",",$tax_terms);
+        		$terms_in = "";
+        		$terms_out = "";
+        		foreach ( $arr_terms as $term ) {
+        			if ( strpos($term,"NOT-") == false ) {
+        				$terms_in .= $term.",";
+        			} else {
+        				$terms_out .= $term.",";
+        			}
+        		}
+        		
+        		// Trim trailing commas
+        		if ( substr($terms_in, -1) == ',' ) {
+					$terms_in = substr($terms_in, 0, -1);
+				}
+				if ( substr($terms_out, -1) == ',' ) {
+					$terms_out = substr($terms_out, 0, -1);
+				}
+				
+        		// Build tax_query
+        		$tax_query = array (
+        			'relation' => 'AND',
+        			array(
+						'taxonomy'  => $taxonomy,
+						'field'     => $tax_field,
+						'terms'     => $terms_in,
+						'include_children' => $include_children,
+						'operator'  => 'IN',
+					),
+        			array(
+						'taxonomy'  => $taxonomy,
+						'field'     => $tax_field,
+						'terms'     => $terms_out,
+						'include_children' => $include_children,
+						'operator'  => 'NOT IN',
+					)
+        		);        		
+                
+        	} else {
+        		$tax_terms = str_replace("NOT-","",$tax_terms);
+            	$tax_operator = 'NOT IN';
+        	}
+            
         } else {
             $tax_operator = 'IN';
         }
