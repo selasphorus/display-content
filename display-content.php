@@ -1831,10 +1831,11 @@ function birdhive_get_posts ( $args = array() ) {
         		$terms_in = "";
         		$terms_out = "";
         		foreach ( $arr_terms as $term ) {
-        			if ( strpos($term,"NOT-") == false ) {
-        				$terms_in .= $term.",";
-        			} else {
+        			if ( strpos($term,"NOT-") !== false ) {
+        				$term = str_replace("NOT-","",$term);
         				$terms_out .= $term.",";
+        			} else {
+        				$terms_in .= $term.",";
         			}
         		}
         		
