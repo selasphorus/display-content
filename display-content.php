@@ -1207,16 +1207,18 @@ function build_item_arr ( $item, $arr_styling = array() ) { // TODO: come up wit
 		
 		// +~+~+~+~+~+~+~+~+~+~+~+~+~+~+~+~+~+~+~+~+~+~+~+
 		
+		// WIP
+		if ( $display_format == "excerpts" || $display_format == "archive" ) {
+			$img_size = "post-thumbnail";
+		} else if ( $aspect_ratio == "square" ) {
+			$img_size = "grid_crop_square";
+		} else {
+			$img_size = "grid_crop_rectangle";
+		}
+			
 		// No collection image? Then look for a image via the post record
 		if ( ! $image_id ) {
 			// WIP
-			if ( $display_format == "excerpts" || $display_format == "archive" ) {
-				$img_size = "post-thumbnail";
-			} else if ( $aspect_ratio == "square" ) {
-				$img_size = "grid_crop_square";
-			} else {
-				$img_size = "grid_crop_rectangle";
-			}
 			$img_args = array( 'post_id' => $post_id, 'format' => 'excerpt', 'img_size' => $img_size, 'sources' => "all", 'echo' => false, 'return_value' => 'id' );
 			$image_id = sdg_post_thumbnail ( $img_args );
 			$ts_info .= '[bia] sdg_post_thumbnail: image_id: '.$image_id.'<br />'; // tft		
@@ -1342,15 +1344,9 @@ function build_item_arr ( $item, $arr_styling = array() ) { // TODO: come up wit
 	$item_image = ""; // init
 	if ( !empty($image_id) ) {
 	
-		$ts_info .= '[bia] image_id: '.print_r($image_id,true).'<br />'; // tft
-		
-		if ( $aspect_ratio == "square" ) {
-			$img_size = "grid_crop_square"; //$img_size = array(600, 600); //"medium_large"; //
-		} else {
-			$img_size = "grid_crop_rectangle";
-		}
-		$ts_info .= '[bia] aspect_ratio: '.$aspect_ratio.'<br />'; // tft
-		$ts_info .= '[bia] img_size: '.print_r($img_size, true).'<br />'; // tft		
+		$ts_info .= '[bia] image_id: '.print_r($image_id,true).'<br />';	
+		$ts_info .= '[bia] aspect_ratio: '.$aspect_ratio.'<br />';
+		$ts_info .= '[bia] img_size: '.print_r($img_size, true).'<br />';	
 		//wp_get_attachment_image( int $attachment_id, string|int[] $size = 'thumbnail', bool $icon = false, string|array $attr = '' ): string
 		//$img_attr = array ( 'sizes' => "(max-width: 600px) 100vw, 100vw" );
 		$item_image = wp_get_attachment_image( $image_id, $img_size );
