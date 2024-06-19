@@ -12,12 +12,12 @@
 
 
 /*** Excerpts styling ***/
-dsplycntnt-posts.excerpts h2.entry-title {
+.dsplycntnt-posts.excerpts h2.entry-title {
 	margin: 1rem 0;
 	font-weight: 600;
 }
 
-dsplycntnt-posts.excerpts .post-thumbnail.float-left {
+.dsplycntnt-posts.excerpts .post-thumbnail.float-left {
     margin-bottom: 0;
 }
 
