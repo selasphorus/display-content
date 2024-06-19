@@ -1170,6 +1170,15 @@ function build_item_arr ( $item, $arr_styling = array() ) { // TODO: come up wit
 	//$ts_info .= 'BIA -- item: '.print_r($item, true).'<br />';
 	$ts_info .= '[bia] item_type: '.$item_type.'<br />';
 	
+	// WIP -- image sizes
+	if ( $display_format == "excerpts" || $display_format == "archive" ) {
+		$img_size = array( 250, 250); //$img_size = "post-thumbnail";
+	} else if ( $aspect_ratio == "square" ) {
+		$img_size = "grid_crop_square";
+	} else {
+		$img_size = "grid_crop_rectangle";
+	}
+	
 	if ( $post && ( $item_type == "post" || $item_type == "event" ) ) {
 
 		//$ts_info .= '<!-- post: <pre>'.print_r($post, true).'</pre> -->';
@@ -1207,14 +1216,6 @@ function build_item_arr ( $item, $arr_styling = array() ) { // TODO: come up wit
 		
 		// +~+~+~+~+~+~+~+~+~+~+~+~+~+~+~+~+~+~+~+~+~+~+~+
 		
-		// WIP
-		if ( $display_format == "excerpts" || $display_format == "archive" ) {
-			$img_size = "post-thumbnail";
-		} else if ( $aspect_ratio == "square" ) {
-			$img_size = "grid_crop_square";
-		} else {
-			$img_size = "grid_crop_rectangle";
-		}
 			
 		// No collection image? Then look for a image via the post record
 		if ( ! $image_id ) {
