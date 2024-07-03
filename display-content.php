@@ -861,7 +861,7 @@ function display_post_item ( $arr_item = array() ) {
 			$item_meta = do_shortcode('[event post_id="'.$post_id.'"]#_EVENTDATES<br /><span class="event_time">#_EVENTTIMES</span>[/event]');
 		}
 	} else {
-		$info .= $item_image;
+		//$info .= $item_image;
 		$info .= $item_text;
 	}
 	
