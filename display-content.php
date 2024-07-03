@@ -872,7 +872,7 @@ function display_post_item ( $arr_item = array() ) {
 		$article_class .= "full";
 	}
 	
-	$info .= '<article id="post-'.$post_id.'" class="'.$article_class.'">'; // post_class()
+	$info .= '<article id="post-'.$post_id.'" class="display_post_item '.$article_class.'">'; // post_class()
 	$info .= '<header class="entry-header">';
 	if ( isset($item_title) ) { $info .= '<h2 class="entry-title">'.$item_title.'</h2>'; }
 	if ( isset($item_meta) ) { $info .= '<div class="entry-meta">'.$item_meta.'</div>'; }
