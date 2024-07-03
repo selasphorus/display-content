@@ -836,6 +836,7 @@ function display_post_item ( $arr_item = array() ) {
 	$ts_info = "";
 	$item_content = "";
 	$item_meta = null;
+	$player_status = null;
 	extract( $arr_item );
 	
 	// WIP
@@ -885,12 +886,16 @@ function display_post_item ( $arr_item = array() ) {
 	$info .= '<div class="entry-content">';
 	//if ( $post_type == 'event' ) { $info .= do_shortcode('[event post_id="'.$post_id.'"]#_EVENTDATES<br /><span class="event_time">#_EVENTTIMES</span>[/event]'); }
 	//if ( $post_type == 'event' ) { $info .= display_media_player( 'post_id' => $post_id, 'position' => 'above' ); }
-	if ( $post_id ) { $info .= display_media_player( array('post_id' => $post_id, 'position' => 'above') ); }
-	if ( $item_image ) {
+	if ( $post_id ) { 
+		$mp_info = display_media_player( array('post_id' => $post_id, 'position' => 'above', 'return' => 'array' ) );
+		$info .= $mp_info['info'];
+		$player_status = $mp_info['player_status'];
+	}
+	if ( $item_image && $player_status != "ready" ) {
 		$info .= $item_image;
 	}
 	$info .= $item_content;
-	if ( $post_id ) { $info .= display_media_player( array('post_id' => $post_id, 'position' => 'below') ); }
+	if ( $post_id ) { $info .= display_media_player( array('post_id' => $post_id, 'position' => 'below' ) ); }
 	$info .= '</div><!-- .entry-content -->';
 	$info .= '<footer class="entry-footer">';
 	$info .= birdhive_entry_meta( $post_id );
