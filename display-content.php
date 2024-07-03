@@ -1356,7 +1356,7 @@ function build_item_arr ( $item, $arr_styling = array() ) { // TODO: come up wit
 		$item_image = wp_get_attachment_image( $image_id, $img_size );
 		
 		if ( !empty($item_image) ) {
-			$img_class = $display_format."_item_image";
+			$img_class = "bia ".$display_format."_item_image";
 			if ( $display_format == "excerpts" || $display_format == "archive" ) {
 				$img_class .= " post-thumbnail sdg no-caption float-left";
 			}
