@@ -1615,7 +1615,7 @@ function collection_header ( $display_format = null, $num_cols = 3, $aspect_rati
 		
 	} else if ( $display_format == "table" ) {
 	
-		//$do_ts = true;
+		//$do_ts = devmode_active();
 		//$ts_info .= "fields: <pre>".print_r($fields, true)."</pre>";
 		//$ts_info .= "headers: <pre>".print_r($headers, true)."</pre>";
 		
@@ -2375,7 +2375,7 @@ function birdhive_display_posts ( $atts = array() ) { //function birdhive_displa
 		// WIP group_by
 		if ( $group_by ) {
 			
-			$do_ts = true;
+			$do_ts = devmode_active();
 			$args['do_ts'] = true;
 			$group_by_secondary = null;
 			
