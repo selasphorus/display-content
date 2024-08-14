@@ -799,7 +799,7 @@ function display_link_item ( $arr_item = array() ) {
 	if ( $item_text )  { $info .= '&nbsp;&mdash;&nbsp;<span class="description">'.$item_text.'</span>'; }
 	if ( $info ) { $info = '<div class="cc_item">'.$info.'</div>'; }
 	
-	//if ( $do_ts === true || $do_ts == "dcp" ) { $info .= '<div class="troubleshooting">'.$ts_info.'</div>'; }
+	//if ( $ts_info != "" && ( $do_ts === true || $do_ts == "dcp" ) ) { $info .= '<div class="troubleshooting">'.$ts_info.'</div>'; }
 	
 	return $info;
 			
@@ -1016,7 +1016,7 @@ function display_table_row ( $arr_item = array(), $arr_styling = array() ) {
 	
 	$info .= '</tr>';
 	
-	//if ( $do_ts === true || $do_ts == "dcp" ) { $info .= '<div class="troubleshooting">'.$ts_info.'</div>'; }
+	//if ( $ts_info != "" && ( $do_ts === true || $do_ts == "dcp" ) ) { $info .= '<div class="troubleshooting">'.$ts_info.'</div>'; }
 
 	return $info;
 	
@@ -1099,7 +1099,7 @@ function display_grid_item ( $arr_item = array(), $arr_styling = array() ) {
 	$info .= '</div>';
 	
 	// Troubleshooting info
-	if ( $do_ts === true || $do_ts == "dcp" ) { $info .= '<div class="troubleshooting">'.$ts_info.'</div>'; }
+	if ( $ts_info != "" && ( $do_ts === true || $do_ts == "dcp" ) ) { $info .= '<div class="troubleshooting">'.$ts_info.'</div>'; }
 	
 	return $info;
 	
@@ -1580,7 +1580,7 @@ function birdhive_display_collection ( $args = array() ) {
 	// List/table/grid footer or close container
 	$info .= collection_footer ( $display_format );
 	
-	if ( $do_ts === true || $do_ts == "dcp" ) { $info .= $ts_info; } //if ( $do_ts === true || $do_ts == "dcp" ) { $info .= '<div class="troubleshooting">'.$ts_info.'</div>'; }
+	if ( $ts_info != "" && ( $do_ts === true || $do_ts == "dcp" ) ) { $info .= $ts_info; } //if ( $ts_info != "" && ( $do_ts === true || $do_ts == "dcp" ) ) { $info .= '<div class="troubleshooting">'.$ts_info.'</div>'; }
 	
 	// Return info for display
 	return $info;
@@ -1665,7 +1665,7 @@ function collection_header ( $display_format = null, $num_cols = 3, $aspect_rati
 		$info .= '<!-- display_format '.$display_format.' not matched -->';
 	}
 	
-	if ( $do_ts === true || $do_ts == "dcp" ) { $info .= $ts_info; } //if ( $do_ts && !empty($ts_info) ) { $info .= $ts_info; } //if ( $do_ts && !empty($ts_info) ) { $info .= '<div class="troubleshooting">'.$ts_info.'</div>'; }
+	if ( $ts_info != "" && ( $do_ts === true || $do_ts == "dcp" ) ) { $info .= $ts_info; } //if ( $do_ts && !empty($ts_info) ) { $info .= $ts_info; } //if ( $do_ts && !empty($ts_info) ) { $info .= '<div class="troubleshooting">'.$ts_info.'</div>'; }
 	
 	// Return info for display
 	return $info;
@@ -2155,7 +2155,7 @@ function birdhive_get_posts ( $args = array() ) {
     //$ts_info .= "birdhive_get_posts arr_posts->request<pre>".$arr_posts->request."</pre>";
     $ts_info .= "birdhive_get_posts last_query:<pre>".$wpdb->last_query."</pre>";
     
-    //if ( $do_ts === true || $do_ts == "dcp" ) { $ts_info = '<div class="troubleshooting">'.$ts_info.'</div>'; }
+    //if ( $ts_info != "" && ( $do_ts === true || $do_ts == "dcp" ) ) { $ts_info = '<div class="troubleshooting">'.$ts_info.'</div>'; }
     
     $arr_info['arr_posts'] = $arr_posts;
     $arr_info['args'] = $wp_args;
@@ -2611,7 +2611,7 @@ function birdhive_display_posts ( $atts = array() ) { //function birdhive_displa
         
     } // END if posts
     
-    if ( $do_ts === true || $do_ts == "dcp" ) { $info .= '<div class="troubleshooting">'.$ts_info.'</div>'; }
+    if ( $ts_info != "" && ( $do_ts === true || $do_ts == "dcp" ) ) { $info .= '<div class="troubleshooting">'.$ts_info.'</div>'; }
     
     return $info;
     
@@ -2639,7 +2639,7 @@ function birdhive_content_collection ( $atts = array() ) {
     
     $info .= birdhive_display_collection( array('collection_id' => $id, 'display_atts' => array('do_ts' => $do_ts) ) );
     
-    if ( $do_ts === true || $do_ts == "dcp" ) { $info .= '<div class="troubleshooting">'.$ts_info.'</div>'; }
+    if ( $ts_info != "" && ( $do_ts === true || $do_ts == "dcp" ) ) { $info .= '<div class="troubleshooting">'.$ts_info.'</div>'; }
     
     return $info;
     
@@ -3805,7 +3805,7 @@ function birdhive_search_form ( $atts = array(), $content = null, $tag = '' ) {
         
     } // END if ( $args['fields'] )
     
-    if ( $do_ts === true || $do_ts == "dcp" ) { $info .= '<div class="troubleshooting">'.$ts_info.'</div>'; }
+    if ( $ts_info != "" && ( $do_ts === true || $do_ts == "dcp" ) ) { $info .= '<div class="troubleshooting">'.$ts_info.'</div>'; }
     
     return $info;
     
