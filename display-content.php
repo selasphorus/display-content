@@ -170,7 +170,7 @@ function dsplycntnt_scripts_method() {
 // TODO: build in plugin dependency on SDG
 // Facilitate search by str in post_title (as oppposed to built-in search by content or by post name, aka slug)
 //add_filter( 'posts_where', 'birdhive_posts_where', 10, 2 );
-function birdhive_posts_where( $where, $wp_query ) {
+/*function birdhive_posts_where( $where, $wp_query ) {
     
     global $wpdb;
     
@@ -218,7 +218,7 @@ function birdhive_posts_where( $where, $wp_query ) {
     
     return $where;
 }
-
+*/
 
 /*** MISC ***/
 
