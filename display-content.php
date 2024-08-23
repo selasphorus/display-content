@@ -164,16 +164,18 @@ function dsplycntnt_scripts_method() {
 
 }
 
+// The following filter function to be removed altogether after testing -- replaced by version of same fcn in sdg.php
 // Facilitate search by str in post_title (as oppposed to built-in search by content or by post name, aka slug)
-add_filter( 'posts_where', 'birdhive_posts_where', 10, 2 );
+//add_filter( 'posts_where', 'birdhive_posts_where', 10, 2 );
 function birdhive_posts_where( $where, $wp_query ) {
     
     global $wpdb;
     
     if ( $search_term = $wp_query->get( '_search_title' ) ) {
         $search_term = $wpdb->esc_like( $search_term );
-        $search_term = '\'%' . $search_term . '%\'';
-        $where .= ' AND ' . $wpdb->posts . '.post_title LIKE ' . $search_term;
+        $search_term = esc_sql($search_term);
+        //$search_term = '\'%' . $search_term . '%\'';
+        $where .= ' AND ' . $wpdb->posts . '.post_title LIKE \'%' . $search_term. '%\'';
         //$where .= " AND " . $wpdb->posts . ".post_title LIKE '" . esc_sql( $wpdb->esc_like( $title ) ) . "%'";
     }
     
@@ -2704,6 +2706,7 @@ function match_group_field ( $field_groups, $field_name ) {
 /***  SEARCH FORM ***/
 
 // TODO: generalize the following to make this functionality not so repertoire-specific
+// See also SDG common_functions.php -- new version WIP
 // https://www.advancedcustomfields.com/resources/creating-wp-archive-custom-field-filter/
 add_shortcode('birdhive_search_form', 'birdhive_search_form');
 function birdhive_search_form ( $atts = array(), $content = null, $tag = '' ) {
