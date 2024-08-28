@@ -1236,7 +1236,7 @@ function build_item_arr ( $item, $arr_styling = array() ) { // TODO: come up wit
 			// WIP
 			$img_args = array( 'post_id' => $post_id, 'format' => 'excerpt', 'img_size' => $img_size, 'sources' => "all", 'echo' => false, 'return_value' => 'id' );
 			$image_id = sdg_post_thumbnail ( $img_args );
-			$ts_info .= '[bia] sdg_post_thumbnail: image_id: '.$image_id.'<br />'; // tft		
+			$ts_info .= '[bia] sdg_post_thumbnail: image_id: '.$image_id.'<br />';		
 		}
 		// +~+~+~+~+~+~+~+~+~+~+~+~+~+~+~+~+~+~+~+~+~+~+~+
 		
@@ -1258,7 +1258,10 @@ function build_item_arr ( $item, $arr_styling = array() ) { // TODO: come up wit
 			$email_address = get_field( 'email_address', $post_id );
 			$first_name = get_field( 'first_name', $post_id );
 			if ( $email_address ) {
+				$ts_info .= '[bia] email_address: '.$email_address.'<br />';
 				$item_text .= '<a class="button" href="mailto:'.$email_address.'">Email '.$first_name.'</a>';
+			} else {
+				$ts_info .= '[bia] email_address: None found<br />';
 			}
 		}
 		/*if ( function_exists('is_dev_site') && is_dev_site() ) {
