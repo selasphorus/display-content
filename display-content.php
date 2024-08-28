@@ -1223,8 +1223,10 @@ function build_item_arr ( $item, $arr_styling = array() ) { // TODO: come up wit
 		
 		// Item URL
 		// TODO: deal w/ possibility of multiple external URLs
-		// WIP 231127
-		$item_url = get_the_permalink( $post_id ); //if ( empty($item_url) ) { $item_url = get_the_permalink( $post_id ); }
+		// WIP 231127, 240828
+		if ( $link_posts != "false" ) {
+			$item_url = get_the_permalink( $post_id ); //if ( empty($item_url) ) { $item_url = get_the_permalink( $post_id ); }
+		}		
 		
 		// +~+~+~+~+~+~+~+~+~+~+~+~+~+~+~+~+~+~+~+~+~+~+~+
 		
@@ -1332,9 +1334,11 @@ function build_item_arr ( $item, $arr_styling = array() ) { // TODO: come up wit
 			$item_link_target = "_blank";
 		} else if ( $post && $item_type == "link" ) {
 			$item_link_target = "_blank";
+		} else {
+			//$item_link_target = "_blank";
 		}
 	}
-	$link_target = ' target="'.$item_link_target.'"';
+	if ( !empty($item_link_target) ) { $link_target = ' target="'.$item_link_target.'"'; } else { $link_target = ""; }
 	
 	// Style the title
 	$ts_info .= '[bia] item_title (before styling): '.$item_title."<br />";
@@ -1414,6 +1418,7 @@ function birdhive_display_collection ( $args = array() ) {
 	// Defaults
 	$defaults = array(
 		'collection_id'		=> null,
+		'link_posts'		=> true,
 		'show_subtitles'	=> null,
 		'show_content'		=> null,
 		'table_fields'		=> array(),
@@ -1509,7 +1514,7 @@ function birdhive_display_collection ( $args = array() ) {
 		} else {
 		
 			// Assemble the array of styling parameters
-			$arr_styling = array( 'item_type' => $item_type, 'display_format' => $display_format, 'show_subtitle' => $show_subtitles, 'show_content' => $show_content, 'aspect_ratio' => $aspect_ratio, 'table_fields' => $table_fields, 'collection_id' => $collection_id, 'do_ts' => $do_ts ); // wip
+			$arr_styling = array( 'item_type' => $item_type, 'display_format' => $display_format, 'link_posts' => $link_posts, 'show_subtitle' => $show_subtitles, 'show_content' => $show_content, 'aspect_ratio' => $aspect_ratio, 'table_fields' => $table_fields, 'collection_id' => $collection_id, 'do_ts' => $do_ts ); // wip
 			//$item_ts_info .= "item: <pre>".print_r($item, true)."</pre>";
 			//$item_ts_info .= "arr_styling: <pre>".print_r($arr_styling, true)."</pre>";
 			
@@ -2228,6 +2233,7 @@ function birdhive_display_posts ( $atts = array() ) { //function birdhive_displa
         //
         'has_image' => false, // set to true to ONLY return posts with features images
         'class' => null, // for additional styling
+        'link_posts' => true,
         'show_images' => false,
         'show_subtitles' => true,
         'show_content' => null, //'excerpts', 'full'
@@ -2603,7 +2609,7 @@ function birdhive_display_posts ( $atts = array() ) { //function birdhive_displa
 		// TODO: check for existence of EM plugin in case some other event CPT is in use
 		if ( $post_type == "event" ) { $content_type = 'events'; } else { $content_type = 'posts'; }
 		// TODO: revise args to fit new setup for item arrays etc.
-		$display_args = array( 'content_type' => $content_type, 'display_format' => $display_format, 'show_subtitles' => $show_subtitles, 'show_content' => $show_content, 'items' => $items, 'display_atts' => $args );
+		$display_args = array( 'content_type' => $content_type, 'display_format' => $display_format, 'link_posts' => $link_posts, 'show_subtitles' => $show_subtitles, 'show_content' => $show_content, 'items' => $items, 'display_atts' => $args );
         $info .= birdhive_display_collection( $display_args );
 		
         $info .= '</div>'; // end div class="dsplycntnt-posts" (wrapper)
