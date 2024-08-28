@@ -913,7 +913,7 @@ function display_post_item ( $arr_item = array() ) {
 	//get_template_part( 'template-parts/content', $post_type_for_template );
 	//$info .= get_template_part( 'template-parts/content', $post_type );
 	
-	if ( $do_ts && !empty($ts_info) ) { $info .= $ts_info; }
+	if ( $ts_info != "" && ( $do_ts === true || $do_ts == "dcp" ) ) { $info .= $ts_info; }
 	
 	return $info;
 			
