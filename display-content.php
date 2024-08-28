@@ -1377,6 +1377,8 @@ function build_item_arr ( $item, $arr_styling = array() ) { // TODO: come up wit
 				$item_image = '<a href="#!" id="dialog_handle_'.$dialog_id.'" class="'.$img_class.' dialog_handle">'.$item_image.'</a>'; 
 			} else if ( !empty($item_url) ) { 
 				$item_image = '<a href="'.$item_url.'" rel="bookmark"'.$link_target.' class="'.$img_class.'">'.$item_image.'</a>';
+			} else {
+				$item_image = '<div class="'.$img_class.'">'.$item_image.'</div>';
 			}
 		}
 		
