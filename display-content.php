@@ -1253,6 +1253,14 @@ function build_item_arr ( $item, $arr_styling = array() ) { // TODO: come up wit
 				}
 			}
 		}
+		// This is temporary! Show email addresses until the vestry form is approved
+		if ( $post_type == "person" ) {
+			$email_address = get_field( 'email_address', $post_id );
+			$first_name = get_field( 'first_name', $post_id );
+			if ( $email_address ) {
+				$item_text .= '<a class="button" href="mailto:'.$email_address.'">Email '.$first_name.'</a>';
+			}
+		}
 		/*if ( function_exists('is_dev_site') && is_dev_site() ) {
 			$exp_args = array( 'post_id' => $post_id ); // $exp_args = array( 'text' => $text, 'post_id' => $post_id, 'text_length' => $text_length, 'preview_length' => $preview_length );
 			$item_text = expandable_text( $exp_args );
