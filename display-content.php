@@ -868,7 +868,20 @@ function display_post_item ( $arr_item = array() ) {
 		}
 	} else {
 		//$info .= $item_image;
-		$info .= $item_text;
+		//$info .= $item_text; // old -- incorrect -- ??
+		$item_content  = $item_text; // 240828
+	}
+
+	// This is temporary! Show email addresses until the vestry form is approved
+	if ( $post_type == "person" ) {
+		$email_address = get_field( 'email_address', $post_id );
+		$first_name = get_field( 'first_name', $post_id );
+		if ( $email_address ) {
+			$ts_info .= 'email_address: '.$email_address.'<br />';
+			$item_content .= '<a class="button" href="mailto:'.$email_address.'">Email '.$first_name.'</a>';
+		} else {
+			$ts_info .= 'email_address: None found<br />';
+		}
 	}
 	
 	// TODO: bring this more in alignment with theme template display? e.g. content-excerpt, content-sermon, content-event...
@@ -1251,17 +1264,6 @@ function build_item_arr ( $item, $arr_styling = array() ) { // TODO: come up wit
 				if ( empty($item_text) ) {
 					$item_text = get_field( 'location', $post_id );
 				}
-			}
-		}
-		// This is temporary! Show email addresses until the vestry form is approved
-		if ( $post_type == "person" ) {
-			$email_address = get_field( 'email_address', $post_id );
-			$first_name = get_field( 'first_name', $post_id );
-			if ( $email_address ) {
-				$ts_info .= '[bia] email_address: '.$email_address.'<br />';
-				$item_text .= '<a class="button" href="mailto:'.$email_address.'">Email '.$first_name.'</a>';
-			} else {
-				$ts_info .= '[bia] email_address: None found<br />';
 			}
 		}
 		/*if ( function_exists('is_dev_site') && is_dev_site() ) {
