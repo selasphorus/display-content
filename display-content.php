@@ -1238,7 +1238,7 @@ function build_item_arr ( $item, $arr_styling = array() ) { // TODO: come up wit
 		// Item URL
 		// TODO: deal w/ possibility of multiple external URLs
 		// WIP 231127, 240828
-		if ( empty($item_url) && $link_posts != "false" ) {
+		if ( empty($item_url) && $link_posts !== "false" ) {
 			$item_url = get_the_permalink( $post_id ); //if ( empty($item_url) ) { $item_url = get_the_permalink( $post_id ); }
 		} else {
 			$ts_info .= '[bia] link_posts: '.$link_posts."<br />";
