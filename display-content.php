@@ -1170,7 +1170,7 @@ function build_item_arr ( $item, $arr_styling = array() ) { // TODO: come up wit
 		
 	} else if ( is_array($item) ) {
 	
-		$ts_info .= '[bia] extract item: '.print_r($item,true).'<br />';
+		$ts_info .= '[bia] extract item: <pre>'.print_r($item,true).'</pre>';
 		extract( $item );
 	
 		if ( isset($post_object) && isset($post_object[0]) ) {
