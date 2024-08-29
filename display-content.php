@@ -1137,7 +1137,7 @@ function build_item_arr ( $item, $arr_styling = array() ) { // TODO: come up wit
 	$arr_item = array();
 	$ts_info = "";
 	//
-	$link_posts =  true; // default in case it's not set by arr_styling
+	$link_posts = true; // default in case it's not set by arr_styling
 	$display_format = null;
 	$aspect_ratio = 'square';
 	extract( $arr_styling );
@@ -1210,7 +1210,7 @@ function build_item_arr ( $item, $arr_styling = array() ) { // TODO: come up wit
 		//$ts_info .= '<!-- post: <pre>'.print_r($post, true).'</pre> -->';
 		$post_type = $post->post_type;
 		$post_id = $post->ID;
-		$ts_info .= '[bia] '.$post_type.' => post_id: '.$post_id."<br />";
+		$ts_info .= '[bia] post_type: '.$post_type.' / post_id: '.$post_id."<br />";
 		
 		// Item Title
 		// If there was no title override set via collection, then get a title
@@ -1240,7 +1240,8 @@ function build_item_arr ( $item, $arr_styling = array() ) { // TODO: come up wit
 		// WIP 231127, 240828
 		if ( empty($item_url) && $link_posts != "false" ) {
 			$item_url = get_the_permalink( $post_id ); //if ( empty($item_url) ) { $item_url = get_the_permalink( $post_id ); }
-		}		
+		}
+		$ts_info .= '[bia] item_url: '.$item_url."<br />";
 		
 		// +~+~+~+~+~+~+~+~+~+~+~+~+~+~+~+~+~+~+~+~+~+~+~+
 		
