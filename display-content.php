@@ -1137,6 +1137,7 @@ function build_item_arr ( $item, $arr_styling = array() ) { // TODO: come up wit
 	$arr_item = array();
 	$ts_info = "";
 	//
+	$link_posts =  true; // default in case it's not set by arr_styling
 	$display_format = null;
 	$aspect_ratio = 'square';
 	extract( $arr_styling );
