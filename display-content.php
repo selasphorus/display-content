@@ -1249,7 +1249,7 @@ function build_item_arr ( $item, $arr_styling = array() ) { // TODO: come up wit
 		
 			
 		// No collection image? Then look for a image via the post record
-		if ( ! $image_id ) {
+		if ( ! $image_id && $show_image !== 'false' ) {
 			// WIP
 			$img_args = array( 'post_id' => $post_id, 'format' => 'excerpt', 'img_size' => $img_size, 'sources' => "all", 'echo' => false, 'return_value' => 'id' );
 			$image_id = sdg_post_thumbnail ( $img_args );
@@ -1376,7 +1376,7 @@ function build_item_arr ( $item, $arr_styling = array() ) { // TODO: come up wit
 	
 	// Finalize the item image html based on the image_id, if any
 	$item_image = ""; // init
-	if ( !empty($image_id) ) {
+	if ( !empty($image_id) && $show_image !== 'false' ) {
 	
 		$ts_info .= '[bia] image_id: '.print_r($image_id,true).'<br />';	
 		$ts_info .= '[bia] aspect_ratio: '.$aspect_ratio.'<br />';
@@ -1400,7 +1400,7 @@ function build_item_arr ( $item, $arr_styling = array() ) { // TODO: come up wit
 		}
 		
 	} else {		
-		$ts_info .= '[bia] image_id NOT FOUND<br />';
+		$ts_info .= '[bia] No image.<br />';
 		//$item_ts_info .= "arr_item: <pre>".print_r($arr_item, true)."</pre>";
 	}
 	
@@ -1440,6 +1440,7 @@ function birdhive_display_collection ( $args = array() ) {
 		'link_posts'		=> true,
 		'show_subtitles'	=> null,
 		'show_content'		=> null,
+		'show_images'		=> null,
 		'table_fields'		=> array(),
 		'table_headers'		=> array(),
 		'table_totals'		=> array(), // field names
@@ -1533,7 +1534,7 @@ function birdhive_display_collection ( $args = array() ) {
 		} else {
 		
 			// Assemble the array of styling parameters
-			$arr_styling = array( 'item_type' => $item_type, 'display_format' => $display_format, 'link_posts' => $link_posts, 'show_subtitle' => $show_subtitles, 'show_content' => $show_content, 'aspect_ratio' => $aspect_ratio, 'table_fields' => $table_fields, 'collection_id' => $collection_id, 'do_ts' => $do_ts ); // wip
+			$arr_styling = array( 'item_type' => $item_type, 'display_format' => $display_format, 'link_posts' => $link_posts, 'show_subtitle' => $show_subtitles, 'show_content' => $show_content, 'show_image' => $show_images, 'aspect_ratio' => $aspect_ratio, 'table_fields' => $table_fields, 'collection_id' => $collection_id, 'do_ts' => $do_ts ); // wip
 			//$item_ts_info .= "item: <pre>".print_r($item, true)."</pre>";
 			//$item_ts_info .= "arr_styling: <pre>".print_r($arr_styling, true)."</pre>";
 			
