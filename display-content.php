@@ -873,7 +873,7 @@ function display_post_item ( $arr_item = array() ) {
 	}
 
 	// This is temporary! Show email addresses until the vestry form is approved
-	if ( $post_type == "person" ) {
+	if ( $post_type == "person" && !is_dev_site() ) {
 		$email_address = get_field( 'email_address', $post_id );
 		$first_name = get_field( 'first_name', $post_id );
 		if ( $email_address ) {
