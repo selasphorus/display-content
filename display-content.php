@@ -1610,7 +1610,7 @@ function birdhive_display_collection ( $args = array() ) {
 	// List/table/grid footer or close container
 	$info .= collection_footer ( $display_format );
 	
-	if ( $ts_info != "" && ( $do_ts === true || $do_ts == "dcp" ) ) { $info .= $ts_info; } //if ( $ts_info != "" && ( $do_ts === true || $do_ts == "dcp" ) ) { $info .= '<div class="troubleshooting">'.$ts_info.'</div>'; }
+	if ( $ts_info != "" && ( $do_ts === true || $do_ts == "dcp" ) ) { $info .= '<div class="troubleshooting">'.$ts_info.'</div>'; }
 	
 	// Return info for display
 	return $info;
