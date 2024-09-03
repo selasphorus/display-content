@@ -230,33 +230,6 @@ function dsplycntnt_query_vars( $qvars ) {
     return $qvars;
 }
 
-/**
- * Explode list using "," and ", ".
- *
- * @param string $string String to split up.
- * @return array Array of string parts.
- */
-function birdhive_att_explode( $string = '' ) {
-	$string = str_replace( ', ', ',', $string );
-	return explode( ',', $string );
-}
-
-function digit_to_word( $number ){
-    switch($number){
-        case 0:$word = "zero";break;
-        case 1:$word = "one";break;
-        case 2:$word = "two";break;
-        case 3:$word = "three";break;
-        case 4:$word = "four";break;
-        case 5:$word = "five";break;
-        case 6:$word = "six";break;
-        case 7:$word = "seven";break;
-        case 8:$word = "eight";break;
-        case 9:$word = "nine";break;
-    }
-    return $word;
-}
-
 // Hide everything within and including the square brackets
 // e.g. for titles matching the pattern "{Whatever} [xxx]" or "[xxx] {Whatever}"
 /*if ( !function_exists( 'remove_bracketed_info' ) ) {
