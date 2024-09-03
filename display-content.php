@@ -926,7 +926,7 @@ function display_post_item ( $arr_item = array() ) {
 	//get_template_part( 'template-parts/content', $post_type_for_template );
 	//$info .= get_template_part( 'template-parts/content', $post_type );
 	
-	if ( $ts_info != "" && ( $do_ts === true || $do_ts == "dcp" ) ) { $info .= $ts_info; }
+	if ( $ts_info != "" && ( $do_ts === true || $do_ts == "dcp" ) ) { $info .= '<div class="troubleshooting">'.$ts_info.'</div>'; }
 	
 	return $info;
 			
