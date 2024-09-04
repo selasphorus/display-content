@@ -1843,7 +1843,7 @@ function birdhive_get_posts ( $args = array() ) {
 					'terms'     => $term,
 					'include_children' => $include_children,
 					'operator'  => 'IN',
-				),
+				);
         	}
         	
         } else if ( $tax_terms && strpos($tax_terms,"NOT-") !== false ) {
