@@ -1828,7 +1828,25 @@ function birdhive_get_posts ( $args = array() ) {
         }
 
         // Taxonomy operator
-        if ( $tax_terms && strpos($tax_terms,"NOT-") !== false ) {
+        if ( $tax_terms && strpos($tax_terms,"+") !== false ) {
+        
+        	$arr_terms = explode("+",$tax_terms);
+        	
+        	// Build tax_query
+			$tax_query = array (
+				'relation' => 'AND'
+			);
+			foreach ( $arr_terms as $term ) {
+				$tax_query[] = array(
+					'taxonomy'  => $taxonomy,
+					'field'     => $tax_field,
+					'terms'     => $term,
+					'include_children' => $include_children,
+					'operator'  => 'IN',
+				),
+        	}
+        	
+        } else if ( $tax_terms && strpos($tax_terms,"NOT-") !== false ) {
         	// WIP
         	// What if there are multiple terms, and not all are negated?
         	if ( strpos($tax_terms,",") !== false ) {
@@ -1871,7 +1889,7 @@ function birdhive_get_posts ( $args = array() ) {
 						'include_children' => $include_children,
 						'operator'  => 'NOT IN',
 					)
-        		);        		
+        		);    		
                 
         	} else {
         		$tax_terms = str_replace("NOT-","",$tax_terms);
