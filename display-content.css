@@ -86,17 +86,19 @@
 .flex-container.twocol .flex-box {
     flex: 50%;
     max-width: 48%;
+    min-width: 250px;
 }
 
 .flex-container.threecol .flex-box {
     flex: 33%;
     max-width: 32%;
+    min-width: 250px;
 }
 
 .flex-container.fourcol .flex-box {
     flex: 25%;
     max-width: 24%;
-    flex-basis: 250px;
+    /*flex-basis: 250px;*/
 }
 
 .flex-container.centered .flex-box {
