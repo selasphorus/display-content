@@ -1197,7 +1197,7 @@ function build_item_arr ( $item, $arr_styling = array() ) { // TODO: come up wit
 				$item_title = $short_title;
 			} else if ( $post_type == "person" ) {
 				$title_args = array( 'person_id' => $post_id, 'show_job_title' => true );
-				$item_title = get_person_display_name($title_args);
+				$item_title = get_person_display_name($title_args)['info'];
 			} else if ( function_exists( 'sdg_post_title' ) ) {
 				$ts_info .= ' >> sdg_post_title<br />';
 				if ( !isset($show_subtitle) ) { $show_subtitle = true; }
