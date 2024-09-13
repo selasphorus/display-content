@@ -52,7 +52,7 @@
 	overflow: hidden;
     flex-grow: 1;
     flex-shrink: 1;
-    min-width: 250px; /* was 300 */
+    min-width: 200px; /*min-width: 250px;*/ /* was 300 */
     border: 1px solid #eee;
     border-radius: 9px 9px 0 0;
     margin-bottom: 1rem;
