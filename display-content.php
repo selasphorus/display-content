@@ -1195,6 +1195,9 @@ function build_item_arr ( $item, $arr_styling = array() ) { // TODO: come up wit
 			if ( !empty($short_title) ) {
 				$ts_info .= ' >> use short_title: '.$short_title.'<br />';
 				$item_title = $short_title;
+			} else if ( $post_type == "person" ) {
+				$title_args = array( 'person_id' => $post_id, 'show_job_title' => true );
+				$item_title = get_person_display_name($title_args);
 			} else if ( function_exists( 'sdg_post_title' ) ) {
 				$ts_info .= ' >> sdg_post_title<br />';
 				if ( !isset($show_subtitle) ) { $show_subtitle = true; }
@@ -2722,6 +2725,1127 @@ function match_group_field ( $field_groups, $field_name ) {
     return $field;
 }
 
+///// ****** START ACF Repeater Rows Display Function(s) -- WIP ****** /////
+
+// Music lists repeater field: list_items
+// Event Programs repeater field: 
+// TODO/WIP: generalize for use with other CPTs/other types of lists?
+// This is a modified version of WHX4: get_event_program_items
+add_shortcode('display_list_items', 'get_list_items');
+function get_list_items( $atts = array() ) {
+    
+    // TS/logging setup
+    $do_ts = devmode_active();
+    $do_log = false;
+    sdg_log( "divline2", $do_log );
+    
+	$args = shortcode_atts( array(
+		'post_id'        => get_the_ID(),
+        'run_updates' => false,
+        'display' => 'table'
+    ), $atts );
+    
+    // Extract
+	extract( $args );
+    
+    // Init vars
+    $arr_info = array(); // wip 06/27/23
+    $info = "";
+    $ts_info = "";
+    $ts_info .= "===== get_list_items =====<br />";
+    
+    if ( $display == 'table' ) { $table = ""; }
+    
+    // TODO: deal more thoroughly w/ non-table display option, or eliminate that parameter altogether.
+	
+	if ($post_id == null) { $post_id = get_the_ID(); }
+	$ts_info .= "Event Program Items for post_id: $post_id<br />";
+    //$ts_info .= "display: $display<br />";
+    
+    // What type of program is this? Service order or concert program?
+    $program_type = get_post_meta( $post_id, 'program_type', true );
+    $ts_info .= "program_type: $program_type<br />";
+    
+    // Program Layout -- left or centered?
+    $program_layout = get_post_meta( $post_id, 'program_layout', true );
+	
+    /*** WIP ***/
+    //if ( devmode_active() || is_dev_site() ) { $run_updates = true; } // TMP(?) disabled 03/25/22
+    //if ( devmode_active() || ( is_dev_site() && devmode_active() )  ) { $run_updates = true; } // ???
+    
+	// Get the program item repeater field values (ACF)
+    $program_rows = get_field('program_items', $post_id); // ACF function: https://www.advancedcustomfields.com/resources/get_field/ -- TODO: change to use have_rows() instead?
+    /*
+    if ( have_rows('program_items', $post_id) ) { // ACF function: https://www.advancedcustomfields.com/resources/have_rows/
+        while ( have_rows('program_items', $post_id) ) : the_row();
+            $XXX = get_sub_field('XXX'); // ACF function: https://www.advancedcustomfields.com/resources/get_sub_field/
+        endwhile;
+    } // end if
+    */    
+    if ( empty($program_rows) ) { $program_rows = array(); }    
+    if ( is_array($program_rows) ) { $ts_info .= count($program_rows)." program_items/program_rows<br />"; } else { $ts_info .= "program_rows: ".print_r($program_rows, true); }
+    
+    //TODO: Determine whether program as a whole contains grouped rows
+    /*
+    if ( program_contains_groupings($rows) ) {
+    	//
+    }
+    */
+    
+    // WIP: streamlining
+    
+	$authorship_display_settings = null;
+	$program_composer_ids = array(); // TMP -- deprecated
+    $deletion_count = 0;
+    $table_rows = array();
+    
+    if ( is_array($program_rows) ) {
+	
+		// Check to see if ANY of the rows contains items with post_type == 'repertoire'
+		if ( program_contains_repertoire($program_rows) ) { // TODO: generalize the following to apply to any items with authorship, not just rep/composers
+	
+			$ts_info .= "program contains repertoire items<br />";
+			// If so, then get all the program composers
+			$program_item_ids = get_program_item_ids($program_rows);
+			$ts_info .= "program_item_ids: ".print_r($program_item_ids, true)."<br />";
+			//
+			$authorship_display_settings = set_row_authorship_display($program_item_ids);
+			$ts_info .= "authorship_display_settings: <pre>".print_r($authorship_display_settings, true)."</pre><br />";
+		
+		}
+	
+		// Translate program_rows into table_rows (separate row per item)
+		//////
+    
+		foreach( $program_rows as $r => $row ) {
+		
+			// TODO: check if row is empty >> next
+		
+			// Initialize variables
+			$row_info = ""; // Info for troubleshooting
+			$row_info .= "-------------------- [row $r] --------------------<br />";
+		
+				$grouped_row = false; // For multiple-item rows
+				//
+			$placeholder_label = false;
+			$placeholder_item = false;
+				//
+			$arr_item_label = array();
+			$arr_item_name = array();
+				//
+			$program_item_label = null;
+			$program_item_name = null;
+				//
+				$show_person_dates = true;
+		
+			//
+			$label_update_required = false;
+			$delete_row = false;
+		
+			//$row_info .= "get_event_program_items ==> program row [$r]: ".print_r($row, true)."<br />";
+			
+			// Is a row_type set? WIP -- working on phasing out deprecated fields like 'show_item_label' in favor of simple row_types setup
+			if ( isset($row['row_type']) ) { $row_type = $row['row_type']; } else { $row_type = null; }
+			$row_info .= "get_event_program_items ==> row_type: ".$row_type."<br />";
+			
+			// ROW TYPES WIP: 
+			/*
+				Program item rows types:
+				default : Standard two-column row
+				header : Header row
+				program_note : Program note
+				label_only : Item label only
+				title_only : Item title only
+				//
+				Personnel row types:
+				default : Standard two-column row
+				header : Header row
+				role_only : Person role only
+				name_only : Person name only
+				//
+				Additional option to consider, TBD:
+				split : Title left/Authorship right
+				//
+				if ( $row_type == 'title_only' ) {
+					
+					$arr_item_name = get_rep_info( $program_item_obj_id, 'display', $show_item_authorship, true );
+					$item_name = $arr_item_name['info'];
+					$ts_info .= $arr_item_name['ts_info'];
+			
+				} else if ( empty($program_item_label) ) {
+
+					$ts_info .= "program_item_label is empty >> use title in left col<br />";
+				
+				}
+			*/
+			
+			// Is this a header row? (Check for deprecated field values)
+			if ( $row_type != "header" && isset($row['is_header']) && $row['is_header'] == 1 ) { $row_type = "header"; } // TODO: update the row_type in the DB
+		
+			// Should this row be displayed on the front end?
+			// TODO: modify to simplify as below -- set to true/false based on stored value, if any
+			if ( isset($row['show_row']) && $row['show_row'] != "" ) { 
+				$show_row = $row['show_row'];
+				$row_info .= "get_event_program_items ==> show_row = '".$row['show_row']."'<br />";
+			} else { 
+				$show_row = 1; // Default to 'Yes'/true/show the row if no zero value has been saved explicitly
+				$row_info .= "get_event_program_items ==> show_row = 1 (default)<br />";
+			}
+		
+			// Should we display the item label for this row?
+			// TODO: streamline/eliminate this deprecated field and simply update row_type
+			if ( isset($row['show_item_label']) && $row['show_item_label'] == "0" ) { 
+				$show_item_label = false;
+				$row_info .= "get_event_program_items ==> show_item_label FALSE<br />";
+			} else { 
+				$show_item_label = true; // Default to 'Yes'/true/show the row if no zero value has been saved explicitly
+				$row_info .= "get_event_program_items ==> show_item_label TRUE (default)<br />";
+			}
+				
+			// Should the item title for this row be displayed on the front end?
+			// TODO: streamline/eliminate this deprecated field and simply update row_type
+			if ( isset($row['show_item_title']) && $row['show_item_title'] == "0" ) { 
+				$show_item_title = false;
+				$row_info .= "show_item_title = 0, i.e. false<br />";
+			} else { 
+				$show_item_title = true; // Default to 'Yes'/true/show the row if no zero value has been saved explicitly
+				$row_info .= "default: show_item_title = true<br />";
+			}
+		
+			// Get the item label
+			// --------------------
+			// TODO/WIP: maybe figure out how to skip this for rep items in $program_type == "concert_program" where title is used in left col instead of label			
+			if ( $show_item_label == true && $row_type != 'title_only' ) {			
+				$row_info .= "get_program_item_label<br />";
+				$arr_item_label = get_program_item_label($row);
+				$program_item_label = $arr_item_label['item_label'];
+				$placeholder_label = $arr_item_label['placeholder'];
+				$row_info .= $arr_item_label['ts_info'];
+				$row_info .= ">> program_item_label: $program_item_label<br />";
+			}
+		
+			// Program item(s)
+			$program_items = array();
+			$num_items = 0;
+			if ( $show_item_title == true && $row_type != 'header' ) {
+				// Does the row contain one or more item objects?			
+				//$num_items = 1; // default: Single-item program_row translates to single table_row
+				if ( isset($row['program_item']) && is_array($row['program_item']) ) {
+					//$ts_info .= "program_item: ".print_r($row['program_item'], true)."<br />";
+					$num_items = count($row['program_item']);
+					$program_items = $row['program_item'];
+				}
+			}
+		
+			//if ( $num_items == 0 ) {
+			if ( empty($program_items) ) {
+		
+				// TODO: eliminate redundancy
+			
+				// No actual items in this row -- just placeholders
+				$row_info .= 'Zero-item program_row -- single table_row with placeholders<br />';
+				$tr = array();
+				$tds = array();
+				$tr_class = "program_objects";
+				if ( $show_row == "0" ) { $tr_class .= " hidden"; }
+				$i = 0;
+				$tr['tr_id'] = "tr-".$r.'-'.$i;
+			
+				if ( !empty($program_item_label) ) {
+					$td_class = "zero_item_row";
+					if ( $placeholder_label ) { $td_class .= " placeholder"; }
+					$td_content = $program_item_label;
+				
+					if ( $row_type == "header" || $row_type == "program_note" || $row_type == "label_only" || $row_type == "title_only" ) {
+					
+						// Single wide column row
+						$td_colspan = 2;					
+						$row_content = "";
+					
+						if ( $row_type == "header" ) { 
+							$td_class = "header";
+							$td_content = $program_item_label;
+						} else if ( $row_type == "program_note" ) {
+							$td_class = "program_note";
+							$td_content = $program_item_name;
+						} else if ( $row_type == "label_only" ) {
+							$td_class = "label_only";
+							$td_content = $program_item_label;
+						} else if ( $row_type == "title_only" ) {
+							$td_class = "title_only";
+							$td_content = $program_item_name;
+						}
+					} else {
+						$td_colspan = 1;
+					}
+				
+					$tds[] = array( 'td_class' => $td_class, 'td_colspan' => $td_colspan, 'td_content' => $td_content );
+				}
+			
+				// Get the program item name
+				// --------------------
+				$arr_item_name = get_program_item_name( array( 'row' => $row, 'program_type' => $program_type, 'row_type' => $row_type, 'program_item_label' => $program_item_label ) );
+				// Title as label?
+				if ( !empty($arr_item_name['title_as_label']) ) {
+					$row_info .= ">> use title_as_label<br />";
+					$title_as_label = $arr_item_name['title_as_label'];
+					$td_content = $title_as_label;
+					$td_class = "title_as_label";
+					$td_colspan = 1;
+					$tds[] = array( 'td_class' => $td_class, 'td_colspan' => $td_colspan, 'td_content' => $td_content );
+				} else {
+					$title_as_label = null;
+				}
+			
+				// Item Name
+				if ( $arr_item_name['item_name'] ) { $program_item_name = $arr_item_name['item_name']; }
+				if ( !empty($program_item_name) ) {
+					$td_class = "program_item placeholder"; // placeholder because this is a zero-item row
+					if ( $title_as_label ) { $td_class .= " authorship"; }
+					$td_content = $program_item_name;
+					$td_colspan = 1;
+					// Add this item as a table cell only for two-column rows -- WIP
+					if ( ! ($row_type == "header" || $row_type == "program_note" || $row_type == "label_only" || $row_type == "title_only") ) {
+						$tds[] = array( 'td_class' => $td_class, 'td_colspan' => $td_colspan, 'td_content' => $td_content );
+					}
+				}
+			
+				//
+				$tr['tr_class'] = $tr_class;
+				$tr['tds'] = $tds;
+			
+				$table_rows[] = $tr;
+			
+			} else if ( $num_items == 1 ) {
+				// Single-item program_row translates to single table_row
+				$row_info .= 'Single-item program_row -- single table_row<br />';
+			} else if ( $num_items > 1 ) {
+				// Multiple items per program row -- display settings per row_type, program_type... -- WIP
+				$row_info .= "*** $num_items program_items found for this row! ***<br />";
+			}
+		
+			$row_info .= " >>>>>>> START foreach program_item <<<<<<<<br />";
+
+			// Loop through the program items for this row (usually there is only one)
+			foreach ( $program_items as $i => $program_item_obj_id ) {
+
+				$row_info .= "<br />+~+~+~+~+ program_item #$i +~+~+~+~+<br />";
+					
+				$tr = array();
+				$tds = array();
+				$tr_class = "program_objects";
+				if ( $show_row == "0" ) { $tr_class .= " hidden"; }
+				if ( $num_items > 1 ) { $tr_class .= " row_group"; }
+				if ( $num_items > 1 && $i == $num_items-1 ) { $tr_class .= " last_in_group"; }
+				$tr['tr_id'] = "tr-".$r.'-'.$i;
+			
+				//
+				$row_info .= "program_item_obj_id: $program_item_obj_id<br />";
+				$item_post_type = get_post_type( $program_item_obj_id );
+				$row_info .= "item_post_type: $item_post_type<br />";
+			
+				// If there's a program label set for the row, and if this is the first 
+				if ( !empty($program_item_label) ) {
+				
+					$td_class = "test_td_class_1";
+					if ( $placeholder_label ) { $td_class .= " placeholder"; }
+				
+					if ( $row_type == "header" || $row_type == "program_note" || $row_type == "label_only" || $row_type == "title_only" ) {
+					
+						// Single column row
+						$td_colspan = 2;					
+						$row_content = "";
+					
+						if ( $row_type == "header" ) { 
+							$td_class = "header";
+							$td_content = $program_item_label;
+						} else if ( $row_type == "program_note" ) {
+							$td_class = "program_note";
+							$td_content = $program_item_name;
+						} else if ( $row_type == "label_only" ) {
+							$td_class = "label_only";
+							$td_content = $program_item_label;
+						} else if ( $row_type == "title_only" ) {
+							$td_class = "title_only";
+							$td_content = $program_item_name;
+						}
+					} else {
+						$td_colspan = 1;
+						if ( $i == 0 ) { $td_content = $program_item_label; } else { $td_content = ""; } //$td_content = "***"; }
+					}			
+				
+					$tds[] = array( 'td_class' => $td_class, 'td_colspan' => $td_colspan, 'td_content' => $td_content );
+				}
+				
+				if ( $authorship_display_settings && isset($authorship_display_settings[$r.'-'.$i]) ) {
+					$display_settings = $authorship_display_settings[$r.'-'.$i];
+					$row_info .= "[".$r.'-'.$i."] program_row >> display_settings: ".print_r($display_settings, true)."<br />";
+					if ( isset($display_settings['show_name']) && $display_settings['show_name'] ) { $tr_class .= " show_authorship"; } else { $tr_class .= " hide_authorship"; }
+					if ( isset($display_settings['show_dates']) && $display_settings['show_dates'] ) { $tr_class .= " show_person_dates"; } else { $tr_class .= " hide_person_dates"; }
+				} else {
+					$row_info .= "[".$r.'-'.$i."] program_row >> display_settings not set<br />";
+				}
+			
+				// Get the program item name
+				// --------------------
+				// WIP
+				$arr_item_name = get_program_item_name( array( 'row' => $row, 'program_type' => $program_type, 'row_type' => $row_type, 'program_item_obj_id' => $program_item_obj_id, 'program_item_label' => $program_item_label ) );
+				// Title as label?
+				if ( !empty($arr_item_name['title_as_label']) ) {
+					$row_info .= ">> use title_as_label<br />";
+					$title_as_label = $arr_item_name['title_as_label'];
+					$td_content = $title_as_label;
+					$td_class = "title_as_label";
+					$td_colspan = 1;
+					$tds[] = array( 'td_class' => $td_class, 'td_colspan' => $td_colspan, 'td_content' => $td_content );
+				} else {
+					$title_as_label = null;
+				}
+			
+				$row_info .= "START arr_item_name['ts_info']<br />";
+				$row_info .= $arr_item_name['ts_info']; // ts_info is already commented
+				$row_info .= "END arr_item_name['ts_info']<br />";
+				//$row_info .= "arr_item_name['info']: <pre>".$arr_item_name['info']."</pre>";
+			
+				// Program item_name
+				if ( $arr_item_name['item_name'] ) { $program_item_name = $arr_item_name['item_name']; }
+				if ( !empty($program_item_name) ) {
+					$td_class = "program_item";
+					if ( $title_as_label ) { $td_class .= " authorship"; }
+					$td_content = $program_item_name;
+					$td_colspan = 1;
+					// Add this item as a table cell only for two-column rows -- WIP
+					if ( ! ($row_type == "header" || $row_type == "program_note" || $row_type == "label_only" || $row_type == "title_only") ) {
+						$tds[] = array( 'td_class' => $td_class, 'td_colspan' => $td_colspan, 'td_content' => $td_content );
+					}
+				}
+			
+				$tr['tr_class'] = $tr_class;
+				$tr['tds'] = $tds;
+					
+				$table_rows[] = $tr;
+				
+			}
+			
+			$row_info .= '--------------------<br />';
+		
+				// Get the program item name
+				// --------------------
+				//$item_name_args = array();
+				//$item_name_args['show_item_authorship'] = null; // wip -- get value true/false based on $program_composers array
+				//$arr_item_name = get_program_item_name($item_name_args);
+			
+			
+				// Match Placeholders
+				//if ( $run_updates == true ) { match_placeholders($row); }
+			
+				// Cleanup/Deletion of extra/empty program rows
+				// --------------------
+				/*
+				// Check for extra/empty rows -- prep to delete them
+				if ( empty($program_item_label) && empty($program_item_name) ) {
+					// Empty row -- no label, no item
+					$delete_row = true;
+					$row_info .= "[$i] delete the row, because everything is empty.<br />";
+				} else if ( ( $program_item_label == "x" || $program_item_label == "")
+					&& ( $program_item_label == "x" || $program_item_label == "*NULL*" || $program_item_label == "" ) 
+					&& ( $program_item_name == "x" || $program_item_name == "*NULL*" || $program_item_name == "" ) 
+				   ) {
+					// Both label and item are either placeholder junk or empty
+					$delete_row = true;
+					$row_info .= "[$i] delete the row, because everything is meaningless.<br />";
+				} else if ( $program_item_label == "*NULL*" || $program_item_name == "*NULL*" ) {
+					// TODO: ???
+					if ( $program_item_label == "*NULL*" ) { $program_item_label = ""; }
+					if ( $program_item_name == "*NULL*" ) { $program_item_name = ""; }
+				}
+			
+				if ( $run_updates == true ) { $do_deletions = true; } else { $do_deletions = false; }
+				$do_deletions = false; // tft -- failsafe!
+			
+			
+				// If the row is empty/x-filled and needs to be deleted, then do so
+				if ( $delete_row == true ) {
+				
+					//sdg_log( "divline1", $do_log );
+					//sdg_log( "program row to be deleted:", $do_log );
+					//sdg_log( print_r($row, true), $do_log );
+					$row_info .= "row: ".print_r($row, true)."<br />";
+					$row_info .= "[$i] program row to be deleted<br />";
+					$row_info .= "[$i] program row: item_label_txt='".$row['item_label_txt']."'; item_label='".$row['item_label']."'; program_item_txt='".$row['program_item_txt']."'<br />";
+					//$row_info .= "[$i] program row: program_item='".print_r($row['program_item'], true)."'<br />";
+				
+					// ... but only run the action if this is the first deletion for this post_id in this round
+					// ... because if a row has already been deleted then the row indexes will have changed for all the personnel rows
+					// ... and though it would likely not be so difficult to reset the row index accordingly, for now let's proceed with caution...
+					if ( $deletion_count == 0 && $do_deletions == true ) {
+
+						if ( delete_row('program_items', $i, $post_id) ) { // ACF function: https://www.advancedcustomfields.com/resources/delete_row/ -- syntax: delete_row($selector, $row_num, $post_id) 
+							$row_info .= "[program row $i deleted]<br />";
+							$deletion_count++;
+							//sdg_log( "[program row $i deleted successfully]", $do_log );
+						} else {
+							$row_info .= "[deletion failed for program row $i]<br />";
+							//sdg_log( "[failed to delete program row $i]", $do_log );
+						}
+					
+					} else {
+					
+						if ( $do_deletions == true ) {
+							$row_info .= "[$i] row to be deleted on next round due to row_index issues.<br />";
+							//sdg_log( "row to be deleted on next round due to row_index issues.", $do_log );
+						} else {
+							$row_info .= "[$i] row to be deleted when do_deletions is re-enabled.<br />";
+							//sdg_log( "row to be deleted when do_deletions is re-enabled.", $do_log );
+						}
+					}
+				
+				}
+				*/
+			
+			
+				// Display the row if it's a header, or if BOTH item_label and item_name are not empty
+				// --------------------
+			
+				// Set up the table row
+				/*if ( $display == 'table' && $delete_row != true ) {
+					$tr_class = "program_objects";
+					if ( $show_row == '0' || $show_row == 0 ) { $tr_class .= " hidden"; } else { $tr_class .= " show_row"; }
+					if ( $show_person_dates == false ) { $tr_class .= " hide_person_dates"; } else { $tr_class .= " show_person_dates"; }
+					if ( $num_row_items > 1 || $grouped_row == true ) { $tr_class .= " grouping"; }
+					$table .= '<tr class="'.$tr_class.'">';
+				}*/
+			
+				// Insert row_info for troubleshooting
+				if ( devmode_active() ) {
+					if ( $display == 'table' ) {
+						//$table .= '<div class="troubleshooting">row_info:<br />'.$row_info.'</div>'; //$row_info; // Display comments w/ in row for ease of parsing dev notes
+					} else {
+						//$ts_info .= 'row_info:<br />'.$row_info;
+					}
+					$ts_info .= $row_info; //$ts_info .= 'row_info:<br />'.$row_info;
+				}
+			
+				// Add the table cells and close out the row
+				/*if ( $display == 'table' && $delete_row != true ) {
+				
+					if ( $row_type == "header" || $row_type == "program_note" || $row_type == "label_only" || $row_type == "title_only" ) {
+					
+						// Single column row
+						$row_content = "";
+						if ( $row_type == "header" ) { 
+							$td_class = "header";
+							$row_content = $program_item_label;
+						} else if ( $row_type == "program_note" ) {
+							$td_class = "program_note";
+							$row_content = $program_item_name;
+						} else if ( $row_type == "label_only" ) {
+							$td_class = "label_only";
+							$row_content = $program_item_label;
+						} else if ( $row_type == "title_only" ) {
+							$td_class = "title_only";
+							$row_content = $program_item_name;
+						}
+						if ( $placeholder_label == true ) { $td_class .= " placeholder"; }
+						$table .= '<td class="'.$td_class.'" colspan="2">'.$row_content.'</td>';
+					
+					} else {
+					
+						// Two column standard row
+					
+						$td_class = "program_label";
+					
+						if ( $show_item_label != true || empty($program_item_label) ) { $td_class .= " no_label"; }
+						if ( $placeholder_label == true ) { $td_class .= " placeholder"; }
+						if ( $label_update_required == true ) { $td_class .= " update_required"; }
+					
+						$table .= '<td class="'.$td_class.'">'.$program_item_label.'</td>';
+						$td_class = "program_item";
+						if ( $placeholder_item == true ) { $td_class .= " placeholder"; }
+						$table .= '<td class="'.$td_class.'">'.$program_item_name.'</td>';
+					
+					}
+					$table .= '</tr>';
+				}*/
+			
+				// Data Cleanup -- WIP
+				// ...figuring out how to sync repertoire related_events w/ updates to program items -- display some TS info to aid this process
+				/*if ( devmode_active() ) {
+					$arr_row_info = event_program_row_cleanup ( $post_id, $i, $row, "program_items" );								
+					$ts_info .= $arr_row_info['info'];
+					$row_errors = $arr_row_info['errors'];
+					//if ( $row_errors ) { $post_errors = true; }
+					if ( isset($row['program_item'][0]) ) {
+						foreach ( $row['program_item'] as $program_item_obj_id ) {						
+							$item_post_type = get_post_type( $program_item_obj_id );						
+							if ( $item_post_type == 'repertoire' ) {
+								// Update the repertoire_events field for this rep record, as needed
+								$ts_info .= update_repertoire_events( $program_item_obj_id, false, array($post_id) );							
+							}					
+						}
+					}
+				}*/
+
+				// --------------------
+			
+			//$i++;
+		
+		
+		} // END foreach( $program_rows as $row )
+    
+    }
+    
+    /////
+    
+    // Build the table based on the table_rows array
+    if ( $display == 'table' && count($table_rows) > 0 ) {
+        
+        if ( $display == 'table' ) {
+        	$table_classes = "event_program program ".$program_layout;
+            $table = '<table class="'.$table_classes.'">';
+            $table .= '<tbody>';
+        }
+
+        // Has a Program Items header been designated? If so, then display it.
+        $program_items_header = get_post_meta( $post_id, 'program_items_header', true );
+        if ( $display == 'table' && !empty($program_items_header) ) {
+            $table .= '<tr><th colspan="2"><h2>'.$program_items_header.'</h2></th></tr>'; //class=""
+        } else {
+        	// TBD display of header for non-table display
+        }
+        
+        // --------------------
+        
+        foreach( $table_rows as $tr ) {
+        
+        	//$ts_info .= "tr: <pre>".print_r($tr, true)."</pre><br />";
+        	
+        	$table .= '<tr id="'.$tr['tr_id'].'" class="'.$tr['tr_class'].'">';
+        	foreach ( $tr['tds'] as $td ) {
+        		$table .= '<td class="'.$td['td_class'].'" colspan="'.$td['td_colspan'].'">'.$td['td_content'].'</td>';
+        	}
+        	$table .= '</tr>';
+        	
+        	/*
+        
+        	//$tr;
+        	//$show_row
+        	//$row_type
+        	//$td_class
+        	//$td_class1
+        	//$td_class2
+        	//$show_item_authorship = true;
+			//$show_person_dates = true;
+        	
+        	
+        	// Set up the table row
+			$tr_class = "program_objects";
+			if ( $show_row == '0' || $show_row == 0 ) { $tr_class .= " hidden"; } else { $tr_class .= " show_row"; }
+			if ( $show_person_dates == false ) { $tr_class .= " hide_person_dates"; } else { $tr_class .= " show_person_dates"; }
+            if ( $num_row_items > 1 || $grouped_row == true ) { $tr_class .= " grouping"; }
+            
+			$table .= '<tr class="'.$tr_class.'">';
+			
+			if ( $row_type == "header" || $row_type == "program_note" || $row_type == "label_only" || $row_type == "title_only" ) {
+                    
+				// Single column row
+				
+				$row_content = "";
+				if ( $row_type == "header" ) { 
+					$td_class = "header";
+					$row_content = $program_item_label;
+				} else if ( $row_type == "program_note" ) {
+					$td_class = "program_note";
+					$row_content = $program_item_name;
+				} else if ( $row_type == "label_only" ) {
+					$td_class = "label_only";
+					$row_content = $program_item_label;
+				} else if ( $row_type == "title_only" ) {
+					$td_class = "title_only";
+					$row_content = $program_item_name;
+				}
+				if ( $placeholder_label == true ) { $td_class .= " placeholder"; }
+				$table .= '<td class="'.$td_class.'" colspan="2">'.$row_content.'</td>';
+				
+			} else {
+				
+				// Two column standard row
+				
+				$td_class = "program_label";
+				
+				if ( $show_item_label != true || empty($program_item_label) ) { $td_class .= " no_label"; }
+				if ( $placeholder_label == true ) { $td_class .= " placeholder"; }
+				if ( $label_update_required == true ) { $td_class .= " update_required"; }
+				
+				$table .= '<td class="'.$td_class.'">'.$program_item_label.'</td>';
+				$td_class = "program_item";
+				if ( $placeholder_item == true ) { $td_class .= " placeholder"; }
+				$table .= '<td class="'.$td_class.'">'.$program_item_name.'</td>';
+				
+			}
+				
+			$table .= '</tr>';
+			*/
+        }
+		
+		// --------------------
+		
+		// Close the table
+        if ( $display == 'table' ) {
+            $table .= '</tbody>';
+            $table .= '</table>';
+        }
+        
+        $info .= $table;
+        
+    } // end if $rows
+    
+    $arr_info['info'] = $info;
+    $arr_info['ts_info'] = $ts_info;
+	return $arr_info;
+	
+}
+
+
+function get_list_items_v1( $atts = array() ) {
+    
+    // TS/logging setup
+    $do_ts = devmode_active();
+    $do_log = false;
+    sdg_log( "divline2", $do_log );
+    
+	$args = shortcode_atts( array(
+		'post_id'        => get_the_ID(),
+        'run_updates' => false,
+        'display' => 'table'       
+    ), $atts );
+    
+    // Extract
+	extract( $args );
+    
+    // Init vars
+    $arr_info = array();
+    $info = "";
+    $ts_info = "";
+    $ts_info .= "===== get_list_items =====<br />";
+    
+    if ( $display == 'table' ) { $table = ""; }
+    
+    // TODO: deal more thoroughly w/ non-table display option, or eliminate that parameter altogether.
+	
+	if ($post_id == null) { $post_id = get_the_ID(); }
+	$ts_info .= "Items for post_id: $post_id<br />";
+    //$ts_info .= "display: $display<br />";
+    
+    // What type of list is this? Music list? Other kind of list?
+    //$list_type = get_post_meta( $post_id, 'list_type', true );
+    //$ts_info .= "list_type: $list_type<br />";
+    
+	// Get the list item repeater field values (ACF)
+    $list_rows = get_field('list_items', $post_id); // ACF function: https://www.advancedcustomfields.com/resources/get_field/ -- TODO: change to use have_rows() instead?   
+    if ( empty($list_rows) ) { $list_rows = array(); }    
+    if ( is_array($list_rows) ) { $ts_info .= count($list_rows)." list_items/list_rows<br />"; } else { $ts_info .= "list_rows: ".print_r($list_rows, true); }
+    
+    // WIP: streamlining
+    
+	$authorship_display_settings = null;
+	$list_composer_ids = array(); // TMP -- deprecated
+    $deletion_count = 0;
+    $table_rows = array();
+    
+    if ( is_array($list_rows) ) {
+	
+		// Check to see if ANY of the rows contains items with post_type == 'repertoire'
+		if ( list_contains_repertoire($list_rows) ) { // TODO: generalize the following to apply to any items with authorship, not just rep/composers
+	
+			$ts_info .= "list contains repertoire items<br />";
+			// If so, then get all the list composers
+			$list_item_ids = get_list_item_ids($list_rows);
+			$ts_info .= "list_item_ids: ".print_r($list_item_ids, true)."<br />";
+			//
+			$authorship_display_settings = set_row_authorship_display($list_item_ids);
+			$ts_info .= "authorship_display_settings: <pre>".print_r($authorship_display_settings, true)."</pre><br />";
+		
+		}
+	
+		// Translate list_rows into table_rows (separate row per item)
+    
+		foreach( $list_rows as $r => $row ) {
+		
+			// TODO: check if row is empty >> next
+		
+			// Initialize variables
+			$row_info = ""; // Info for troubleshooting
+			$row_info .= "-------------------- [row $r] --------------------<br />";
+		
+			$grouped_row = false; // For multiple-item rows
+			//
+			$placeholder_label = false;
+			$placeholder_item = false;
+			//
+			$arr_item_label = array();
+			$arr_item_name = array();
+			//
+			$list_item_label = null;
+			$list_item_name = null;
+			//
+			$show_person_dates = true;
+		
+			//
+			$label_update_required = false;
+			$delete_row = false;
+		
+			//$row_info .= "get_list_items ==> list row [$r]: ".print_r($row, true)."<br />";
+			
+			// Is a row_type set? WIP -- working on phasing out deprecated fields like 'show_item_label' in favor of simple row_types setup
+			if ( isset($row['row_type']) ) { $row_type = $row['row_type']; } else { $row_type = null; }
+			$row_info .= "get_list_items ==> row_type: ".$row_type."<br />";
+			
+			// ROW TYPES WIP: 
+			/*
+				List item rows types:
+				default : Standard two-column row
+				header : Header row
+				list_note : Program note
+				label_only : Item label only
+				title_only : Item title only
+				//
+				Additional option to consider, TBD:
+				split : Title left/Authorship right
+				//
+				if ( $row_type == 'title_only' ) {
+					
+					$arr_item_name = get_rep_info( $list_item_obj_id, 'display', $show_item_authorship, true );
+					$item_name = $arr_item_name['info'];
+					$ts_info .= $arr_item_name['ts_info'];
+			
+				} else if ( empty($list_item_label) ) {
+
+					$ts_info .= "list_item_label is empty >> use title in left col<br />";
+				
+				}
+			*/
+			
+			// Is this a header row? (Check for deprecated field values)
+			if ( $row_type != "header" && isset($row['is_header']) && $row['is_header'] == 1 ) { $row_type = "header"; } // TODO: update the row_type in the DB
+		
+			// Should this row be displayed on the front end?
+			// TODO: modify to simplify as below -- set to true/false based on stored value, if any
+			if ( isset($row['show_row']) && $row['show_row'] != "" ) { 
+				$show_row = $row['show_row'];
+				$row_info .= "get_list_items ==> show_row = '".$row['show_row']."'<br />";
+			} else { 
+				$show_row = 1; // Default to 'Yes'/true/show the row if no zero value has been saved explicitly
+				$row_info .= "get_list_items ==> show_row = 1 (default)<br />";
+			}
+		
+			// Should we display the item label for this row?
+			// TODO: streamline/eliminate this deprecated field and simply update row_type
+			if ( isset($row['show_item_label']) && $row['show_item_label'] == "0" ) { 
+				$show_item_label = false;
+				$row_info .= "get_list_items ==> show_item_label FALSE<br />";
+			} else { 
+				$show_item_label = true; // Default to 'Yes'/true/show the row if no zero value has been saved explicitly
+				$row_info .= "get_list_items ==> show_item_label TRUE (default)<br />";
+			}
+				
+			// Should the item title for this row be displayed on the front end?
+			// TODO: streamline/eliminate this deprecated field and simply update row_type
+			if ( isset($row['show_item_title']) && $row['show_item_title'] == "0" ) { 
+				$show_item_title = false;
+				$row_info .= "show_item_title = 0, i.e. false<br />";
+			} else { 
+				$show_item_title = true; // Default to 'Yes'/true/show the row if no zero value has been saved explicitly
+				$row_info .= "default: show_item_title = true<br />";
+			}
+		
+			// Get the item label
+			// --------------------
+			// TODO/WIP: maybe figure out how to skip this for rep items in $list_type == "concert_program" where title is used in left col instead of label			
+			if ( $show_item_label == true && $row_type != 'title_only' ) {			
+				$row_info .= "get_list_item_label<br />";
+				$arr_item_label = get_list_item_label($row);
+				$list_item_label = $arr_item_label['item_label'];
+				$placeholder_label = $arr_item_label['placeholder'];
+				$row_info .= $arr_item_label['ts_info'];
+				$row_info .= ">> list_item_label: $list_item_label<br />";
+			}
+		
+			// Program item(s)
+			$list_items = array();
+			$num_items = 0;
+			if ( $show_item_title == true && $row_type != 'header' ) {
+				// Does the row contain one or more item objects?			
+				//$num_items = 1; // default: Single-item list_row translates to single table_row
+				if ( isset($row['list_item']) && is_array($row['list_item']) ) {
+					//$ts_info .= "list_item: ".print_r($row['list_item'], true)."<br />";
+					$num_items = count($row['list_item']);
+					$list_items = $row['list_item'];
+				}
+			}
+		
+			//if ( $num_items == 0 ) {
+			if ( empty($list_items) ) {
+		
+				// TODO: eliminate redundancy
+			
+				// No actual items in this row -- just placeholders
+				$row_info .= 'Zero-item list_row -- single table_row with placeholders<br />';
+				$tr = array();
+				$tds = array();
+				$tr_class = "list_objects";
+				if ( $show_row == "0" ) { $tr_class .= " hidden"; }
+				$i = 0;
+				$tr['tr_id'] = "tr-".$r.'-'.$i;
+			
+				if ( !empty($list_item_label) ) {
+					$td_class = "zero_item_row";
+					if ( $placeholder_label ) { $td_class .= " placeholder"; }
+					$td_content = $list_item_label;
+				
+					if ( $row_type == "header" || $row_type == "list_note" || $row_type == "label_only" || $row_type == "title_only" ) {
+					
+						// Single wide column row
+						$td_colspan = 2;					
+						$row_content = "";
+					
+						if ( $row_type == "header" ) { 
+							$td_class = "header";
+							$td_content = $list_item_label;
+						} else if ( $row_type == "list_note" ) {
+							$td_class = "list_note";
+							$td_content = $list_item_name;
+						} else if ( $row_type == "label_only" ) {
+							$td_class = "label_only";
+							$td_content = $list_item_label;
+						} else if ( $row_type == "title_only" ) {
+							$td_class = "title_only";
+							$td_content = $list_item_name;
+						}
+					} else {
+						$td_colspan = 1;
+					}
+				
+					$tds[] = array( 'td_class' => $td_class, 'td_colspan' => $td_colspan, 'td_content' => $td_content );
+				}
+			
+				// Get the list item name
+				// --------------------
+				$arr_item_name = get_list_item_name( array( 'row' => $row, 'list_type' => $list_type, 'row_type' => $row_type, 'list_item_label' => $list_item_label ) );
+				// Title as label?
+				if ( !empty($arr_item_name['title_as_label']) ) {
+					$row_info .= ">> use title_as_label<br />";
+					$title_as_label = $arr_item_name['title_as_label'];
+					$td_content = $title_as_label;
+					$td_class = "title_as_label";
+					$td_colspan = 1;
+					$tds[] = array( 'td_class' => $td_class, 'td_colspan' => $td_colspan, 'td_content' => $td_content );
+				} else {
+					$title_as_label = null;
+				}
+			
+				// Item Name
+				if ( $arr_item_name['item_name'] ) { $list_item_name = $arr_item_name['item_name']; }
+				if ( !empty($list_item_name) ) {
+					$td_class = "list_item placeholder"; // placeholder because this is a zero-item row
+					if ( $title_as_label ) { $td_class .= " authorship"; }
+					$td_content = $list_item_name;
+					$td_colspan = 1;
+					// Add this item as a table cell only for two-column rows -- WIP
+					if ( ! ($row_type == "header" || $row_type == "list_note" || $row_type == "label_only" || $row_type == "title_only") ) {
+						$tds[] = array( 'td_class' => $td_class, 'td_colspan' => $td_colspan, 'td_content' => $td_content );
+					}
+				}
+			
+				//
+				$tr['tr_class'] = $tr_class;
+				$tr['tds'] = $tds;
+			
+				$table_rows[] = $tr;
+			
+			} else if ( $num_items == 1 ) {
+				// Single-item list_row translates to single table_row
+				$row_info .= 'Single-item list_row -- single table_row<br />';
+			} else if ( $num_items > 1 ) {
+				// Multiple items per list row -- display settings per row_type, list_type... -- WIP
+				$row_info .= "*** $num_items list_items found for this row! ***<br />";
+			}
+		
+			$row_info .= " >>>>>>> START foreach list_item <<<<<<<<br />";
+
+			// Loop through the list items for this row (usually there is only one)
+			foreach ( $list_items as $i => $list_item_obj_id ) {
+
+				$row_info .= "<br />+~+~+~+~+ list_item #$i +~+~+~+~+<br />";
+					
+				$tr = array();
+				$tds = array();
+				$tr_class = "list_objects";
+				if ( $show_row == "0" ) { $tr_class .= " hidden"; }
+				if ( $num_items > 1 ) { $tr_class .= " row_group"; }
+				if ( $num_items > 1 && $i == $num_items-1 ) { $tr_class .= " last_in_group"; }
+				$tr['tr_id'] = "tr-".$r.'-'.$i;
+			
+				//
+				$row_info .= "list_item_obj_id: $list_item_obj_id<br />";
+				$item_post_type = get_post_type( $list_item_obj_id );
+				$row_info .= "item_post_type: $item_post_type<br />";
+			
+				// If there's a list label set for the row, and if this is the first 
+				if ( !empty($list_item_label) ) {
+				
+					$td_class = "test_td_class_1";
+					if ( $placeholder_label ) { $td_class .= " placeholder"; }
+				
+					if ( $row_type == "header" || $row_type == "list_note" || $row_type == "label_only" || $row_type == "title_only" ) {
+					
+						// Single column row
+						$td_colspan = 2;					
+						$row_content = "";
+					
+						if ( $row_type == "header" ) { 
+							$td_class = "header";
+							$td_content = $list_item_label;
+						} else if ( $row_type == "list_note" ) {
+							$td_class = "list_note";
+							$td_content = $list_item_name;
+						} else if ( $row_type == "label_only" ) {
+							$td_class = "label_only";
+							$td_content = $list_item_label;
+						} else if ( $row_type == "title_only" ) {
+							$td_class = "title_only";
+							$td_content = $list_item_name;
+						}
+					} else {
+						$td_colspan = 1;
+						if ( $i == 0 ) { $td_content = $list_item_label; } else { $td_content = ""; } //$td_content = "***"; }
+					}			
+				
+					$tds[] = array( 'td_class' => $td_class, 'td_colspan' => $td_colspan, 'td_content' => $td_content );
+				}
+				
+				if ( $authorship_display_settings && isset($authorship_display_settings[$r.'-'.$i]) ) {
+					$display_settings = $authorship_display_settings[$r.'-'.$i];
+					$row_info .= "[".$r.'-'.$i."] list_row >> display_settings: ".print_r($display_settings, true)."<br />";
+					if ( isset($display_settings['show_name']) && $display_settings['show_name'] ) { $tr_class .= " show_authorship"; } else { $tr_class .= " hide_authorship"; }
+					if ( isset($display_settings['show_dates']) && $display_settings['show_dates'] ) { $tr_class .= " show_person_dates"; } else { $tr_class .= " hide_person_dates"; }
+				} else {
+					$row_info .= "[".$r.'-'.$i."] list_row >> display_settings not set<br />";
+				}
+			
+				// Get the list item name
+				// --------------------
+				// WIP
+				$arr_item_name = get_list_item_name( array( 'row' => $row, 'list_type' => $list_type, 'row_type' => $row_type, 'list_item_obj_id' => $list_item_obj_id, 'list_item_label' => $list_item_label ) );
+				// Title as label?
+				if ( !empty($arr_item_name['title_as_label']) ) {
+					$row_info .= ">> use title_as_label<br />";
+					$title_as_label = $arr_item_name['title_as_label'];
+					$td_content = $title_as_label;
+					$td_class = "title_as_label";
+					$td_colspan = 1;
+					$tds[] = array( 'td_class' => $td_class, 'td_colspan' => $td_colspan, 'td_content' => $td_content );
+				} else {
+					$title_as_label = null;
+				}
+			
+				$row_info .= "START arr_item_name['ts_info']<br />";
+				$row_info .= $arr_item_name['ts_info']; // ts_info is already commented
+				$row_info .= "END arr_item_name['ts_info']<br />";
+				//$row_info .= "arr_item_name['info']: <pre>".$arr_item_name['info']."</pre>";
+			
+				// Program item_name
+				if ( $arr_item_name['item_name'] ) { $list_item_name = $arr_item_name['item_name']; }
+				if ( !empty($list_item_name) ) {
+					$td_class = "list_item";
+					if ( $title_as_label ) { $td_class .= " authorship"; }
+					$td_content = $list_item_name;
+					$td_colspan = 1;
+					// Add this item as a table cell only for two-column rows -- WIP
+					if ( ! ($row_type == "header" || $row_type == "list_note" || $row_type == "label_only" || $row_type == "title_only") ) {
+						$tds[] = array( 'td_class' => $td_class, 'td_colspan' => $td_colspan, 'td_content' => $td_content );
+					}
+				}
+			
+				$tr['tr_class'] = $tr_class;
+				$tr['tds'] = $tds;
+					
+				$table_rows[] = $tr;
+				
+			}
+			
+			$row_info .= '--------------------<br />';
+				
+			// Insert row_info for troubleshooting
+			if ( devmode_active() ) {
+				if ( $display == 'table' ) {
+					//$table .= '<div class="troubleshooting">row_info:<br />'.$row_info.'</div>'; //$row_info; // Display comments w/ in row for ease of parsing dev notes
+				} else {
+					//$ts_info .= 'row_info:<br />'.$row_info;
+				}
+				$ts_info .= $row_info; //$ts_info .= 'row_info:<br />'.$row_info;
+			}
+		
+			// --------------------
+		
+		
+		} // END foreach( $list_rows as $row )
+    
+    }
+    
+    /////
+    
+    // Build the table based on the table_rows array
+    if ( $display == 'table' && count($table_rows) > 0 ) {
+        
+        if ( $display == 'table' ) {
+        	$table_classes = "list ".$list_layout;
+            $table = '<table class="'.$table_classes.'">';
+            $table .= '<tbody>';
+        }
+
+        // Has a Program Items header been designated? If so, then display it.
+        $list_items_header = get_post_meta( $post_id, 'list_items_header', true );
+        if ( $display == 'table' && !empty($list_items_header) ) {
+            $table .= '<tr><th colspan="2"><h2>'.$list_items_header.'</h2></th></tr>'; //class=""
+        } else {
+        	// TBD display of header for non-table display
+        }
+        
+        // --------------------
+        
+        foreach( $table_rows as $tr ) {
+        
+        	//$ts_info .= "tr: <pre>".print_r($tr, true)."</pre><br />";
+        	
+        	$table .= '<tr id="'.$tr['tr_id'].'" class="'.$tr['tr_class'].'">';
+        	foreach ( $tr['tds'] as $td ) {
+        		$table .= '<td class="'.$td['td_class'].'" colspan="'.$td['td_colspan'].'">'.$td['td_content'].'</td>';
+        	}
+        	$table .= '</tr>';
+        	
+        }
+		
+		// --------------------
+		
+		// Close the table
+        if ( $display == 'table' ) {
+            $table .= '</tbody>';
+            $table .= '</table>';
+        }
+        
+        $info .= $table;
+        
+    } // end if $rows
+    
+    $arr_info['info'] = $info;
+    $arr_info['ts_info'] = $ts_info;
+	return $arr_info;
+	
+}
+
+
+///// ****** END ACF Repeater Rows Display Function(s) -- WIP ****** /////
 
 /***  SEARCH FORM ***/
 
