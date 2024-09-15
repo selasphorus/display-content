@@ -2122,7 +2122,7 @@ function birdhive_get_posts ( $args = array() ) {
 				// Event series
 				$meta_query_components[] = 
 					array(
-						'key' => 'event_series_event', //'key' => 'events_series',
+						'key' => 'event_series', //'key' => 'series_events', //'key' => 'events_series',
                         'value' => '"' . $series . '"', // Series ID -- matches exactly "123", not just 123. This prevents a match for "1234"
                         'compare' => 'LIKE'	
 					);
