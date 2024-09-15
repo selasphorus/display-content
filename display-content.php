@@ -1354,6 +1354,7 @@ function build_item_arr ( $item, $arr_styling = array() ) { // TODO: come up wit
 	$item_image = ""; // init
 	if ( !empty($image_id) && $show_image !== 'false' ) {
 	
+		// WIP: TS sizing of grid images e.g. https://www.saintthomaschurch.org/whos-who-new-revised/#vestry
 		$ts_info .= '[bia] image_id: '.print_r($image_id,true).'<br />';	
 		$ts_info .= '[bia] aspect_ratio: '.$aspect_ratio.'<br />';
 		$ts_info .= '[bia] img_size: '.print_r($img_size, true).'<br />';	
@@ -2121,7 +2122,7 @@ function birdhive_get_posts ( $args = array() ) {
 				// Event series
 				$meta_query_components[] = 
 					array(
-						'key' => 'series_events', //'key' => 'events_series',
+						'key' => 'event_series_event', //'key' => 'events_series',
                         'value' => '"' . $series . '"', // Series ID -- matches exactly "123", not just 123. This prevents a match for "1234"
                         'compare' => 'LIKE'	
 					);
@@ -2725,7 +2726,7 @@ function match_group_field ( $field_groups, $field_name ) {
     return $field;
 }
 
-///// ****** START ACF Repeater Rows Display Function(s) -- WIP ****** /////
+///// ****** START ACF Repeater Rows Display Function(s) -- WIP 2409 ****** /////
 
 // Music lists repeater field: list_items
 // Event Programs repeater field: 
