@@ -55,7 +55,7 @@ $plugin_path = plugin_dir_path( __FILE__ );
 function dsplycntnt_settings_init() {
 
 	// TS/logging setup
-    $do_ts = devmode_active(); 
+    $do_ts = devmode_active( array("dcp") );
     $do_log = false;
     sdg_log( "divline2", $do_log );
 
@@ -672,7 +672,7 @@ function birdhive_get_default_category () {
 function get_post_links( $post_id = null ) {
 
 	// TS/logging setup
-    $do_ts = devmode_active();
+    $do_ts = devmode_active( array("dcp") );
     $do_log = false;
     sdg_log( "divline2", $do_log );
 
@@ -759,7 +759,7 @@ function display_item ( $arr_item = array(), $arr_styling = array() ) {
 function display_link_item ( $arr_item = array() ) {
 	
 	// TS/logging setup
-    $do_ts = devmode_active();
+    $do_ts = devmode_active( array("dcp") );
     $do_log = false;
     sdg_log( "divline2", $do_log );
     
@@ -786,7 +786,7 @@ function display_link_item ( $arr_item = array() ) {
 function display_list_item ( $arr_item = array() ) {
 	
 	// TS/logging setup
-    $do_ts = devmode_active();
+    $do_ts = devmode_active( array("dcp") );
     $do_log = false;
     sdg_log( "divline2", $do_log );
     
@@ -805,7 +805,7 @@ function display_list_item ( $arr_item = array() ) {
 function display_post_item ( $arr_item = array() ) {
 	
 	// TS/logging setup
-    $do_ts = devmode_active();
+    $do_ts = devmode_active( array("dcp") );
     $do_log = false;
     sdg_log( "divline2", $do_log );
 
@@ -916,7 +916,7 @@ function display_event_list_item ( $EM_Event ) {
 function display_table_row ( $arr_item = array(), $arr_styling = array() ) {
 	
 	// TS/logging setup
-    $do_ts = devmode_active();
+    $do_ts = devmode_active( array("dcp") );
     $do_log = false;
     sdg_log( "divline2", $do_log );
     sdg_log( "function called: display_table_row", $do_log );
@@ -1016,7 +1016,7 @@ function display_table_row ( $arr_item = array(), $arr_styling = array() ) {
 function display_grid_item ( $arr_item = array(), $arr_styling = array() ) {
 
 	// TS/logging setup
-    $do_ts = devmode_active();
+    $do_ts = devmode_active( array("dcp") );
     $do_log = false;
     sdg_log( "divline2", $do_log );
     sdg_log( "function called: display_grid_item", $do_log );
@@ -1403,7 +1403,7 @@ function build_item_arr ( $item, $arr_styling = array() ) { // TODO: come up wit
 function birdhive_display_collection ( $args = array() ) {
 
 	// TS/logging setup
-    $do_ts = devmode_active();
+    $do_ts = devmode_active( array("dcp") );
     $do_log = false;
     sdg_log( "divline2", $do_log );
 
@@ -1598,7 +1598,7 @@ function birdhive_display_collection ( $args = array() ) {
 function collection_header ( $display_format = null, $num_cols = 3, $aspect_ratio = "square", $fields = null, $headers = null ) {
 
 	// TS/logging setup
-    $do_ts = devmode_active();
+    $do_ts = devmode_active( array("dcp") );
     $do_log = false;
     sdg_log( "divline2", $do_log );
 
@@ -1622,7 +1622,6 @@ function collection_header ( $display_format = null, $num_cols = 3, $aspect_rati
 		
 	} else if ( $display_format == "table" ) {
 	
-		//$do_ts = devmode_active();
 		//$ts_info .= "fields: <pre>".print_r($fields, true)."</pre>";
 		//$ts_info .= "headers: <pre>".print_r($headers, true)."</pre>";
 		
@@ -1707,7 +1706,7 @@ function collection_footer ( $display_format = null ) {
 function birdhive_get_posts ( $args = array() ) {
 
 	// TS/logging setup
-    $do_ts = devmode_active();
+    $do_ts = devmode_active( array("dcp") );
     $do_log = false;
     sdg_log( "divline2", $do_log );
     
@@ -2205,7 +2204,7 @@ add_shortcode('display_posts', 'birdhive_display_posts');
 function birdhive_display_posts ( $atts = array() ) { //function birdhive_display_posts ( $args = array() ) {
 
 	// TS/logging setup
-    $do_ts = devmode_active();
+    $do_ts = devmode_active( array("dcp") );
     $do_log = false;
     sdg_log( "divline2", $do_log );
 	
@@ -2401,7 +2400,6 @@ function birdhive_display_posts ( $atts = array() ) { //function birdhive_displa
 		// WIP group_by
 		if ( $group_by ) {
 			
-			$do_ts = devmode_active();
 			$args['do_ts'] = true;
 			$group_by_secondary = null;
 			
@@ -2647,7 +2645,7 @@ add_shortcode('content_collection', 'birdhive_content_collection');
 function birdhive_content_collection ( $atts = array() ) {
 
 	// TS/logging setup
-    $do_ts = devmode_active();
+    $do_ts = devmode_active( array("dcp") );
     $do_log = false;
     sdg_log( "divline2", $do_log );
     
@@ -2736,7 +2734,7 @@ add_shortcode('display_list_items', 'get_list_items');
 function get_list_items( $atts = array() ) {
     
     // TS/logging setup
-    $do_ts = devmode_active();
+    $do_ts = devmode_active( array("dcp") );
     $do_log = false;
     sdg_log( "divline2", $do_log );
     
@@ -3218,7 +3216,7 @@ function get_list_items( $atts = array() ) {
 				}*/
 			
 				// Insert row_info for troubleshooting
-				if ( devmode_active() ) {
+				if ( $do_ts ) {
 					if ( $display == 'table' ) {
 						//$table .= '<div class="troubleshooting">row_info:<br />'.$row_info.'</div>'; //$row_info; // Display comments w/ in row for ease of parsing dev notes
 					} else {
@@ -3271,7 +3269,7 @@ function get_list_items( $atts = array() ) {
 			
 				// Data Cleanup -- WIP
 				// ...figuring out how to sync repertoire related_events w/ updates to program items -- display some TS info to aid this process
-				/*if ( devmode_active() ) {
+				/*if ( $do_ts ) {
 					$arr_row_info = event_program_row_cleanup ( $post_id, $i, $row, "program_items" );								
 					$ts_info .= $arr_row_info['info'];
 					$row_errors = $arr_row_info['errors'];
@@ -3411,7 +3409,7 @@ function get_list_items( $atts = array() ) {
 function get_list_items_v1( $atts = array() ) {
     
     // TS/logging setup
-    $do_ts = devmode_active();
+    $do_ts = devmode_active( array("dcp") );
     $do_log = false;
     sdg_log( "divline2", $do_log );
     
@@ -3778,7 +3776,7 @@ function get_list_items_v1( $atts = array() ) {
 			$row_info .= '--------------------<br />';
 				
 			// Insert row_info for troubleshooting
-			if ( devmode_active() ) {
+			if ( $do_ts ) {
 				if ( $display == 'table' ) {
 					//$table .= '<div class="troubleshooting">row_info:<br />'.$row_info.'</div>'; //$row_info; // Display comments w/ in row for ease of parsing dev notes
 				} else {
@@ -3857,7 +3855,7 @@ add_shortcode('birdhive_search_form', 'birdhive_search_form');
 function birdhive_search_form ( $atts = array(), $content = null, $tag = '' ) {
 
 	// TS/logging setup
-    $do_ts = devmode_active();
+    $do_ts = devmode_active( array("dcp", "search") );
     $do_log = false;
     sdg_log( "divline2", $do_log );
 	
