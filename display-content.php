@@ -1384,6 +1384,7 @@ function build_item_arr ( $item, $arr_styling = array() ) { // TODO: come up wit
 			} else if ( !empty($item_url) ) { 
 				$item_image = '<a href="'.$item_url.'" rel="bookmark"'.$link_target.' class="'.$img_class.'">'.$item_image.'</a>';
 			} else {
+				$img_class = $img_class.' bia_default';
 				$item_image = '<div class="'.$img_class.'">'.$item_image.'</div>';
 			}
 		}
