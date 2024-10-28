@@ -1378,6 +1378,8 @@ function build_item_arr ( $item, $arr_styling = array() ) { // TODO: come up wit
 			}
 			if ( !empty($dialog_id) && ( $item_type == "modal" || $item_link_target == "modal" ) ) {
 				$item_image = '<a href="#!" id="dialog_handle_'.$dialog_id.'" class="'.$img_class.' dialog_handle">'.$item_image.'</a>'; 
+			} else if ( $show_content == "full" ) {
+				$item_image = '<div class="'.$img_class.'">'.$item_image.'</div>';
 			} else if ( !empty($item_url) ) { 
 				$item_image = '<a href="'.$item_url.'" rel="bookmark"'.$link_target.' class="'.$img_class.'">'.$item_image.'</a>';
 			} else {
