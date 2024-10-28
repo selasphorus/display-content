@@ -807,6 +807,7 @@ function display_post_item ( $arr_item = array() ) {
 	// TS/logging setup
     $do_ts = devmode_active( array("dcp") );
     $do_log = false;
+    $fcn_id = "[dc-dpi]&nbsp;";
     sdg_log( "divline2", $do_log );
 
 	// Init vars
@@ -820,14 +821,14 @@ function display_post_item ( $arr_item = array() ) {
 	// WIP
 	if ( $post_id ) {
 		$post_type = get_post_type($post_id);
-		$ts_info .= "post_id: ".$post_id."<br />";
-		$ts_info .= "post_type: ".$post_type."<br />";
+		$ts_info .= $fcn_id."post_id: ".$post_id."<br />";
+		$ts_info .= $fcn_id."post_type: ".$post_type."<br />";
 	} else {
 		$post_type = null;
 	}
 	
-	$ts_info .= ">>> display_post_item <<<<br />";
-	$ts_info .= "show_content: ".$show_content."<br />";
+	$ts_info .= $fcn_id.">>> display_post_item <<<<br />";
+	$ts_info .= $fcn_id."show_content: ".$show_content."<br />";
 	//$ts_info .= "arr_item: <pre>".print_r($arr_item,true)."</pre>";
 	
 	if ( $post_id && $show_content == "full" ) {
@@ -850,10 +851,10 @@ function display_post_item ( $arr_item = array() ) {
 		$email_address = get_field( 'email_address', $post_id );
 		$first_name = get_field( 'first_name', $post_id );
 		if ( $email_address ) {
-			$ts_info .= 'email_address: '.$email_address.'<br />';
+			$ts_info .= $fcn_id.'email_address: '.$email_address.'<br />';
 			$item_content .= '<a class="button" href="mailto:'.$email_address.'">Email '.$first_name.'</a>';
 		} else {
-			$ts_info .= 'email_address: None found<br />';
+			$ts_info .= $fcn_id.'email_address: None found<br />';
 		}
 	}
 	
@@ -871,6 +872,7 @@ function display_post_item ( $arr_item = array() ) {
 	// TODO: add subtitle?
 	$info .= '</header><!-- .entry-header -->';
 	if ( empty($item_image) && $show_content == "full" ) {
+		$ts_info .= $fcn_id.'No item_image => get image via SDGPT<br />';
 		$img_args = array( 'post_id' => $post_id, 'img_size' => "full", 'sources' => array("featured", "gallery"), 'echo' => false );
 		$info .= sdg_post_thumbnail( $img_args );
 	}
@@ -1181,6 +1183,7 @@ function build_item_arr ( $item, $arr_styling = array() ) { // TODO: come up wit
 	} else {
 		$img_size = "grid_crop_rectangle";
 	}
+	$ts_info .= '[bia] img_size: '.$img_size.'<br />';
 	
 	if ( $post && ( $item_type == "post" || $item_type == "event" ) ) {
 
