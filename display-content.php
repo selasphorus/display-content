@@ -1373,7 +1373,7 @@ function build_item_arr ( $item, $arr_styling = array() ) { // TODO: come up wit
 		
 		if ( !empty($item_image) ) {
 			$img_class = "bia ".$display_format."_item_image";
-			if ( $display_format == "excerpts" || $display_format == "archive" ) {
+			if ( $show_content != "full" && ( $display_format == "excerpts" || $display_format == "archive" ) ) {
 				$img_class .= " post-thumbnail sdg no-caption float-left";
 			}
 			if ( !empty($dialog_id) && ( $item_type == "modal" || $item_link_target == "modal" ) ) {
