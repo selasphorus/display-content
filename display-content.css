@@ -136,7 +136,7 @@
 }
 
 /* --- WIP --- */
-.archive_item_image {
+.archive_item_image:not(.full) {
 	max-width: 250px;
     float: left;
     margin: 0 1rem 1rem 0;
