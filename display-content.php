@@ -833,11 +833,13 @@ function display_post_item ( $arr_item = array() ) {
 	
 	if ( $post_id && $show_content == "full" ) {
 		//$ts_info .= "Show full content<br />";
+		$item_content .= "<!-- $fcn_id get post_content for post_id $post_id -->";
 		$full_content = true;
 		$post = get_post($post_id);		
 		$item_content .= apply_filters('the_content', $post->post_content);
 		// For event posts, get date/location info for header
 		if ( $post_type == 'event' ) {
+			$item_content .= "<!-- $fcn_id get item_meta via EM shortcode for post_id $post_id -->";
 			$item_meta = do_shortcode('[event post_id="'.$post_id.'"]#_EVENTDATES<br /><span class="event_time">#_EVENTTIMES</span>[/event]');
 		}
 	} else {
@@ -862,7 +864,7 @@ function display_post_item ( $arr_item = array() ) {
 	
 	$article_class = 'cc_item';
 	if ( $show_content == "full" ) {
-		$article_class .= "full";
+		$article_class .= " full";
 	}
 	
 	$info .= '<article id="post-'.$post_id.'" class="display_post_item '.$article_class.'">'; // post_class()
