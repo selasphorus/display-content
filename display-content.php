@@ -833,10 +833,11 @@ function display_post_item ( $arr_item = array() ) {
 	
 	if ( $post_id && $show_content == "full" ) {
 		//$ts_info .= "Show full content<br />";
-		$item_content .= "<!-- $fcn_id get post_content for post_id $post_id -->";
+		$item_content .= "<!-- $fcn_id START post_content for post_id $post_id -->";
 		$full_content = true;
 		$post = get_post($post_id);		
 		$item_content .= apply_filters('the_content', $post->post_content);
+		$item_content .= "<!-- $fcn_id END post_content for post_id $post_id -->";
 		// For event posts, get date/location info for header
 		if ( $post_type == 'event' ) {
 			$item_content .= "<!-- $fcn_id get item_meta via EM shortcode for post_id $post_id -->";
@@ -845,7 +846,7 @@ function display_post_item ( $arr_item = array() ) {
 	} else {
 		//$info .= $item_image;
 		//$info .= $item_text; // old -- incorrect -- ??
-		$item_content  = $item_text; // 240828
+		$item_content = $item_text; // 240828
 	}
 
 	// This is temporary! Show email addresses until the vestry form is approved
