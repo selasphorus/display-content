@@ -1197,9 +1197,9 @@ function build_item_arr ( $item, $arr_styling = array() ) { // TODO: come up wit
 		// TODO: deal w/ prefix/suffix options?
 		if ( empty($item_title) ) {
 			$ts_info .= '[bia] get item_title<br />';
-			// If a short_title is set, use it. If not, use the post_title
+			// If a short_title is set, and we're NOT showing full content, use the short title.
 			$short_title = get_post_meta( $post_id, 'short_title', true );
-			if ( !empty($short_title) ) {
+			if ( !empty($short_title) && $show_content != "full" ) {
 				$ts_info .= ' >> use short_title: '.$short_title.'<br />';
 				$item_title = $short_title;
 			} else if ( $post_type == "person" ) {
@@ -1533,6 +1533,7 @@ function birdhive_display_collection ( $args = array() ) {
 				$arr_item = $item;
 			} else {
 				$arr_item = build_item_arr ( $item, $arr_styling );
+				$item_ts_info .= $arr_item['ts_info'];
 			}
 			
 			// Get content for display in appropriate form...
