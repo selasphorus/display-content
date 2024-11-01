@@ -870,7 +870,14 @@ function display_post_item ( $arr_item = array() ) {
 	
 	$info .= '<article id="post-'.$post_id.'" class="display_post_item '.$article_class.'">'; // post_class()
 	$info .= '<header class="entry-header">';
-	if ( isset($item_title) ) { $info .= '<h2 class="entry-title">'.$item_title.'</h2>'; }
+	if ( isset($item_title) ) {
+		if ( $show_content == "full" ) {
+			$info .= $item_title;
+		} else {
+			$info .= '<h2 class="entry-title">'.$item_title.'</h2>';
+		}
+	}
+	//
 	if ( isset($item_meta) ) { $info .= '<div class="entry-meta">'.$item_meta.'</div>'; }
 	// TODO: add subtitle?
 	$info .= '</header><!-- .entry-header -->';
@@ -1211,7 +1218,13 @@ function build_item_arr ( $item, $arr_styling = array() ) { // TODO: come up wit
 			} else if ( function_exists( 'sdg_post_title' ) ) {
 				$ts_info .= ' >> sdg_post_title<br />';
 				if ( !isset($show_subtitle) ) { $show_subtitle = true; }
-				$title_args = array( 'post' => $post_id, 'line_breaks' => true, 'show_subtitle' => $show_subtitle, 'echo' => false, 'hlevel' => 0, 'hlevel_sub' => 0 ); //, 'do_ts' => $do_ts
+				$title_args = array( 'post' => $post_id, 'line_breaks' => true, 'show_subtitle' => $show_subtitle, 'echo' => false );
+				if ( $show_content == "full" ) {
+					$title_args['hlevel_sub'] = 2;
+				} else {
+					$title_args['hlevel'] = 0;
+					$title_args['hlevel_sub'] = 0;
+				}
 				$item_title = sdg_post_title( $title_args );
 			} else {
 				$ts_info .= ' >> use get_the_title()<br />';
@@ -1352,22 +1365,24 @@ function build_item_arr ( $item, $arr_styling = array() ) { // TODO: come up wit
 	// Style the title
 	$ts_info .= '[bia] item_title (before styling): '.$item_title."<br />";
 	if ( !empty($item_title) ) {
-		$item_title = '<span class="item_title">'.$item_title.'</span>';
-		// Wrap the title in a hyperlink, if a URL has been set	OR if the item is linked to modal content		
-		if ( $item_type == "modal" || $item_link_target == "modal" ) {
-			$dialog_id = sanitize_title($item_title); // tmp/wip
-			$item_title = '<a href="#!" id="dialog_handle_'.$dialog_id.'" class="dialog_handle">'.$item_title.'</a>'; 
-		} else {
-			if ( !empty($item_url) ) { $item_title = '<a href="'.$item_url.'" rel="bookmark"'.$link_target.'>'.$item_title.'</a>'; }
-		}
-		if ( !empty($hlevel) ) { // empty($image_id)
-			$item_title = '<h'.$hlevel.' id="'.$item_id.'" class="collection_group">'.$item_title.'</h'.$hlevel.'>';
-			if ( $hlevel <= 2 && $set_anchors == true ) { $item_title = anchor_link_top().$item_title; }
+		if ( $show_content != "full" ) {
+			$item_title = '<span class="item_title">'.$item_title.'</span>';
+			// Wrap the title in a hyperlink, if a URL has been set	OR if the item is linked to modal content		
+			if ( $item_type == "modal" || $item_link_target == "modal" ) {
+				$dialog_id = sanitize_title($item_title); // tmp/wip
+				$item_title = '<a href="#!" id="dialog_handle_'.$dialog_id.'" class="dialog_handle">'.$item_title.'</a>'; 
+			} else {
+				if ( !empty($item_url) ) { $item_title = '<a href="'.$item_url.'" rel="bookmark"'.$link_target.'>'.$item_title.'</a>'; }
+			}
+			if ( !empty($hlevel) ) { // empty($image_id)
+				$item_title = '<h'.$hlevel.' id="'.$item_id.'" class="collection_group">'.$item_title.'</h'.$hlevel.'>';
+				if ( $hlevel <= 2 && $set_anchors == true ) { $item_title = anchor_link_top().$item_title; }
+			}
 		}
 	}
 	
 	// Finalize the item image html based on the image_id, if any
-	// WIP: if show_content=="full", show full-size image, not medium thumb... 10/24
+	// If show_content=="full", show full-size image, not medium thumb
 	$item_image = ""; // init
 	if ( !empty($image_id) && $show_image !== 'false' ) {
 	
