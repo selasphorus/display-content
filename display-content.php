@@ -835,7 +835,7 @@ function display_post_item ( $arr_item = array() ) {
 		//$ts_info .= "Show full content<br />";
 		$item_content .= "<!-- $fcn_id START post_content for post_id $post_id -->";
 		$full_content = true;
-		$post = get_post($post_id);		
+		$post = get_post($post_id);
 		$item_content .= apply_filters('the_content', $post->post_content);
 		$item_content .= "<!-- $fcn_id END post_content for post_id $post_id -->";
 		// For event posts, get date/location info for header
@@ -876,7 +876,7 @@ function display_post_item ( $arr_item = array() ) {
 	$info .= '</header><!-- .entry-header -->';
 	if ( empty($item_image) && $show_content == "full" ) {
 		$ts_info .= $fcn_id.'No item_image => get image via SDGPT<br />';
-		$img_args = array( 'post_id' => $post_id, 'img_size' => "full", 'sources' => array("featured", "gallery"), 'echo' => false );
+		$img_args = array( 'post_id' => $post_id, 'format' => 'singular', 'img_size' => "full", 'sources' => array("featured", "gallery"), 'echo' => false );
 		$info .= sdg_post_thumbnail( $img_args );
 	}
 	$info .= '<div class="entry-content">';
