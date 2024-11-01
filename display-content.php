@@ -1220,7 +1220,8 @@ function build_item_arr ( $item, $arr_styling = array() ) { // TODO: come up wit
 				if ( !isset($show_subtitle) ) { $show_subtitle = true; }
 				$title_args = array( 'post' => $post_id, 'line_breaks' => true, 'show_subtitle' => $show_subtitle, 'echo' => false );
 				if ( $show_content == "full" ) {
-					$title_args['hlevel_sub'] = 2;
+					$title_args['hlevel'] = 2;
+					$title_args['hlevel_sub'] = 3;
 				} else {
 					$title_args['hlevel'] = 0;
 					$title_args['hlevel_sub'] = 0;
