@@ -10,6 +10,9 @@
 	display: flow-root;
 }
 
+.posts_archive h2.entry-title {
+	font-size: 1.5rem;
+}
 
 /*** Excerpts styling ***/
 .dsplycntnt-posts.excerpts h2.entry-title {
