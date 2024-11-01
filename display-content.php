@@ -1238,7 +1238,12 @@ function build_item_arr ( $item, $arr_styling = array() ) { // TODO: come up wit
 		if ( ! $image_id && $show_image !== 'false' ) {
 			// WIP
 			//img_size if show_content = full...
-			$img_args = array( 'post_id' => $post_id, 'format' => 'excerpt', 'img_size' => $img_size, 'sources' => "all", 'echo' => false, 'return_value' => 'id' );
+			if ( $show_content == "full" ) {
+				$sdgpt_format = 'singular';
+			} else {
+				$sdgpt_format = 'excerpt';
+			}
+			$img_args = array( 'post_id' => $post_id, 'format' => $sdgpt_format, 'img_size' => $img_size, 'sources' => "all", 'echo' => false, 'return_value' => 'id' );
 			$image_id = sdg_post_thumbnail ( $img_args );
 			$ts_info .= '[bia] sdg_post_thumbnail -> image_id: '.$image_id.'<br />';		
 		}
