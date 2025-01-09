@@ -919,8 +919,14 @@ function display_post_item ( $arr_item = array() ) {
 
 function display_event_list_item ( $EM_Event ) {
 	
+	// Init
+	$info = "";
+	
 	// Use category list item version so as to include date (as opposed to grouped version) -- see EM settings in CMS
-	$info = do_shortcode( $EM_Event->output(get_option('dbem_category_event_list_item_format')) ); //$info = $EM_Event->output(get_option('dbem_event_list_item_format'));
+	// First, though, check to make sure $EM_Event is of the expected object type, and not an array or something
+	if ($EM_Event instanceof EM_Event) {
+		$info = do_shortcode( $EM_Event->output(get_option('dbem_category_event_list_item_format')) ); //$info = $EM_Event->output(get_option('dbem_event_list_item_format'));
+	}
 	return $info;
 			
 }
