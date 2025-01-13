@@ -1232,6 +1232,9 @@ function build_item_arr ( $item, $arr_styling = array() ) { // TODO: come up wit
 					$title_args['hlevel'] = 0;
 					$title_args['hlevel_sub'] = 0;
 				}
+				if ( $display_format == "table" ) {
+					$title_args['hclass'] = "dct";
+				}
 				$item_title = sdg_post_title( $title_args );
 			} else {
 				$ts_info .= ' >> use get_the_title()<br />';
