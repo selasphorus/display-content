@@ -1234,8 +1234,8 @@ function build_item_arr ( $item, $arr_styling = array() ) { // TODO: come up wit
 				}
 				if ( $display_format == "table" ) {
 					$title_args['hclass'] = "dct";
-					$title_args['hlevel'] = 4;
-					$title_args['hlevel_sub'] = 5;
+					$title_args['hlevel'] = 0;
+					$title_args['hlevel_sub'] = 0;
 				}
 				$item_title = sdg_post_title( $title_args );
 			} else {
