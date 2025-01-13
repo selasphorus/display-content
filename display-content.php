@@ -925,7 +925,7 @@ function display_event_list_item ( $EM_Event ) {
 	// Use category list item version so as to include date (as opposed to grouped version) -- see EM settings in CMS
 	// First, though, check to make sure $EM_Event is of the expected object type, and not an array or something
 	if ($EM_Event instanceof EM_Event) {
-		$info = do_shortcode( $EM_Event->output(get_option('dbem_category_event_list_item_format')) ); //$info = $EM_Event->output(get_option('dbem_event_list_item_format'));
+		$info = do_shortcode( $EM_Event->output(get_option('dbem_category_event_list_item_format')) );
 	}
 	return $info;
 			
@@ -2320,7 +2320,7 @@ function birdhive_display_posts ( $atts = array() ) { //function birdhive_displa
 	// WIP -- all override for ALL args? or just specific ones?0
 	if ( get_query_var('scope') ) {
 		$scope = get_query_var('scope');
-		$ts_info .= "scope via query_var: ".$scope."<br />";
+		$ts_info .= "scope via query_var: ".print_r($scope,true)."<br />";
 	} else {
 		$ts_info .= "scope query_var not set<br />";
 	}
