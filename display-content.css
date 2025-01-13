@@ -339,7 +339,9 @@ a.icon .icons {
 /*** Tables ***/
 
 table.posts_archive {
-	width: fit-content;
+	/*width: fit-content;*/
+	width: 100%;
+	display: table;
 }
 
 table.posts_archive tr th,
