@@ -1530,7 +1530,7 @@ function birdhive_display_collection ( $args = array() ) {
 	
 	// List/table/grid header or container
 	//$info .= collection_header ( $display_format, $num_cols, $aspect_ratio, $table_fields, $table_headers );
-	$header_args = array( 'display_format' => $display_format, $num_cols, $aspect_ratio, $table_fields, $table_headers );
+	$header_args = array( 'display_format' => $display_format, 'num_cols' => $num_cols, 'aspect_ratio' => $aspect_ratio, 'table_fields' => $table_fields, 'table_headers' => $table_headers );
 	$info .= collection_header ( $header_args );
 	
 	if ( $display_format == "table" ) {
