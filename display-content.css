@@ -278,10 +278,12 @@
 
 .flex-box img:hover,
 .flex-img img:hover {
-    -webkit-transform: scale(1.9);
-    transform: scale(1.9);
+    /*-webkit-transform: scale(1.9);
+    transform: scale(1.9);*/
+    transform: rotate(10deg);
   	transition: transform 0.3s ease-in-out;
-  	border: 20px dotted orange;
+  	border: 10px dotted orange;
+  	animation-play-state: paused;
 }
 
 .entry-content .borderless .flex-img,
