@@ -1405,6 +1405,7 @@ function build_item_arr ( $item, $arr_styling = array() ) { // TODO: come up wit
 		//wp_get_attachment_image( int $attachment_id, string|int[] $size = 'thumbnail', bool $icon = false, string|array $attr = '' ): string
 		//$img_attr = array ( 'sizes' => "(max-width: 600px) 100vw, 100vw" );
 		$img_class = "bia ".$display_format."_item_image";
+		if ( $display_format == "grid" ) { $img_class .= " hoverZoom"; }
 		$item_image = wp_get_attachment_image( $image_id, $img_size, "", array( "class" => $img_class ) );
 		
 		if ( !empty($item_image) ) {
