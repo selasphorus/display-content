@@ -1096,7 +1096,7 @@ function display_grid_item ( $arr_item = array(), $arr_styling = array() ) {
 		$info .= '<div class="item_info">'.$item_info.'</div>';
 	}
 	// Show the item image
-	$info .= '<div class="flex-img">';
+	$info .= '<div class="flex-img hoverZoom">';
 	$info .= $item_image;
 	$info .= '</div>';
 	//
