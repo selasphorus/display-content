@@ -280,17 +280,17 @@
 .flex-img img:hover {
 	opacity: 1;
     /*-webkit-transform: scale(1.9);*/
-    transform: scale(1.9);
+    transform: scale(1.2);
     /*transform: rotate(10deg);*/
-  	transition: transform 0.3s ease-in-out;
-  	border: 3px dotted purple;
+  	/*transition: transform 0.3s ease-in-out;*/
+  	/*border: 3px dotted purple;*/
   	/*animation-play-state: paused;*/
-  	animation: flexHoverZoom 1.5s ease-out forwards;
+  	animation: flexHoverZoom 1.5s ease-in-out forwards;
 }
 
 @keyframes flexHoverZoom {
 	0% {
-		transform: scale(1.5);
+		transform: scale(1.2);
 	}
 	100% {
 		transform: scale(1);
