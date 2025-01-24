@@ -1487,7 +1487,7 @@ function birdhive_display_collection ( $args = array() ) {
 		
 		$ts_info .= "collection_id: $collection_id<br />";
 		
-		$content_type = "mixed"; // tft
+		$content_type = "mixed";
 		$display_format = get_field('display_format', $collection_id);
     	$items = get_field('collection_items', $collection_id); // ACF collection item repeater field values
 		$aspect_ratio = get_field('aspect_ratio', $collection_id);
@@ -1739,8 +1739,9 @@ function collection_header ( $args = array() ) { // wip
 		}
 	
 	} else if ( $display_format == "grid" ) {
-	
-		$colclass = digit_to_word($num_cols)."col";
+		
+		$colclass = sdg_digit_to_word($num_cols)."col";
+		$ts_info .= "num_cols: ".$num_cols." => colclass: ".$colclass."<br />";
 		//if ( $class ) { $colclass .= " ".$class; }
 		$info .= '<div class="flex-container '.$colclass.' '.$aspect_ratio.'">';
 	
