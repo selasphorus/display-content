@@ -279,7 +279,7 @@
 .flex-box img:hover,
 .flex-img img:hover {
 	opacity: 1;
-    /*-webkit-transform: scale(1.9);*/
+    -webkit-transform: scale(1.2);
     transform: scale(1.2);
     /*transform: rotate(10deg);*/
   	/*transition: transform 0.3s ease-in-out;*/
@@ -290,10 +290,10 @@
 
 @keyframes flexHoverZoom {
 	0% {
-		transform: scale(1.2);
+		transform: scale(1);
 	}
 	100% {
-		transform: scale(1);
+		transform: scale(1.2);
 	}
 }
 
