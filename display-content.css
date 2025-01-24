@@ -282,7 +282,7 @@
     -webkit-transform: scale(1.2);
     transform: scale(1.2);
     /*transform: rotate(10deg);*/
-  	/*transition: transform 0.3s ease-in-out;*/
+  	transition: transform 0.3s ease-in-out;
   	/*border: 3px dotted purple;*/
   	/*animation-play-state: paused;*/
   	animation: flexHoverZoom 1.5s ease-in-out forwards;
