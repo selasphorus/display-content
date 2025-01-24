@@ -1509,7 +1509,12 @@ function birdhive_display_collection ( $args = array() ) {
 			$table_headers = $display_atts['headers'];
 			$table_totals = $display_atts['totals'];
 		}
-		if ( $display_format == "grid" && isset($display_atts['cols']) ) { $num_cols = $display_atts['cols']; }
+		if ( $display_format == "grid" && isset($display_atts['cols']) ) {
+			$num_cols = $display_atts['cols'];
+		} else {
+			$ts_info .= "Get num_cols from default: ".$num_cols." for display_format: ".$display_format."<br />";
+		}
+		
 		if ( isset($display_atts['aspect_ratio']) ) { $aspect_ratio = $display_atts['aspect_ratio']; } // TODO: either eliminate this, or make it so that aspect_ratio actually ever is passable as an arg, via mods to args array of display_posts, for example...
 				
 	}
