@@ -1471,6 +1471,7 @@ function birdhive_display_collection ( $args = array() ) {
 		'table_totals'		=> array(), // field names
 		'num_cols'			=> "3",
 		'aspect_ratio'		=> "square",
+		'custom_class'		=> null,
 	);
 	
     // Parse & Extract args
@@ -1523,7 +1524,9 @@ function birdhive_display_collection ( $args = array() ) {
 	$col_totals = array();
 	
 	// List/table/grid header or container
-	$info .= collection_header ( $display_format, $num_cols, $aspect_ratio, $table_fields, $table_headers );
+	//$info .= collection_header ( $display_format, $num_cols, $aspect_ratio, $table_fields, $table_headers );
+	$header_args = array( 'display_format' => $display_format, $num_cols, $aspect_ratio, $table_fields, $table_headers );
+	$info .= collection_header ( $header_args );
 	
 	if ( $display_format == "table" ) {
 		$info .= '<tbody>';
@@ -1644,7 +1647,8 @@ function birdhive_display_collection ( $args = array() ) {
 } // END function birdhive_display_collection ( $args = array() ) 
 
 // TODO: add options for collection_SUBheaders... e.g. for group/subgroups/personnel; links displayed grouped by link categories; etc.
-function collection_header ( $display_format = null, $num_cols = 3, $aspect_ratio = "square", $fields = null, $headers = null ) {
+function collection_header ( $args = array() ) { // wip
+//function collection_header ( $display_format = null, $num_cols = 3, $aspect_ratio = "square", $fields = null, $headers = null ) {
 
 	// TS/logging setup
     $do_ts = devmode_active( array("dcp") );
@@ -1654,6 +1658,21 @@ function collection_header ( $display_format = null, $num_cols = 3, $aspect_rati
 	// Init vars
 	$info = "";
 	$ts_info = "";
+	
+	// Defaults
+	$defaults = array(
+		'display_format'	=> null,
+		'num_cols'			=> true,		
+		'aspect_ratio'		=> null,
+		'fields'			=> null,
+		'headers'			=> null,
+		'custom_class'		=> null,
+	);
+	
+    // Parse & Extract args
+	$args = wp_parse_args( $args, $defaults );
+	extract( $args );
+	//$ts_info .= "collection_header >> args: <pre>".print_r($args, true)."</pre>";
 	
 	$ts_info .= "<!-- +~+~+~+~+~+~+ collection_header +~+~+~+~+~+~+ -->";
 	
@@ -1674,18 +1693,22 @@ function collection_header ( $display_format = null, $num_cols = 3, $aspect_rati
 		//$ts_info .= "fields: <pre>".print_r($fields, true)."</pre>";
 		//$ts_info .= "headers: <pre>".print_r($headers, true)."</pre>";
 		
-		$info .= '<table class="posts_archive">'; //$info .= '<table class="posts_archive '.$class.'">';
+		$table_classes = "posts_archive";
+		if ( $custom_class ) { $table_classes .= " ".$custom_class; }
+		$info .= '<table class="'.$table_classes.'">';
 		
 		// Make header row from field names
 		if ( !empty($fields) ) {
 		
-			$info .= "<tr>"; // prep the header row
+			$info .= '<tr>'; //$info .= "<tr>"; // prep the header row
 		
 			// Create array from fields string, as needed
 			if ( is_array($fields) ) { $arr_fields = $fields; } else { $arr_fields = explode(",",$fields); }
 			//$info .= "<td>".$fields."</td>"; // tft
 			//$info .= "<td><pre>".print_r($arr_fields, true)."</pre></td>"; // tft
-		
+			$col = 0;
+			$th_customization = ""; // wip -- see e.g. bkkp employment income
+			
 			if ( !empty($headers) ) {
 			
 				// Create array from headers string, as needed
@@ -1694,7 +1717,11 @@ function collection_header ( $display_format = null, $num_cols = 3, $aspect_rati
 				foreach ( $arr_headers as $header ) {
 					$header = trim($header);
 					if ( $header == "-" ) { $header = ""; }
-					$info .= "<th>".$header."</th>";
+					//$info .= "<th>".$header."</th>";
+					//$info .= '<th class="'.$thclass.'">'.$header."</th>";
+					$info .= '<th'.$th_customization.'>'.$header."</th>";
+					//width="25%
+					$col++;
 				}
 			
 			} else {
@@ -1702,7 +1729,8 @@ function collection_header ( $display_format = null, $num_cols = 3, $aspect_rati
 				// If no headers were submitted, make do with the field names
 				foreach ( $arr_fields as $field_name ) {
 					$field_name = ucfirst(trim($field_name));
-					$info .= "<th>".$field_name."</th>";
+					$info .= '<th'.$th_customization.'>'.$header."</th>";
+					$col++;
 				}
 			
 			}
