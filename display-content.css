@@ -278,6 +278,7 @@
 
 .flex-box img:hover,
 .flex-img img:hover {
+	opacity: 1;
     /*-webkit-transform: scale(1.9);*/
     transform: scale(1.9);
     /*transform: rotate(10deg);*/
