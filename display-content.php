@@ -1404,10 +1404,10 @@ function build_item_arr ( $item, $arr_styling = array() ) { // TODO: come up wit
 		$ts_info .= '[bia] img_size: '.print_r($img_size, true).'<br />';	
 		//wp_get_attachment_image( int $attachment_id, string|int[] $size = 'thumbnail', bool $icon = false, string|array $attr = '' ): string
 		//$img_attr = array ( 'sizes' => "(max-width: 600px) 100vw, 100vw" );
-		$item_image = wp_get_attachment_image( $image_id, $img_size );
+		$img_class = "bia ".$display_format."_item_image";
+		$item_image = wp_get_attachment_image( $image_id, $img_size, "", array( "class" => $img_class ) );
 		
 		if ( !empty($item_image) ) {
-			$img_class = "bia ".$display_format."_item_image";
 			if ( $show_content != "full" && ( $display_format == "excerpts" || $display_format == "archive" ) ) {
 				$img_class .= " post-thumbnail sdg no-caption float-left";
 			}
