@@ -281,6 +281,7 @@
     -webkit-transform: scale(1.2);
     transform: scale(1.2);
   	transition: transform 0.3s ease-in-out;
+  	border: 2px dotted orange;
 }
 
 .entry-content .borderless .flex-img,
