@@ -1090,7 +1090,7 @@ function display_grid_item ( $arr_item = array(), $arr_styling = array() ) {
 	
 	// Begin building item_info
 	if ( $aspect_ratio != "square" ) {
-		$hclass = "grid_rect";
+		$hclass = "grid_".$aspect_ratio; //$hclass = "grid_rect";
 		$item_title = '<h3 class="'.$hclass.'">'.$item_title.'</h3>';
 		if ( !empty($item_subtitle) ) { $hclass .= " with-subtitle"; $item_subtitle = '<h4 class="subtitle">'.$item_subtitle.'</h4>'; }
 	}
@@ -2357,7 +2357,7 @@ function birdhive_display_posts ( $atts = array() ) { //function birdhive_displa
         //
         'display_format' => 'list', // other options: links; excerpts; archive (full post content); grid; table
         'return_format' => null, // deprecated -- TODO: remove this extra attribute as soon as updates are complete on all sites (STC, AGO)
-        
+        'aspect_ratio' => 'square',
         // For grid display_format:
         'cols' => 4, // ***
         'spacing' => 'spaced', // ***
