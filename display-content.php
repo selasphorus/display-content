@@ -1,12 +1,12 @@
 <?php
 /**
  * @package Display_Content
- * @version 0.1
+ * @version 0.2
  */
 
 /*
 Plugin Name: Birdhive Display Content
-Version: 0.1
+Version: 0.2
 Plugin URI: 
 Description: Display content of all types in a variety of formats using shortcodes.
 Author: Alison C.
@@ -41,6 +41,13 @@ if ( !function_exists( 'add_action' ) ) {
 }
 
 $plugin_path = plugin_dir_path( __FILE__ );
+
+// Define our handy constants.
+define( 'DCP_VERSION', '0.2' );
+define( 'DCP_PLUGIN_DIR', __DIR__ );
+define( 'DCP_PLUGIN_URL', plugin_dir_url( __FILE__ ) );
+define( 'DCP_PLUGIN_BLOCKS', DCP_PLUGIN_DIR . '/blocks/' );
+//$plugin_path = plugin_dir_path( __FILE__ );
 
 /* +~+~+~+~+~+~+~+~+~+~+~+~+~+~+~+~+~+~+~+~+~+~+~+~+ */
 
