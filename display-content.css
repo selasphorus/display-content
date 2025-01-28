@@ -77,7 +77,8 @@
 }
 
 .flex-container.borderless .flex-box,
-.flex-box.rectangle {
+.flex-box.landscape,
+.flex-box.portrait {
     border: none;
 }
 
@@ -268,9 +269,11 @@
     -webkit-border-radius: 9px;
 }
 
-/*.flex-container.rectangle .flex-img,*/
-.flex-container.rectangle .flex-img,
-.flex-container.rectangle .flex-img:hover {
+/*.flex-container.landscape .flex-img,*/
+.flex-container.landscape .flex-img,
+.flex-container.landscape .flex-img:hover,
+.flex-container.portrait .flex-img,
+.flex-container.portrait .flex-img:hover {
     box-shadow: 0 0 5px 1px rgba(0,0,0,.5);
     -webkit-box-shadow: 0 0 5px 1px rgba(0,0,0,.5);
     -moz-box-shadow: 0 0 5px 1px rgba(0,0,0,.5);
@@ -298,8 +301,10 @@
 
 .entry-content .borderless .flex-img,
 .entry-content .borderless .flex-img img,
-.entry-content .rectangle .flex-img,
-.entry-content .rectangle .flex-img img {
+.entry-content .landscape .flex-img,
+.entry-content .landscape .flex-img img,
+.entry-content .portrait .flex-img,
+.entry-content .portrait .flex-img img {
     border-radius: 9px;
     -moz-border-radius: 9px;
     -webkit-border-radius: 9px;
@@ -419,7 +424,8 @@ h2.collection_group {
         margin-bottom: 1rem;
     }
     
-    .flex-container .flex-box.rectangle {
+    .flex-container .flex-box.landscape,
+    .flex-container .flex-box.portrait {
     	margin-bottom: 0;
     }
     

@@ -142,12 +142,16 @@ if ( file_exists($posttypes_filepath) ) { include_once( $posttypes_filepath ); }
 // Add custom image sizes
 // TODO: build in option to customize dimensions per site
 add_image_size( 'grid_crop_square', 600, 600, true ); // for stc: 600x600; for general use: 400x400. WIP: build in option via plugin settings
-add_image_size( 'grid_crop_rectangle', 534, 300, true );
+//add_image_size( 'grid_crop_rectangle', 534, 300, true ); // Aspect Ratio: approx 16:9 -- old version
+add_image_size( 'grid_crop_landscape', 534, 300, true ); // Aspect Ratio: approx 16:9
+add_image_size( 'grid_crop_portrait', 350, 525, true ); // Aspect Ratio: approx 2:3
 add_filter( 'image_size_names_choose', 'birdhive_custom_image_sizes' );
 function birdhive_custom_image_sizes( $sizes ) {
     return array_merge( $sizes, array(
         'grid_crop_square' => __( 'Grid Crop (square)' ),
-        'grid_crop_rectangle' => __( 'Grid Crop (rectangle)' ),
+        //'grid_crop_rectangle' => __( 'Grid Crop (rectangle)' ),
+        'grid_crop_landscape' => __( 'Grid Crop (landscape)' ),
+        'grid_crop_portrait' => __( 'Grid Crop (portrait)' ),
     ) );
 }
 
@@ -1194,10 +1198,14 @@ function build_item_arr ( $item, $arr_styling = array() ) { // TODO: come up wit
 		} else {
 			$img_size = array( 250, 250 ); //$img_size = "post-thumbnail";
 		}		
-	} else if ( $aspect_ratio == "square" ) {
+	} else if ( $aspect_ratio ) {
+		$img_size = "grid_crop_".$aspect_ratio;
+	/*} else if ( $aspect_ratio == "square" ) {
 		$img_size = "grid_crop_square";
 	} else {
 		$img_size = "grid_crop_rectangle";
+	*/} else {
+		$img_size = "grid_crop_landscape";
 	}
 	$ts_info .= '[bia] img_size: '.$img_size.'<br />';
 	
