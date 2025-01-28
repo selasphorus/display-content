@@ -1076,7 +1076,7 @@ function display_grid_item ( $arr_item = array(), $arr_styling = array() ) {
 	$ts_info = "";
 	//
 	$display_format = null;
-	$aspect_ratio = 'square';
+	//$aspect_ratio = 'square';
 	//
 	extract( $arr_item );
 	extract( $arr_styling );
@@ -1162,6 +1162,7 @@ function build_item_arr ( $item, $arr_styling = array() ) { // TODO: come up wit
 	$link_posts = "true"; // default in case it's not set by arr_styling
 	$display_format = null;
 	$aspect_ratio = 'square';
+	
 	extract( $arr_styling );
 	//
 	$post = null; // is this necessary?
