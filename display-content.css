@@ -331,11 +331,11 @@
     max-height: 400px;
 }
 
-.flex-img img,
+.flex-img img/*,
 .flex-img > img
 .flex-img a img,
 .grid_item_image img,
-.entry-content .portrait .flex-img img {
+.entry-content .portrait .flex-img img*/ {
 	/*display: block;*/
 	display: inline-block;
 }
