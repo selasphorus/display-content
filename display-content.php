@@ -1123,7 +1123,8 @@ function display_grid_item ( $arr_item = array(), $arr_styling = array() ) {
 	}
 	$info .= '<div class="'.$flex_box_classes.'">';
 	//
-	if ( !($overlay) && $aspect_ratio != "square" && $aspect_ratio != "portrait" ) {
+	//if ( !($overlay) && $aspect_ratio != "square" && $aspect_ratio != "portrait" ) {
+	if ( !($overlay) && !($aspect_ratio) ) {
 		$info .= '<div class="item_info">'.$item_info.'</div>';
 	}
 	// Show the item image
@@ -1133,7 +1134,7 @@ function display_grid_item ( $arr_item = array(), $arr_styling = array() ) {
 	//
 	if ( $overclass ) {
 		$info .= '<div class="'.$overclass.'">'.$item_info.'</div>';
-	} else if ( $aspect_ratio == "square" || $aspect_ratio == "portrait" ) {
+	} else if ( $aspect_ratio ) {//if ( $aspect_ratio == "square" || $aspect_ratio == "portrait" ) {
 		$info .= '<div class="item_info">'.$item_info.'</div>';
 	}
 	$info .= '</div>';
