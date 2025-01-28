@@ -314,6 +314,11 @@
     max-height: 600px;
 }
 
+.flex-container.twocol.portrait .flex-box .flex-img,
+.flex-container.threecol.portrait .flex-box .flex-img {
+    max-height: 525px;
+}
+
 .flex-container.threecol .flex-box .flex-img {
     max-height: 400px;
 }
@@ -322,8 +327,13 @@
     max-height: 300px;
 }
 
+.flex-container.fourcol.portrait .flex-box .flex-img {
+    max-height: 400px;
+}
+
 .flex-img > img {
-	display: block;
+	/*display: block;*/
+	display: inline-block;
 }
 
 .flex-img p {
