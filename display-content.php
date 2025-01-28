@@ -49,22 +49,22 @@ $plugin_path = plugin_dir_path( __FILE__ );
 /* +~+~+ ACF +~+~+ */
 
 // Set custom load & save JSON points for ACF sync
-require 'includes/acf-json.php';
+require 'inc/acf-json.php';
 
 // Register blocks and other handy ACF Block helpers
-//require 'includes/acf-blocks.php';
+//require 'inc/acf-blocks.php';
 
 // Register a default "Site Settings" Options Page
-//require 'includes/acf-settings-page.php';
+//require 'inc/acf-settings-page.php';
 
 // Restrict access to ACF Admin screens
-require 'includes/acf-restrict-access.php';
+require 'inc/acf-restrict-access.php';
 
 // Display and template helpers
-require 'includes/template-tags.php';
+require 'inc/template-tags.php';
 
 // Load ACF field groups hard-coded as PHP
-require 'includes/acf-field-groups.php';
+require 'inc/acf-field-groups.php';
 
 // Register our sdg_settings_init to the admin_init action hook.
 //add_action( 'admin_init', 'dsplycntnt_settings_init' );
