@@ -332,7 +332,8 @@
 }
 
 .flex-img > img
-.flex-img a img {
+.flex-img a img,
+.grid_item_image img {
 	/*display: block;*/
 	display: inline-block;
 }
