@@ -1091,7 +1091,7 @@ function display_grid_item ( $arr_item = array(), $arr_styling = array() ) {
 	// Begin building item_info
 	if ( $aspect_ratio ) {//if ( $aspect_ratio != "square" ) {
 		$hclass = "grid_".$aspect_ratio; //$hclass = "grid_rect";
-		$item_title = '<h3 class="'.$hclass.'">'.$item_title.'</h3>';
+		$item_title = '<h3 class="'.$hclass.'">'.$item_title.'</h3>'; //$item_title = '<h3 class="'.$hclass.'">'.$item_title.'</h3>';
 		if ( !empty($item_subtitle) ) { $hclass .= " with-subtitle"; $item_subtitle = '<h4 class="subtitle">'.$item_subtitle.'</h4>'; }
 	}
 	$item_info .= $item_title;
@@ -1123,8 +1123,8 @@ function display_grid_item ( $arr_item = array(), $arr_styling = array() ) {
 	}
 	$info .= '<div class="'.$flex_box_classes.'">';
 	//
-	//if ( !($overlay) && $aspect_ratio != "square" && $aspect_ratio != "portrait" ) {
-	if ( !($overlay) && !($aspect_ratio) ) {
+	if ( !($overlay) && $aspect_ratio != "square" && $aspect_ratio != "portrait" ) {
+	//if ( !($overlay) && !($aspect_ratio) ) {
 		$info .= '<div class="item_info">'.$item_info.'</div>';
 	}
 	// Show the item image
@@ -1134,7 +1134,7 @@ function display_grid_item ( $arr_item = array(), $arr_styling = array() ) {
 	//
 	if ( $overclass ) {
 		$info .= '<div class="'.$overclass.'">'.$item_info.'</div>';
-	} else if ( $aspect_ratio ) {//if ( $aspect_ratio == "square" || $aspect_ratio == "portrait" ) {
+	} else if ( $aspect_ratio == "square" || $aspect_ratio == "portrait" ) { //if ( $aspect_ratio ) {
 		$info .= '<div class="item_info">'.$item_info.'</div>';
 	}
 	$info .= '</div>';
