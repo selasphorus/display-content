@@ -331,7 +331,8 @@
     max-height: 400px;
 }
 
-.flex-img > img {
+.flex-img > img
+.flex-img a img {
 	/*display: block;*/
 	display: inline-block;
 }
