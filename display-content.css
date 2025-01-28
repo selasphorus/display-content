@@ -269,11 +269,11 @@
     -webkit-border-radius: 9px;
 }
 
-/*.flex-container.landscape .flex-img,*/
+/*.flex-container.rectangle .flex-img,*/
 .flex-container.landscape .flex-img,
-.flex-container.landscape .flex-img:hover,
+.flex-container.landscape .flex-img:hover/*,
 .flex-container.portrait .flex-img,
-.flex-container.portrait .flex-img:hover {
+.flex-container.portrait .flex-img:hover*/ {
     box-shadow: 0 0 5px 1px rgba(0,0,0,.5);
     -webkit-box-shadow: 0 0 5px 1px rgba(0,0,0,.5);
     -moz-box-shadow: 0 0 5px 1px rgba(0,0,0,.5);
