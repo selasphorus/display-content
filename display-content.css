@@ -187,10 +187,12 @@
 
 .flex-box .item_info h3,
 .entry-content .flex-box .item_info h3, 
+.fullwidth.centered .entry-content .flex-box .item_info h3,
 .flex-box h3 {
 	font-weight: normal;
 	font-size: 1.1rem;
 	line-height: normal;
+	font-style: normal;
 }
 
 /* Two options: 1) post_info, shows BELOW flex-box, 2) overlay */
