@@ -177,7 +177,7 @@ add_filter( 'image_size_names_choose', 'birdhive_custom_image_sizes' );
 function birdhive_custom_image_sizes( $sizes ) {
     return array_merge( $sizes, array(
         'grid_crop_square' => __( 'Grid Crop (square)' ),
-        //'grid_crop_rectangle' => __( 'Grid Crop (rectangle)' ),
+        'grid_crop_rectangle' => __( 'Grid Crop (rectangle)' ),
         'grid_crop_landscape' => __( 'Grid Crop (landscape)' ),
         'grid_crop_portrait' => __( 'Grid Crop (portrait)' ),
     ) );
