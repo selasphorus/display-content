@@ -76,8 +76,8 @@ function dcp_register_field_groups() {
 				'choices' => array(
 					'square' => 'Square',
 					//'rectangle' => 'Rectangle',
-					'portrait' => 'Portrait (2:3)',
-					'landscape' => 'Landcape (16:9)',
+					'portrait' => 'Portrait', // (2:3)
+					'landscape' => 'Landcape', // (16:9)
 				),
 				'default_value' => 'landscape',
 				'return_format' => 'value',
