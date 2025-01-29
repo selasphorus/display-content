@@ -185,10 +185,10 @@
 	padding: 1rem;
 }
 
-/*.flex-box h3:not(.grid_rectangle),
-.fullwidth.centered .entry-content .flex-box .item_info h3:not(.grid_rectangle),
-.flex-box .item_info h3:not(.grid_rectangle),*/
-.entry-content .flex-box .item_info h3:not(.grid_rectangle) 
+/*.flex-box h3:not(.grid_landscape),
+.fullwidth.centered .entry-content .flex-box .item_info h3:not(.grid_landscape),
+.flex-box .item_info h3:not(.grid_landscape),*/
+.entry-content .flex-box .item_info h3:not(.grid_landscape) 
  {
 	font-weight: normal;
 	font-size: 1.1rem;
@@ -280,7 +280,6 @@
     -webkit-border-radius: 9px;
 }
 
-/*.flex-container.rectangle .flex-img,*/
 .flex-container.landscape .flex-img,
 .flex-container.landscape .flex-img:hover/*,
 .flex-container.portrait .flex-img,
