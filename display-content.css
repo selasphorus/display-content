@@ -289,26 +289,6 @@
     -moz-box-shadow: 0 0 5px 1px rgba(0,0,0,.5);
 }
 
-/*
-.flex-box img:hover,
-.flex-img img:hover {
-	opacity: 1;
-    -webkit-transform: scale(1.2);
-    transform: scale(1.2);
-  	transition: transform 0.3s ease-in-out;
-  	animation: flexHoverZoom 1.5s ease-in-out forwards;
-}
-
-@keyframes flexHoverZoom {
-	0% {
-		transform: scale(1);
-	}
-	100% {
-		transform: scale(1.2);
-	}
-}
-*/
-
 .entry-content .borderless .flex-img,
 .entry-content .borderless .flex-img img,
 .entry-content .landscape .flex-img,
@@ -414,6 +394,9 @@ h2.collection_group {
 	margin: 0.5rem 0;
     padding: 0;
 }
+
+
+/*** TODO: (maybe) move zoom-fade img styling from apostle style.css to this plugin? ***/
 
 /*** Hover Capability ***/
 /* Primary input mechanism system can 
