@@ -188,11 +188,10 @@
 /*.flex-box h3:not(.grid_landscape),
 .fullwidth.centered .entry-content .flex-box .item_info h3:not(.grid_landscape),
 .flex-box .item_info h3:not(.grid_landscape),*/
-.entry-content .flex-box .item_info h3:not(.grid_landscape) 
- {
+.entry-content .flex-box .item_info h3:not(.grid_landscape) {
 	font-weight: normal;
-	font-size: 1.1rem;
-	line-height: 1.7rem;
+	font-size: 1rem;
+	line-height: normal;
 	font-style: normal;
 }
 
