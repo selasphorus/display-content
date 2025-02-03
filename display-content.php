@@ -1089,7 +1089,7 @@ function display_grid_item ( $arr_item = array(), $arr_styling = array() ) {
 	if ( isset($overlay) ) { $ts_info .= "<!-- overlay: $overlay -->"; } else { $overlay = null; }
 	
 	// Begin building item_info
-	if ( $aspect_ratio ) {//if ( $aspect_ratio != "square" ) {
+	if ( $aspect_ratio ) {
 		$hclass = "grid_".$aspect_ratio; //$hclass = "grid_rect";
 		$item_title = '<h3 class="'.$hclass.'">'.$item_title.'</h3>'; //$item_title = '<h3 class="'.$hclass.'">'.$item_title.'</h3>';
 		if ( !empty($item_subtitle) ) { $hclass .= " with-subtitle"; $item_subtitle = '<h4 class="subtitle">'.$item_subtitle.'</h4>'; }
@@ -1097,10 +1097,7 @@ function display_grid_item ( $arr_item = array(), $arr_styling = array() ) {
 	$item_info .= $item_title;
 	
 	// Date_Str?
-	if ( $item_date_str ) {
-		if ( $aspect_ratio == "square" ) { $item_info .="<br />"; }
-		$item_info .= $item_date_str;
-	}
+	if ( $item_date_str ) { $item_info .= $item_date_str; }
 	
 	// Subtitle?
 	if ( !empty($item_subtitle) ) { $item_info .= $item_subtitle; } //"<br />".
