@@ -2427,6 +2427,8 @@ function birdhive_display_posts ( $atts = array() ) { //function birdhive_displa
     		// If ordering is setup by meta_key, translate that for EM
     		if ( $orderby == "date" || ( empty($orderby) && str_contains($meta_key, "event_start" ) ) || str_contains($orderby, "event_start" )) { 
     			$orderby = "event_start";
+    		} else if ( $orderby == "title" ) {
+    			$orderby = "event_name";
     		}
     		
 			// TODO: deal w/ taxonomy parameters -- how to translate these properly for EM?
