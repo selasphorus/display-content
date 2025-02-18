@@ -278,6 +278,10 @@
     transition: transform .8s cubic-bezier(.05,0.2,.1,1);
 }
 
+.flex-box.square .flex-img {
+	aspect-ratio: 1/1;
+}
+
 .overlaid .flex-img,
 .overlaid .flex-img img {
 	border-radius: 9px;
