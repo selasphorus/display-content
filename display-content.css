@@ -91,6 +91,12 @@
     margin: 0;
 }*/
 
+.flex-container.onecol .flex-box {
+    flex: 100%;
+    max-width: 100%;
+    min-width: 250px;
+}
+
 .flex-container.twocol .flex-box {
     flex: 50%;
     max-width: 48%;
