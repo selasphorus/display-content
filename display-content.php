@@ -9,7 +9,7 @@ Plugin Name: Birdhive Display Content
 Version: 0.2
 Plugin URI: 
 Description: Display content of all types in a variety of formats using shortcodes.
-Author: Alison C.
+Author: atc
 Author URI: http://birdhive.com
 Text Domain: dsplycntnt
 */
