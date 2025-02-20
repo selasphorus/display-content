@@ -1332,8 +1332,13 @@ function build_item_arr ( $item, $arr_styling = array() ) { // TODO: come up wit
 		// Item Date -- for events
 		if ( post_type_exists('event') && $post_type == 'event' ) { 
 			$event_start_datetime = get_post_meta( $post_id, '_event_start_local', true );
+			$event_all_day = get_post_meta( $post_id, '_event_all_day', true );
 			if ( $event_start_datetime ) {
-				$item_date_str = date_i18n( "l, F d, Y \@ g:i a", strtotime($event_start_datetime) );
+				if ( $event_all_day ) {
+					$item_date_str = date_i18n( "l, F d, Y", strtotime($event_start_datetime) );
+				} else {
+					$item_date_str = date_i18n( "l, F d, Y \@ g:i a", strtotime($event_start_datetime) );
+				}				
 				$item_date_str = str_replace(array('am','pm'),array('a.m.','p.m.'),$item_date_str); // STC >> TODO: generalize formatting options
 			}
 		}
