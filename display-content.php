@@ -1337,19 +1337,19 @@ function build_item_arr ( $item, $arr_styling = array() ) { // TODO: come up wit
 			if ( $event_start_datetime ) {
 				if ( $event_all_day ) {
 					if ( $event_end_datetime ) {
-						$item_date_str = date_i18n( "l, F d", strtotime($event_start_datetime) );
+						$item_date_str = date_i18n( "l, F j", strtotime($event_start_datetime) );
 					} else {
-						$item_date_str = date_i18n( "l, F d, Y", strtotime($event_start_datetime) );
+						$item_date_str = date_i18n( "l, F j, Y", strtotime($event_start_datetime) );
 					}
 					
 				} else {
-					$item_date_str = date_i18n( "l, F d, Y \@ g:i a", strtotime($event_start_datetime) );
+					$item_date_str = date_i18n( "l, F j, Y \@ g:i a", strtotime($event_start_datetime) );
 				}				
 				
 			}
 			// Multi-day event? Then show the end date
 			if ( $event_end_datetime && $event_all_day ) {
-				$item_date_str .= "  to ".date_i18n( "l, F d, Y", strtotime($event_end_datetime) );
+				$item_date_str .= "  to ".date_i18n( "l, F j, Y", strtotime($event_end_datetime) );
 			}
 			$item_date_str = str_replace(array('am','pm'),array('a.m.','p.m.'),$item_date_str); // STC >> TODO: generalize formatting options
 			
