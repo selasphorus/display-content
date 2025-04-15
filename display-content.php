@@ -1024,7 +1024,7 @@ function display_table_row ( $arr_item = array(), $arr_styling = array() ) {
 							
 							// Get post_title
 							if ( function_exists( 'sdg_post_title' ) ) {
-								$title_args = array( 'post' => $field_value[0], 'line_breaks' => false, 'show_subtitle' => false, 'hlevel' => 0, 'echo' => false, 'do_ts' => $do_ts );
+								$title_args = array( 'post' => $field_value[0], 'line_breaks' => false, 'show_subtitle' => false, 'hlevel' => 0, 'echo' => false, 'called_by' => 'dcp->display_table_row', 'do_ts' => $do_ts );
 								$value = sdg_post_title( $title_args );
 								if ( empty($value) ) {
 									$info .= "no title found using sdg_post_title with title_args: <pre>".print_r($title_args, true)."</pre>";
@@ -1156,6 +1156,7 @@ function build_item_arr ( $item, $arr_styling = array() ) { // TODO: come up wit
 	// Init vars
 	$arr_item = array();
 	$ts_info = "";
+    $fcn_id = "[dc-bia]&nbsp;";
 	//
 	$link_posts = "true"; // default in case it's not set by arr_styling
 	$display_format = null;
@@ -1253,12 +1254,12 @@ function build_item_arr ( $item, $arr_styling = array() ) { // TODO: come up wit
 				$ts_info .= ' >> use short_title: '.$short_title.'<br />';
 				$item_title = $short_title;
 			} else if ( $post_type == "person" ) {
-				$title_args = array( 'person_id' => $post_id, 'override' => 'post_title', 'show_job_title' => true );
+				$title_args = array( 'person_id' => $post_id, 'override' => 'post_title', 'show_job_title' => true, 'called_by' => $fcn_id );
 				$item_title = get_person_display_name($title_args)['info'];
 			} else if ( function_exists( 'sdg_post_title' ) ) {
 				$ts_info .= ' >> sdg_post_title<br />';
 				if ( !isset($show_subtitle) ) { $show_subtitle = true; }
-				$title_args = array( 'post' => $post_id, 'line_breaks' => true, 'show_subtitle' => $show_subtitle, 'echo' => false );
+				$title_args = array( 'post' => $post_id, 'line_breaks' => true, 'show_subtitle' => $show_subtitle, 'echo' => false, 'called_by' => $fcn_id );
 				if ( $show_content == "full" ) {
 					$title_args['hlevel'] = 2;
 					$title_args['hlevel_sub'] = 3;
@@ -1583,7 +1584,8 @@ function birdhive_display_collection ( $args = array() ) {
 	
 	// List/table/grid header or container
 	//$info .= collection_header ( $display_format, $num_cols, $aspect_ratio, $table_fields, $table_headers );
-	$header_args = array( 'display_format' => $display_format, 'num_cols' => $num_cols, 'aspect_ratio' => $aspect_ratio, 'table_fields' => $table_fields, 'table_headers' => $table_headers );
+	//$header_args = array( 'display_format' => $display_format, 'num_cols' => $num_cols, 'aspect_ratio' => $aspect_ratio, 'table_fields' => $table_fields, 'table_headers' => $table_headers );
+	$header_args = array( 'display_format' => $display_format, 'num_cols' => $num_cols, 'aspect_ratio' => $aspect_ratio, 'fields' => $table_fields, 'headers' => $table_headers );
 	$info .= collection_header ( $header_args );
 	
 	if ( $display_format == "table" ) {
@@ -1755,7 +1757,7 @@ function collection_header ( $args = array() ) { // wip
 		if ( $custom_class ) { $table_classes .= " ".$custom_class; }
 		$info .= '<table class="'.$table_classes.'">';
 		
-		// Make header row from field names
+		// Make header row -- from field names(?)
 		if ( !empty($fields) ) {
 		
 			$info .= '<tr>'; //$info .= "<tr>"; // prep the header row
@@ -3996,6 +3998,7 @@ function birdhive_search_form ( $atts = array(), $content = null, $tag = '' ) {
     $do_ts = devmode_active( array("dcp", "search") );
     $do_log = false;
     sdg_log( "divline2", $do_log );
+    $fcn_id = "[dc-bsf]&nbsp;";
 	
 	// Init vars
 	$info = "";
@@ -4678,7 +4681,7 @@ function birdhive_search_form ( $atts = array(), $content = null, $tag = '' ) {
                                         $options[$id] = $option_name;
                                         // TODO: deal w/ possibility that last_name, first_name fields are empty
                                     } else if ( function_exists( 'sdg_post_title' ) ) {
-										$title_args = array( 'post' => $post_id, 'line_breaks' => true, 'show_subtitle' => true, 'echo' => false, 'hlevel' => 0, 'hlevel_sub' => 0 );
+										$title_args = array( 'post' => $post_id, 'line_breaks' => true, 'show_subtitle' => true, 'echo' => false, 'hlevel' => null, 'hlevel_sub' => null, 'called_by' => $fcn_id );
 										$options[$id] = sdg_post_title( $title_args );
 									} else {
 										$options[$id] = get_the_title($id);
