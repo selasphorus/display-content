@@ -36,8 +36,8 @@ defined( 'ABSPATH' ) or die( 'No script kiddies please!' );
 
 // Make sure we don't expose any info if called directly
 if ( !function_exists( 'add_action' ) ) {
-	echo 'Hi there!  I\'m just a plugin, not much I can do when called directly.';
-	exit;
+    echo 'Hi there!  I\'m just a plugin, not much I can do when called directly.';
+    exit;
 }
 
 $plugin_path = plugin_dir_path( __FILE__ );
@@ -81,24 +81,24 @@ require 'inc/acf-field-groups.php';
  */
 function dsplycntnt_settings_init() {
 
-	// TS/logging setup
+    // TS/logging setup
     $do_ts = devmode_active( array("dcp") );
     $do_log = false;
     sdg_log( "divline2", $do_log );
 
-	// Register a new setting for "dsplycntnt" page.
-	register_setting( 'dsplycntnt', 'dsplycntnt_settings' );
+    // Register a new setting for "dsplycntnt" page.
+    register_setting( 'dsplycntnt', 'dsplycntnt_settings' );
 
-	// Register a new section in the "dsplycntnt" page.
-	add_settings_section(
-		'dsplycntnt_settings',
-		__( 'Display Content Plugin Settings', 'dsplycntnt' ), 'dsplycntnt_settings_section_callback',
-		'dsplycntnt'
-	);
-	
-	/*
-	// Checkbox to designate dev site
-	add_settings_field(
+    // Register a new section in the "dsplycntnt" page.
+    add_settings_section(
+        'dsplycntnt_settings',
+        __( 'Display Content Plugin Settings', 'dsplycntnt' ), 'dsplycntnt_settings_section_callback',
+        'dsplycntnt'
+    );
+    
+    /*
+    // Checkbox to designate dev site
+    add_settings_field(
         'is_dev_site',
         esc_attr__('Dev Site', 'dsplycntnt'),
         'dsplycntnt_devsite_field_cb',
@@ -118,7 +118,7 @@ function dsplycntnt_settings_init() {
     );
     
     // Checkbox to determine whether or not to use custom capabilities
-	add_settings_field(
+    add_settings_field(
         'use_custom_caps',
         esc_attr__('Capabilities (Permissions)', 'dsplycntnt'),
         'dsplycntnt_caps_field_cb',
@@ -133,32 +133,32 @@ function dsplycntnt_settings_init() {
             'checked'      => (!isset(get_option('dsplycntnt_settings')['use_custom_caps'])) ? 0 : get_option('dsplycntnt_settings')['use_custom_caps'],
             )
     ); 
-	
-	// Register a new section in the "dsplycntnt" page.
-	add_settings_section(
-		'dsplycntnt_modules',
-		__( 'Display Content Modules', 'dsplycntnt' ), 'dsplycntnt_modules_section_callback',
-		'dsplycntnt'
-	);
-	
-	// Register a new field in the "dsplycntnt_modules" section, inside the "dsplycntnt" page.
-	add_settings_field(
-		'dsplycntnt_modules', // As of WP 4.6 this value is used only internally.
-		__( 'Active Modules', 'dsplycntnt' ),
-		'dsplycntnt_modules_field_cb',
-		'dsplycntnt',
-		'dsplycntnt_modules',
-		array(
-			'label_for'         => 'dsplycntnt_modules',
-			//'value'        		=> (empty(get_option('dsplycntnt_settings')['dsplycntnt_modules'])) ? 0 : get_option('dsplycntnt_settings')['dsplycntnt_modules'],
-			'class'             => 'dsplycntnt_row',
-			'dsplycntnt_custom_data' 	=> 'custom',
-		)
-	);
-	*/
-	// TODO: new section/field(s) geared toward individual artist site -- see "artiste" plugin posttypes draft
-	
-	
+    
+    // Register a new section in the "dsplycntnt" page.
+    add_settings_section(
+        'dsplycntnt_modules',
+        __( 'Display Content Modules', 'dsplycntnt' ), 'dsplycntnt_modules_section_callback',
+        'dsplycntnt'
+    );
+    
+    // Register a new field in the "dsplycntnt_modules" section, inside the "dsplycntnt" page.
+    add_settings_field(
+        'dsplycntnt_modules', // As of WP 4.6 this value is used only internally.
+        __( 'Active Modules', 'dsplycntnt' ),
+        'dsplycntnt_modules_field_cb',
+        'dsplycntnt',
+        'dsplycntnt_modules',
+        array(
+            'label_for'         => 'dsplycntnt_modules',
+            //'value'                => (empty(get_option('dsplycntnt_settings')['dsplycntnt_modules'])) ? 0 : get_option('dsplycntnt_settings')['dsplycntnt_modules'],
+            'class'             => 'dsplycntnt_row',
+            'dsplycntnt_custom_data'     => 'custom',
+        )
+    );
+    */
+    // TODO: new section/field(s) geared toward individual artist site -- see "artiste" plugin posttypes draft
+    
+    
 }
 
 
@@ -190,10 +190,10 @@ function dsplycntnt_scripts_method() {
     wp_enqueue_style( 'dsplycntnt-style', plugin_dir_url( __FILE__ ) . 'display-content.css', NULL, $ver );
     
     wp_register_script('dsplycntnt-js', plugin_dir_url( __FILE__ ) . 'js/dc.js', array( 'jquery' ) );
-	wp_enqueue_script('dsplycntnt-js');
-	
-	// Enqueue Font Awesome 5
-	// WIP
+    wp_enqueue_script('dsplycntnt-js');
+    
+    // Enqueue Font Awesome 5
+    // WIP
 
 }
 
@@ -239,13 +239,13 @@ function dsplycntnt_scripts_method() {
     
     // Filter query results to enable searching per ACF repeater fields
     // See https://www.advancedcustomfields.com/resources/repeater/#faq "How is the data saved"
-	// meta_keys for repeater fields are named according to the number of rows
-	// ... e.g. item_0_description, item_1_description, so we need to adjust the search to use a wildcard for matching
-	// Replace comparision operator "=" with "LIKE" and replace the wildcard placeholder "XYZ" with the actual wildcard character "%"
-	$pattern = '/meta_key = \'([A-Za-z_]+)_XYZ/i';
-	if ( preg_match("/meta_key = '[A-Za-z_]+_XYZ/i", $where) ) {
-		$where = preg_replace($pattern, "meta_key LIKE '$1_%", $where); //$where = str_replace("meta_key = 'program_items_XYZ", "meta_key LIKE 'program_items_%", $where);
-	}
+    // meta_keys for repeater fields are named according to the number of rows
+    // ... e.g. item_0_description, item_1_description, so we need to adjust the search to use a wildcard for matching
+    // Replace comparision operator "=" with "LIKE" and replace the wildcard placeholder "XYZ" with the actual wildcard character "%"
+    $pattern = '/meta_key = \'([A-Za-z_]+)_XYZ/i';
+    if ( preg_match("/meta_key = '[A-Za-z_]+_XYZ/i", $where) ) {
+        $where = preg_replace($pattern, "meta_key LIKE '$1_%", $where); //$where = str_replace("meta_key = 'program_items_XYZ", "meta_key LIKE 'program_items_%", $where);
+    }
     
     return $where;
 }
@@ -257,7 +257,7 @@ function dsplycntnt_scripts_method() {
 // TBD -- IMPORTANT: will this cause issues with EM?
 add_filter( 'query_vars', 'dsplycntnt_query_vars' );
 function dsplycntnt_query_vars( $qvars ) {
-	$qvars[] = 'scope';
+    $qvars[] = 'scope';
     return $qvars;
 }
 
@@ -341,54 +341,54 @@ function dsplycntnt_allowedtags() {
 
 function dsplycntnt_custom_wp_trim_excerpt($excerpt) {
         
-	global $post;
-	
-	$raw_excerpt = $excerpt;
-	if ( '' == $excerpt ) {
+    global $post;
+    
+    $raw_excerpt = $excerpt;
+    if ( '' == $excerpt ) {
 
-		$excerpt = get_the_content('');
-		$excerpt = strip_shortcodes( $excerpt );
-		$excerpt = apply_filters('the_content', $excerpt);
-		$excerpt = str_replace(']]>', ']]&gt;', $excerpt);
-		$excerpt = strip_tags($excerpt, dsplycntnt_allowedtags()); // IF you need to allow just certain tags. Delete if all tags are allowed
+        $excerpt = get_the_content('');
+        $excerpt = strip_shortcodes( $excerpt );
+        $excerpt = apply_filters('the_content', $excerpt);
+        $excerpt = str_replace(']]>', ']]&gt;', $excerpt);
+        $excerpt = strip_tags($excerpt, dsplycntnt_allowedtags()); // IF you need to allow just certain tags. Delete if all tags are allowed
 
-		//Set the excerpt word count and only break after sentence is complete.
-		$excerpt_word_count = 75;
-		$excerpt_length = apply_filters('excerpt_length', $excerpt_word_count); 
-		$tokens = array();
-		$excerptOutput = '';
-		$count = 0;
+        //Set the excerpt word count and only break after sentence is complete.
+        $excerpt_word_count = 75;
+        $excerpt_length = apply_filters('excerpt_length', $excerpt_word_count); 
+        $tokens = array();
+        $excerptOutput = '';
+        $count = 0;
 
-		// Divide the string into tokens; HTML tags, or words, followed by any whitespace
-		preg_match_all('/(<[^>]+>|[^<>\s]+)\s*/u', $excerpt, $tokens);
+        // Divide the string into tokens; HTML tags, or words, followed by any whitespace
+        preg_match_all('/(<[^>]+>|[^<>\s]+)\s*/u', $excerpt, $tokens);
 
-		foreach ($tokens[0] as $token) { 
+        foreach ($tokens[0] as $token) { 
 
-			if ($count >= $excerpt_length && preg_match('/[\,\;\?\.\!]\s*$/uS', $token)) { 
-			// Limit reached, continue until , ; ? . or ! occur at the end
-				$excerptOutput .= trim($token);
-				break;
-			}
+            if ($count >= $excerpt_length && preg_match('/[\,\;\?\.\!]\s*$/uS', $token)) { 
+            // Limit reached, continue until , ; ? . or ! occur at the end
+                $excerptOutput .= trim($token);
+                break;
+            }
 
-			// Add words to complete sentence
-			$count++;
+            // Add words to complete sentence
+            $count++;
 
-			// Append what's left of the token
-			$excerptOutput .= $token;
-		}
+            // Append what's left of the token
+            $excerptOutput .= $token;
+        }
 
-		$excerpt = trim(force_balance_tags($excerptOutput));
-		
-		// After the content
-		//$excerpt .= atc_excerpt_more( '' );
+        $excerpt = trim(force_balance_tags($excerptOutput));
+        
+        // After the content
+        //$excerpt .= atc_excerpt_more( '' );
 
-		return $excerpt;   
+        return $excerpt;   
 
-	} else if ( has_excerpt( $post->ID ) ) {
-		//$excerpt .= atc_excerpt_more( '' );
-		//$excerpt .= "***";
-	}
-	return apply_filters('dsplycntnt_custom_wp_trim_excerpt', $dsplycntnt_excerpt, $raw_excerpt);
+    } else if ( has_excerpt( $post->ID ) ) {
+        //$excerpt .= atc_excerpt_more( '' );
+        //$excerpt .= "***";
+    }
+    return apply_filters('dsplycntnt_custom_wp_trim_excerpt', $dsplycntnt_excerpt, $raw_excerpt);
 }
 
 // Replace trim_excerpt function -- temp disabled for troubleshooting
@@ -402,74 +402,74 @@ function dsplycntnt_custom_wp_trim_excerpt($excerpt) {
  */
 
 function dsplycntnt_get_excerpt( $args = array() ) {
-	
-	// init vars
-	$info = "";
-	$text = "";	
-	//$info .= "args (initial): <pre>".print_r($args, true)."</pre>";
-	
-	// Defaults
-	$defaults = array(
-		'post'            	=> '',
-		'post_id'         	=> null,
-		'preview_length'  	=> 55, // num words to display as preview text
-		'readmore'        	=> false,
-		'readmore_text'   	=> esc_html__( 'Read more...', 'dsplycntnt' ),
-		'readmore_after'  	=> '',
-		'custom_excerpts' 	=> true,
-		'disable_more'    	=> false,
-		'expandable'		=> false,
-		'text_length'		=> 'excerpt',
-	);
+    
+    // init vars
+    $info = "";
+    $text = "";    
+    //$info .= "args (initial): <pre>".print_r($args, true)."</pre>";
+    
+    // Defaults
+    $defaults = array(
+        'post'                => '',
+        'post_id'             => null,
+        'preview_length'      => 55, // num words to display as preview text
+        'readmore'            => false,
+        'readmore_text'       => esc_html__( 'Read more...', 'dsplycntnt' ),
+        'readmore_after'      => '',
+        'custom_excerpts'     => true,
+        'disable_more'        => false,
+        'expandable'        => false,
+        'text_length'        => 'excerpt',
+    );
 
-	// Apply filters
-	//$defaults = apply_filters( 'dsplycntnt_get_excerpt_defaults', $defaults );
+    // Apply filters
+    //$defaults = apply_filters( 'dsplycntnt_get_excerpt_defaults', $defaults );
 
-	// Parse & Extract args
-	$args = wp_parse_args( $args, $defaults );
-	extract( $args );	
-	//$info .= "args: <pre>".print_r($args, true)."</pre>";
+    // Parse & Extract args
+    $args = wp_parse_args( $args, $defaults );
+    extract( $args );    
+    //$info .= "args: <pre>".print_r($args, true)."</pre>";
 
-	if ( $post_id ) {
-		$post = get_post( $post_id );
-	} else {
-		if ( ! $post ) { global $post; } // Get global post data
-		$post_id = $post->ID; // Get post ID
-	}
-	
-	// Set up the "Read more" link
-	$readmore_link = '&nbsp;<a href="' . get_permalink( $post_id ) . '" class="readmore"><em>' . $readmore_text . $readmore_after . '</em></a>'; // todo -- get rid of em, use css
-	 
-	// Get the text, based on args
-	if ( $text_length == "full" ) {
-		// Full post content
-		$text = $post->post_content;
-	} else if ( $custom_excerpts && has_excerpt( $post_id ) ) {
-		// Check for custom excerpt
-		$text = $post->post_excerpt;
-	} else if ( ! $disable_more && strpos( $post->post_content, '<!--more-->' ) ) {
-		// Check for "more" tag and return content, if it exists
-		$text = apply_filters( 'the_content', get_the_content( $readmore_text . $readmore_after ) );
-	} else {	
-		// No "more" tag defined, so generate excerpt using wp_trim_words
-		$text = wp_trim_words( strip_shortcodes( $post->post_content ), $preview_length );
-	}
-	
-	if ( $expandable ) {
-		$exp_args = array( 'text' => $text, 'post_id' => $post_id, 'text_length' => $text_length, 'preview_length' => $preview_length );
-		$info .= expandable_text( $exp_args );
-	} else {
-		$info .= $text;
-	}		
-	
-	// Add readmore to excerpt if enabled
-	if ( $readmore ) {
-		$info .= apply_filters( 'dsplycntnt_readmore_link', $readmore_link );
-	}
+    if ( $post_id ) {
+        $post = get_post( $post_id );
+    } else {
+        if ( ! $post ) { global $post; } // Get global post data
+        $post_id = $post->ID; // Get post ID
+    }
+    
+    // Set up the "Read more" link
+    $readmore_link = '&nbsp;<a href="' . get_permalink( $post_id ) . '" class="readmore"><em>' . $readmore_text . $readmore_after . '</em></a>'; // todo -- get rid of em, use css
+     
+    // Get the text, based on args
+    if ( $text_length == "full" ) {
+        // Full post content
+        $text = $post->post_content;
+    } else if ( $custom_excerpts && has_excerpt( $post_id ) ) {
+        // Check for custom excerpt
+        $text = $post->post_excerpt;
+    } else if ( ! $disable_more && strpos( $post->post_content, '<!--more-->' ) ) {
+        // Check for "more" tag and return content, if it exists
+        $text = apply_filters( 'the_content', get_the_content( $readmore_text . $readmore_after ) );
+    } else {    
+        // No "more" tag defined, so generate excerpt using wp_trim_words
+        $text = wp_trim_words( strip_shortcodes( $post->post_content ), $preview_length );
+    }
+    
+    if ( $expandable ) {
+        $exp_args = array( 'text' => $text, 'post_id' => $post_id, 'text_length' => $text_length, 'preview_length' => $preview_length );
+        $info .= expandable_text( $exp_args );
+    } else {
+        $info .= $text;
+    }        
+    
+    // Add readmore to excerpt if enabled
+    if ( $readmore ) {
+        $info .= apply_filters( 'dsplycntnt_readmore_link', $readmore_link );
+    }
 
-	// Apply filters and echo
-	//return apply_filters( 'dsplycntnt_get_excerpt', $info );
-	return $info;
+    // Apply filters and echo
+    //return apply_filters( 'dsplycntnt_get_excerpt', $info );
+    return $info;
 
 }
 
@@ -478,106 +478,106 @@ function dsplycntnt_get_excerpt( $args = array() ) {
 // TODO: pare down number of args -- simplify
 // TODO: build in option to submit $preview_text and $full_text as vars to be formatted for display
 function expandable_text( $args = array() ) {
-	
-	// Init	
-	$info = "";
-	$full_text = "";
-	
+    
+    // Init    
+    $info = "";
+    $full_text = "";
+    
     // Defaults
-	$defaults = array(
-		'post_id'         	=> null,
-		'text'         		=> null,
-		'preview_text'      => null,
-		'text_length'		=> "excerpt",
-		'preview_length'	=> null, //55,
-		'readmore'        	=> false,
-	);
-	
+    $defaults = array(
+        'post_id'             => null,
+        'text'                 => null,
+        'preview_text'      => null,
+        'text_length'        => "excerpt",
+        'preview_length'    => null, //55,
+        'readmore'            => false,
+    );
+    
     // Parse & Extract args
-	$args = wp_parse_args( $args, $defaults );
-	extract( $args );
-	
-	//$info = "extxt args: <pre>".print_r($args, true)."</pre>";
-	
-	if ( empty($post_id) && empty($text) ) { return false; } // nothing to work with
-	
-	// Get the text and preview_text
-	if ( $text ) {
-	
-		$info .= "<!-- extxt set full_text to text -->";
-		$full_text = $text;
-		
-		// If no preview_text was provided, make an excerpt
-		if ( empty($preview_text) ) {
-			$info .= "<!-- extxt preview_text is empty -->";
-			//
-		}
-	
-	} else if ( $post_id ) {
-	
-		$post = get_post( $post_id );
-		if ( has_excerpt( $post_id ) ) { 
-			$excerpt = $post->post_excerpt; // ??
-		} else {
-			$excerpt = get_the_excerpt($post_id);
-		}
-		$preview_text = $excerpt;
-		if ( $text_length == "full_text" ) {
-			$full_text = $post->post_content;			
-		} else {
-			$full_text = $excerpt;
-		}	
-		
-		// If a preview_length has been set, adjust the preview_text as needed
-		// WIP! Needs to be tested.
-		if ( $preview_length  ) {
-		
-			// TODO fix the following in terms of handling html tags within the text
-			//$stripped_text = wp_strip_all_tags($text);
-			$split = explode(" ", $preview_text); // convert string to array
-			$len = count($split); // get number of words in text
-			//$info .= "<pre>".print_r($split, true)."</pre>";
-		
-			if ( $len > $preview_length ) {
-			
-				// The excerpt-as-preview_text is longer than the set preview length, so we need to truncate it
-				$info .= "<!-- extxt len > preview_length -->";
-		
-				$firsthalf = array_slice($split, 0, $preview_length);
-				$secondhalf = array_slice($split, $preview_length, $len - 1);
-		
-				$preview_text = implode(' ', $firsthalf) . '<span class="extxt spacer">&nbsp;</span><span class="extxt more-text readmore">more</span>';
-				$full_text = implode(' ', $secondhalf);
-			
-			}		
-		
-		}
-	}
-	
-	// Check to be sure the full_text is actually longer than the preview_text (if it's not there's no point in expanding/collapsing)
-	if ( strlen(wp_strip_all_tags($preview_text)) != strlen(wp_strip_all_tags($full_text)) ) {
-	
-		$info .= "<!-- extxt preview_text not same as full_text -->";
-		
-		//$info = '<p class="extxt expandable-text">'.$text.'</p>';
-		$info .= '<p class="expandable-text" >';
-		$info .= '<span class="extxt text-preview" >';
-		$info .= $preview_text;
-		$info .= '</span>';
-		$info .= '<span class="extxt spacer">&nbsp;</span><span class="extxt more-text readmore">more</span>';
-		$info .= '<span class="extxt text-full hide">';
-		$info .= $full_text;
-		$info .= '</span>';
-		$info .= '<span class="extxt spacer hide">&nbsp;</span><span class="extxt less-text readmore hide">less</span>';
-		$info .= '</p>';
-	
-	} else if ( strlen($full_text) > 0 ) {
-	
-		$info = '<p class="extxt">'.$full_text.'</p>';
-		
-	}
-	
-	return $info;
+    $args = wp_parse_args( $args, $defaults );
+    extract( $args );
+    
+    //$info = "extxt args: <pre>".print_r($args, true)."</pre>";
+    
+    if ( empty($post_id) && empty($text) ) { return false; } // nothing to work with
+    
+    // Get the text and preview_text
+    if ( $text ) {
+    
+        $info .= "<!-- extxt set full_text to text -->";
+        $full_text = $text;
+        
+        // If no preview_text was provided, make an excerpt
+        if ( empty($preview_text) ) {
+            $info .= "<!-- extxt preview_text is empty -->";
+            //
+        }
+    
+    } else if ( $post_id ) {
+    
+        $post = get_post( $post_id );
+        if ( has_excerpt( $post_id ) ) { 
+            $excerpt = $post->post_excerpt; // ??
+        } else {
+            $excerpt = get_the_excerpt($post_id);
+        }
+        $preview_text = $excerpt;
+        if ( $text_length == "full_text" ) {
+            $full_text = $post->post_content;            
+        } else {
+            $full_text = $excerpt;
+        }    
+        
+        // If a preview_length has been set, adjust the preview_text as needed
+        // WIP! Needs to be tested.
+        if ( $preview_length  ) {
+        
+            // TODO fix the following in terms of handling html tags within the text
+            //$stripped_text = wp_strip_all_tags($text);
+            $split = explode(" ", $preview_text); // convert string to array
+            $len = count($split); // get number of words in text
+            //$info .= "<pre>".print_r($split, true)."</pre>";
+        
+            if ( $len > $preview_length ) {
+            
+                // The excerpt-as-preview_text is longer than the set preview length, so we need to truncate it
+                $info .= "<!-- extxt len > preview_length -->";
+        
+                $firsthalf = array_slice($split, 0, $preview_length);
+                $secondhalf = array_slice($split, $preview_length, $len - 1);
+        
+                $preview_text = implode(' ', $firsthalf) . '<span class="extxt spacer">&nbsp;</span><span class="extxt more-text readmore">more</span>';
+                $full_text = implode(' ', $secondhalf);
+            
+            }        
+        
+        }
+    }
+    
+    // Check to be sure the full_text is actually longer than the preview_text (if it's not there's no point in expanding/collapsing)
+    if ( strlen(wp_strip_all_tags($preview_text)) != strlen(wp_strip_all_tags($full_text)) ) {
+    
+        $info .= "<!-- extxt preview_text not same as full_text -->";
+        
+        //$info = '<p class="extxt expandable-text">'.$text.'</p>';
+        $info .= '<p class="expandable-text" >';
+        $info .= '<span class="extxt text-preview" >';
+        $info .= $preview_text;
+        $info .= '</span>';
+        $info .= '<span class="extxt spacer">&nbsp;</span><span class="extxt more-text readmore">more</span>';
+        $info .= '<span class="extxt text-full hide">';
+        $info .= $full_text;
+        $info .= '</span>';
+        $info .= '<span class="extxt spacer hide">&nbsp;</span><span class="extxt less-text readmore hide">less</span>';
+        $info .= '</p>';
+    
+    } else if ( strlen($full_text) > 0 ) {
+    
+        $info = '<p class="extxt">'.$full_text.'</p>';
+        
+    }
+    
+    return $info;
 }
 
 //}
@@ -587,7 +587,7 @@ function expandable_text( $args = array() ) {
  * This function is a version of twentysixteen_entry_meta
  */
 function birdhive_entry_meta() {
-	
+    
     $format = get_post_format();
     if ( current_theme_supports( 'post-formats', $format ) ) {
         printf(
@@ -631,9 +631,9 @@ function birdhive_get_default_taxonomy ( $post_type = null ) {
 
 // Function to determine default category for given page, for purposes of Recent Posts &c.
 function birdhive_get_default_category () {
-	
-	$default_cat = "";
-	
+    
+    $default_cat = "";
+    
     if ( is_category() ) {
     
         $category = get_queried_object();
@@ -648,53 +648,53 @@ function birdhive_get_default_category () {
         // WIP...
         
     }
-	
-	if ( ! empty( $categories ) ) {
-		
-		//echo esc_html( $categories[0]->name );	
-		// WIP...
-			 
-	} else if ( empty($default_cat) ) {
+    
+    if ( ! empty( $categories ) ) {
         
-		// TODO: generalize so that this isn't so STC-specific
-		// TODO: make this more efficient by simply checking to see if name of Page is same as name of any Category
-		// Get page slug
-		if ( is_page() ) {
-			global $post;
-			$page_slug = $post->post_name;
-			// Does a taxonomy term exist matching this slug?
-			$default_cat = term_exists( $page_slug );
-		}
-		// Get default cat as per plugin options? WIP
-		
-		/*
-		if ( is_page('Families') ) {
-			$default_cat = "Families";
-		} else if (is_page('Giving')) {
-			$default_cat = "Giving";
-		} else if (is_page('Music')) {
-			$default_cat = "Music";
-		} else if (is_page('Outreach')) {
-			$default_cat = "Outreach";
-		} else if (is_page('Parish Life')) {
-			$default_cat = "Parish Life";
-		} else if (is_page('Rector')) {
-			$default_cat = "Rector";
-		} else if (is_page('Theology')) {
-			$default_cat = "Theology";
-		} else if (is_page('Worship')) {
-			$default_cat = "Worship";
-		} else if (is_page('Youth')) {
-			$default_cat = "Youth";
-		} else {
-			$default_cat = "Latest News";
-		}
-		*/
-	}
-	//$info .= "default_cat: $default_cat<br />";
-	//echo "default_cat: $default_cat<br />";
-	
-	return $default_cat;
+        //echo esc_html( $categories[0]->name );    
+        // WIP...
+             
+    } else if ( empty($default_cat) ) {
+        
+        // TODO: generalize so that this isn't so STC-specific
+        // TODO: make this more efficient by simply checking to see if name of Page is same as name of any Category
+        // Get page slug
+        if ( is_page() ) {
+            global $post;
+            $page_slug = $post->post_name;
+            // Does a taxonomy term exist matching this slug?
+            $default_cat = term_exists( $page_slug );
+        }
+        // Get default cat as per plugin options? WIP
+        
+        /*
+        if ( is_page('Families') ) {
+            $default_cat = "Families";
+        } else if (is_page('Giving')) {
+            $default_cat = "Giving";
+        } else if (is_page('Music')) {
+            $default_cat = "Music";
+        } else if (is_page('Outreach')) {
+            $default_cat = "Outreach";
+        } else if (is_page('Parish Life')) {
+            $default_cat = "Parish Life";
+        } else if (is_page('Rector')) {
+            $default_cat = "Rector";
+        } else if (is_page('Theology')) {
+            $default_cat = "Theology";
+        } else if (is_page('Worship')) {
+            $default_cat = "Worship";
+        } else if (is_page('Youth')) {
+            $default_cat = "Youth";
+        } else {
+            $default_cat = "Latest News";
+        }
+        */
+    }
+    //$info .= "default_cat: $default_cat<br />";
+    //echo "default_cat: $default_cat<br />";
+    
+    return $default_cat;
 }
 
 
@@ -702,56 +702,56 @@ function birdhive_get_default_category () {
 
 function get_post_links( $post_id = null ) {
 
-	// TS/logging setup
+    // TS/logging setup
     $do_ts = devmode_active( array("dcp") );
     $do_log = false;
     sdg_log( "divline2", $do_log );
 
-	if ( empty($post_id) ) { return false; }
-	
-	// Init vars
-	$info = "";
-	//$ts_info = "";
-	
-	$related_links = get_field( 'related_links', $post_id );
-	if ( $related_links ) {
-		$info .= '<div class="related_links">';
-		foreach ( $related_links as $link_id ) {
-			$show = get_field( 'show_in_grid', $link_id );
-			if ( !$show ) {
-				continue;
-			}
-			// get terms for $link_id
-			$terms = get_the_terms( $link_id, 'link_category' );
+    if ( empty($post_id) ) { return false; }
+    
+    // Init vars
+    $info = "";
+    //$ts_info = "";
+    
+    $related_links = get_field( 'related_links', $post_id );
+    if ( $related_links ) {
+        $info .= '<div class="related_links">';
+        foreach ( $related_links as $link_id ) {
+            $show = get_field( 'show_in_grid', $link_id );
+            if ( !$show ) {
+                continue;
+            }
+            // get terms for $link_id
+            $terms = get_the_terms( $link_id, 'link_category' );
             //$info .= "<!-- terms: ".print_r($terms, true)." -->"; // tft
             $icon = null;
             if ( $terms ) {
                 foreach ( $terms as $term ) {
-                	// Does this term have a dashicon assigned?
+                    // Does this term have a dashicon assigned?
                     $icon = get_term_meta($term->term_id, 'dashicon', true);
                     //$info .= "<!-- term: ".$term->slug." :: dashicon: ".$dashicon." -->"; // tft
                     //$info .= "term: ".print_r($term, true)." "; // tft
                     //$info .= $term->name;
                     if ( !empty($icon) ) {
-                    	// TBD: fas/far? for font awesome
-                    	$icon = '<span class="icons '.$icon.'"></span>'; 
-                    	break;
+                        // TBD: fas/far? for font awesome
+                        $icon = '<span class="icons '.$icon.'"></span>'; 
+                        break;
                     }
                 }
             }
-			$url = get_field( 'url', $link_id );
-			$text = get_field( 'link_text', $link_id );
-			if ( $text ) { $title = $text; } else { $title = get_the_title( $link_id ); $text = $title; } // wip
-			$class = "related"; // tft
-			$target = "_blank";
-			if ( $icon ) { $text = $icon; $class .= " icon"; }
-			$info .= make_link( $url, $text, $title, $class, $target); // This is an SDG fcn -- TODO: check to make sure fcn exists // set up plugin dependency
-		}
-		$info .= '</div>';
-	}
-	
-	return $info;
-		
+            $url = get_field( 'url', $link_id );
+            $text = get_field( 'link_text', $link_id );
+            if ( $text ) { $title = $text; } else { $title = get_the_title( $link_id ); $text = $title; } // wip
+            $class = "related"; // tft
+            $target = "_blank";
+            if ( $icon ) { $text = $icon; $class .= " icon"; }
+            $info .= make_link( $url, $text, $title, $class, $target); // This is an SDG fcn -- TODO: check to make sure fcn exists // set up plugin dependency
+        }
+        $info .= '</div>';
+    }
+    
+    return $info;
+        
 }
 
 /*** RETRIEVE & DISPLAY POSTS with complex queries &c. ***/
@@ -767,380 +767,380 @@ function get_post_links( $post_id = null ) {
 //function display_item ( $display_format = "links", $item_arr = array(), $display_atts = null, $table_fields = null, $item_ts_info = null ) {
 function display_item ( $arr_item = array(), $arr_styling = array() ) {
 
-	$info = "";
-	
-	extract( $arr_styling );
-	
-	if ( $display_format == "links" ) {	
-		$info .= display_link_item($arr_item);
-	} else if ( $display_format == "list" ) {
-		$info .= display_list_item($arr_item);
-	} else if ( $display_format == "excerpts" || $display_format == "archive" ) {
-		$info .= display_post_item($arr_item);
-	} else if ( $display_format == "table" ) {
-		$info .= display_table_row($arr_item, $arr_styling);
-	} else if ( $display_format == "grid" ) {
-		$info .= display_grid_item($arr_item, $arr_styling);
-	}
-	
-	return $info;
+    $info = "";
+    
+    extract( $arr_styling );
+    
+    if ( $display_format == "links" ) {    
+        $info .= display_link_item($arr_item);
+    } else if ( $display_format == "list" ) {
+        $info .= display_list_item($arr_item);
+    } else if ( $display_format == "excerpts" || $display_format == "archive" ) {
+        $info .= display_post_item($arr_item);
+    } else if ( $display_format == "table" ) {
+        $info .= display_table_row($arr_item, $arr_styling);
+    } else if ( $display_format == "grid" ) {
+        $info .= display_grid_item($arr_item, $arr_styling);
+    }
+    
+    return $info;
 
 }
 
 function display_link_item ( $arr_item = array() ) {
-	
-	// TS/logging setup
+    
+    // TS/logging setup
     $do_ts = devmode_active( array("dcp") );
     $do_log = false;
     sdg_log( "divline2", $do_log );
     
     // Init vars
-	$info = "";
-	extract( $arr_item );
-	
-	// Date_Str
-	$info .= $item_date_str;
-	
-	// Item Title
-	$info .= $item_title;
-	
-	// TODO: fine-tune text -- option to show excerpts or not -- e.g. ago board page
-	if ( $item_text )  { $info .= '&nbsp;&mdash;&nbsp;<span class="description">'.$item_text.'</span>'; }
-	if ( $info ) { $info = '<div class="cc_item">'.$info.'</div>'; }
-	
-	//if ( $ts_info != "" && ( $do_ts === true || $do_ts == "dcp" ) ) { $info .= '<div class="troubleshooting">'.$ts_info.'</div>'; }
-	
-	return $info;
-			
+    $info = "";
+    extract( $arr_item );
+    
+    // Date_Str
+    $info .= $item_date_str;
+    
+    // Item Title
+    $info .= $item_title;
+    
+    // TODO: fine-tune text -- option to show excerpts or not -- e.g. ago board page
+    if ( $item_text )  { $info .= '&nbsp;&mdash;&nbsp;<span class="description">'.$item_text.'</span>'; }
+    if ( $info ) { $info = '<div class="cc_item">'.$info.'</div>'; }
+    
+    //if ( $ts_info != "" && ( $do_ts === true || $do_ts == "dcp" ) ) { $info .= '<div class="troubleshooting">'.$ts_info.'</div>'; }
+    
+    return $info;
+            
 }
 
 function display_list_item ( $arr_item = array() ) {
-	
-	// TS/logging setup
+    
+    // TS/logging setup
     $do_ts = devmode_active( array("dcp") );
     $do_log = false;
     sdg_log( "divline2", $do_log );
     
     // Init vars
-	$info = "";
-	extract( $arr_item );
-	
-	$info .= '<li class="cc_item">';
-	$info .= $item_title;
-	$info .= '</li>';
-	
-	return $info;
-			
+    $info = "";
+    extract( $arr_item );
+    
+    $info .= '<li class="cc_item">';
+    $info .= $item_title;
+    $info .= '</li>';
+    
+    return $info;
+            
 }
 
 function display_post_item ( $arr_item = array() ) {
-	
-	// TS/logging setup
+    
+    // TS/logging setup
     $do_ts = devmode_active( array("dcp") );
     $do_log = false;
     $fcn_id = "[dc-dpi]&nbsp;";
     sdg_log( "divline2", $do_log );
 
-	// Init vars
-	$info = "";
-	$ts_info = "";
-	$item_content = "";
-	$item_meta = null;
-	$player_status = null;
-	extract( $arr_item );
-	
-	// WIP
-	if ( $post_id ) {
-		$post_type = get_post_type($post_id);
-		$ts_info .= $fcn_id."post_id: ".$post_id."<br />";
-		$ts_info .= $fcn_id."post_type: ".$post_type."<br />";
-	} else {
-		$post_type = null;
-	}
-	
-	$ts_info .= $fcn_id.">>> display_post_item <<<<br />";
-	$ts_info .= $fcn_id."show_content: ".$show_content."<br />";
-	//$ts_info .= "arr_item: <pre>".print_r($arr_item,true)."</pre>";
-	
-	if ( $post_id && $show_content == "full" ) {
-		//$ts_info .= "Show full content<br />";
-		$item_content .= "<!-- $fcn_id START post_content for post_id $post_id -->";
-		$full_content = true;
-		$post = get_post($post_id);
-		$item_content .= apply_filters('the_content', $post->post_content);
-		$item_content .= "<!-- $fcn_id END post_content for post_id $post_id -->";
-		// For event posts, get date/location info for header
-		if ( $post_type == 'event' ) {
-			$item_content .= "<!-- $fcn_id get item_meta via EM shortcode for post_id $post_id -->";
-			$item_meta = do_shortcode('[event post_id="'.$post_id.'"]#_EVENTDATES<br /><span class="event_time">#_EVENTTIMES</span>[/event]');
-		}
-	} else {
-		//$info .= $item_image;
-		//$info .= $item_text; // old -- incorrect -- ??
-		$item_content = $item_text; // 240828
-	}
+    // Init vars
+    $info = "";
+    $ts_info = "";
+    $item_content = "";
+    $item_meta = null;
+    $player_status = null;
+    extract( $arr_item );
+    
+    // WIP
+    if ( $post_id ) {
+        $post_type = get_post_type($post_id);
+        $ts_info .= $fcn_id."post_id: ".$post_id."<br />";
+        $ts_info .= $fcn_id."post_type: ".$post_type."<br />";
+    } else {
+        $post_type = null;
+    }
+    
+    $ts_info .= $fcn_id.">>> display_post_item <<<<br />";
+    $ts_info .= $fcn_id."show_content: ".$show_content."<br />";
+    //$ts_info .= "arr_item: <pre>".print_r($arr_item,true)."</pre>";
+    
+    if ( $post_id && $show_content == "full" ) {
+        //$ts_info .= "Show full content<br />";
+        $item_content .= "<!-- $fcn_id START post_content for post_id $post_id -->";
+        $full_content = true;
+        $post = get_post($post_id);
+        $item_content .= apply_filters('the_content', $post->post_content);
+        $item_content .= "<!-- $fcn_id END post_content for post_id $post_id -->";
+        // For event posts, get date/location info for header
+        if ( $post_type == 'event' ) {
+            $item_content .= "<!-- $fcn_id get item_meta via EM shortcode for post_id $post_id -->";
+            $item_meta = do_shortcode('[event post_id="'.$post_id.'"]#_EVENTDATES<br /><span class="event_time">#_EVENTTIMES</span>[/event]');
+        }
+    } else {
+        //$info .= $item_image;
+        //$info .= $item_text; // old -- incorrect -- ??
+        $item_content = $item_text; // 240828
+    }
 
-	// This is temporary! Show email addresses until the vestry form is approved
-	if ( $post_type == "person" && !is_dev_site() ) {
-		$email_address = get_field( 'email_address', $post_id );
-		$first_name = get_field( 'first_name', $post_id );
-		if ( $email_address ) {
-			$ts_info .= $fcn_id.'email_address: '.$email_address.'<br />';
-			$item_content .= '<a class="button" href="mailto:'.$email_address.'">Email '.$first_name.'</a>';
-		} else {
-			$ts_info .= $fcn_id.'email_address: None found<br />';
-		}
-	}
-	
-	// TODO: bring this more in alignment with theme template display? e.g. content-excerpt, content-sermon, content-event...
-	
-	$article_class = 'cc_item';
-	if ( $show_content == "full" ) {
-		$article_class .= " full";
-	}
-	
-	$info .= '<article id="post-'.$post_id.'" class="display_post_item '.$article_class.'">'; // post_class()
-	$info .= '<header class="entry-header">';
-	if ( isset($item_title) ) {
-		if ( $show_content == "full" ) {
-			$info .= $item_title;
-		} else {
-			$info .= '<h2 class="entry-title">'.$item_title.'</h2>';
-		}
-	}
-	//
-	if ( isset($item_meta) ) { $info .= '<div class="entry-meta">'.$item_meta.'</div>'; }
-	// TODO: add subtitle?
-	$info .= '</header><!-- .entry-header -->';
-	if ( empty($item_image) && $show_content == "full" ) {
-		$ts_info .= $fcn_id.'No item_image => get image via SDGPT<br />';
-		$img_args = array( 'post_id' => $post_id, 'format' => 'singular', 'img_size' => "full", 'sources' => array("featured", "gallery"), 'echo' => false );
-		$info .= sdg_post_thumbnail( $img_args );
-	}
-	$info .= '<div class="entry-content">';
-	//if ( $post_type == 'event' ) { $info .= do_shortcode('[event post_id="'.$post_id.'"]#_EVENTDATES<br /><span class="event_time">#_EVENTTIMES</span>[/event]'); }
-	//if ( $post_type == 'event' ) { $info .= display_media_player( 'post_id' => $post_id, 'position' => 'above' ); }
-	if ( $post_id ) { 
-		$mp_info = display_media_player( array('post_id' => $post_id, 'position' => 'above', 'return' => 'array' ) );
-		$info .= $mp_info['info'];
-		$player_status = $mp_info['player_status'];
-	}
-	if ( $item_image && $player_status != "ready" ) {
-		$info .= $item_image;
-	}
-	$info .= $item_content;
-	if ( $post_id ) { $info .= display_media_player( array('post_id' => $post_id, 'position' => 'below' ) ); }
-	$info .= '</div><!-- .entry-content -->';
-	$info .= '<footer class="entry-footer">';
-	$info .= birdhive_entry_meta( $post_id );
-	$info .= '</footer><!-- .entry-footer -->';
-	$info .= '</article><!-- #post-'.$post_id.' -->';
+    // This is temporary! Show email addresses until the vestry form is approved
+    if ( $post_type == "person" && !is_dev_site() ) {
+        $email_address = get_field( 'email_address', $post_id );
+        $first_name = get_field( 'first_name', $post_id );
+        if ( $email_address ) {
+            $ts_info .= $fcn_id.'email_address: '.$email_address.'<br />';
+            $item_content .= '<a class="button" href="mailto:'.$email_address.'">Email '.$first_name.'</a>';
+        } else {
+            $ts_info .= $fcn_id.'email_address: None found<br />';
+        }
+    }
+    
+    // TODO: bring this more in alignment with theme template display? e.g. content-excerpt, content-sermon, content-event...
+    
+    $article_class = 'cc_item';
+    if ( $show_content == "full" ) {
+        $article_class .= " full";
+    }
+    
+    $info .= '<article id="post-'.$post_id.'" class="display_post_item '.$article_class.'">'; // post_class()
+    $info .= '<header class="entry-header">';
+    if ( isset($item_title) ) {
+        if ( $show_content == "full" ) {
+            $info .= $item_title;
+        } else {
+            $info .= '<h2 class="entry-title">'.$item_title.'</h2>';
+        }
+    }
+    //
+    if ( isset($item_meta) ) { $info .= '<div class="entry-meta">'.$item_meta.'</div>'; }
+    // TODO: add subtitle?
+    $info .= '</header><!-- .entry-header -->';
+    if ( empty($item_image) && $show_content == "full" ) {
+        $ts_info .= $fcn_id.'No item_image => get image via SDGPT<br />';
+        $img_args = array( 'post_id' => $post_id, 'format' => 'singular', 'img_size' => "full", 'sources' => array("featured", "gallery"), 'echo' => false );
+        $info .= sdg_post_thumbnail( $img_args );
+    }
+    $info .= '<div class="entry-content">';
+    //if ( $post_type == 'event' ) { $info .= do_shortcode('[event post_id="'.$post_id.'"]#_EVENTDATES<br /><span class="event_time">#_EVENTTIMES</span>[/event]'); }
+    //if ( $post_type == 'event' ) { $info .= display_media_player( 'post_id' => $post_id, 'position' => 'above' ); }
+    if ( $post_id ) { 
+        $mp_info = display_media_player( array('post_id' => $post_id, 'position' => 'above', 'return' => 'array' ) );
+        $info .= $mp_info['info'];
+        $player_status = $mp_info['player_status'];
+    }
+    if ( $item_image && $player_status != "ready" ) {
+        $info .= $item_image;
+    }
+    $info .= $item_content;
+    if ( $post_id ) { $info .= display_media_player( array('post_id' => $post_id, 'position' => 'below' ) ); }
+    $info .= '</div><!-- .entry-content -->';
+    $info .= '<footer class="entry-footer">';
+    $info .= birdhive_entry_meta( $post_id );
+    $info .= '</footer><!-- .entry-footer -->';
+    $info .= '</article><!-- #post-'.$post_id.' -->';
 
-	// WIP is it possible to use template parts in this context?
-	//$info .= get_template_part( 'template-parts/content', 'excerpt', array('post_id' => $post_id ) ); // 
-	//$post_type_for_template = birdhive_get_type_for_template();
-	//get_template_part( 'template-parts/content', $post_type_for_template );
-	//$info .= get_template_part( 'template-parts/content', $post_type );
-	
-	if ( $ts_info != "" && ( $do_ts === true || $do_ts == "dcp" ) ) { $info .= '<div class="troubleshooting">'.$ts_info.'</div>'; }
-	
-	return $info;
-			
+    // WIP is it possible to use template parts in this context?
+    //$info .= get_template_part( 'template-parts/content', 'excerpt', array('post_id' => $post_id ) ); // 
+    //$post_type_for_template = birdhive_get_type_for_template();
+    //get_template_part( 'template-parts/content', $post_type_for_template );
+    //$info .= get_template_part( 'template-parts/content', $post_type );
+    
+    if ( $ts_info != "" && ( $do_ts === true || $do_ts == "dcp" ) ) { $info .= '<div class="troubleshooting">'.$ts_info.'</div>'; }
+    
+    return $info;
+            
 }
 
 function display_event_list_item ( $EM_Event ) {
-	
-	// Init
-	$info = "";
-	
-	// Use category list item version so as to include date (as opposed to grouped version) -- see EM settings in CMS
-	// First, though, check to make sure $EM_Event is of the expected object type, and not an array or something
-	if ($EM_Event instanceof EM_Event) {
-		$info = do_shortcode( $EM_Event->output(get_option('dbem_category_event_list_item_format')) );
-	}
-	return $info;
-			
+    
+    // Init
+    $info = "";
+    
+    // Use category list item version so as to include date (as opposed to grouped version) -- see EM settings in CMS
+    // First, though, check to make sure $EM_Event is of the expected object type, and not an array or something
+    if ($EM_Event instanceof EM_Event) {
+        $info = do_shortcode( $EM_Event->output(get_option('dbem_category_event_list_item_format')) );
+    }
+    return $info;
+            
 }
 
 function display_table_row ( $arr_item = array(), $arr_styling = array() ) {
-	
-	// TS/logging setup
+    
+    // TS/logging setup
     $do_ts = devmode_active( array("dcp") );
     $do_log = false;
     sdg_log( "divline2", $do_log );
     sdg_log( "function called: display_table_row", $do_log );
     
-	// Init vars
-	$info = "";
-	$ts_info = "";
-	$fields = null;
-	
-	extract( $arr_item );
-	extract( $arr_styling );
-	
-	// Get/set item vars
-	//$ts_info .= "<!-- item: ".print_r($item, true)."; fields: ".print_r($fields, true)." -->";
-	
-	// TBD: build in possibility that one field value might be item_image?
-	// TBD: build in possibility that one field value might be item_text?
-	
-	// Start building the rows
-	$info .= '<tr class="cc_item">';
-	
-	// Make sure we've got a proper array of fields and then loop through them to accumulate the info for display
-	if ( !is_array($table_fields) ) { $arr_fields = explode(",",$table_fields); } else { $arr_fields = $table_fields; }
-	
-	if ( $arr_fields ) {
-	
-		//if ( !is_array($field_values) ) { $arr_field_values = explode(",",$field_values); } else { $arr_field_values = $field_values; }
-		
-		foreach ( $arr_fields as $field_name ) {
-		
-			$field_name = trim($field_name);
-			
-			if ( !empty($field_name) ) {
-				
-				$info .= '<td>';				
-				//$info .= "[".$field_name."] "; // tft
-				
-				// Check for corresponding field value passed with item
-				if ( isset($field_values[$field_name]) ) {
-					$field_value = $field_values[$field_name];
-				} else if ( $field_name == "title" && !empty($item_title) ) {
-					$field_value = $item_title; // WIP!!!
-				} else {
-					$field_value = get_post_meta( $post_id, $field_name, true );
-				}
-				
-				if ( is_array($field_value) ) {
-					
-					if ( count($field_value) == 1 ) {
-						
-						//$info .= "<pre>".print_r($field_value,true)."</pre>"; // tft
-						
-						if ( is_numeric($field_value[0]) ) {
-							
-							//$info .= $field_value[0]; // tft
-							
-							// Get post_title
-							if ( function_exists( 'sdg_post_title' ) ) {
-								$title_args = array( 'post' => $field_value[0], 'line_breaks' => false, 'show_subtitle' => false, 'hlevel' => 0, 'echo' => false, 'called_by' => 'dcp->display_table_row', 'do_ts' => $do_ts );
-								$value = sdg_post_title( $title_args );
-								if ( empty($value) ) {
-									$info .= "no title found using sdg_post_title with title_args: <pre>".print_r($title_args, true)."</pre>";
-								}
-							} else {
-								$value = get_the_title($field_value[0]);
-							}
-							$info .= $value;
-						} else {
-							$info .= "Not is_numeric: ".$field_value[0];
-						}
-						
-					} else {
-						$info .= count($field_value).": <pre>".print_r($field_value, true)."</pre>";
-					}
-					
-				} else {
-					if ( is_numeric($field_value) && !strpos( $field_name, "year" ) ) {
-						$field_value = number_format_i18n($field_value);
-					}
-					$info .= $field_value;
-				}
-				
-				$info .= '</td>';
-			}
-		}
-		
-	}
-	
-	$info .= '</tr>';
-	
-	//if ( $ts_info != "" && ( $do_ts === true || $do_ts == "dcp" ) ) { $info .= '<div class="troubleshooting">'.$ts_info.'</div>'; }
+    // Init vars
+    $info = "";
+    $ts_info = "";
+    $fields = null;
+    
+    extract( $arr_item );
+    extract( $arr_styling );
+    
+    // Get/set item vars
+    //$ts_info .= "<!-- item: ".print_r($item, true)."; fields: ".print_r($fields, true)." -->";
+    
+    // TBD: build in possibility that one field value might be item_image?
+    // TBD: build in possibility that one field value might be item_text?
+    
+    // Start building the rows
+    $info .= '<tr class="cc_item">';
+    
+    // Make sure we've got a proper array of fields and then loop through them to accumulate the info for display
+    if ( !is_array($table_fields) ) { $arr_fields = explode(",",$table_fields); } else { $arr_fields = $table_fields; }
+    
+    if ( $arr_fields ) {
+    
+        //if ( !is_array($field_values) ) { $arr_field_values = explode(",",$field_values); } else { $arr_field_values = $field_values; }
+        
+        foreach ( $arr_fields as $field_name ) {
+        
+            $field_name = trim($field_name);
+            
+            if ( !empty($field_name) ) {
+                
+                $info .= '<td>';                
+                //$info .= "[".$field_name."] "; // tft
+                
+                // Check for corresponding field value passed with item
+                if ( isset($field_values[$field_name]) ) {
+                    $field_value = $field_values[$field_name];
+                } else if ( $field_name == "title" && !empty($item_title) ) {
+                    $field_value = $item_title; // WIP!!!
+                } else {
+                    $field_value = get_post_meta( $post_id, $field_name, true );
+                }
+                
+                if ( is_array($field_value) ) {
+                    
+                    if ( count($field_value) == 1 ) {
+                        
+                        //$info .= "<pre>".print_r($field_value,true)."</pre>"; // tft
+                        
+                        if ( is_numeric($field_value[0]) ) {
+                            
+                            //$info .= $field_value[0]; // tft
+                            
+                            // Get post_title
+                            if ( function_exists( 'sdg_post_title' ) ) {
+                                $title_args = array( 'post' => $field_value[0], 'line_breaks' => false, 'show_subtitle' => false, 'hlevel' => 0, 'echo' => false, 'called_by' => 'dcp->display_table_row', 'do_ts' => $do_ts );
+                                $value = sdg_post_title( $title_args );
+                                if ( empty($value) ) {
+                                    $info .= "no title found using sdg_post_title with title_args: <pre>".print_r($title_args, true)."</pre>";
+                                }
+                            } else {
+                                $value = get_the_title($field_value[0]);
+                            }
+                            $info .= $value;
+                        } else {
+                            $info .= "Not is_numeric: ".$field_value[0];
+                        }
+                        
+                    } else {
+                        $info .= count($field_value).": <pre>".print_r($field_value, true)."</pre>";
+                    }
+                    
+                } else {
+                    if ( is_numeric($field_value) && !strpos( $field_name, "year" ) ) {
+                        $field_value = number_format_i18n($field_value);
+                    }
+                    $info .= $field_value;
+                }
+                
+                $info .= '</td>';
+            }
+        }
+        
+    }
+    
+    $info .= '</tr>';
+    
+    //if ( $ts_info != "" && ( $do_ts === true || $do_ts == "dcp" ) ) { $info .= '<div class="troubleshooting">'.$ts_info.'</div>'; }
 
-	return $info;
-	
+    return $info;
+    
 }
 
 function display_grid_item ( $arr_item = array(), $arr_styling = array() ) {
 
-	// TS/logging setup
+    // TS/logging setup
     $do_ts = devmode_active( array("dcp") );
     $do_log = false;
     sdg_log( "divline2", $do_log );
     sdg_log( "function called: display_grid_item", $do_log );
     
-	// Init vars
-	$info = "";
-	$item_info = "";
-	$ts_info = "";
-	//
-	$display_format = null;
-	//$aspect_ratio = 'square';
-	//
-	extract( $arr_item );
-	extract( $arr_styling );
-	
-	//$ts_info .= "item: <pre>".print_r($arr_item, true)."</pre>";
-	//$ts_info .= "arr_styling: <pre>".print_r($arr_styling, true)."</pre>";
-	
-	// Post Type?
-	if ( $post_id ) { $post_type = get_post_type($post_id); }
-	if ( isset($overlay) ) { $ts_info .= "<!-- overlay: $overlay -->"; } else { $overlay = null; }
-	
-	// Begin building item_info
-	if ( $aspect_ratio ) {
-		$hclass = "grid_".$aspect_ratio; //$hclass = "grid_rect";
-		$item_title = '<h3 class="'.$hclass.'">'.$item_title.'</h3>'; //$item_title = '<h3 class="'.$hclass.'">'.$item_title.'</h3>';
-		if ( !empty($item_subtitle) ) { $hclass .= " with-subtitle"; $item_subtitle = '<h4 class="subtitle">'.$item_subtitle.'</h4>'; }
-	}
-	$item_info .= $item_title;
-	
-	// Date_Str?
-	if ( $item_date_str ) { $item_info .= $item_date_str; }
-	
-	// Subtitle?
-	if ( !empty($item_subtitle) ) { $item_info .= $item_subtitle; } //"<br />".
-	
-	// Text/Content
-	if ( !empty($item_text) ) { $item_info .= $item_text; }
-	
-	// Links?
-	$links = get_post_links( $post_id );
-	if ( $links ) { $item_info .= $links; }
-	
-	$flex_box_classes = "flex-box ".$aspect_ratio;
-	if ( !empty($spacing) ) { $flex_box_classes .= " ".$spacing; }
-	if ( $overlay == "true" || $overlay == "fullover" ) {
-		$overclass = "overlay";
-		$flex_box_classes .= " overlaid";
-		if ( $overlay == "fullover" ) { $overclass .= " fullover"; }
-	} else {
-		$overclass = null;
-	}
-	$info .= '<div class="'.$flex_box_classes.'">';
-	//
-	if ( !($overlay) && $aspect_ratio != "square" && $aspect_ratio != "portrait" ) {
-	//if ( !($overlay) && !($aspect_ratio) ) {
-		$info .= '<div class="item_info">'.$item_info.'</div>';
-	}
-	// Show the item image
-	$info .= '<div class="flex-img hoverZoom">';
-	$info .= $item_image;
-	$info .= '</div>';
-	//
-	if ( $overclass ) {
-		$info .= '<div class="'.$overclass.'">'.$item_info.'</div>';
-	} else if ( $aspect_ratio == "square" || $aspect_ratio == "portrait" ) { //if ( $aspect_ratio ) {
-		$info .= '<div class="item_info">'.$item_info.'</div>';
-	}
-	$info .= '</div>';
-	
-	// Troubleshooting info
-	if ( $ts_info != "" && ( $do_ts === true || $do_ts == "dcp" ) ) { $info .= '<div class="troubleshooting">'.$ts_info.'</div>'; }
-	
-	return $info;
-	
+    // Init vars
+    $info = "";
+    $item_info = "";
+    $ts_info = "";
+    //
+    $display_format = null;
+    //$aspect_ratio = 'square';
+    //
+    extract( $arr_item );
+    extract( $arr_styling );
+    
+    //$ts_info .= "item: <pre>".print_r($arr_item, true)."</pre>";
+    //$ts_info .= "arr_styling: <pre>".print_r($arr_styling, true)."</pre>";
+    
+    // Post Type?
+    if ( $post_id ) { $post_type = get_post_type($post_id); }
+    if ( isset($overlay) ) { $ts_info .= "<!-- overlay: $overlay -->"; } else { $overlay = null; }
+    
+    // Begin building item_info
+    if ( $aspect_ratio ) {
+        $hclass = "grid_".$aspect_ratio; //$hclass = "grid_rect";
+        $item_title = '<h3 class="'.$hclass.'">'.$item_title.'</h3>'; //$item_title = '<h3 class="'.$hclass.'">'.$item_title.'</h3>';
+        if ( !empty($item_subtitle) ) { $hclass .= " with-subtitle"; $item_subtitle = '<h4 class="subtitle">'.$item_subtitle.'</h4>'; }
+    }
+    $item_info .= $item_title;
+    
+    // Date_Str?
+    if ( $item_date_str ) { $item_info .= $item_date_str; }
+    
+    // Subtitle?
+    if ( !empty($item_subtitle) ) { $item_info .= $item_subtitle; } //"<br />".
+    
+    // Text/Content
+    if ( !empty($item_text) ) { $item_info .= $item_text; }
+    
+    // Links?
+    $links = get_post_links( $post_id );
+    if ( $links ) { $item_info .= $links; }
+    
+    $flex_box_classes = "flex-box ".$aspect_ratio;
+    if ( !empty($spacing) ) { $flex_box_classes .= " ".$spacing; }
+    if ( $overlay == "true" || $overlay == "fullover" ) {
+        $overclass = "overlay";
+        $flex_box_classes .= " overlaid";
+        if ( $overlay == "fullover" ) { $overclass .= " fullover"; }
+    } else {
+        $overclass = null;
+    }
+    $info .= '<div class="'.$flex_box_classes.'">';
+    //
+    if ( !($overlay) && $aspect_ratio != "square" && $aspect_ratio != "portrait" ) {
+    //if ( !($overlay) && !($aspect_ratio) ) {
+        $info .= '<div class="item_info">'.$item_info.'</div>';
+    }
+    // Show the item image
+    $info .= '<div class="flex-img hoverZoom">';
+    $info .= $item_image;
+    $info .= '</div>';
+    //
+    if ( $overclass ) {
+        $info .= '<div class="'.$overclass.'">'.$item_info.'</div>';
+    } else if ( $aspect_ratio == "square" || $aspect_ratio == "portrait" ) { //if ( $aspect_ratio ) {
+        $info .= '<div class="item_info">'.$item_info.'</div>';
+    }
+    $info .= '</div>';
+    
+    // Troubleshooting info
+    if ( $ts_info != "" && ( $do_ts === true || $do_ts == "dcp" ) ) { $info .= '<div class="troubleshooting">'.$ts_info.'</div>'; }
+    
+    return $info;
+    
 }
 
 // TODO:
@@ -1152,698 +1152,698 @@ function display_grid_item ( $arr_item = array(), $arr_styling = array() ) {
 // TODO: simplify -- item atts, display atts -- don't need all of them for every display_format etc.
 //function build_item_arr ( $item = array(), $item_type = null, $display_format = "list", $aspect_ratio = null, $collection_id = null ) {
 function build_item_arr ( $item, $arr_styling = array() ) { // TODO: come up with better name for $arr_styling -- which also includes atts like collection_id, not just styling atts like aspect_ratio
-	
-	// Init vars
-	$arr_item = array();
-	$ts_info = "";
+    
+    // Init vars
+    $arr_item = array();
+    $ts_info = "";
     $fcn_id = "[dc-bia]&nbsp;";
-	//
-	$link_posts = "true"; // default in case it's not set by arr_styling
-	$display_format = null;
-	$aspect_ratio = 'square';
-	
-	extract( $arr_styling );
-	//
-	$post = null; // is this necessary?
-	$post_id = null;
-	//	
-	$item_id = null; // If this is a header or subheader, there should be an item_id to use for internal page links
-	$item_title = null;
-	$item_subtitle = null;
-	$item_text = null;
-	$item_image = null;
-	$item_date_str = null;
-	$field_values = array();
-	//
-	$item_url = null;
-	$item_link_target = null;
-	$image_id = null;
-	$hlevel = null;
-	//
-	$set_anchors = false; // wip
-	
-	if ( !isset($show_content) ) { $show_content = null; }
-	if ( !isset($aspect_ratio) ) { $aspect_ratio = "square"; }
-	
-	// Is the $item a post object, an array, or simply an ID?
-	if ( is_object($item) ) { // item is post object, e.g. when called via display_posts shortcode
-	
-		$post = $item;
-		
-	} else if ( is_array($item) ) {
-	
-		$ts_info .= '[bia] extract item: <pre>'.print_r($item,true).'</pre>';
-		extract( $item );
-	
-		if ( isset($post_object) && isset($post_object[0]) ) {
-			$post = $post_object[0];
-		} else if ( $post_id ) {
-			$post = get_post( $post_id );
-		} else if ( is_numeric($item) ) {
-			$post = get_post( $item );
-		}
-		
-	} else if ( is_numeric($item) ) {
-	
-		$post = get_post( $item );
-		
-	}
-	
-	// Item Image
-	// If this is a post via a collection, check to see if there's an image override
-	if ( !empty($item_image) ) { $image_id = $item_image; }
-	//
-	
-	//$ts_info .= 'BIA -- item: <pre>'.print_r($item, true).'</pre><br />';
-	//$ts_info .= 'BIA -- item: '.print_r($item, true).'<br />';
-	$ts_info .= '[bia] item_type: '.$item_type.'<br />';
-	
-	// WIP -- image sizes
-	if ( $display_format == "excerpts" || $display_format == "archive" ) {
-		if ( $show_content == "full" ) {
-			$img_size = "full";
-		} else {
-			$img_size = array( 250, 250 ); //$img_size = "post-thumbnail";
-		}		
-	} else if ( $aspect_ratio ) {
-		$img_size = "grid_crop_".$aspect_ratio;
-	/*} else if ( $aspect_ratio == "square" ) {
-		$img_size = "grid_crop_square";
-	} else {
-		$img_size = "grid_crop_rectangle";
-	*/} else {
-		$img_size = "grid_crop_landscape";
-	}
-	$ts_info .= '[bia] img_size: '.$img_size.'<br />';
-	
-	if ( $post && ( $item_type == "post" || $item_type == "event" ) ) {
+    //
+    $link_posts = "true"; // default in case it's not set by arr_styling
+    $display_format = null;
+    $aspect_ratio = 'square';
+    
+    extract( $arr_styling );
+    //
+    $post = null; // is this necessary?
+    $post_id = null;
+    //    
+    $item_id = null; // If this is a header or subheader, there should be an item_id to use for internal page links
+    $item_title = null;
+    $item_subtitle = null;
+    $item_text = null;
+    $item_image = null;
+    $item_date_str = null;
+    $field_values = array();
+    //
+    $item_url = null;
+    $item_link_target = null;
+    $image_id = null;
+    $hlevel = null;
+    //
+    $set_anchors = false; // wip
+    
+    if ( !isset($show_content) ) { $show_content = null; }
+    if ( !isset($aspect_ratio) ) { $aspect_ratio = "square"; }
+    
+    // Is the $item a post object, an array, or simply an ID?
+    if ( is_object($item) ) { // item is post object, e.g. when called via display_posts shortcode
+    
+        $post = $item;
+        
+    } else if ( is_array($item) ) {
+    
+        $ts_info .= '[bia] extract item: <pre>'.print_r($item,true).'</pre>';
+        extract( $item );
+    
+        if ( isset($post_object) && isset($post_object[0]) ) {
+            $post = $post_object[0];
+        } else if ( $post_id ) {
+            $post = get_post( $post_id );
+        } else if ( is_numeric($item) ) {
+            $post = get_post( $item );
+        }
+        
+    } else if ( is_numeric($item) ) {
+    
+        $post = get_post( $item );
+        
+    }
+    
+    // Item Image
+    // If this is a post via a collection, check to see if there's an image override
+    if ( !empty($item_image) ) { $image_id = $item_image; }
+    //
+    
+    //$ts_info .= 'BIA -- item: <pre>'.print_r($item, true).'</pre><br />';
+    //$ts_info .= 'BIA -- item: '.print_r($item, true).'<br />';
+    $ts_info .= '[bia] item_type: '.$item_type.'<br />';
+    
+    // WIP -- image sizes
+    if ( $display_format == "excerpts" || $display_format == "archive" ) {
+        if ( $show_content == "full" ) {
+            $img_size = "full";
+        } else {
+            $img_size = array( 250, 250 ); //$img_size = "post-thumbnail";
+        }        
+    } else if ( $aspect_ratio ) {
+        $img_size = "grid_crop_".$aspect_ratio;
+    /*} else if ( $aspect_ratio == "square" ) {
+        $img_size = "grid_crop_square";
+    } else {
+        $img_size = "grid_crop_rectangle";
+    */} else {
+        $img_size = "grid_crop_landscape";
+    }
+    $ts_info .= '[bia] img_size: '.$img_size.'<br />';
+    
+    if ( $post && ( $item_type == "post" || $item_type == "event" ) ) {
 
-		//$ts_info .= '<!-- post: <pre>'.print_r($post, true).'</pre> -->';
-		$post_type = $post->post_type;
-		$post_id = $post->ID;
-		$ts_info .= '[bia] post_type: '.$post_type.' / post_id: '.$post_id."<br />";
-		
-		// Item Title
-		// If there was no title override set via collection, then get a title
-		// TODO: deal w/ prefix/suffix options?
-		if ( empty($item_title) ) {
-			$ts_info .= '[bia] get item_title<br />';
-			// If a short_title is set, and we're NOT showing full content, use the short title.
-			$short_title = get_post_meta( $post_id, 'short_title', true );
-			if ( !empty($short_title) && $show_content != "full" ) {
-				$ts_info .= ' >> use short_title: '.$short_title.'<br />';
-				$item_title = $short_title;
-			} else if ( $post_type == "person" ) {
-				$title_args = array( 'person_id' => $post_id, 'override' => 'post_title', 'show_job_title' => true, 'called_by' => $fcn_id );
-				$item_title = get_person_display_name($title_args)['info'];
-			} else if ( function_exists( 'sdg_post_title' ) ) {
-				$ts_info .= ' >> sdg_post_title<br />';
-				if ( !isset($show_subtitle) ) { $show_subtitle = true; }
-				$title_args = array( 'post' => $post_id, 'line_breaks' => true, 'show_subtitle' => $show_subtitle, 'echo' => false, 'called_by' => $fcn_id );
-				if ( $show_content == "full" ) {
-					$title_args['hlevel'] = 2;
-					$title_args['hlevel_sub'] = 3;
-				} else {
-					$title_args['hlevel'] = 0;
-					$title_args['hlevel_sub'] = 0;
-				}
-				if ( $display_format == "table" ) {
-					$title_args['hclass'] = "dct";
-					$title_args['hlevel'] = 0;
-					$title_args['hlevel_sub'] = 0;
-				}
-				$item_title = sdg_post_title( $title_args );
-			} else {
-				$ts_info .= ' >> use get_the_title()<br />';
-				$item_title = get_the_title($post_id);// Retrieve and style the subtitle
-				if ( empty($item_subtitle) ) { $item_subtitle = get_post_meta( $post_id, 'subtitle', true ); }
-				if ( !empty($item_subtitle) ) { $item_subtitle = '<span class="item_subtitle">'.$item_subtitle.'</span>'; }
-			}
-		}
-		
-		// Item URL
-		// TODO: deal w/ possibility of multiple external URLs
-		// WIP 231127, 240828
-		if ( empty($item_url) && $link_posts !== "false" ) {
-			$item_url = get_the_permalink( $post_id ); //if ( empty($item_url) ) { $item_url = get_the_permalink( $post_id ); }
-		} else {
-			$ts_info .= '[bia] link_posts: '.$link_posts."<br />";
-		}
-		$ts_info .= '[bia] item_url: '.$item_url."<br />";
-		
-		// +~+~+~+~+~+~+~+~+~+~+~+~+~+~+~+~+~+~+~+~+~+~+~+
-		
-			
-		// No collection image? Then look for a image via the post record
-		if ( ! $image_id && $show_image !== 'false' ) {
-			// WIP
-			//img_size if show_content = full...
-			if ( $show_content == "full" ) {
-				$sdgpt_format = 'singular';
-			} else {
-				$sdgpt_format = 'excerpt';
-			}
-			$img_args = array( 'post_id' => $post_id, 'format' => $sdgpt_format, 'img_size' => $img_size, 'sources' => "all", 'echo' => false, 'return_value' => 'id' );
-			$image_id = sdg_post_thumbnail ( $img_args );
-			$ts_info .= '[bia] sdg_post_thumbnail -> image_id: '.$image_id.'<br />';		
-		}
-		// +~+~+~+~+~+~+~+~+~+~+~+~+~+~+~+~+~+~+~+~+~+~+~+
-		
-		// Item Excerpt/Text
-		if ( empty($item_text) ) {		
-			if ( isset($show_content) && $show_content == 'excerpts' ) {
-				$item_text = get_the_excerpt( $post_id );
-			}
-			// WIP
-			if ( $post_type == "link" ) {
-				$item_text = get_field( 'description', $post_id );
-				if ( empty($item_text) ) {
-					$item_text = get_field( 'location', $post_id );
-				}
-			}
-		}
-		/*if ( function_exists('is_dev_site') && is_dev_site() ) {
-			$exp_args = array( 'post_id' => $post_id ); // $exp_args = array( 'text' => $text, 'post_id' => $post_id, 'text_length' => $text_length, 'preview_length' => $preview_length );
-			$item_text = expandable_text( $exp_args );
-			//$info .= dsplycntnt_get_excerpt( array('post_id' => $post_id, 'expandable' => $expandable, 'text_length' => $text_length, 'preview_length' => $preview_length ) );				
-		} else {
-			$item_text = get_the_excerpt( $post_id ); //$info .= $post->post_excerpt;
-		}*/
-		
-		// Item Date -- for events
-		if ( post_type_exists('event') && $post_type == 'event' ) { 
-			$event_start_datetime = get_post_meta( $post_id, '_event_start_local', true );
-			$event_end_datetime = get_post_meta( $post_id, '_event_end_local', true );
-			$event_all_day = get_post_meta( $post_id, '_event_all_day', true );
-			if ( $event_start_datetime ) {
-				if ( $event_all_day ) {
-					if ( $event_end_datetime ) {
-						$item_date_str = date_i18n( "F j", strtotime($event_start_datetime) );
-					} else {
-						$item_date_str = date_i18n( "l, F j, Y", strtotime($event_start_datetime) );
-					}
-					
-				} else {
-					$item_date_str = date_i18n( "l, F j, Y \@ g:i a", strtotime($event_start_datetime) );
-				}				
-				
-			}
-			// Multi-day event? Then show the end date
-			if ( $event_end_datetime && $event_all_day ) {
-				$item_date_str .= "  to ".date_i18n( "F j, Y", strtotime($event_end_datetime) );
-			}
-			$item_date_str = str_replace(array('am','pm'),array('a.m.','p.m.'),$item_date_str); // STC >> TODO: generalize formatting options
-			
-		}
-	
-	} else if ( $item_type == "tax_term" || $item_type == "event_category" || $item_type == "post_category" ) {
-		
-		if ( empty($term_id) ) {
-			if ( $item_type == "event_category" ) { $term_id = $event_category; } else { $term_id = $post_category; }
-		}
-		
-		// Get term
-		$term = get_term( $term_id ); // $term = get_term( $term_id, $taxonomy );
-		if ( empty($item_id) ) { $item_id = $term->slug; }
-		
-		// If there's a title override, use it. Otherwise, use the taxonomy term name.
-		if ( empty($item_title) ) {
-			$item_title = $term->name;	
-		}
-		// TODO: append term description, if any?
-		
-		$item_url = get_term_link( $term_id) ;
-		
-		// Get the taxonomy image, if any has been set
-		if ( $item_type == "event_category" ) { 
-			// TMP solution:
-			global $wpdb; 
-			//wpstc_em_meta
-			$image_id = $wpdb->get_var('SELECT meta_value FROM '.EM_META_TABLE." WHERE object_id='".$term_id."' AND meta_key='category-image-id' LIMIT 1"); // 288081
-			/* // TODO: figure out how to get EM taxonomy image without direct DB query
-			$image_url = ""; // tft
-			//$EM_Tax_Term = new EM_Taxonomy_Term($term_id, 'term_id'); 
-			//$item_image = $EM_Tax_Term->get_image_url();
-			$item_image = "";
-			*/
-		} else {
-			$taxonomy_featured_image = get_term_meta( $term_id, 'taxonomy_featured_image', true );
-			if ( $taxonomy_featured_image ) { $image_id = $taxonomy_featured_image; } else { $image_id = null; }
-		}
-		
-	} else { // if ( $item_type == ??? )
-	
-		$arr_item = $item; // init
-		
-		// Item URL
-		if ( $item_type == "page_link" && isset($page_link) ) {
-			$item_url = $page_link;
-			//$ts_info .= '<!-- page_link item: <pre>'.print_r($item, true).'</pre> -->'; // tft
-		} else if ( $item_type == "email" ) {
-			if ( !empty($item_email) ) {
-				$item_url = "mailto:".$item_email;
-			}
-		}
-		
-		/* WIP
-		$media_file = $item['media_file'];
-		$event_category = $item['event_category'];
-		$post_category = $item['post_category'];
-		//if ( isset($row['row_type']) ) { $row_type = $row['row_type']; } else { $row_type = null; }
-		*/
-					
-	}
-	
-	// Set Link Target
-	if ( empty($item_link_target) ) {
-		if ( $display_format == "table" ) {
-			$item_link_target = "_blank";
-		} else if ( $post && $item_type == "link" ) {
-			$item_link_target = "_blank";
-		} else {
-			//$item_link_target = "_blank";
-		}
-	}
-	if ( !empty($item_link_target) ) { $link_target = ' target="'.$item_link_target.'"'; } else { $link_target = ""; }
-	
-	// Style the title
-	$ts_info .= '[bia] item_title (before styling): '.$item_title."<br />";
-	if ( !empty($item_title) ) {
-		if ( $show_content != "full" ) {
-			$item_title = '<span class="item_title">'.$item_title.'</span>';
-			// Wrap the title in a hyperlink, if a URL has been set	OR if the item is linked to modal content		
-			if ( $item_type == "modal" || $item_link_target == "modal" ) {
-				$dialog_id = sanitize_title($item_title); // tmp/wip
-				$item_title = '<a href="#!" id="dialog_handle_'.$dialog_id.'" class="dialog_handle">'.$item_title.'</a>'; 
-			} else {
-				if ( !empty($item_url) ) { $item_title = '<a href="'.$item_url.'" rel="bookmark"'.$link_target.'>'.$item_title.'</a>'; }
-			}
-			if ( !empty($hlevel) ) { // empty($image_id)
-				$item_title = '<h'.$hlevel.' id="'.$item_id.'" class="collection_group">'.$item_title.'</h'.$hlevel.'>';
-				if ( $hlevel <= 2 && $set_anchors == true ) { $item_title = anchor_link_top().$item_title; }
-			}
-		}
-	}
-	
-	// Finalize the item image html based on the image_id, if any
-	// If show_content=="full", show full-size image, not medium thumb
-	$item_image = ""; // init
-	if ( !empty($image_id) && $show_image !== 'false' ) {
-	
-		// WIP: TS sizing of grid images e.g. https://www.saintthomaschurch.org/whos-who-new-revised/#vestry
-		$ts_info .= '[bia] image_id: '.print_r($image_id,true).'<br />';	
-		$ts_info .= '[bia] aspect_ratio: '.$aspect_ratio.'<br />';
-		$ts_info .= '[bia] img_size: '.print_r($img_size, true).'<br />';	
-		//wp_get_attachment_image( int $attachment_id, string|int[] $size = 'thumbnail', bool $icon = false, string|array $attr = '' ): string
-		//$img_attr = array ( 'sizes' => "(max-width: 600px) 100vw, 100vw" );
-		$img_class = "bia ".$display_format."_item_image";
-		if ( $show_content == "full" ) { $img_class .= " full"; }
-		if ( $display_format == "grid" ) { $img_class .= " hoverZoom"; }
-		$item_image = wp_get_attachment_image( $image_id, $img_size, "", array( "class" => $img_class ) );
-		
-		if ( !empty($item_image) ) {
-			if ( $show_content != "full" && ( $display_format == "excerpts" || $display_format == "archive" ) ) {
-				$img_class .= " post-thumbnail sdg no-caption float-left";
-			}
-			if ( !empty($dialog_id) && ( $item_type == "modal" || $item_link_target == "modal" ) ) {
-				$item_image = '<a href="#!" id="dialog_handle_'.$dialog_id.'" class="'.$img_class.' dialog_handle">'.$item_image.'</a>'; 
-			} else if ( $show_content == "full" ) {
-				$img_class = 'post-thumbnail sdg no-caption full '.$img_class;
-				$item_image = '<div class="'.$img_class.'">'.$item_image.'</div>';
-			} else if ( !empty($item_url) ) { 
-				$item_image = '<a href="'.$item_url.'" rel="bookmark"'.$link_target.' class="'.$img_class.'">'.$item_image.'</a>';
-			} else {
-				$img_class = $img_class.' bia_default';
-				$item_image = '<div class="'.$img_class.'">'.$item_image.'</div>';
-			}
-		}
-		
-	} else {		
-		$ts_info .= '[bia] No image.<br />';
-		//$item_ts_info .= "arr_item: <pre>".print_r($arr_item, true)."</pre>";
-	}
-	
-	// Set the array values based on what we've found
-	// Some of the values will be null, but that will prevent undefined index errors
-	$arr_item['post_id'] = $post_id;
-	$arr_item['show_content'] = $show_content;
-	$arr_item['item_title'] = $item_title;
-	$arr_item['item_subtitle'] = $item_subtitle;
-	$arr_item['item_text'] = $item_text;
-	$arr_item['item_image'] = $item_image;
-	$arr_item['item_date_str'] = $item_date_str;
-	$arr_item['ts_info'] = $ts_info;
-	$arr_item['field_values'] = $field_values;
-	
-	// Return the assembled item array
-	return $arr_item;
-		
+        //$ts_info .= '<!-- post: <pre>'.print_r($post, true).'</pre> -->';
+        $post_type = $post->post_type;
+        $post_id = $post->ID;
+        $ts_info .= '[bia] post_type: '.$post_type.' / post_id: '.$post_id."<br />";
+        
+        // Item Title
+        // If there was no title override set via collection, then get a title
+        // TODO: deal w/ prefix/suffix options?
+        if ( empty($item_title) ) {
+            $ts_info .= '[bia] get item_title<br />';
+            // If a short_title is set, and we're NOT showing full content, use the short title.
+            $short_title = get_post_meta( $post_id, 'short_title', true );
+            if ( !empty($short_title) && $show_content != "full" ) {
+                $ts_info .= ' >> use short_title: '.$short_title.'<br />';
+                $item_title = $short_title;
+            } else if ( $post_type == "person" ) {
+                $title_args = array( 'person_id' => $post_id, 'override' => 'post_title', 'show_job_title' => true, 'called_by' => $fcn_id );
+                $item_title = get_person_display_name($title_args)['info'];
+            } else if ( function_exists( 'sdg_post_title' ) ) {
+                $ts_info .= ' >> sdg_post_title<br />';
+                if ( !isset($show_subtitle) ) { $show_subtitle = true; }
+                $title_args = array( 'post' => $post_id, 'line_breaks' => true, 'show_subtitle' => $show_subtitle, 'echo' => false, 'called_by' => $fcn_id );
+                if ( $show_content == "full" ) {
+                    $title_args['hlevel'] = 2;
+                    $title_args['hlevel_sub'] = 3;
+                } else {
+                    $title_args['hlevel'] = 0;
+                    $title_args['hlevel_sub'] = 0;
+                }
+                if ( $display_format == "table" ) {
+                    $title_args['hclass'] = "dct";
+                    $title_args['hlevel'] = 0;
+                    $title_args['hlevel_sub'] = 0;
+                }
+                $item_title = sdg_post_title( $title_args );
+            } else {
+                $ts_info .= ' >> use get_the_title()<br />';
+                $item_title = get_the_title($post_id);// Retrieve and style the subtitle
+                if ( empty($item_subtitle) ) { $item_subtitle = get_post_meta( $post_id, 'subtitle', true ); }
+                if ( !empty($item_subtitle) ) { $item_subtitle = '<span class="item_subtitle">'.$item_subtitle.'</span>'; }
+            }
+        }
+        
+        // Item URL
+        // TODO: deal w/ possibility of multiple external URLs
+        // WIP 231127, 240828
+        if ( empty($item_url) && $link_posts !== "false" ) {
+            $item_url = get_the_permalink( $post_id ); //if ( empty($item_url) ) { $item_url = get_the_permalink( $post_id ); }
+        } else {
+            $ts_info .= '[bia] link_posts: '.$link_posts."<br />";
+        }
+        $ts_info .= '[bia] item_url: '.$item_url."<br />";
+        
+        // +~+~+~+~+~+~+~+~+~+~+~+~+~+~+~+~+~+~+~+~+~+~+~+
+        
+            
+        // No collection image? Then look for a image via the post record
+        if ( ! $image_id && $show_image !== 'false' ) {
+            // WIP
+            //img_size if show_content = full...
+            if ( $show_content == "full" ) {
+                $sdgpt_format = 'singular';
+            } else {
+                $sdgpt_format = 'excerpt';
+            }
+            $img_args = array( 'post_id' => $post_id, 'format' => $sdgpt_format, 'img_size' => $img_size, 'sources' => "all", 'echo' => false, 'return_value' => 'id' );
+            $image_id = sdg_post_thumbnail ( $img_args );
+            $ts_info .= '[bia] sdg_post_thumbnail -> image_id: '.$image_id.'<br />';        
+        }
+        // +~+~+~+~+~+~+~+~+~+~+~+~+~+~+~+~+~+~+~+~+~+~+~+
+        
+        // Item Excerpt/Text
+        if ( empty($item_text) ) {        
+            if ( isset($show_content) && $show_content == 'excerpts' ) {
+                $item_text = get_the_excerpt( $post_id );
+            }
+            // WIP
+            if ( $post_type == "link" ) {
+                $item_text = get_field( 'description', $post_id );
+                if ( empty($item_text) ) {
+                    $item_text = get_field( 'location', $post_id );
+                }
+            }
+        }
+        /*if ( function_exists('is_dev_site') && is_dev_site() ) {
+            $exp_args = array( 'post_id' => $post_id ); // $exp_args = array( 'text' => $text, 'post_id' => $post_id, 'text_length' => $text_length, 'preview_length' => $preview_length );
+            $item_text = expandable_text( $exp_args );
+            //$info .= dsplycntnt_get_excerpt( array('post_id' => $post_id, 'expandable' => $expandable, 'text_length' => $text_length, 'preview_length' => $preview_length ) );                
+        } else {
+            $item_text = get_the_excerpt( $post_id ); //$info .= $post->post_excerpt;
+        }*/
+        
+        // Item Date -- for events
+        if ( post_type_exists('event') && $post_type == 'event' ) { 
+            $event_start_datetime = get_post_meta( $post_id, '_event_start_local', true );
+            $event_end_datetime = get_post_meta( $post_id, '_event_end_local', true );
+            $event_all_day = get_post_meta( $post_id, '_event_all_day', true );
+            if ( $event_start_datetime ) {
+                if ( $event_all_day ) {
+                    if ( $event_end_datetime ) {
+                        $item_date_str = date_i18n( "F j", strtotime($event_start_datetime) );
+                    } else {
+                        $item_date_str = date_i18n( "l, F j, Y", strtotime($event_start_datetime) );
+                    }
+                    
+                } else {
+                    $item_date_str = date_i18n( "l, F j, Y \@ g:i a", strtotime($event_start_datetime) );
+                }                
+                
+            }
+            // Multi-day event? Then show the end date
+            if ( $event_end_datetime && $event_all_day ) {
+                $item_date_str .= "  to ".date_i18n( "F j, Y", strtotime($event_end_datetime) );
+            }
+            $item_date_str = str_replace(array('am','pm'),array('a.m.','p.m.'),$item_date_str); // STC >> TODO: generalize formatting options
+            
+        }
+    
+    } else if ( $item_type == "tax_term" || $item_type == "event_category" || $item_type == "post_category" ) {
+        
+        if ( empty($term_id) ) {
+            if ( $item_type == "event_category" ) { $term_id = $event_category; } else { $term_id = $post_category; }
+        }
+        
+        // Get term
+        $term = get_term( $term_id ); // $term = get_term( $term_id, $taxonomy );
+        if ( empty($item_id) ) { $item_id = $term->slug; }
+        
+        // If there's a title override, use it. Otherwise, use the taxonomy term name.
+        if ( empty($item_title) ) {
+            $item_title = $term->name;    
+        }
+        // TODO: append term description, if any?
+        
+        $item_url = get_term_link( $term_id) ;
+        
+        // Get the taxonomy image, if any has been set
+        if ( $item_type == "event_category" ) { 
+            // TMP solution:
+            global $wpdb; 
+            //wpstc_em_meta
+            $image_id = $wpdb->get_var('SELECT meta_value FROM '.EM_META_TABLE." WHERE object_id='".$term_id."' AND meta_key='category-image-id' LIMIT 1"); // 288081
+            /* // TODO: figure out how to get EM taxonomy image without direct DB query
+            $image_url = ""; // tft
+            //$EM_Tax_Term = new EM_Taxonomy_Term($term_id, 'term_id'); 
+            //$item_image = $EM_Tax_Term->get_image_url();
+            $item_image = "";
+            */
+        } else {
+            $taxonomy_featured_image = get_term_meta( $term_id, 'taxonomy_featured_image', true );
+            if ( $taxonomy_featured_image ) { $image_id = $taxonomy_featured_image; } else { $image_id = null; }
+        }
+        
+    } else { // if ( $item_type == ??? )
+    
+        $arr_item = $item; // init
+        
+        // Item URL
+        if ( $item_type == "page_link" && isset($page_link) ) {
+            $item_url = $page_link;
+            //$ts_info .= '<!-- page_link item: <pre>'.print_r($item, true).'</pre> -->'; // tft
+        } else if ( $item_type == "email" ) {
+            if ( !empty($item_email) ) {
+                $item_url = "mailto:".$item_email;
+            }
+        }
+        
+        /* WIP
+        $media_file = $item['media_file'];
+        $event_category = $item['event_category'];
+        $post_category = $item['post_category'];
+        //if ( isset($row['row_type']) ) { $row_type = $row['row_type']; } else { $row_type = null; }
+        */
+                    
+    }
+    
+    // Set Link Target
+    if ( empty($item_link_target) ) {
+        if ( $display_format == "table" ) {
+            $item_link_target = "_blank";
+        } else if ( $post && $item_type == "link" ) {
+            $item_link_target = "_blank";
+        } else {
+            //$item_link_target = "_blank";
+        }
+    }
+    if ( !empty($item_link_target) ) { $link_target = ' target="'.$item_link_target.'"'; } else { $link_target = ""; }
+    
+    // Style the title
+    $ts_info .= '[bia] item_title (before styling): '.$item_title."<br />";
+    if ( !empty($item_title) ) {
+        if ( $show_content != "full" ) {
+            $item_title = '<span class="item_title">'.$item_title.'</span>';
+            // Wrap the title in a hyperlink, if a URL has been set    OR if the item is linked to modal content        
+            if ( $item_type == "modal" || $item_link_target == "modal" ) {
+                $dialog_id = sanitize_title($item_title); // tmp/wip
+                $item_title = '<a href="#!" id="dialog_handle_'.$dialog_id.'" class="dialog_handle">'.$item_title.'</a>'; 
+            } else {
+                if ( !empty($item_url) ) { $item_title = '<a href="'.$item_url.'" rel="bookmark"'.$link_target.'>'.$item_title.'</a>'; }
+            }
+            if ( !empty($hlevel) ) { // empty($image_id)
+                $item_title = '<h'.$hlevel.' id="'.$item_id.'" class="collection_group">'.$item_title.'</h'.$hlevel.'>';
+                if ( $hlevel <= 2 && $set_anchors == true ) { $item_title = anchor_link_top().$item_title; }
+            }
+        }
+    }
+    
+    // Finalize the item image html based on the image_id, if any
+    // If show_content=="full", show full-size image, not medium thumb
+    $item_image = ""; // init
+    if ( !empty($image_id) && $show_image !== 'false' ) {
+    
+        // WIP: TS sizing of grid images e.g. https://www.saintthomaschurch.org/whos-who-new-revised/#vestry
+        $ts_info .= '[bia] image_id: '.print_r($image_id,true).'<br />';    
+        $ts_info .= '[bia] aspect_ratio: '.$aspect_ratio.'<br />';
+        $ts_info .= '[bia] img_size: '.print_r($img_size, true).'<br />';    
+        //wp_get_attachment_image( int $attachment_id, string|int[] $size = 'thumbnail', bool $icon = false, string|array $attr = '' ): string
+        //$img_attr = array ( 'sizes' => "(max-width: 600px) 100vw, 100vw" );
+        $img_class = "bia ".$display_format."_item_image";
+        if ( $show_content == "full" ) { $img_class .= " full"; }
+        if ( $display_format == "grid" ) { $img_class .= " hoverZoom"; }
+        $item_image = wp_get_attachment_image( $image_id, $img_size, "", array( "class" => $img_class ) );
+        
+        if ( !empty($item_image) ) {
+            if ( $show_content != "full" && ( $display_format == "excerpts" || $display_format == "archive" ) ) {
+                $img_class .= " post-thumbnail sdg no-caption float-left";
+            }
+            if ( !empty($dialog_id) && ( $item_type == "modal" || $item_link_target == "modal" ) ) {
+                $item_image = '<a href="#!" id="dialog_handle_'.$dialog_id.'" class="'.$img_class.' dialog_handle">'.$item_image.'</a>'; 
+            } else if ( $show_content == "full" ) {
+                $img_class = 'post-thumbnail sdg no-caption full '.$img_class;
+                $item_image = '<div class="'.$img_class.'">'.$item_image.'</div>';
+            } else if ( !empty($item_url) ) { 
+                $item_image = '<a href="'.$item_url.'" rel="bookmark"'.$link_target.' class="'.$img_class.'">'.$item_image.'</a>';
+            } else {
+                $img_class = $img_class.' bia_default';
+                $item_image = '<div class="'.$img_class.'">'.$item_image.'</div>';
+            }
+        }
+        
+    } else {        
+        $ts_info .= '[bia] No image.<br />';
+        //$item_ts_info .= "arr_item: <pre>".print_r($arr_item, true)."</pre>";
+    }
+    
+    // Set the array values based on what we've found
+    // Some of the values will be null, but that will prevent undefined index errors
+    $arr_item['post_id'] = $post_id;
+    $arr_item['show_content'] = $show_content;
+    $arr_item['item_title'] = $item_title;
+    $arr_item['item_subtitle'] = $item_subtitle;
+    $arr_item['item_text'] = $item_text;
+    $arr_item['item_image'] = $item_image;
+    $arr_item['item_date_str'] = $item_date_str;
+    $arr_item['ts_info'] = $ts_info;
+    $arr_item['field_values'] = $field_values;
+    
+    // Return the assembled item array
+    return $arr_item;
+        
 } // END function build_item_arr
 
 
 // Display a collection of post items
 function birdhive_display_collection ( $args = array() ) {
 
-	// TS/logging setup
+    // TS/logging setup
     $do_ts = devmode_active( array("dcp") );
     $do_log = false;
     sdg_log( "divline2", $do_log );
 
-	// Init vars
-	$info = "";
-	$ts_info = "";
-	
-	// Defaults
-	$defaults = array(
-		'collection_id'		=> null,
-		'link_posts'		=> true,
-		'show_subtitles'	=> null,
-		'show_content'		=> null,
-		'show_images'		=> null,
-		'table_fields'		=> array(),
-		'table_headers'		=> array(),
-		'table_totals'		=> array(), // field names
-		'num_cols'			=> "3",
-		'aspect_ratio'		=> "square",
-		'custom_class'		=> null,
-	);
-	
+    // Init vars
+    $info = "";
+    $ts_info = "";
+    
+    // Defaults
+    $defaults = array(
+        'collection_id'        => null,
+        'link_posts'        => true,
+        'show_subtitles'    => null,
+        'show_content'        => null,
+        'show_images'        => null,
+        'table_fields'        => array(),
+        'table_headers'        => array(),
+        'table_totals'        => array(), // field names
+        'num_cols'            => "3",
+        'aspect_ratio'        => "square",
+        'custom_class'        => null,
+    );
+    
     // Parse & Extract args
-	$args = wp_parse_args( $args, $defaults );
-	extract( $args );
-	//$ts_info .= "birdhive_display_collection >> args: <pre>".print_r($args, true)."</pre>";
+    $args = wp_parse_args( $args, $defaults );
+    extract( $args );
+    //$ts_info .= "birdhive_display_collection >> args: <pre>".print_r($args, true)."</pre>";
 
-	if ( is_array($display_atts) ) { extract( $display_atts ); } // one of args
-	//$ts_info .= "display_atts: <pre>".print_r($display_atts, true)."</pre>";
-	
-	// Get args from array
-	if ( isset($collection_id) ) {
-		
-		$ts_info .= "collection_id: $collection_id<br />";
-		
-		$content_type = "mixed";
-		$display_format = get_field('display_format', $collection_id);
-    	$items = get_field('collection_items', $collection_id); // ACF collection item repeater field values
-		$aspect_ratio = get_field('aspect_ratio', $collection_id);
-		//
-		if ( $display_format == "table" ) { 
-			$table_fields = get_field('table_fields', $collection_id);
-			$table_headers = get_field('table_headers', $collection_id);
-			$table_totals = get_field('table_totals', $collection_id);
-		}
-		if ( $display_format == "grid" ) { $num_cols = get_field('num_cols', $collection_id); }
-		//$content_type = $args['content_type']; -- probably mixed, but could be posts or whatever, collection of single type of items -- would have to loop to determine
+    if ( is_array($display_atts) ) { extract( $display_atts ); } // one of args
+    //$ts_info .= "display_atts: <pre>".print_r($display_atts, true)."</pre>";
+    
+    // Get args from array
+    if ( isset($collection_id) ) {
+        
+        $ts_info .= "collection_id: $collection_id<br />";
+        
+        $content_type = "mixed";
+        $display_format = get_field('display_format', $collection_id);
+        $items = get_field('collection_items', $collection_id); // ACF collection item repeater field values
+        $aspect_ratio = get_field('aspect_ratio', $collection_id);
+        //
+        if ( $display_format == "table" ) { 
+            $table_fields = get_field('table_fields', $collection_id);
+            $table_headers = get_field('table_headers', $collection_id);
+            $table_totals = get_field('table_totals', $collection_id);
+        }
+        if ( $display_format == "grid" ) { $num_cols = get_field('num_cols', $collection_id); }
+        //$content_type = $args['content_type']; -- probably mixed, but could be posts or whatever, collection of single type of items -- would have to loop to determine
 
-	} else {
-	
-		$ts_info .= "No collection_id set<br />";
-		
-		if ( $display_format == "table" && isset($display_atts['fields']) ) {
-			$table_fields = $display_atts['fields'];
-			$table_headers = $display_atts['headers'];
-			$table_totals = $display_atts['totals'];
-		}
-		if ( $display_format == "grid" && isset($display_atts['cols']) ) {
-			$num_cols = $display_atts['cols'];
-		} else {
-			$ts_info .= "Get num_cols from default: ".$num_cols." for display_format: ".$display_format."<br />";
-		}
-		
-		if ( isset($display_atts['aspect_ratio']) ) { $aspect_ratio = $display_atts['aspect_ratio']; } // TODO: either eliminate this, or make it so that aspect_ratio actually ever is passable as an arg, via mods to args array of display_posts, for example...
-				
-	}
-	
-	// Show TS info based on display_format (tft)
-	if ( $display_format == "table" ) {
-		$ts_info .= "display_format: $display_format<br />";
-		$ts_info .= "table_fields: ".print_r($table_fields, true)."<br />";
-		$ts_info .= "table_headers: ".print_r($table_headers, true)."<br />";
-		$ts_info .= "table_totals: ".print_r($table_totals, true)."<br />";
-	}
-	$col_totals = array();
-	
-	// List/table/grid header or container
-	//$info .= collection_header ( $display_format, $num_cols, $aspect_ratio, $table_fields, $table_headers );
-	//$header_args = array( 'display_format' => $display_format, 'num_cols' => $num_cols, 'aspect_ratio' => $aspect_ratio, 'table_fields' => $table_fields, 'table_headers' => $table_headers );
-	$header_args = array( 'display_format' => $display_format, 'num_cols' => $num_cols, 'aspect_ratio' => $aspect_ratio, 'fields' => $table_fields, 'headers' => $table_headers );
-	$info .= collection_header ( $header_args );
-	
-	if ( $display_format == "table" ) {
-		$info .= '<tbody>';
-	}
-	//$info .= "+~+~+~+~+~+~+ collection items +~+~+~+~+~+~+<br />";
-	
-	// For each item, get content for display in appropriate form...
-	foreach ( $items as $item ) {
-	
-		$item_info = "";
-		$item_ts_info = "";
-		$arr_item = array();
-		$image_id = null;
-		
-		//$item_ts_info .= "item: <pre>".print_r($item, true)."</pre>";
-		
-		if ( is_array($item) && isset($item['item_type']) ) {
-			$item_type = $item['item_type'];
-		} else if ( $content_type == "posts" ) {
-			$item_type = "post";
-		} else if ( $content_type == "events" ) {
-			$item_type = "event";
-		} else {
-			$item_type = "UNKNOWN!";
-		}
-		
-		//$item_ts_info .= "item_type: ".$item_type."<br />"; //$item_ts_info .= "<!-- item_type: ".$item_type." -->";
-		
-		if ( $item_type == "event" && ( $display_format == "excerpts" || ( $display_format == "archive" && $show_content != 'full' ) ) ) {
-		
-			$item_info .= display_event_list_item( $item );
-			
-		} else {
-		
-			// Assemble the array of styling parameters
-			$arr_styling = array( 'item_type' => $item_type, 'display_format' => $display_format, 'link_posts' => $link_posts, 'show_subtitle' => $show_subtitles, 'show_content' => $show_content, 'show_image' => $show_images, 'aspect_ratio' => $aspect_ratio, 'table_fields' => $table_fields, 'collection_id' => $collection_id, 'do_ts' => $do_ts ); // wip
-			//$item_ts_info .= "item: <pre>".print_r($item, true)."</pre>";
-			//$item_ts_info .= "arr_styling: <pre>".print_r($arr_styling, true)."</pre>";
-			
-			// Assemble the arr_item
-			if ( $item_type == "custom_item" ) {
-				$arr_item = $item;
-			} else {
-				$arr_item = build_item_arr ( $item, $arr_styling );
-				$item_ts_info .= $arr_item['ts_info'];
-			}
-			
-			// Get content for display in appropriate form...
-			//$item_args = array( 'content_type' => $content_type, 'display_format' => $display_format, 'item' => $item );
-			//$item_info .= display_item($display_format, $arr_item, $display_atts, $table_fields, $item_ts_info); //$item_info .= display_item($item_args);
-			$item_info .= display_item ( $arr_item, $arr_styling );
-		
-		}
-		
-		
-		if ( isset( $arr_item['item_content'] ) && $item_type == "modal" || ( isset( $arr_item['item_link_target'] ) && $arr_item['item_link_target'] == "modal" ) ) { 
-			// modal_content...
-			//<div id="dialog_content_contact_us" class="dialog dialog_content"></div>
-			$dialog_id = sanitize_title($arr_item['item_title']); // wip 
-			$info .= '<div id="dialog_content_'.$dialog_id.'" class="dialog dialog_content">'.$arr_item['item_content'].'</div>';
-		}
-		
-		//
-		if ( !empty($table_totals) ) {
-			foreach ( $table_totals as $field_name ) {		
-				//$item_ts_info .= "table_totals field_name '".$field_name."'<br />";		
-				if ( isset( $arr_item['field_values'][$field_name] ) ) { // isset( $arr_item[$field_name] ) || 
-					//$item_ts_info .= "item value for field_name '".$field_name."': ".$arr_item['field_values'][$field_name]."<br />";
-					if ( isset($col_totals[$field_name]) ) {
-						$col_totals[$field_name] += (float) $arr_item['field_values'][$field_name];
-						//$item_ts_info .= "add to total: ".(float) $arr_item['field_values'][$field_name]."<br />";
-					} else {
-						$col_totals[$field_name] = (float) $arr_item['field_values'][$field_name];
-						//$item_ts_info .= "set col_totals $field_name: ".(float) $arr_item['field_values'][$field_name]."<br />";
-					}
-				}
-			}
-		}
-		
-		// Add the item_info to the info for return/display		
-		$info .= $item_info;
-		$ts_info .= $item_ts_info;
-		
-	} // END foreach items as item
-	
-	if ( $display_format == "table" ) {
-		$info .= '</tbody>';
-	}
-		
-	// Display column totals, if applicable
-	if ( $display_format == "table" && !empty($col_totals) ) {
-		// WIP
-		//$info .= "col_totals: <pre>".print_r($col_totals, true)."</pre>";
-		if ( is_array($table_fields) ) { $arr_fields = $table_fields; } else { $arr_fields = explode(",",$table_fields); }
-		$info .= '<tfoot>';
-		$info .= '<tr class="totals">';
-		foreach ( $table_fields as $field_name ) {		
-			if ( array_key_exists( $field_name, $col_totals ) ) {
-				$col_value = $col_totals[$field_name];
-				if ( is_numeric($col_value) ) { $col_value = number_format_i18n($col_value); }
-				$info .= "<td>".$col_value."</td>";
-			} else {
-				$info .= "<td>--</td>"; // ".$field_name."
-			}
-		}
-		$info .= '</tr>';
-		$info .= '</tfoot>';
-	}
-	
-	// List/table/grid footer or close container
-	$info .= collection_footer ( $display_format );
-	
-	if ( $ts_info != "" && ( $do_ts === true || $do_ts == "dcp" ) ) { $info .= '<div class="troubleshooting">'.$ts_info.'</div>'; }
-	
-	// Return info for display
-	return $info;
-	
+    } else {
+    
+        $ts_info .= "No collection_id set<br />";
+        
+        if ( $display_format == "table" && isset($display_atts['fields']) ) {
+            $table_fields = $display_atts['fields'];
+            $table_headers = $display_atts['headers'];
+            $table_totals = $display_atts['totals'];
+        }
+        if ( $display_format == "grid" && isset($display_atts['cols']) ) {
+            $num_cols = $display_atts['cols'];
+        } else {
+            $ts_info .= "Get num_cols from default: ".$num_cols." for display_format: ".$display_format."<br />";
+        }
+        
+        if ( isset($display_atts['aspect_ratio']) ) { $aspect_ratio = $display_atts['aspect_ratio']; } // TODO: either eliminate this, or make it so that aspect_ratio actually ever is passable as an arg, via mods to args array of display_posts, for example...
+                
+    }
+    
+    // Show TS info based on display_format (tft)
+    if ( $display_format == "table" ) {
+        $ts_info .= "display_format: $display_format<br />";
+        $ts_info .= "table_fields: ".print_r($table_fields, true)."<br />";
+        $ts_info .= "table_headers: ".print_r($table_headers, true)."<br />";
+        $ts_info .= "table_totals: ".print_r($table_totals, true)."<br />";
+    }
+    $col_totals = array();
+    
+    // List/table/grid header or container
+    //$info .= collection_header ( $display_format, $num_cols, $aspect_ratio, $table_fields, $table_headers );
+    //$header_args = array( 'display_format' => $display_format, 'num_cols' => $num_cols, 'aspect_ratio' => $aspect_ratio, 'table_fields' => $table_fields, 'table_headers' => $table_headers );
+    $header_args = array( 'display_format' => $display_format, 'num_cols' => $num_cols, 'aspect_ratio' => $aspect_ratio, 'fields' => $table_fields, 'headers' => $table_headers );
+    $info .= collection_header ( $header_args );
+    
+    if ( $display_format == "table" ) {
+        $info .= '<tbody>';
+    }
+    //$info .= "+~+~+~+~+~+~+ collection items +~+~+~+~+~+~+<br />";
+    
+    // For each item, get content for display in appropriate form...
+    foreach ( $items as $item ) {
+    
+        $item_info = "";
+        $item_ts_info = "";
+        $arr_item = array();
+        $image_id = null;
+        
+        //$item_ts_info .= "item: <pre>".print_r($item, true)."</pre>";
+        
+        if ( is_array($item) && isset($item['item_type']) ) {
+            $item_type = $item['item_type'];
+        } else if ( $content_type == "posts" ) {
+            $item_type = "post";
+        } else if ( $content_type == "events" ) {
+            $item_type = "event";
+        } else {
+            $item_type = "UNKNOWN!";
+        }
+        
+        //$item_ts_info .= "item_type: ".$item_type."<br />"; //$item_ts_info .= "<!-- item_type: ".$item_type." -->";
+        
+        if ( $item_type == "event" && ( $display_format == "excerpts" || ( $display_format == "archive" && $show_content != 'full' ) ) ) {
+        
+            $item_info .= display_event_list_item( $item );
+            
+        } else {
+        
+            // Assemble the array of styling parameters
+            $arr_styling = array( 'item_type' => $item_type, 'display_format' => $display_format, 'link_posts' => $link_posts, 'show_subtitle' => $show_subtitles, 'show_content' => $show_content, 'show_image' => $show_images, 'aspect_ratio' => $aspect_ratio, 'table_fields' => $table_fields, 'collection_id' => $collection_id, 'do_ts' => $do_ts ); // wip
+            //$item_ts_info .= "item: <pre>".print_r($item, true)."</pre>";
+            //$item_ts_info .= "arr_styling: <pre>".print_r($arr_styling, true)."</pre>";
+            
+            // Assemble the arr_item
+            if ( $item_type == "custom_item" ) {
+                $arr_item = $item;
+            } else {
+                $arr_item = build_item_arr ( $item, $arr_styling );
+                $item_ts_info .= $arr_item['ts_info'];
+            }
+            
+            // Get content for display in appropriate form...
+            //$item_args = array( 'content_type' => $content_type, 'display_format' => $display_format, 'item' => $item );
+            //$item_info .= display_item($display_format, $arr_item, $display_atts, $table_fields, $item_ts_info); //$item_info .= display_item($item_args);
+            $item_info .= display_item ( $arr_item, $arr_styling );
+        
+        }
+        
+        
+        if ( isset( $arr_item['item_content'] ) && $item_type == "modal" || ( isset( $arr_item['item_link_target'] ) && $arr_item['item_link_target'] == "modal" ) ) { 
+            // modal_content...
+            //<div id="dialog_content_contact_us" class="dialog dialog_content"></div>
+            $dialog_id = sanitize_title($arr_item['item_title']); // wip 
+            $info .= '<div id="dialog_content_'.$dialog_id.'" class="dialog dialog_content">'.$arr_item['item_content'].'</div>';
+        }
+        
+        //
+        if ( !empty($table_totals) ) {
+            foreach ( $table_totals as $field_name ) {        
+                //$item_ts_info .= "table_totals field_name '".$field_name."'<br />";        
+                if ( isset( $arr_item['field_values'][$field_name] ) ) { // isset( $arr_item[$field_name] ) || 
+                    //$item_ts_info .= "item value for field_name '".$field_name."': ".$arr_item['field_values'][$field_name]."<br />";
+                    if ( isset($col_totals[$field_name]) ) {
+                        $col_totals[$field_name] += (float) $arr_item['field_values'][$field_name];
+                        //$item_ts_info .= "add to total: ".(float) $arr_item['field_values'][$field_name]."<br />";
+                    } else {
+                        $col_totals[$field_name] = (float) $arr_item['field_values'][$field_name];
+                        //$item_ts_info .= "set col_totals $field_name: ".(float) $arr_item['field_values'][$field_name]."<br />";
+                    }
+                }
+            }
+        }
+        
+        // Add the item_info to the info for return/display        
+        $info .= $item_info;
+        $ts_info .= $item_ts_info;
+        
+    } // END foreach items as item
+    
+    if ( $display_format == "table" ) {
+        $info .= '</tbody>';
+    }
+        
+    // Display column totals, if applicable
+    if ( $display_format == "table" && !empty($col_totals) ) {
+        // WIP
+        //$info .= "col_totals: <pre>".print_r($col_totals, true)."</pre>";
+        if ( is_array($table_fields) ) { $arr_fields = $table_fields; } else { $arr_fields = explode(",",$table_fields); }
+        $info .= '<tfoot>';
+        $info .= '<tr class="totals">';
+        foreach ( $table_fields as $field_name ) {        
+            if ( array_key_exists( $field_name, $col_totals ) ) {
+                $col_value = $col_totals[$field_name];
+                if ( is_numeric($col_value) ) { $col_value = number_format_i18n($col_value); }
+                $info .= "<td>".$col_value."</td>";
+            } else {
+                $info .= "<td>--</td>"; // ".$field_name."
+            }
+        }
+        $info .= '</tr>';
+        $info .= '</tfoot>';
+    }
+    
+    // List/table/grid footer or close container
+    $info .= collection_footer ( $display_format );
+    
+    if ( $ts_info != "" && ( $do_ts === true || $do_ts == "dcp" ) ) { $info .= '<div class="troubleshooting">'.$ts_info.'</div>'; }
+    
+    // Return info for display
+    return $info;
+    
 } // END function birdhive_display_collection ( $args = array() ) 
 
 // TODO: add options for collection_SUBheaders... e.g. for group/subgroups/personnel; links displayed grouped by link categories; etc.
 function collection_header ( $args = array() ) { // wip
 //function collection_header ( $display_format = null, $num_cols = 3, $aspect_ratio = "square", $fields = null, $headers = null ) {
 
-	// TS/logging setup
+    // TS/logging setup
     $do_ts = devmode_active( array("dcp") );
     $do_log = false;
     sdg_log( "divline2", $do_log );
 
-	// Init vars
-	$info = "";
-	$ts_info = "";
-	
-	// Defaults
-	$defaults = array(
-		'display_format'	=> null,
-		'num_cols'			=> true,		
-		'aspect_ratio'		=> null,
-		'fields'			=> null,
-		'headers'			=> null,
-		'custom_class'		=> null,
-	);
-	
+    // Init vars
+    $info = "";
+    $ts_info = "";
+    
+    // Defaults
+    $defaults = array(
+        'display_format'    => null,
+        'num_cols'            => true,        
+        'aspect_ratio'        => null,
+        'fields'            => null,
+        'headers'            => null,
+        'custom_class'        => null,
+    );
+    
     // Parse & Extract args
-	$args = wp_parse_args( $args, $defaults );
-	extract( $args );
-	//$ts_info .= "collection_header >> args: <pre>".print_r($args, true)."</pre>";
-	
-	$ts_info .= "<!-- +~+~+~+~+~+~+ collection_header +~+~+~+~+~+~+ -->";
-	
-	if ( $display_format == "list" ) {
-	
-		$info .= '<ul>';
-		
-	} else if ( $display_format == "links" ) {
-	
-		//$info .= '';
-		
-	} else if ( $display_format == "excerpts" || $display_format == "archive" ) {
-	
-		$info .= '<div class="posts_archive">';
-		
-	} else if ( $display_format == "table" ) {
-	
-		//$ts_info .= "fields: <pre>".print_r($fields, true)."</pre>";
-		//$ts_info .= "headers: <pre>".print_r($headers, true)."</pre>";
-		
-		$table_classes = "posts_archive";
-		if ( $custom_class ) { $table_classes .= " ".$custom_class; }
-		$info .= '<table class="'.$table_classes.'">';
-		
-		// Make header row -- from field names(?)
-		if ( !empty($fields) ) {
-		
-			$info .= '<tr>'; //$info .= "<tr>"; // prep the header row
-		
-			// Create array from fields string, as needed
-			if ( is_array($fields) ) { $arr_fields = $fields; } else { $arr_fields = explode(",",$fields); }
-			//$info .= "<td>".$fields."</td>"; // tft
-			//$info .= "<td><pre>".print_r($arr_fields, true)."</pre></td>"; // tft
-			$col = 0;
-			$th_customization = ""; // wip -- see e.g. bkkp employment income
-			
-			if ( !empty($headers) ) {
-			
-				// Create array from headers string, as needed
-				if ( is_array($headers) ) { $arr_headers = $headers; } else { $arr_headers = explode(",",$headers); }
-			
-				foreach ( $arr_headers as $header ) {
-					$header = trim($header);
-					if ( $header == "-" ) { $header = ""; }
-					//$info .= "<th>".$header."</th>";
-					//$info .= '<th class="'.$thclass.'">'.$header."</th>";
-					$info .= '<th'.$th_customization.'>'.$header."</th>";
-					//width="25%
-					$col++;
-				}
-			
-			} else {
-			
-				// If no headers were submitted, make do with the field names
-				foreach ( $arr_fields as $field_name ) {
-					$field_name = ucfirst(trim($field_name));
-					$info .= '<th'.$th_customization.'>'.$header."</th>";
-					$col++;
-				}
-			
-			}
-		
-			$info .= "</tr>"; // close out the header row
-		}
-	
-	} else if ( $display_format == "grid" ) {
-		
-		$colclass = sdg_digit_to_word($num_cols)."col";
-		$ts_info .= "num_cols: ".$num_cols." => colclass: ".$colclass."<br />";
-		//if ( $class ) { $colclass .= " ".$class; }
-		$info .= '<div class="flex-container '.$colclass.' '.$aspect_ratio.'">';
-	
-	} else {
-		$info .= '<!-- display_format '.$display_format.' not matched -->';
-	}
-	
-	if ( $ts_info != "" && ( $do_ts === true || $do_ts == "dcp" ) ) { $info .= $ts_info; } //if ( $do_ts && !empty($ts_info) ) { $info .= $ts_info; } //if ( $do_ts && !empty($ts_info) ) { $info .= '<div class="troubleshooting">'.$ts_info.'</div>'; }
-	
-	// Return info for display
-	return $info;
+    $args = wp_parse_args( $args, $defaults );
+    extract( $args );
+    //$ts_info .= "collection_header >> args: <pre>".print_r($args, true)."</pre>";
+    
+    $ts_info .= "<!-- +~+~+~+~+~+~+ collection_header +~+~+~+~+~+~+ -->";
+    
+    if ( $display_format == "list" ) {
+    
+        $info .= '<ul>';
+        
+    } else if ( $display_format == "links" ) {
+    
+        //$info .= '';
+        
+    } else if ( $display_format == "excerpts" || $display_format == "archive" ) {
+    
+        $info .= '<div class="posts_archive">';
+        
+    } else if ( $display_format == "table" ) {
+    
+        //$ts_info .= "fields: <pre>".print_r($fields, true)."</pre>";
+        //$ts_info .= "headers: <pre>".print_r($headers, true)."</pre>";
+        
+        $table_classes = "posts_archive";
+        if ( $custom_class ) { $table_classes .= " ".$custom_class; }
+        $info .= '<table class="'.$table_classes.'">';
+        
+        // Make header row -- from field names(?)
+        if ( !empty($fields) ) {
+        
+            $info .= '<tr>'; //$info .= "<tr>"; // prep the header row
+        
+            // Create array from fields string, as needed
+            if ( is_array($fields) ) { $arr_fields = $fields; } else { $arr_fields = explode(",",$fields); }
+            //$info .= "<td>".$fields."</td>"; // tft
+            //$info .= "<td><pre>".print_r($arr_fields, true)."</pre></td>"; // tft
+            $col = 0;
+            $th_customization = ""; // wip -- see e.g. bkkp employment income
+            
+            if ( !empty($headers) ) {
+            
+                // Create array from headers string, as needed
+                if ( is_array($headers) ) { $arr_headers = $headers; } else { $arr_headers = explode(",",$headers); }
+            
+                foreach ( $arr_headers as $header ) {
+                    $header = trim($header);
+                    if ( $header == "-" ) { $header = ""; }
+                    //$info .= "<th>".$header."</th>";
+                    //$info .= '<th class="'.$thclass.'">'.$header."</th>";
+                    $info .= '<th'.$th_customization.'>'.$header."</th>";
+                    //width="25%
+                    $col++;
+                }
+            
+            } else {
+            
+                // If no headers were submitted, make do with the field names
+                foreach ( $arr_fields as $field_name ) {
+                    $field_name = ucfirst(trim($field_name));
+                    $info .= '<th'.$th_customization.'>'.$header."</th>";
+                    $col++;
+                }
+            
+            }
+        
+            $info .= "</tr>"; // close out the header row
+        }
+    
+    } else if ( $display_format == "grid" ) {
+        
+        $colclass = sdg_digit_to_word($num_cols)."col";
+        $ts_info .= "num_cols: ".$num_cols." => colclass: ".$colclass."<br />";
+        //if ( $class ) { $colclass .= " ".$class; }
+        $info .= '<div class="flex-container '.$colclass.' '.$aspect_ratio.'">';
+    
+    } else {
+        $info .= '<!-- display_format '.$display_format.' not matched -->';
+    }
+    
+    if ( $ts_info != "" && ( $do_ts === true || $do_ts == "dcp" ) ) { $info .= $ts_info; } //if ( $do_ts && !empty($ts_info) ) { $info .= $ts_info; } //if ( $do_ts && !empty($ts_info) ) { $info .= '<div class="troubleshooting">'.$ts_info.'</div>'; }
+    
+    // Return info for display
+    return $info;
 }
 
 function collection_footer ( $display_format = null ) {
 
-	$info = "";
-	//$info .= "+~+~+~+~+~+~+ collection_footer +~+~+~+~+~+~+<br />";
-	
-	if ( $display_format == "links" ) {
-		$info .= anchor_link_top();
-	} else if ( $display_format == "list" ) {
-		//if ( ! is_archive() && ! is_category() ) { $info .= '<li>'.$category_link.'</li>'; }
-		$info .= '</ul>';
-		$info .= anchor_link_top();
-	} else if ( $display_format == "excerpts" || $display_format == "archive" ) {
-		$info .= '</div>';
-		$info .= anchor_link_top();
-	} else if ( $display_format == "table" ) {
-		$info .= '</table>';
-	} else if ( $display_format == "grid" ) {
-		$info .= '</div>';
-	}
-	
-	return $info;
-	
+    $info = "";
+    //$info .= "+~+~+~+~+~+~+ collection_footer +~+~+~+~+~+~+<br />";
+    
+    if ( $display_format == "links" ) {
+        $info .= anchor_link_top();
+    } else if ( $display_format == "list" ) {
+        //if ( ! is_archive() && ! is_category() ) { $info .= '<li>'.$category_link.'</li>'; }
+        $info .= '</ul>';
+        $info .= anchor_link_top();
+    } else if ( $display_format == "excerpts" || $display_format == "archive" ) {
+        $info .= '</div>';
+        $info .= anchor_link_top();
+    } else if ( $display_format == "table" ) {
+        $info .= '</table>';
+    } else if ( $display_format == "grid" ) {
+        $info .= '</div>';
+    }
+    
+    return $info;
+    
 }
 
 // Get an array of posts by processing/assembling args and passing them to WP_Query
 // Among other things, this function can deal w/ special cases like sermon series, accept strings of slugs and turn them into arrays, etc. -- issues related to CPTs and taxonomies
 function birdhive_get_posts ( $args = array() ) {
 
-	// TS/logging setup
+    // TS/logging setup
     $do_ts = devmode_active( array("dcp") );
     $do_log = false;
     sdg_log( "divline2", $do_log );
@@ -1861,61 +1861,61 @@ function birdhive_get_posts ( $args = array() ) {
     $ts_info .= "[bgp] args as passed to birdhive_get_posts: <pre>".print_r($args,true)."</pre>";
 
     // Defaults
-	$defaults = array(
-		'limit'				=> null,
-		'posts_per_page'  	=> -1,
-		'_search_title'		=> null, // The search_title is a special placeholder field handled by the birdhive_posts_where fcn
-		'_meta_or_tax'		=> null, // TODO: deal w/ underscore?
-		'post_type'			=> null,
-		'post_status'		=> 'publish',
-		'order'				=> null,
-		'orderby'			=> null,
-		'groupby'			=> null,
-		//
-		'meta_query'        => array(),
-		'tax_query'			=> array(),
-		'return_fields'		=> 'all',
-		//
-		'ids'				=> null,
-		'slugs'				=> null,
-		//
-		'taxonomy'			=> null,
-		'tax_terms'			=> null,
-		'tax_field'			=> 'slug', // init -- in some cases will want to use term_id
-		'include_children'	=> true,
-		//
-		'category'			=> null,
-		'meta_key'			=> null,
-		'meta_value'		=> null,
-		'series'			=> null, // For Events & Sermons, if those post_types exist for the current application
-		//
-		'scope'				=> null,
-		'date_field'		=> null, // e.g. sermon_date, transaction_date...
-		//
-		'do_ts'				=> false,
-	);
-	
+    $defaults = array(
+        'limit'                => null,
+        'posts_per_page'      => -1,
+        '_search_title'        => null, // The search_title is a special placeholder field handled by the birdhive_posts_where fcn
+        '_meta_or_tax'        => null, // TODO: deal w/ underscore?
+        'post_type'            => null,
+        'post_status'        => 'publish',
+        'order'                => null,
+        'orderby'            => null,
+        'groupby'            => null,
+        //
+        'meta_query'        => array(),
+        'tax_query'            => array(),
+        'return_fields'        => 'all',
+        //
+        'ids'                => null,
+        'slugs'                => null,
+        //
+        'taxonomy'            => null,
+        'tax_terms'            => null,
+        'tax_field'            => 'slug', // init -- in some cases will want to use term_id
+        'include_children'    => true,
+        //
+        'category'            => null,
+        'meta_key'            => null,
+        'meta_value'        => null,
+        'series'            => null, // For Events & Sermons, if those post_types exist for the current application
+        //
+        'scope'                => null,
+        'date_field'        => null, // e.g. sermon_date, transaction_date...
+        //
+        'do_ts'                => false,
+    );
+    
     // Parse & Extract args
-	$args = wp_parse_args( $args, $defaults );
-	extract( $args );
+    $args = wp_parse_args( $args, $defaults );
+    extract( $args );
     
     // Limit, aka posts_per_page, aka num posts to retrieve
     if ( !empty($limit) ) { $posts_per_page = $limit; }
     if ( empty($post_type) ) {
-    	if ( !empty($ids) ) {
-    		$post_type = 'any';
-    	} else {
-    		$post_type = 'post';
-    	}
+        if ( !empty($ids) ) {
+            $post_type = 'any';
+        } else {
+            $post_type = 'post';
+        }
     }
     
     // Set up basic query args
     $wp_args = array(
-		'post_type'       => $post_type,
-		'post_status'     => $post_status,
-		'posts_per_page'  => $posts_per_page,
+        'post_type'       => $post_type,
+        'post_status'     => $post_status,
+        'posts_per_page'  => $posts_per_page,
         'fields'          => $return_fields,
-	);
+    );
     
     // Custom parameters
     if ( $_search_title ) { $wp_args['_search_title'] = $_search_title; }
@@ -1931,12 +1931,12 @@ function birdhive_get_posts ( $args = array() ) {
         $ts_info .= "Getting posts by IDs: ".$ids."<br />";
         
         // Turn the list of IDs into a proper array
-		$post_ids         = array_map( 'intval', birdhive_att_explode( $ids ) );
-		$wp_args['post__in'] = $post_ids;
+        $post_ids         = array_map( 'intval', birdhive_att_explode( $ids ) );
+        $wp_args['post__in'] = $post_ids;
         $wp_args['orderby']  = 'post__in';
         $get_by_ids = true;
         
-	}
+    }
     
     // Posts by slug
     // NB: if slugs are specified, ignore most other args
@@ -1945,12 +1945,12 @@ function birdhive_get_posts ( $args = array() ) {
         $ts_info .= "Getting posts by slugs: ".$slugs;
         
         // Turn the list of slugs into a proper array
-		$post_slugs = birdhive_att_explode( $slugs );
-		$wp_args['post_name__in'] = $post_slugs;
+        $post_slugs = birdhive_att_explode( $slugs );
+        $wp_args['post_name__in'] = $post_slugs;
         $wp_args['orderby'] = 'post_name__in';
         $get_by_slugs = true;
         
-	}
+    }
     
     // If not getting posts by ID or by slugs, build the Tax and Meta Queries
     if ( !$get_by_ids && !$get_by_slugs ) {
@@ -1971,71 +1971,71 @@ function birdhive_get_posts ( $args = array() ) {
         // Taxonomy operator
         if ( $tax_terms && strpos($tax_terms,"+") !== false ) {
         
-        	$arr_terms = explode("+",$tax_terms);
-        	
-        	// Build tax_query
-			$tax_query = array (
-				'relation' => 'AND'
-			);
-			foreach ( $arr_terms as $term ) {
-				$tax_query[] = array(
-					'taxonomy'  => $taxonomy,
-					'field'     => $tax_field,
-					'terms'     => $term,
-					'include_children' => $include_children,
-					'operator'  => 'IN',
-				);
-        	}
-        	
+            $arr_terms = explode("+",$tax_terms);
+            
+            // Build tax_query
+            $tax_query = array (
+                'relation' => 'AND'
+            );
+            foreach ( $arr_terms as $term ) {
+                $tax_query[] = array(
+                    'taxonomy'  => $taxonomy,
+                    'field'     => $tax_field,
+                    'terms'     => $term,
+                    'include_children' => $include_children,
+                    'operator'  => 'IN',
+                );
+            }
+            
         } else if ( $tax_terms && strpos($tax_terms,"NOT-") !== false ) {
-        	// WIP
-        	// What if there are multiple terms, and not all are negated?
-        	if ( strpos($tax_terms,",") !== false ) {
-        		
-        		// Group together terms to include/exclude
-        		$arr_terms = explode(",",$tax_terms);
-        		$terms_in = "";
-        		$terms_out = "";
-        		foreach ( $arr_terms as $term ) {
-        			if ( strpos($term,"NOT-") !== false ) {
-        				$term = str_replace("NOT-","",$term);
-        				$terms_out .= $term.",";
-        			} else {
-        				$terms_in .= $term.",";
-        			}
-        		}
-        		
-        		// Trim trailing commas
-        		if ( substr($terms_in, -1) == ',' ) {
-					$terms_in = substr($terms_in, 0, -1);
-				}
-				if ( substr($terms_out, -1) == ',' ) {
-					$terms_out = substr($terms_out, 0, -1);
-				}
-				
-        		// Build tax_query
-        		$tax_query = array (
-        			'relation' => 'AND',
-        			array(
-						'taxonomy'  => $taxonomy,
-						'field'     => $tax_field,
-						'terms'     => $terms_in,
-						'include_children' => $include_children,
-						'operator'  => 'IN',
-					),
-        			array(
-						'taxonomy'  => $taxonomy,
-						'field'     => $tax_field,
-						'terms'     => $terms_out,
-						'include_children' => $include_children,
-						'operator'  => 'NOT IN',
-					)
-        		);    		
+            // WIP
+            // What if there are multiple terms, and not all are negated?
+            if ( strpos($tax_terms,",") !== false ) {
                 
-        	} else {
-        		$tax_terms = str_replace("NOT-","",$tax_terms);
-            	$tax_operator = 'NOT IN';
-        	}
+                // Group together terms to include/exclude
+                $arr_terms = explode(",",$tax_terms);
+                $terms_in = "";
+                $terms_out = "";
+                foreach ( $arr_terms as $term ) {
+                    if ( strpos($term,"NOT-") !== false ) {
+                        $term = str_replace("NOT-","",$term);
+                        $terms_out .= $term.",";
+                    } else {
+                        $terms_in .= $term.",";
+                    }
+                }
+                
+                // Trim trailing commas
+                if ( substr($terms_in, -1) == ',' ) {
+                    $terms_in = substr($terms_in, 0, -1);
+                }
+                if ( substr($terms_out, -1) == ',' ) {
+                    $terms_out = substr($terms_out, 0, -1);
+                }
+                
+                // Build tax_query
+                $tax_query = array (
+                    'relation' => 'AND',
+                    array(
+                        'taxonomy'  => $taxonomy,
+                        'field'     => $tax_field,
+                        'terms'     => $terms_in,
+                        'include_children' => $include_children,
+                        'operator'  => 'IN',
+                    ),
+                    array(
+                        'taxonomy'  => $taxonomy,
+                        'field'     => $tax_field,
+                        'terms'     => $terms_out,
+                        'include_children' => $include_children,
+                        'operator'  => 'NOT IN',
+                    )
+                );            
+                
+            } else {
+                $tax_terms = str_replace("NOT-","",$tax_terms);
+                $tax_operator = 'NOT IN';
+            }
             
         } else {
             $tax_operator = 'IN';
@@ -2063,13 +2063,13 @@ function birdhive_get_posts ( $args = array() ) {
         // Orderby
         if ( isset($orderby) ) {
         
-        	$ts_info .= "orderby: ".print_r($orderby, true)."<br />";
+            $ts_info .= "orderby: ".print_r($orderby, true)."<br />";
 
-			if ( !is_array($orderby) && strpos($orderby, ',') !== false) {
-				$orderby = str_replace(","," ",$orderby);
-				//$orderby = birdhive_att_explode( $orderby );
-			}
-			
+            if ( !is_array($orderby) && strpos($orderby, ',') !== false) {
+                $orderby = str_replace(","," ",$orderby);
+                //$orderby = birdhive_att_explode( $orderby );
+            }
+            
             $standard_orderby_values = array( 'none', 'ID', 'author', 'title', 'name', 'type', 'date', 'modified', 'parent', 'rand', 'comment_count', 'relevance', 'menu_order', 'meta_value', 'meta_value_num', 'post__in', 'post_name__in', 'post_parent__in' );
                         
             // determine if orderby is actually meta_value or meta_value_num with orderby $args value to be used as meta_key
@@ -2077,17 +2077,17 @@ function birdhive_get_posts ( $args = array() ) {
                 
                 // Is the orderby value one of the standard values for ordering?
                 if ( !in_array( $orderby, $standard_orderby_values) ) {
-                	
-                	// TODO: determine whether to sort meta values as numbers or as text
-					if (strpos($orderby, 'num') !== false) {
-						$wp_args['orderby'] = 'meta_value_num'; // or meta_value?
-					} else {
-						$wp_args['orderby'] = 'meta_value';
-					}
-					$wp_args['meta_key'] = $orderby; // TODO: figure out how to opt to also include items WITHOUT this meta key...
+                    
+                    // TODO: determine whether to sort meta values as numbers or as text
+                    if (strpos($orderby, 'num') !== false) {
+                        $wp_args['orderby'] = 'meta_value_num'; // or meta_value?
+                    } else {
+                        $wp_args['orderby'] = 'meta_value';
+                    }
+                    $wp_args['meta_key'] = $orderby; // TODO: figure out how to opt to also include items WITHOUT this meta key...
                 
                 } else {
-                	$wp_args['orderby'] = $orderby;
+                    $wp_args['orderby'] = $orderby;
                 }
                 
                 /* //TODO: consider naming meta_query sub-clauses, as per the following example:
@@ -2111,32 +2111,32 @@ function birdhive_get_posts ( $args = array() ) {
                 */
             } else {
             
-            	$orderby = array();
-            		
-				foreach ( $orderby as $k => $v ) {
-					$v = trim($v);
-					if ( in_array( $k, $standard_orderby_values ) && ($v == "ASC" || $v == "DESC") ) {
-						$orderby[$k] = $v;
-					} else {
-						$wp_args['meta_key'] = $orderer;
-						$wp_args['orderby'] = 'meta_key';
-					}
-				}
-				// TODO: deal w/ possibility of meta_key/value pair AND a standard orderby val...
-				if ( empty($wp_args['orderby']) && !empty( $orderby )) {
-					$wp_args['orderby'] = $orderby;
-				}
-				
-			}
+                $orderby = array();
+                    
+                foreach ( $orderby as $k => $v ) {
+                    $v = trim($v);
+                    if ( in_array( $k, $standard_orderby_values ) && ($v == "ASC" || $v == "DESC") ) {
+                        $orderby[$k] = $v;
+                    } else {
+                        $wp_args['meta_key'] = $orderer;
+                        $wp_args['orderby'] = 'meta_key';
+                    }
+                }
+                // TODO: deal w/ possibility of meta_key/value pair AND a standard orderby val...
+                if ( empty($wp_args['orderby']) && !empty( $orderby )) {
+                    $wp_args['orderby'] = $orderby;
+                }
+                
+            }
 
         }
         
-		// Tax Query
-		if ( !empty($tax_query) ) {
-			
-			$wp_args['tax_query'] = $tax_query;
-			
-		} else if ( is_category() && $category != "all" ) {
+        // Tax Query
+        if ( !empty($tax_query) ) {
+            
+            $wp_args['tax_query'] = $tax_query;
+            
+        } else if ( is_category() && $category != "all" ) {
 
             // Post category archive
             $ts_info .= "is_category (archive)<br />";
@@ -2144,11 +2144,11 @@ function birdhive_get_posts ( $args = array() ) {
             // Get archive term_id from slug
             $archive_term = term_exists( "archives", "category" );
             if ( !$archive_term ) { $archive_term = term_exists( "website-archives", "category" ); }
-			if ( $archive_term ) {
-				$archive_cat_id = $archive_term['term_id'];
-			} else {
-				$archive_cat_id = 99999; // tft
-			}
+            if ( $archive_term ) {
+                $archive_cat_id = $archive_term['term_id'];
+            } else {
+                $archive_cat_id = 99999; // tft
+            }
             // TODO: designate instead via CMS options?
             //$archive_term = get_term_by('slug', 'website-archives', 'category');
             //if ( $archive_term ) { $archive_cat_id = $archive_term->term_id; }
@@ -2157,19 +2157,19 @@ function birdhive_get_posts ( $args = array() ) {
             
             $wp_args['tax_query'] = array();
             if ( $tax_terms ) {
-            	$wp_args['tax_query']['relation'] = 'AND';
-            	$wp_args['tax_query'][] = array(
+                $wp_args['tax_query']['relation'] = 'AND';
+                $wp_args['tax_query'][] = array(
                     'taxonomy' => 'category',
                     'field'    => $tax_field,
                     'terms'    => array( $tax_terms ),
                 );
             }
             $wp_args['tax_query'][] = array(
-				'taxonomy' => 'category',
-				'field'    => 'term_id',
-				'terms'    => array( $archive_cat_id),
-				'operator' => 'NOT IN',
-			);
+                'taxonomy' => 'category',
+                'field'    => 'term_id',
+                'terms'    => array( $archive_cat_id),
+                'operator' => 'NOT IN',
+            );
 
         } else if ( $taxonomy && $tax_terms ) {
 
@@ -2188,94 +2188,94 @@ function birdhive_get_posts ( $args = array() ) {
         }
         
         // Meta Query
-		if ( empty($meta_query) ) {
-			
-			// If meta_query was NOT set already via query args, then build it based on other args, as needed
-			$meta_query_components = array();
+        if ( empty($meta_query) ) {
+            
+            // If meta_query was NOT set already via query args, then build it based on other args, as needed
+            $meta_query_components = array();
         
-			// Featured Image restrictions?
-			// TODO: update this to account for custom_thumb and first_image options? Or is it no longer necessary at all?
-			if ( isset($args['has_image']) && $args['has_image'] == true ) {
-				$meta_query_components[] = 
-					array(
-						'key' => '_thumbnail_id',
-						'compare' => 'EXISTS'
-					);
-			}
-			
-			// Scope restrictions? WIP
-			if ( $scope && $date_field ) {
-				$ts_info .= "query by scope/date_field<br />";
-				// Check to make sure the date_field is a registered meta field
-				//if ( registered_meta_key_exists( 'post', $date_field ) ) { //if ( registered_meta_key_exists( 'post', $date_field, $post_type ) ) { // disabled -- not working as expected
-					//
-					$scope_dates = sdg_scope_dates($scope);
-					$start_date = $scope_dates['start'];
-					$end_date = $scope_dates['end'];
-					$ts_info .= "start_date: $start_date; end_date: $end_date<br />";
-					
-					$meta_query_components[] = 
-						array(
-							'key' => $date_field,
-							'value' => array( $start_date, $end_date ),
-							'type'    => 'numeric',
-							'compare'   => 'BETWEEN',
-						);
-					
-				//} else {
-					//$ts_info .= "No registered meta_key with key: '$date_field'<br />"; // for post_type '$post_type'
-				//}
-			}
-			
-			// Designated meta_key/meta_value?
-			if ( ( $meta_key && $meta_value ) ) {
-				// meta_key and meta_value both specified
-				$meta_query_components[] = 
-					array(
-						'key' => $meta_key,
-						'value'   => $meta_value,
-						'compare' => '=',
-					);
-			} else if ( ( $meta_key && $meta_key != $date_field) ) {
+            // Featured Image restrictions?
+            // TODO: update this to account for custom_thumb and first_image options? Or is it no longer necessary at all?
+            if ( isset($args['has_image']) && $args['has_image'] == true ) {
+                $meta_query_components[] = 
+                    array(
+                        'key' => '_thumbnail_id',
+                        'compare' => 'EXISTS'
+                    );
+            }
+            
+            // Scope restrictions? WIP
+            if ( $scope && $date_field ) {
+                $ts_info .= "query by scope/date_field<br />";
+                // Check to make sure the date_field is a registered meta field
+                //if ( registered_meta_key_exists( 'post', $date_field ) ) { //if ( registered_meta_key_exists( 'post', $date_field, $post_type ) ) { // disabled -- not working as expected
+                    //
+                    $scope_dates = sdg_scope_dates($scope);
+                    $start_date = $scope_dates['start'];
+                    $end_date = $scope_dates['end'];
+                    $ts_info .= "start_date: $start_date; end_date: $end_date<br />";
+                    
+                    $meta_query_components[] = 
+                        array(
+                            'key' => $date_field,
+                            'value' => array( $start_date, $end_date ),
+                            'type'    => 'numeric',
+                            'compare'   => 'BETWEEN',
+                        );
+                    
+                //} else {
+                    //$ts_info .= "No registered meta_key with key: '$date_field'<br />"; // for post_type '$post_type'
+                //}
+            }
+            
+            // Designated meta_key/meta_value?
+            if ( ( $meta_key && $meta_value ) ) {
+                // meta_key and meta_value both specified
+                $meta_query_components[] = 
+                    array(
+                        'key' => $meta_key,
+                        'value'   => $meta_value,
+                        'compare' => '=',
+                    );
+            } else if ( ( $meta_key && $meta_key != $date_field) ) {
                 // meta_key specified, but no value
-				$meta_query_components[] = 
-					array(
-						'key' => $meta_key,
-						//'value' => '' ,
+                $meta_query_components[] = 
+                    array(
+                        'key' => $meta_key,
+                        //'value' => '' ,
                         'compare' => 'EXISTS',
-					);
-			}
+                    );
+            }
 
-			// Series?
-			if ( post_type_exists('sermon') && $post_type == 'sermon' && $series ) {
-				// Sermon series
-				$meta_query_components[] = 
-					array(
-						'key' => 'sermons_series',
+            // Series?
+            if ( post_type_exists('sermon') && $post_type == 'sermon' && $series ) {
+                // Sermon series
+                $meta_query_components[] = 
+                    array(
+                        'key' => 'sermons_series',
                         'value' => '"' . $series . '"', // Series ID -- matches exactly "123", not just 123. This prevents a match for "1234"
-                        'compare' => 'LIKE'	
-					);
-			} else if ( post_type_exists('event') && $post_type == 'event' && $series ) {
-				// Event series
-				$meta_query_components[] = 
-					array(
-						'key' => 'event_series', //'key' => 'series_events', //'key' => 'events_series',
+                        'compare' => 'LIKE'    
+                    );
+            } else if ( post_type_exists('event') && $post_type == 'event' && $series ) {
+                // Event series
+                $meta_query_components[] = 
+                    array(
+                        'key' => 'event_series', //'key' => 'series_events', //'key' => 'events_series',
                         'value' => '"' . $series . '"', // Series ID -- matches exactly "123", not just 123. This prevents a match for "1234"
-                        'compare' => 'LIKE'	
-					);
-			}
+                        'compare' => 'LIKE'    
+                    );
+            }
 
-			// Finalize meta_query based on number of components
-			if ( count($meta_query_components) > 1 ) {
-				$meta_query['relation'] = 'AND';
-				foreach ( $meta_query_components AS $component ) {
-					$meta_query[] = $component;
-				}
-			} else {
-				$meta_query = $meta_query_components; //$meta_query = $meta_query_components[0];
-			}
-			
-		}
+            // Finalize meta_query based on number of components
+            if ( count($meta_query_components) > 1 ) {
+                $meta_query['relation'] = 'AND';
+                foreach ( $meta_query_components AS $component ) {
+                    $meta_query[] = $component;
+                }
+            } else {
+                $meta_query = $meta_query_components; //$meta_query = $meta_query_components[0];
+            }
+            
+        }
 
         if ( !empty($meta_query) ) {
             $wp_args['meta_query'] = $meta_query;
@@ -2306,13 +2306,13 @@ function birdhive_get_posts ( $args = array() ) {
     // -------
     // Run the query
     // -------
-	$arr_posts = new WP_Query( $wp_args );
+    $arr_posts = new WP_Query( $wp_args );
     
     $ts_info .= "[bgp] WP_Query run as follows:";
     $ts_info .= "<pre>args: ".print_r($wp_args, true)."</pre>";
     $ts_info .= "[".count($arr_posts->posts)."] posts found.<br />";
     //$ts_info .= "<pre>meta_query: ".print_r($meta_query, true)."</pre>";
-	//$ts_info .= "birdhive_get_posts arr_posts: <pre>".print_r($arr_posts, true)."</pre>";
+    //$ts_info .= "birdhive_get_posts arr_posts: <pre>".print_r($arr_posts, true)."</pre>";
 
     //$ts_info .= "birdhive_get_posts arr_posts->request<pre>".$arr_posts->request."</pre>";
     $ts_info .= "birdhive_get_posts last_query:<pre>".$wpdb->last_query."</pre>";
@@ -2341,38 +2341,38 @@ Table display:
 add_shortcode('display_posts', 'birdhive_display_posts');
 function birdhive_display_posts ( $atts = array() ) { //function birdhive_display_posts ( $args = array() ) {
 
-	// TS/logging setup
+    // TS/logging setup
     $do_ts = devmode_active( array("dcp") );
     $do_log = false;
     sdg_log( "divline2", $do_log );
-	
-	global $wpdb;
-	$info = "";
-	$ts_info = "";
-	$posts = array(); 
-	$items = array(); // post items -- may be simple array of post objects, or mixed array of headers and post ids
+    
+    global $wpdb;
+    $info = "";
+    $ts_info = "";
+    $posts = array(); 
+    $items = array(); // post items -- may be simple array of post objects, or mixed array of headers and post ids
 
-	$args = shortcode_atts( array(
+    $args = shortcode_atts( array(
         
-        'post_type'	=> 'post',
-        'limit' 	=> 15,
-        'orderby' 	=> 'title',
-        'order' 	=> 'ASC',
-        'meta_key' 	=> null,
+        'post_type'    => 'post',
+        'limit'     => 15,
+        'orderby'     => 'title',
+        'order'     => 'ASC',
+        'meta_key'     => null,
         'meta_value'=> null,
-        //'groupby'	=> null,
+        //'groupby'    => null,
         //
-        'ids' 		=> null,
-        'slugs' 	=> null,
-        'post_id' 	=> null, // ?
-        'name' 		=> null,
+        'ids'         => null,
+        'slugs'     => null,
+        'post_id'     => null, // ?
+        'name'         => null,
         //
         'category' => null, // for posts/pages only
         'taxonomy'  => null,
         'tax_terms'  => null,
         //
         // This group_by is NOT the same as the wpq arg 'groupby' -- we're going to use it to retrieve posts group by group for display with headers... WIP
-        'group_by'	=> null, // e.g. category, event-categories, link_category -- for queries using scope, TODO: also build in options to group_by month, etc.
+        'group_by'    => null, // e.g. category, event-categories, link_category -- for queries using scope, TODO: also build in options to group_by month, etc.
         //
         'display_format' => 'list', // other options: links; excerpts; archive (full post content); grid; table
         'return_format' => null, // deprecated -- TODO: remove this extra attribute as soon as updates are complete on all sites (STC, AGO)
@@ -2408,27 +2408,27 @@ function birdhive_display_posts ( $atts = array() ) { //function birdhive_displa
     ), $atts );
     
     // Extract
-	extract( $args );
-	
-	// Get query vars >> override args
-	// WIP -- all override for ALL args? or just specific ones?0
-	if ( get_query_var('scope') ) {
-		$scope = get_query_var('scope');
-		$ts_info .= "scope via query_var: ".print_r($scope,true)."<br />";
-	} else {
-		$ts_info .= "scope query_var not set<br />";
-	}
-	
-	//$ts_info .= 'extracted args: <pre>'.print_r($args, true).'</pre>';
-	$ts_info .= "post_type: ".$post_type."<br />";
+    extract( $args );
+    
+    // Get query vars >> override args
+    // WIP -- all override for ALL args? or just specific ones?0
+    if ( get_query_var('scope') ) {
+        $scope = get_query_var('scope');
+        $ts_info .= "scope via query_var: ".print_r($scope,true)."<br />";
+    } else {
+        $ts_info .= "scope query_var not set<br />";
+    }
+    
+    //$ts_info .= 'extracted args: <pre>'.print_r($args, true).'</pre>';
+    $ts_info .= "post_type: ".$post_type."<br />";
     
     if ( $return_format ) { $display_format = $return_format; $args['display_format'] = $display_format; } // deal w/ deprecated attribute
     if ( $show_subtitles == "false" ) {
-    	$show_subtitles = false;
-    	$ts_info .= "show_subtitles: false<br />";
+        $show_subtitles = false;
+        $ts_info .= "show_subtitles: false<br />";
     } else {
-    	$show_subtitles = true;
-    	$ts_info .= "show_subtitles: true<br />";
+        $show_subtitles = true;
+        $ts_info .= "show_subtitles: true<br />";
     }
     
     //
@@ -2437,76 +2437,76 @@ function birdhive_display_posts ( $atts = array() ) { //function birdhive_displa
     
     // Events are a special case...
     if ( post_type_exists('event') && $post_type == "event" ) {
-    	
-    	if ( empty($series) ) {
-    	
-    		// Use EM::get if no series ID has been designated
-			// TODO: check to see if EM plugin is installed and active?
-    	
-    		// If ordering is setup by meta_key, translate that for EM
-    		if ( $orderby == "date" || ( empty($orderby) && str_contains($meta_key, "event_start" ) ) || str_contains($orderby, "event_start" )) { 
-    			$orderby = "event_start";
-    		} else if ( $orderby == "title" ) {
-    			$orderby = "event_name";
-    		}
-    		
-			// TODO: deal w/ taxonomy parameters -- how to translate these properly for EM?
-			// Deal w/ other args...: meta_key, meta_value, name, taxonomy, tax_terms, display_format, cols...
-		
-			// Create array of args relevant to EM search attributes
-			$em_args = array();
-			$em_args['limit'] = $limit;
-			$em_args['order'] = $order;
-			$em_args['orderby'] = $orderby;
-			$em_args['category'] = $category;
-			$em_args['scope'] = $scope;
-		
-			// Posts by ID -- translate to fit EM search attributes (https://wp-events-plugin.com/documentation/event-search-attributes/)
-			if ( !empty($ids) ) {
-				$ts_info .= "Getting posts by IDs: ".$ids."<br />";				
-				$post_ids = array_map( 'intval', birdhive_att_explode( $ids ) );
-				if ( count($post_ids) > 1 ) {
-					$em_args['post_id'] = $post_ids; //$em_args['post__in'] = $post_ids;
-				} else {
-					$em_args['post_id'] = $ids;
-				}
-				//$em_args['post_id'] = $ids;
-			}
-			if ( $em_args ) { $ts_info .= 'shortcode_atts as passed to EM_Events::get <pre>'.print_r($em_args, true).'</pre>'; } // tft
-		
-			$items = EM_Events::get( $em_args ); // Retrieves an array of EM_Event Objects
-			//$ts_info .= "EM items retrieved: <pre>".print_r($items, true)."</pre>";
-			
-			$ts_info .= 'Posts retrieved using EM_Events::get: <pre>';		
-			foreach ( $items as $obj ) {
-				//$ts_info .= "obj: ".print_r($obj, true)."<br />";
-				$ts_info .= "post_id: ".$obj->post_id."<br />";
-				$ts_info .= "event_id: ".$obj->event_id."<br />";
-				$ts_info .= "event_name: ".$obj->event_name."<br />";
-				$ts_info .= "-------<br />";
-				//$ts_info .= "event_attributes: ".print_r($post->event_attributes, true)."<br />";
-				//if ( isset($post->event_attributes['event_series']) ) { $ts_info .= "event_series: ".$post->event_attributes['event_series']."<br />"; }
-			}
-			//$ts_info .= 'last_query: '.print_r( $wpdb->last_query, true); // '<pre></pre>'
-			$ts_info .= '</pre>'; // tft
         
-    	} else {
-    	
-    		$ts_info .= "searching for events with series_id: ".$series."<br />";
-    		
-    		// If no meta_key is yet set and the orderby str is event_start, or _event_start_date, or variations on that theme, set the ordering and meta_key accordingly
-			if ( empty($meta_key) && str_contains($orderby, "event_start" ) ) { 
-				$args['orderby'] = "meta_value";
-				$args['meta_key'] = "_event_start"; // use event_start because that covers date AND time	
-			} else {
-				if ( str_contains($meta_key, "event_start" ) ) { $args['meta_key'] = "_event_start"; }
-				//if ( $meta_key == "event_start_date,event_start_time" ) { $args['meta_key'] = "_event_start_date"; }
-				if ( empty($orderby) ) { $args['orderby'] = "meta_value"; } else { $ts_info .= "args['meta_key']: ".$args['meta_key']."<br />"; $ts_info .= "orderby: ".$orderby."<br />"; }
-			}
-    		
-    		if ( isset($args['category']) &&  !isset($args['taxonomy']) ) { $args['taxonomy'] = "event-categories"; $args['tax_terms'] = $args['category']; unset($args["category"]); }
-    	}
-    	
+        if ( empty($series) ) {
+        
+            // Use EM::get if no series ID has been designated
+            // TODO: check to see if EM plugin is installed and active?
+        
+            // If ordering is setup by meta_key, translate that for EM
+            if ( $orderby == "date" || ( empty($orderby) && str_contains($meta_key, "event_start" ) ) || str_contains($orderby, "event_start" )) { 
+                $orderby = "event_start";
+            } else if ( $orderby == "title" ) {
+                $orderby = "event_name";
+            }
+            
+            // TODO: deal w/ taxonomy parameters -- how to translate these properly for EM?
+            // Deal w/ other args...: meta_key, meta_value, name, taxonomy, tax_terms, display_format, cols...
+        
+            // Create array of args relevant to EM search attributes
+            $em_args = array();
+            $em_args['limit'] = $limit;
+            $em_args['order'] = $order;
+            $em_args['orderby'] = $orderby;
+            $em_args['category'] = $category;
+            $em_args['scope'] = $scope;
+        
+            // Posts by ID -- translate to fit EM search attributes (https://wp-events-plugin.com/documentation/event-search-attributes/)
+            if ( !empty($ids) ) {
+                $ts_info .= "Getting posts by IDs: ".$ids."<br />";                
+                $post_ids = array_map( 'intval', birdhive_att_explode( $ids ) );
+                if ( count($post_ids) > 1 ) {
+                    $em_args['post_id'] = $post_ids; //$em_args['post__in'] = $post_ids;
+                } else {
+                    $em_args['post_id'] = $ids;
+                }
+                //$em_args['post_id'] = $ids;
+            }
+            if ( $em_args ) { $ts_info .= 'shortcode_atts as passed to EM_Events::get <pre>'.print_r($em_args, true).'</pre>'; } // tft
+        
+            $items = EM_Events::get( $em_args ); // Retrieves an array of EM_Event Objects
+            //$ts_info .= "EM items retrieved: <pre>".print_r($items, true)."</pre>";
+            
+            $ts_info .= 'Posts retrieved using EM_Events::get: <pre>';        
+            foreach ( $items as $obj ) {
+                //$ts_info .= "obj: ".print_r($obj, true)."<br />";
+                $ts_info .= "post_id: ".$obj->post_id."<br />";
+                $ts_info .= "event_id: ".$obj->event_id."<br />";
+                $ts_info .= "event_name: ".$obj->event_name."<br />";
+                $ts_info .= "-------<br />";
+                //$ts_info .= "event_attributes: ".print_r($post->event_attributes, true)."<br />";
+                //if ( isset($post->event_attributes['event_series']) ) { $ts_info .= "event_series: ".$post->event_attributes['event_series']."<br />"; }
+            }
+            //$ts_info .= 'last_query: '.print_r( $wpdb->last_query, true); // '<pre></pre>'
+            $ts_info .= '</pre>'; // tft
+        
+        } else {
+        
+            $ts_info .= "searching for events with series_id: ".$series."<br />";
+            
+            // If no meta_key is yet set and the orderby str is event_start, or _event_start_date, or variations on that theme, set the ordering and meta_key accordingly
+            if ( empty($meta_key) && str_contains($orderby, "event_start" ) ) { 
+                $args['orderby'] = "meta_value";
+                $args['meta_key'] = "_event_start"; // use event_start because that covers date AND time    
+            } else {
+                if ( str_contains($meta_key, "event_start" ) ) { $args['meta_key'] = "_event_start"; }
+                //if ( $meta_key == "event_start_date,event_start_time" ) { $args['meta_key'] = "_event_start_date"; }
+                if ( empty($orderby) ) { $args['orderby'] = "meta_value"; } else { $ts_info .= "args['meta_key']: ".$args['meta_key']."<br />"; $ts_info .= "orderby: ".$orderby."<br />"; }
+            }
+            
+            if ( isset($args['category']) &&  !isset($args['taxonomy']) ) { $args['taxonomy'] = "event-categories"; $args['tax_terms'] = $args['category']; unset($args["category"]); }
+        }
+        
     }
         
     // Clean up the array
@@ -2524,223 +2524,223 @@ function birdhive_display_posts ( $atts = array() ) { //function birdhive_displa
     $ts_info .= "display_format: ".$display_format."<br />";
     $ts_info .= "show_content: ".$show_content."<br />";
     
-	// Init index
-	$index = "";
-	
+    // Init index
+    $index = "";
+    
     // Retrieve an array of posts matching the args supplied -- if we didn't already get the posts using EM
     if ( empty($items) ) {
-    	
-    	// NOT events -- or: events in a series
-    	
-    	// TODO: deal w/ events scope even if searching for series?
-    	
-    	// If we've got a group_by value, then handle it    	
-		// build set of sorted relevant taxonomies and then get posts per term_id
-	
-		// WIP group_by
-		if ( $group_by ) {
-			
-			$args['do_ts'] = true;
-			$group_by_secondary = null;
-			
-			// Is it a single or multiple group_by value?
-			if ( str_contains($group_by, "," ) ) {
-				$ts_info .= "multiple group_by parameters!<br />";
-				$arr_groups = birdhive_att_explode($group_by);
-				$group_by = $arr_groups[0];
-				$ts_info .= "group_by: $group_by<br />";
-				//if ( $arr_groups[1] ) { $group_by_secondary = $arr_groups[1]; }
-				$group_by_secondary = $arr_groups[1];
-				$ts_info .= "group_by_secondary: $group_by_secondary<br />";
-				
-				// WIP!
-				if ( $group_by_secondary ) {
-				
-					//$field = get_field_object($group_by_secondary); // this won't work here because there's no object instance to check
-					
-					if ( taxonomy_exists($group_by_secondary) ) {
-						$ts_info .= "'$group_by_secondary' is a taxonomy<br />";
-					//} else if ( get_field_object($group_by_secondary) ) {
-						//$ts_info .= "'$group_by_secondary' is an ACF field";
-					} else if ( registered_meta_key_exists( 'post', $group_by_secondary, 'link' ) || registered_meta_key_exists( 'post', $group_by_secondary ) ) {
-						$ts_info .= "'$group_by_secondary' is a registered_meta_key<br />";
-						// is $group_by_secondary a meta_key? -- why doesn't this work? are ACF fields not officially registered as meta keys? why not?
-						// if so...
-						// orderby meta_value
-					} else {
-						$ts_info .= "'$group_by_secondary' is neither a taxonomy, nor a registered_meta_key<br />"; // , nor an ACF field
-					}
-				}
-				
-			}
-			
-			// Get posts per group
-			//$info .= "group_by: $group_by<br />"; // tft
-			
-			// First check to see if the group_by refers to a taxonomy
-			if ( taxonomy_exists($group_by) ) {
-				
-				$current_term_id = ""; // init
-				$items = array();
-				$tax_terms = array();
-				
-				// Get all non-empty terms for the given taxonomy, ordered by sort_num
-				$terms = get_terms( array( 'taxonomy' => $group_by, 'hide_empty' => true, 'orderby' => 'meta_value_num', 'meta_key' => 'sort_num', 'parent' => 0 ) );
-				foreach ( $terms as $term ) {
-				
-					$hlevel = 2;
-					
-					$term_id = $term->term_id;
-					$tax_terms[] = $term_id;
-					
-					//$info .= $term->name."<br />";
-					// TFT: get sort_num -- because the orderby isn't working right
-					//get_postmeta.... WIP
-					$sort_num = get_field('sort_num', $term_id, false);
-					//$ts_info .= "term_id: ".$term_id."/sort_num: ".$sort_num."<br />";
-					$item_id = $term->slug;
-					
-					// Add item to index
-					$index .= '<a href="#'.$item_id.'" class="index_anchor primary">'.$term->name.'</a><br />';
-					
-					// WIP Add "tax_term" -- or more generically: "header"? -- item to array with term name as title
-					// WIP -- add anchor for header items
-					
-					$term_item = array( 'item_type' => "tax_term", 'term_id' => $term_id, 'item_id' => $item_id, 'hlevel' => $hlevel );
-					array_push( $items, $term_item );	
-					
-					// Get posts per term_id
-					$wp_args = $args;
-					$wp_args['taxonomy'] = $group_by;
-					$wp_args['tax_terms'] = $term_id;
-					$wp_args['tax_field'] = 'term_id';
-					$wp_args['include_children'] = false;
-					$wp_args['return_fields'] = 'ids';
-					if ( $group_by_secondary ) {
-						// WIP: fix this so it sorts by child terms first, then by secondary field
-						$wp_args['orderby'] = $group_by_secondary;
-					}
-					$posts_info = birdhive_get_posts( $wp_args );
-					$posts = $posts_info['arr_posts']->posts;
-					//$ts_info .= 'shortcode_atts as passed to birdhive_get_posts: <pre>'.print_r($args, true).'</pre>';
-					$ts_info .= $posts_info['ts_info'];
+        
+        // NOT events -- or: events in a series
+        
+        // TODO: deal w/ events scope even if searching for series?
+        
+        // If we've got a group_by value, then handle it        
+        // build set of sorted relevant taxonomies and then get posts per term_id
+    
+        // WIP group_by
+        if ( $group_by ) {
+            
+            $args['do_ts'] = true;
+            $group_by_secondary = null;
+            
+            // Is it a single or multiple group_by value?
+            if ( str_contains($group_by, "," ) ) {
+                $ts_info .= "multiple group_by parameters!<br />";
+                $arr_groups = birdhive_att_explode($group_by);
+                $group_by = $arr_groups[0];
+                $ts_info .= "group_by: $group_by<br />";
+                //if ( $arr_groups[1] ) { $group_by_secondary = $arr_groups[1]; }
+                $group_by_secondary = $arr_groups[1];
+                $ts_info .= "group_by_secondary: $group_by_secondary<br />";
+                
+                // WIP!
+                if ( $group_by_secondary ) {
+                
+                    //$field = get_field_object($group_by_secondary); // this won't work here because there's no object instance to check
+                    
+                    if ( taxonomy_exists($group_by_secondary) ) {
+                        $ts_info .= "'$group_by_secondary' is a taxonomy<br />";
+                    //} else if ( get_field_object($group_by_secondary) ) {
+                        //$ts_info .= "'$group_by_secondary' is an ACF field";
+                    } else if ( registered_meta_key_exists( 'post', $group_by_secondary, 'link' ) || registered_meta_key_exists( 'post', $group_by_secondary ) ) {
+                        $ts_info .= "'$group_by_secondary' is a registered_meta_key<br />";
+                        // is $group_by_secondary a meta_key? -- why doesn't this work? are ACF fields not officially registered as meta keys? why not?
+                        // if so...
+                        // orderby meta_value
+                    } else {
+                        $ts_info .= "'$group_by_secondary' is neither a taxonomy, nor a registered_meta_key<br />"; // , nor an ACF field
+                    }
+                }
+                
+            }
+            
+            // Get posts per group
+            //$info .= "group_by: $group_by<br />"; // tft
+            
+            // First check to see if the group_by refers to a taxonomy
+            if ( taxonomy_exists($group_by) ) {
+                
+                $current_term_id = ""; // init
+                $items = array();
+                $tax_terms = array();
+                
+                // Get all non-empty terms for the given taxonomy, ordered by sort_num
+                $terms = get_terms( array( 'taxonomy' => $group_by, 'hide_empty' => true, 'orderby' => 'meta_value_num', 'meta_key' => 'sort_num', 'parent' => 0 ) );
+                foreach ( $terms as $term ) {
+                
+                    $hlevel = 2;
+                    
+                    $term_id = $term->term_id;
+                    $tax_terms[] = $term_id;
+                    
+                    //$info .= $term->name."<br />";
+                    // TFT: get sort_num -- because the orderby isn't working right
+                    //get_postmeta.... WIP
+                    $sort_num = get_field('sort_num', $term_id, false);
+                    //$ts_info .= "term_id: ".$term_id."/sort_num: ".$sort_num."<br />";
+                    $item_id = $term->slug;
+                    
+                    // Add item to index
+                    $index .= '<a href="#'.$item_id.'" class="index_anchor primary">'.$term->name.'</a><br />';
+                    
+                    // WIP Add "tax_term" -- or more generically: "header"? -- item to array with term name as title
+                    // WIP -- add anchor for header items
+                    
+                    $term_item = array( 'item_type' => "tax_term", 'term_id' => $term_id, 'item_id' => $item_id, 'hlevel' => $hlevel );
+                    array_push( $items, $term_item );    
+                    
+                    // Get posts per term_id
+                    $wp_args = $args;
+                    $wp_args['taxonomy'] = $group_by;
+                    $wp_args['tax_terms'] = $term_id;
+                    $wp_args['tax_field'] = 'term_id';
+                    $wp_args['include_children'] = false;
+                    $wp_args['return_fields'] = 'ids';
+                    if ( $group_by_secondary ) {
+                        // WIP: fix this so it sorts by child terms first, then by secondary field
+                        $wp_args['orderby'] = $group_by_secondary;
+                    }
+                    $posts_info = birdhive_get_posts( $wp_args );
+                    $posts = $posts_info['arr_posts']->posts;
+                    //$ts_info .= 'shortcode_atts as passed to birdhive_get_posts: <pre>'.print_r($args, true).'</pre>';
+                    $ts_info .= $posts_info['ts_info'];
 
-					// Add the posts to the items array
-					$current_sub = ""; // init for group_by_secondary
-					$hlevel = 3;
-					foreach ( $posts as $post_id ) {
-						if ( $group_by_secondary ) {
-							$subheader = null;
-							$item_id = null;
-							$arr_subheader = get_field($group_by_secondary, $post_id); // acf
-							if ( is_array($arr_subheader) ) {
-								if ( isset($arr_subheader['label']) ) { $subheader = $arr_subheader['label']; }
-								if ( isset($arr_subheader['value']) ) { $item_id = $arr_subheader['value']; }
-							}
-							if ( $subheader && $subheader != $current_sub && $subheader != '---' ) {
-								// Add anchor for header items
-								// WIP: figure out how NOT to add the header item if all the posts have the same subheader...
-								$gbs_item = array( 'item_type' => "subheader", 'item_title' => $subheader, 'item_id' => $item_id, 'hlevel' => $hlevel );
-								array_push( $items, $gbs_item );
-								$current_sub = $subheader;
-								// Add item to index
-								$index .= '&bull; <a href="#'.$item_id.'" class="index_anchor secondary">'.$subheader.'</a><br />';
-							}
-						}
-						$post_item = array( 'item_type' => "post", 'post_id' => $post_id );
-						array_push( $items, $post_item );
-					}
-					
-					// WIP: get term children, if any, and the childrens' links...
-					$child_terms = get_terms( array( 'taxonomy' => $group_by, 'hide_empty' => true, 'child_of' => $term_id ) );
-					foreach ( $child_terms as $child_term ) {		
-					
-						$hlevel = 3;
-								
-						$child_term_id = $child_term->term_id;
-						$tax_terms[] = $child_term_id;
-						
-						$item_id = $child_term->slug;
-						$index .= '<a href="#'.$item_id.'" class="index_anchor secondary">'.$child_term->name.'</a><br />';
-						//$index .= "=> ".$child_term->name."<br />";
-						// How to generalize this? Perhaps a separate function to build the hierarchical array of taxonomy terms to be retrieved?
-						// ...
-						$child_term_item = array( 'item_type' => "tax_term", 'term_id' => $child_term_id, 'item_id' => $item_id, 'hlevel' => $hlevel );
-						array_push( $items, $child_term_item ); // WIP -- this ends up in the wrong place -- needs to be a subheader, like w/ group_by_secondary...
-						// Modify parent wp_args to use child_term_id
-						$wp_args['tax_terms'] = $child_term_id;
-						// Get posts per child_term_id
-						$posts_info = birdhive_get_posts( $wp_args );
-						$child_posts = $posts_info['arr_posts']->posts;
-						
-						//$ts_info .= 'shortcode_atts as passed to birdhive_get_posts: <pre>'.print_r($args, true).'</pre>';
-						$ts_info .= $posts_info['ts_info']; 
-						
-						// Add the posts to the items array
-						$current_sub = ""; // init for group_by_secondary
-						$hlevel = 4;
-						foreach ( $child_posts as $post_id ) {
-							if ( $group_by_secondary ) {
-								$subheader = null;
-								$item_id = null;
-								$arr_subheader = get_field($group_by_secondary, $post_id); // acf
-								if ( is_array($arr_subheader) ) {
-									if ( isset($arr_subheader['label']) ) { $subheader = $arr_subheader['label']; }
-									if ( isset($arr_subheader['value']) ) { $item_id = $arr_subheader['value']; }
-								}
-								if ( $subheader && $subheader != $current_sub && $subheader != '---' ) {
-									// Add anchor for header items
-									// WIP: figure out how NOT to add the header item if all the posts have the same subheader...
-									$gbs_item = array( 'item_type' => "subheader", 'item_title' => $subheader, 'item_id' => $item_id, 'hlevel' => $hlevel );
-									array_push( $items, $gbs_item );
-									$current_sub = $subheader;
-									// Add item to index
-									$index .= '&bull; <a href="#'.$item_id.'" class="index_anchor secondary">'.$subheader.'</a><br />';
-								}
-							}
-							$post_item = array( 'item_type' => "post", 'post_id' => $post_id );
-							array_push( $items, $post_item );
-						}
-					}
-					
-					/*
-					// Get posts per term_id
-					$wp_args = $args;
-					$wp_args['taxonomy'] = $group_by;
-					$wp_args['tax_terms'] = $tax_terms; //wip... how to properly loop in child_terms and THEN group_by_secondary...
-					//$wp_args['tax_terms'] = $term_id;
-					$wp_args['tax_field'] = 'term_id';
-					$wp_args['return_fields'] = 'ids';
-					if ( $child_terms ) {
-						//$wp_args['orderby'] = parent, term_id, group_by_secondary
-					}
-					if ( $group_by_secondary ) {
-						$wp_args['orderby'] = $group_by_secondary;
-					}
-					
-					$posts_info = birdhive_get_posts( $wp_args );
-					$posts = $posts_info['arr_posts']->posts; // Retrieves an array of WP_Post Objects
-					//$ts_info .= 'shortcode_atts as passed to birdhive_get_posts: <pre>'.print_r($args, true).'</pre>';
-					$ts_info .= $posts_info['ts_info'];
-					*/		
-					//array_push( $items, $posts );
-					//$info .= $posts_info['info']; // obsolete(?)
-				}
-				
-			} else {
-				// If it's not a taxonomy, then what?
-			}
-			
-		} else {
-			
-			// No groupings, just get one set of posts based on args
-			$posts_info = birdhive_get_posts( $args );
-			$items = $posts_info['arr_posts']->posts; // Retrieves an array of WP_Post Objects
-			//$info .= $posts_info['info']; // obsolete(?)
-			$ts_info .= 'args as passed to birdhive_get_posts: <pre>'.print_r($args, true).'</pre>';
-			$ts_info .= $posts_info['ts_info'];
-			
-		} // END if ( $group_by )
+                    // Add the posts to the items array
+                    $current_sub = ""; // init for group_by_secondary
+                    $hlevel = 3;
+                    foreach ( $posts as $post_id ) {
+                        if ( $group_by_secondary ) {
+                            $subheader = null;
+                            $item_id = null;
+                            $arr_subheader = get_field($group_by_secondary, $post_id); // acf
+                            if ( is_array($arr_subheader) ) {
+                                if ( isset($arr_subheader['label']) ) { $subheader = $arr_subheader['label']; }
+                                if ( isset($arr_subheader['value']) ) { $item_id = $arr_subheader['value']; }
+                            }
+                            if ( $subheader && $subheader != $current_sub && $subheader != '---' ) {
+                                // Add anchor for header items
+                                // WIP: figure out how NOT to add the header item if all the posts have the same subheader...
+                                $gbs_item = array( 'item_type' => "subheader", 'item_title' => $subheader, 'item_id' => $item_id, 'hlevel' => $hlevel );
+                                array_push( $items, $gbs_item );
+                                $current_sub = $subheader;
+                                // Add item to index
+                                $index .= '&bull; <a href="#'.$item_id.'" class="index_anchor secondary">'.$subheader.'</a><br />';
+                            }
+                        }
+                        $post_item = array( 'item_type' => "post", 'post_id' => $post_id );
+                        array_push( $items, $post_item );
+                    }
+                    
+                    // WIP: get term children, if any, and the childrens' links...
+                    $child_terms = get_terms( array( 'taxonomy' => $group_by, 'hide_empty' => true, 'child_of' => $term_id ) );
+                    foreach ( $child_terms as $child_term ) {        
+                    
+                        $hlevel = 3;
+                                
+                        $child_term_id = $child_term->term_id;
+                        $tax_terms[] = $child_term_id;
+                        
+                        $item_id = $child_term->slug;
+                        $index .= '<a href="#'.$item_id.'" class="index_anchor secondary">'.$child_term->name.'</a><br />';
+                        //$index .= "=> ".$child_term->name."<br />";
+                        // How to generalize this? Perhaps a separate function to build the hierarchical array of taxonomy terms to be retrieved?
+                        // ...
+                        $child_term_item = array( 'item_type' => "tax_term", 'term_id' => $child_term_id, 'item_id' => $item_id, 'hlevel' => $hlevel );
+                        array_push( $items, $child_term_item ); // WIP -- this ends up in the wrong place -- needs to be a subheader, like w/ group_by_secondary...
+                        // Modify parent wp_args to use child_term_id
+                        $wp_args['tax_terms'] = $child_term_id;
+                        // Get posts per child_term_id
+                        $posts_info = birdhive_get_posts( $wp_args );
+                        $child_posts = $posts_info['arr_posts']->posts;
+                        
+                        //$ts_info .= 'shortcode_atts as passed to birdhive_get_posts: <pre>'.print_r($args, true).'</pre>';
+                        $ts_info .= $posts_info['ts_info']; 
+                        
+                        // Add the posts to the items array
+                        $current_sub = ""; // init for group_by_secondary
+                        $hlevel = 4;
+                        foreach ( $child_posts as $post_id ) {
+                            if ( $group_by_secondary ) {
+                                $subheader = null;
+                                $item_id = null;
+                                $arr_subheader = get_field($group_by_secondary, $post_id); // acf
+                                if ( is_array($arr_subheader) ) {
+                                    if ( isset($arr_subheader['label']) ) { $subheader = $arr_subheader['label']; }
+                                    if ( isset($arr_subheader['value']) ) { $item_id = $arr_subheader['value']; }
+                                }
+                                if ( $subheader && $subheader != $current_sub && $subheader != '---' ) {
+                                    // Add anchor for header items
+                                    // WIP: figure out how NOT to add the header item if all the posts have the same subheader...
+                                    $gbs_item = array( 'item_type' => "subheader", 'item_title' => $subheader, 'item_id' => $item_id, 'hlevel' => $hlevel );
+                                    array_push( $items, $gbs_item );
+                                    $current_sub = $subheader;
+                                    // Add item to index
+                                    $index .= '&bull; <a href="#'.$item_id.'" class="index_anchor secondary">'.$subheader.'</a><br />';
+                                }
+                            }
+                            $post_item = array( 'item_type' => "post", 'post_id' => $post_id );
+                            array_push( $items, $post_item );
+                        }
+                    }
+                    
+                    /*
+                    // Get posts per term_id
+                    $wp_args = $args;
+                    $wp_args['taxonomy'] = $group_by;
+                    $wp_args['tax_terms'] = $tax_terms; //wip... how to properly loop in child_terms and THEN group_by_secondary...
+                    //$wp_args['tax_terms'] = $term_id;
+                    $wp_args['tax_field'] = 'term_id';
+                    $wp_args['return_fields'] = 'ids';
+                    if ( $child_terms ) {
+                        //$wp_args['orderby'] = parent, term_id, group_by_secondary
+                    }
+                    if ( $group_by_secondary ) {
+                        $wp_args['orderby'] = $group_by_secondary;
+                    }
+                    
+                    $posts_info = birdhive_get_posts( $wp_args );
+                    $posts = $posts_info['arr_posts']->posts; // Retrieves an array of WP_Post Objects
+                    //$ts_info .= 'shortcode_atts as passed to birdhive_get_posts: <pre>'.print_r($args, true).'</pre>';
+                    $ts_info .= $posts_info['ts_info'];
+                    */        
+                    //array_push( $items, $posts );
+                    //$info .= $posts_info['info']; // obsolete(?)
+                }
+                
+            } else {
+                // If it's not a taxonomy, then what?
+            }
+            
+        } else {
+            
+            // No groupings, just get one set of posts based on args
+            $posts_info = birdhive_get_posts( $args );
+            $items = $posts_info['arr_posts']->posts; // Retrieves an array of WP_Post Objects
+            //$info .= $posts_info['info']; // obsolete(?)
+            $ts_info .= 'args as passed to birdhive_get_posts: <pre>'.print_r($args, true).'</pre>';
+            $ts_info .= $posts_info['ts_info'];
+            
+        } // END if ( $group_by )
         
     } // END if ( empty($posts) )
     
@@ -2750,21 +2750,21 @@ function birdhive_display_posts ( $atts = array() ) { //function birdhive_displa
         
         $class = " ".$display_format; // wip
         
-		//if ($args['header'] == 'true') { $info .= '<h3>Latest '.$category.' Articles:</h3>'; } // WIP
-		$info .= '<div class="dsplycntnt-posts'.$class.'">';
-		if ( $index ) {
-			$info .= '<h2>Index</h2>';
-			$info .= '<div class="dsplycntnt index">';
-			$info .= $index;
-			$info .= '</div>'; 
-		}
-		// TODO: modify the following to pass only subset of args? Much of the info is not needed for the display_collection fcn
-		// TODO: check for existence of EM plugin in case some other event CPT is in use
-		if ( $post_type == "event" ) { $content_type = 'events'; } else { $content_type = 'posts'; }
-		// TODO: revise args to fit new setup for item arrays etc.
-		$display_args = array( 'content_type' => $content_type, 'display_format' => $display_format, 'link_posts' => $link_posts, 'show_subtitles' => $show_subtitles, 'show_content' => $show_content, 'items' => $items, 'display_atts' => $args );
+        //if ($args['header'] == 'true') { $info .= '<h3>Latest '.$category.' Articles:</h3>'; } // WIP
+        $info .= '<div class="dsplycntnt-posts'.$class.'">';
+        if ( $index ) {
+            $info .= '<h2>Index</h2>';
+            $info .= '<div class="dsplycntnt index">';
+            $info .= $index;
+            $info .= '</div>'; 
+        }
+        // TODO: modify the following to pass only subset of args? Much of the info is not needed for the display_collection fcn
+        // TODO: check for existence of EM plugin in case some other event CPT is in use
+        if ( $post_type == "event" ) { $content_type = 'events'; } else { $content_type = 'posts'; }
+        // TODO: revise args to fit new setup for item arrays etc.
+        $display_args = array( 'content_type' => $content_type, 'display_format' => $display_format, 'link_posts' => $link_posts, 'show_subtitles' => $show_subtitles, 'show_content' => $show_content, 'items' => $items, 'display_atts' => $args );
         $info .= birdhive_display_collection( $display_args );
-		
+        
         $info .= '</div>'; // end div class="dsplycntnt-posts" (wrapper)
         
         wp_reset_postdata();
@@ -2784,22 +2784,22 @@ function birdhive_display_posts ( $atts = array() ) { //function birdhive_displa
 add_shortcode('content_collection', 'birdhive_content_collection');
 function birdhive_content_collection ( $atts = array() ) {
 
-	// TS/logging setup
+    // TS/logging setup
     $do_ts = devmode_active( array("dcp") );
     $do_log = false;
     sdg_log( "divline2", $do_log );
     
-	global $wpdb;
-	$info = "";
-	$ts_info = "";
-	
-	$args = shortcode_atts( array(
+    global $wpdb;
+    $info = "";
+    $ts_info = "";
+    
+    $args = shortcode_atts( array(
         'id' => null,
         'do_ts' => $do_ts,
     ), $atts );
     
     // Extract
-	extract( $args );
+    extract( $args );
     
     $info .= birdhive_display_collection( array('collection_id' => $id, 'display_atts' => array('do_ts' => $do_ts) ) );
     
@@ -2878,14 +2878,14 @@ function get_list_items( $atts = array() ) {
     $do_log = false;
     sdg_log( "divline2", $do_log );
     
-	$args = shortcode_atts( array(
-		'post_id'        => get_the_ID(),
+    $args = shortcode_atts( array(
+        'post_id'        => get_the_ID(),
         'run_updates' => false,
         'display' => 'table'
     ), $atts );
     
     // Extract
-	extract( $args );
+    extract( $args );
     
     // Init vars
     $arr_info = array(); // wip 06/27/23
@@ -2896,9 +2896,9 @@ function get_list_items( $atts = array() ) {
     if ( $display == 'table' ) { $table = ""; }
     
     // TODO: deal more thoroughly w/ non-table display option, or eliminate that parameter altogether.
-	
-	if ($post_id == null) { $post_id = get_the_ID(); }
-	$ts_info .= "Event Program Items for post_id: $post_id<br />";
+    
+    if ($post_id == null) { $post_id = get_the_ID(); }
+    $ts_info .= "Event Program Items for post_id: $post_id<br />";
     //$ts_info .= "display: $display<br />";
     
     // What type of program is this? Service order or concert program?
@@ -2907,12 +2907,12 @@ function get_list_items( $atts = array() ) {
     
     // Program Layout -- left or centered?
     $program_layout = get_post_meta( $post_id, 'program_layout', true );
-	
+    
     /*** WIP ***/
     //if ( devmode_active() || is_dev_site() ) { $run_updates = true; } // TMP(?) disabled 03/25/22
     //if ( devmode_active() || ( is_dev_site() && devmode_active() )  ) { $run_updates = true; } // ???
     
-	// Get the program item repeater field values (ACF)
+    // Get the program item repeater field values (ACF)
     $program_rows = get_field('program_items', $post_id); // ACF function: https://www.advancedcustomfields.com/resources/get_field/ -- TODO: change to use have_rows() instead?
     /*
     if ( have_rows('program_items', $post_id) ) { // ACF function: https://www.advancedcustomfields.com/resources/have_rows/
@@ -2927,510 +2927,510 @@ function get_list_items( $atts = array() ) {
     //TODO: Determine whether program as a whole contains grouped rows
     /*
     if ( program_contains_groupings($rows) ) {
-    	//
+        //
     }
     */
     
     // WIP: streamlining
     
-	$authorship_display_settings = null;
-	$program_composer_ids = array(); // TMP -- deprecated
+    $authorship_display_settings = null;
+    $program_composer_ids = array(); // TMP -- deprecated
     $deletion_count = 0;
     $table_rows = array();
     
     if ( is_array($program_rows) ) {
-	
-		// Check to see if ANY of the rows contains items with post_type == 'repertoire'
-		if ( program_contains_repertoire($program_rows) ) { // TODO: generalize the following to apply to any items with authorship, not just rep/composers
-	
-			$ts_info .= "program contains repertoire items<br />";
-			// If so, then get all the program composers
-			$program_item_ids = get_program_item_ids($program_rows);
-			$ts_info .= "program_item_ids: ".print_r($program_item_ids, true)."<br />";
-			//
-			$authorship_display_settings = set_row_authorship_display($program_item_ids);
-			$ts_info .= "authorship_display_settings: <pre>".print_r($authorship_display_settings, true)."</pre><br />";
-		
-		}
-	
-		// Translate program_rows into table_rows (separate row per item)
-		//////
     
-		foreach( $program_rows as $r => $row ) {
-		
-			// TODO: check if row is empty >> next
-		
-			// Initialize variables
-			$row_info = ""; // Info for troubleshooting
-			$row_info .= "-------------------- [row $r] --------------------<br />";
-		
-				$grouped_row = false; // For multiple-item rows
-				//
-			$placeholder_label = false;
-			$placeholder_item = false;
-				//
-			$arr_item_label = array();
-			$arr_item_name = array();
-				//
-			$program_item_label = null;
-			$program_item_name = null;
-				//
-				$show_person_dates = true;
-		
-			//
-			$label_update_required = false;
-			$delete_row = false;
-		
-			//$row_info .= "get_event_program_items ==> program row [$r]: ".print_r($row, true)."<br />";
-			
-			// Is a row_type set? WIP -- working on phasing out deprecated fields like 'show_item_label' in favor of simple row_types setup
-			if ( isset($row['row_type']) ) { $row_type = $row['row_type']; } else { $row_type = null; }
-			$row_info .= "get_event_program_items ==> row_type: ".$row_type."<br />";
-			
-			// ROW TYPES WIP: 
-			/*
-				Program item rows types:
-				default : Standard two-column row
-				header : Header row
-				program_note : Program note
-				label_only : Item label only
-				title_only : Item title only
-				//
-				Personnel row types:
-				default : Standard two-column row
-				header : Header row
-				role_only : Person role only
-				name_only : Person name only
-				//
-				Additional option to consider, TBD:
-				split : Title left/Authorship right
-				//
-				if ( $row_type == 'title_only' ) {
-					
-					$arr_item_name = get_rep_info( $program_item_obj_id, 'display', $show_item_authorship, true );
-					$item_name = $arr_item_name['info'];
-					$ts_info .= $arr_item_name['ts_info'];
-			
-				} else if ( empty($program_item_label) ) {
+        // Check to see if ANY of the rows contains items with post_type == 'repertoire'
+        if ( program_contains_repertoire($program_rows) ) { // TODO: generalize the following to apply to any items with authorship, not just rep/composers
+    
+            $ts_info .= "program contains repertoire items<br />";
+            // If so, then get all the program composers
+            $program_item_ids = get_program_item_ids($program_rows);
+            $ts_info .= "program_item_ids: ".print_r($program_item_ids, true)."<br />";
+            //
+            $authorship_display_settings = set_row_authorship_display($program_item_ids);
+            $ts_info .= "authorship_display_settings: <pre>".print_r($authorship_display_settings, true)."</pre><br />";
+        
+        }
+    
+        // Translate program_rows into table_rows (separate row per item)
+        //////
+    
+        foreach( $program_rows as $r => $row ) {
+        
+            // TODO: check if row is empty >> next
+        
+            // Initialize variables
+            $row_info = ""; // Info for troubleshooting
+            $row_info .= "-------------------- [row $r] --------------------<br />";
+        
+                $grouped_row = false; // For multiple-item rows
+                //
+            $placeholder_label = false;
+            $placeholder_item = false;
+                //
+            $arr_item_label = array();
+            $arr_item_name = array();
+                //
+            $program_item_label = null;
+            $program_item_name = null;
+                //
+                $show_person_dates = true;
+        
+            //
+            $label_update_required = false;
+            $delete_row = false;
+        
+            //$row_info .= "get_event_program_items ==> program row [$r]: ".print_r($row, true)."<br />";
+            
+            // Is a row_type set? WIP -- working on phasing out deprecated fields like 'show_item_label' in favor of simple row_types setup
+            if ( isset($row['row_type']) ) { $row_type = $row['row_type']; } else { $row_type = null; }
+            $row_info .= "get_event_program_items ==> row_type: ".$row_type."<br />";
+            
+            // ROW TYPES WIP: 
+            /*
+                Program item rows types:
+                default : Standard two-column row
+                header : Header row
+                program_note : Program note
+                label_only : Item label only
+                title_only : Item title only
+                //
+                Personnel row types:
+                default : Standard two-column row
+                header : Header row
+                role_only : Person role only
+                name_only : Person name only
+                //
+                Additional option to consider, TBD:
+                split : Title left/Authorship right
+                //
+                if ( $row_type == 'title_only' ) {
+                    
+                    $arr_item_name = get_rep_info( $program_item_obj_id, 'display', $show_item_authorship, true );
+                    $item_name = $arr_item_name['info'];
+                    $ts_info .= $arr_item_name['ts_info'];
+            
+                } else if ( empty($program_item_label) ) {
 
-					$ts_info .= "program_item_label is empty >> use title in left col<br />";
-				
-				}
-			*/
-			
-			// Is this a header row? (Check for deprecated field values)
-			if ( $row_type != "header" && isset($row['is_header']) && $row['is_header'] == 1 ) { $row_type = "header"; } // TODO: update the row_type in the DB
-		
-			// Should this row be displayed on the front end?
-			// TODO: modify to simplify as below -- set to true/false based on stored value, if any
-			if ( isset($row['show_row']) && $row['show_row'] != "" ) { 
-				$show_row = $row['show_row'];
-				$row_info .= "get_event_program_items ==> show_row = '".$row['show_row']."'<br />";
-			} else { 
-				$show_row = 1; // Default to 'Yes'/true/show the row if no zero value has been saved explicitly
-				$row_info .= "get_event_program_items ==> show_row = 1 (default)<br />";
-			}
-		
-			// Should we display the item label for this row?
-			// TODO: streamline/eliminate this deprecated field and simply update row_type
-			if ( isset($row['show_item_label']) && $row['show_item_label'] == "0" ) { 
-				$show_item_label = false;
-				$row_info .= "get_event_program_items ==> show_item_label FALSE<br />";
-			} else { 
-				$show_item_label = true; // Default to 'Yes'/true/show the row if no zero value has been saved explicitly
-				$row_info .= "get_event_program_items ==> show_item_label TRUE (default)<br />";
-			}
-				
-			// Should the item title for this row be displayed on the front end?
-			// TODO: streamline/eliminate this deprecated field and simply update row_type
-			if ( isset($row['show_item_title']) && $row['show_item_title'] == "0" ) { 
-				$show_item_title = false;
-				$row_info .= "show_item_title = 0, i.e. false<br />";
-			} else { 
-				$show_item_title = true; // Default to 'Yes'/true/show the row if no zero value has been saved explicitly
-				$row_info .= "default: show_item_title = true<br />";
-			}
-		
-			// Get the item label
-			// --------------------
-			// TODO/WIP: maybe figure out how to skip this for rep items in $program_type == "concert_program" where title is used in left col instead of label			
-			if ( $show_item_label == true && $row_type != 'title_only' ) {			
-				$row_info .= "get_program_item_label<br />";
-				$arr_item_label = get_program_item_label($row);
-				$program_item_label = $arr_item_label['item_label'];
-				$placeholder_label = $arr_item_label['placeholder'];
-				$row_info .= $arr_item_label['ts_info'];
-				$row_info .= ">> program_item_label: $program_item_label<br />";
-			}
-		
-			// Program item(s)
-			$program_items = array();
-			$num_items = 0;
-			if ( $show_item_title == true && $row_type != 'header' ) {
-				// Does the row contain one or more item objects?			
-				//$num_items = 1; // default: Single-item program_row translates to single table_row
-				if ( isset($row['program_item']) && is_array($row['program_item']) ) {
-					//$ts_info .= "program_item: ".print_r($row['program_item'], true)."<br />";
-					$num_items = count($row['program_item']);
-					$program_items = $row['program_item'];
-				}
-			}
-		
-			//if ( $num_items == 0 ) {
-			if ( empty($program_items) ) {
-		
-				// TODO: eliminate redundancy
-			
-				// No actual items in this row -- just placeholders
-				$row_info .= 'Zero-item program_row -- single table_row with placeholders<br />';
-				$tr = array();
-				$tds = array();
-				$tr_class = "program_objects";
-				if ( $show_row == "0" ) { $tr_class .= " hidden"; }
-				$i = 0;
-				$tr['tr_id'] = "tr-".$r.'-'.$i;
-			
-				if ( !empty($program_item_label) ) {
-					$td_class = "zero_item_row";
-					if ( $placeholder_label ) { $td_class .= " placeholder"; }
-					$td_content = $program_item_label;
-				
-					if ( $row_type == "header" || $row_type == "program_note" || $row_type == "label_only" || $row_type == "title_only" ) {
-					
-						// Single wide column row
-						$td_colspan = 2;					
-						$row_content = "";
-					
-						if ( $row_type == "header" ) { 
-							$td_class = "header";
-							$td_content = $program_item_label;
-						} else if ( $row_type == "program_note" ) {
-							$td_class = "program_note";
-							$td_content = $program_item_name;
-						} else if ( $row_type == "label_only" ) {
-							$td_class = "label_only";
-							$td_content = $program_item_label;
-						} else if ( $row_type == "title_only" ) {
-							$td_class = "title_only";
-							$td_content = $program_item_name;
-						}
-					} else {
-						$td_colspan = 1;
-					}
-				
-					$tds[] = array( 'td_class' => $td_class, 'td_colspan' => $td_colspan, 'td_content' => $td_content );
-				}
-			
-				// Get the program item name
-				// --------------------
-				$arr_item_name = get_program_item_name( array( 'row' => $row, 'program_type' => $program_type, 'row_type' => $row_type, 'program_item_label' => $program_item_label ) );
-				// Title as label?
-				if ( !empty($arr_item_name['title_as_label']) ) {
-					$row_info .= ">> use title_as_label<br />";
-					$title_as_label = $arr_item_name['title_as_label'];
-					$td_content = $title_as_label;
-					$td_class = "title_as_label";
-					$td_colspan = 1;
-					$tds[] = array( 'td_class' => $td_class, 'td_colspan' => $td_colspan, 'td_content' => $td_content );
-				} else {
-					$title_as_label = null;
-				}
-			
-				// Item Name
-				if ( $arr_item_name['item_name'] ) { $program_item_name = $arr_item_name['item_name']; }
-				if ( !empty($program_item_name) ) {
-					$td_class = "program_item placeholder"; // placeholder because this is a zero-item row
-					if ( $title_as_label ) { $td_class .= " authorship"; }
-					$td_content = $program_item_name;
-					$td_colspan = 1;
-					// Add this item as a table cell only for two-column rows -- WIP
-					if ( ! ($row_type == "header" || $row_type == "program_note" || $row_type == "label_only" || $row_type == "title_only") ) {
-						$tds[] = array( 'td_class' => $td_class, 'td_colspan' => $td_colspan, 'td_content' => $td_content );
-					}
-				}
-			
-				//
-				$tr['tr_class'] = $tr_class;
-				$tr['tds'] = $tds;
-			
-				$table_rows[] = $tr;
-			
-			} else if ( $num_items == 1 ) {
-				// Single-item program_row translates to single table_row
-				$row_info .= 'Single-item program_row -- single table_row<br />';
-			} else if ( $num_items > 1 ) {
-				// Multiple items per program row -- display settings per row_type, program_type... -- WIP
-				$row_info .= "*** $num_items program_items found for this row! ***<br />";
-			}
-		
-			$row_info .= " >>>>>>> START foreach program_item <<<<<<<<br />";
+                    $ts_info .= "program_item_label is empty >> use title in left col<br />";
+                
+                }
+            */
+            
+            // Is this a header row? (Check for deprecated field values)
+            if ( $row_type != "header" && isset($row['is_header']) && $row['is_header'] == 1 ) { $row_type = "header"; } // TODO: update the row_type in the DB
+        
+            // Should this row be displayed on the front end?
+            // TODO: modify to simplify as below -- set to true/false based on stored value, if any
+            if ( isset($row['show_row']) && $row['show_row'] != "" ) { 
+                $show_row = $row['show_row'];
+                $row_info .= "get_event_program_items ==> show_row = '".$row['show_row']."'<br />";
+            } else { 
+                $show_row = 1; // Default to 'Yes'/true/show the row if no zero value has been saved explicitly
+                $row_info .= "get_event_program_items ==> show_row = 1 (default)<br />";
+            }
+        
+            // Should we display the item label for this row?
+            // TODO: streamline/eliminate this deprecated field and simply update row_type
+            if ( isset($row['show_item_label']) && $row['show_item_label'] == "0" ) { 
+                $show_item_label = false;
+                $row_info .= "get_event_program_items ==> show_item_label FALSE<br />";
+            } else { 
+                $show_item_label = true; // Default to 'Yes'/true/show the row if no zero value has been saved explicitly
+                $row_info .= "get_event_program_items ==> show_item_label TRUE (default)<br />";
+            }
+                
+            // Should the item title for this row be displayed on the front end?
+            // TODO: streamline/eliminate this deprecated field and simply update row_type
+            if ( isset($row['show_item_title']) && $row['show_item_title'] == "0" ) { 
+                $show_item_title = false;
+                $row_info .= "show_item_title = 0, i.e. false<br />";
+            } else { 
+                $show_item_title = true; // Default to 'Yes'/true/show the row if no zero value has been saved explicitly
+                $row_info .= "default: show_item_title = true<br />";
+            }
+        
+            // Get the item label
+            // --------------------
+            // TODO/WIP: maybe figure out how to skip this for rep items in $program_type == "concert_program" where title is used in left col instead of label            
+            if ( $show_item_label == true && $row_type != 'title_only' ) {            
+                $row_info .= "get_program_item_label<br />";
+                $arr_item_label = get_program_item_label($row);
+                $program_item_label = $arr_item_label['item_label'];
+                $placeholder_label = $arr_item_label['placeholder'];
+                $row_info .= $arr_item_label['ts_info'];
+                $row_info .= ">> program_item_label: $program_item_label<br />";
+            }
+        
+            // Program item(s)
+            $program_items = array();
+            $num_items = 0;
+            if ( $show_item_title == true && $row_type != 'header' ) {
+                // Does the row contain one or more item objects?            
+                //$num_items = 1; // default: Single-item program_row translates to single table_row
+                if ( isset($row['program_item']) && is_array($row['program_item']) ) {
+                    //$ts_info .= "program_item: ".print_r($row['program_item'], true)."<br />";
+                    $num_items = count($row['program_item']);
+                    $program_items = $row['program_item'];
+                }
+            }
+        
+            //if ( $num_items == 0 ) {
+            if ( empty($program_items) ) {
+        
+                // TODO: eliminate redundancy
+            
+                // No actual items in this row -- just placeholders
+                $row_info .= 'Zero-item program_row -- single table_row with placeholders<br />';
+                $tr = array();
+                $tds = array();
+                $tr_class = "program_objects";
+                if ( $show_row == "0" ) { $tr_class .= " hidden"; }
+                $i = 0;
+                $tr['tr_id'] = "tr-".$r.'-'.$i;
+            
+                if ( !empty($program_item_label) ) {
+                    $td_class = "zero_item_row";
+                    if ( $placeholder_label ) { $td_class .= " placeholder"; }
+                    $td_content = $program_item_label;
+                
+                    if ( $row_type == "header" || $row_type == "program_note" || $row_type == "label_only" || $row_type == "title_only" ) {
+                    
+                        // Single wide column row
+                        $td_colspan = 2;                    
+                        $row_content = "";
+                    
+                        if ( $row_type == "header" ) { 
+                            $td_class = "header";
+                            $td_content = $program_item_label;
+                        } else if ( $row_type == "program_note" ) {
+                            $td_class = "program_note";
+                            $td_content = $program_item_name;
+                        } else if ( $row_type == "label_only" ) {
+                            $td_class = "label_only";
+                            $td_content = $program_item_label;
+                        } else if ( $row_type == "title_only" ) {
+                            $td_class = "title_only";
+                            $td_content = $program_item_name;
+                        }
+                    } else {
+                        $td_colspan = 1;
+                    }
+                
+                    $tds[] = array( 'td_class' => $td_class, 'td_colspan' => $td_colspan, 'td_content' => $td_content );
+                }
+            
+                // Get the program item name
+                // --------------------
+                $arr_item_name = get_program_item_name( array( 'row' => $row, 'program_type' => $program_type, 'row_type' => $row_type, 'program_item_label' => $program_item_label ) );
+                // Title as label?
+                if ( !empty($arr_item_name['title_as_label']) ) {
+                    $row_info .= ">> use title_as_label<br />";
+                    $title_as_label = $arr_item_name['title_as_label'];
+                    $td_content = $title_as_label;
+                    $td_class = "title_as_label";
+                    $td_colspan = 1;
+                    $tds[] = array( 'td_class' => $td_class, 'td_colspan' => $td_colspan, 'td_content' => $td_content );
+                } else {
+                    $title_as_label = null;
+                }
+            
+                // Item Name
+                if ( $arr_item_name['item_name'] ) { $program_item_name = $arr_item_name['item_name']; }
+                if ( !empty($program_item_name) ) {
+                    $td_class = "program_item placeholder"; // placeholder because this is a zero-item row
+                    if ( $title_as_label ) { $td_class .= " authorship"; }
+                    $td_content = $program_item_name;
+                    $td_colspan = 1;
+                    // Add this item as a table cell only for two-column rows -- WIP
+                    if ( ! ($row_type == "header" || $row_type == "program_note" || $row_type == "label_only" || $row_type == "title_only") ) {
+                        $tds[] = array( 'td_class' => $td_class, 'td_colspan' => $td_colspan, 'td_content' => $td_content );
+                    }
+                }
+            
+                //
+                $tr['tr_class'] = $tr_class;
+                $tr['tds'] = $tds;
+            
+                $table_rows[] = $tr;
+            
+            } else if ( $num_items == 1 ) {
+                // Single-item program_row translates to single table_row
+                $row_info .= 'Single-item program_row -- single table_row<br />';
+            } else if ( $num_items > 1 ) {
+                // Multiple items per program row -- display settings per row_type, program_type... -- WIP
+                $row_info .= "*** $num_items program_items found for this row! ***<br />";
+            }
+        
+            $row_info .= " >>>>>>> START foreach program_item <<<<<<<<br />";
 
-			// Loop through the program items for this row (usually there is only one)
-			foreach ( $program_items as $i => $program_item_obj_id ) {
+            // Loop through the program items for this row (usually there is only one)
+            foreach ( $program_items as $i => $program_item_obj_id ) {
 
-				$row_info .= "<br />+~+~+~+~+ program_item #$i +~+~+~+~+<br />";
-					
-				$tr = array();
-				$tds = array();
-				$tr_class = "program_objects";
-				if ( $show_row == "0" ) { $tr_class .= " hidden"; }
-				if ( $num_items > 1 ) { $tr_class .= " row_group"; }
-				if ( $num_items > 1 && $i == $num_items-1 ) { $tr_class .= " last_in_group"; }
-				$tr['tr_id'] = "tr-".$r.'-'.$i;
-			
-				//
-				$row_info .= "program_item_obj_id: $program_item_obj_id<br />";
-				$item_post_type = get_post_type( $program_item_obj_id );
-				$row_info .= "item_post_type: $item_post_type<br />";
-			
-				// If there's a program label set for the row, and if this is the first 
-				if ( !empty($program_item_label) ) {
-				
-					$td_class = "test_td_class_1";
-					if ( $placeholder_label ) { $td_class .= " placeholder"; }
-				
-					if ( $row_type == "header" || $row_type == "program_note" || $row_type == "label_only" || $row_type == "title_only" ) {
-					
-						// Single column row
-						$td_colspan = 2;					
-						$row_content = "";
-					
-						if ( $row_type == "header" ) { 
-							$td_class = "header";
-							$td_content = $program_item_label;
-						} else if ( $row_type == "program_note" ) {
-							$td_class = "program_note";
-							$td_content = $program_item_name;
-						} else if ( $row_type == "label_only" ) {
-							$td_class = "label_only";
-							$td_content = $program_item_label;
-						} else if ( $row_type == "title_only" ) {
-							$td_class = "title_only";
-							$td_content = $program_item_name;
-						}
-					} else {
-						$td_colspan = 1;
-						if ( $i == 0 ) { $td_content = $program_item_label; } else { $td_content = ""; } //$td_content = "***"; }
-					}			
-				
-					$tds[] = array( 'td_class' => $td_class, 'td_colspan' => $td_colspan, 'td_content' => $td_content );
-				}
-				
-				if ( $authorship_display_settings && isset($authorship_display_settings[$r.'-'.$i]) ) {
-					$display_settings = $authorship_display_settings[$r.'-'.$i];
-					$row_info .= "[".$r.'-'.$i."] program_row >> display_settings: ".print_r($display_settings, true)."<br />";
-					if ( isset($display_settings['show_name']) && $display_settings['show_name'] ) { $tr_class .= " show_authorship"; } else { $tr_class .= " hide_authorship"; }
-					if ( isset($display_settings['show_dates']) && $display_settings['show_dates'] ) { $tr_class .= " show_person_dates"; } else { $tr_class .= " hide_person_dates"; }
-				} else {
-					$row_info .= "[".$r.'-'.$i."] program_row >> display_settings not set<br />";
-				}
-			
-				// Get the program item name
-				// --------------------
-				// WIP
-				$arr_item_name = get_program_item_name( array( 'row' => $row, 'program_type' => $program_type, 'row_type' => $row_type, 'program_item_obj_id' => $program_item_obj_id, 'program_item_label' => $program_item_label ) );
-				// Title as label?
-				if ( !empty($arr_item_name['title_as_label']) ) {
-					$row_info .= ">> use title_as_label<br />";
-					$title_as_label = $arr_item_name['title_as_label'];
-					$td_content = $title_as_label;
-					$td_class = "title_as_label";
-					$td_colspan = 1;
-					$tds[] = array( 'td_class' => $td_class, 'td_colspan' => $td_colspan, 'td_content' => $td_content );
-				} else {
-					$title_as_label = null;
-				}
-			
-				$row_info .= "START arr_item_name['ts_info']<br />";
-				$row_info .= $arr_item_name['ts_info']; // ts_info is already commented
-				$row_info .= "END arr_item_name['ts_info']<br />";
-				//$row_info .= "arr_item_name['info']: <pre>".$arr_item_name['info']."</pre>";
-			
-				// Program item_name
-				if ( $arr_item_name['item_name'] ) { $program_item_name = $arr_item_name['item_name']; }
-				if ( !empty($program_item_name) ) {
-					$td_class = "program_item";
-					if ( $title_as_label ) { $td_class .= " authorship"; }
-					$td_content = $program_item_name;
-					$td_colspan = 1;
-					// Add this item as a table cell only for two-column rows -- WIP
-					if ( ! ($row_type == "header" || $row_type == "program_note" || $row_type == "label_only" || $row_type == "title_only") ) {
-						$tds[] = array( 'td_class' => $td_class, 'td_colspan' => $td_colspan, 'td_content' => $td_content );
-					}
-				}
-			
-				$tr['tr_class'] = $tr_class;
-				$tr['tds'] = $tds;
-					
-				$table_rows[] = $tr;
-				
-			}
-			
-			$row_info .= '--------------------<br />';
-		
-				// Get the program item name
-				// --------------------
-				//$item_name_args = array();
-				//$item_name_args['show_item_authorship'] = null; // wip -- get value true/false based on $program_composers array
-				//$arr_item_name = get_program_item_name($item_name_args);
-			
-			
-				// Match Placeholders
-				//if ( $run_updates == true ) { match_placeholders($row); }
-			
-				// Cleanup/Deletion of extra/empty program rows
-				// --------------------
-				/*
-				// Check for extra/empty rows -- prep to delete them
-				if ( empty($program_item_label) && empty($program_item_name) ) {
-					// Empty row -- no label, no item
-					$delete_row = true;
-					$row_info .= "[$i] delete the row, because everything is empty.<br />";
-				} else if ( ( $program_item_label == "x" || $program_item_label == "")
-					&& ( $program_item_label == "x" || $program_item_label == "*NULL*" || $program_item_label == "" ) 
-					&& ( $program_item_name == "x" || $program_item_name == "*NULL*" || $program_item_name == "" ) 
-				   ) {
-					// Both label and item are either placeholder junk or empty
-					$delete_row = true;
-					$row_info .= "[$i] delete the row, because everything is meaningless.<br />";
-				} else if ( $program_item_label == "*NULL*" || $program_item_name == "*NULL*" ) {
-					// TODO: ???
-					if ( $program_item_label == "*NULL*" ) { $program_item_label = ""; }
-					if ( $program_item_name == "*NULL*" ) { $program_item_name = ""; }
-				}
-			
-				if ( $run_updates == true ) { $do_deletions = true; } else { $do_deletions = false; }
-				$do_deletions = false; // tft -- failsafe!
-			
-			
-				// If the row is empty/x-filled and needs to be deleted, then do so
-				if ( $delete_row == true ) {
-				
-					//sdg_log( "divline1", $do_log );
-					//sdg_log( "program row to be deleted:", $do_log );
-					//sdg_log( print_r($row, true), $do_log );
-					$row_info .= "row: ".print_r($row, true)."<br />";
-					$row_info .= "[$i] program row to be deleted<br />";
-					$row_info .= "[$i] program row: item_label_txt='".$row['item_label_txt']."'; item_label='".$row['item_label']."'; program_item_txt='".$row['program_item_txt']."'<br />";
-					//$row_info .= "[$i] program row: program_item='".print_r($row['program_item'], true)."'<br />";
-				
-					// ... but only run the action if this is the first deletion for this post_id in this round
-					// ... because if a row has already been deleted then the row indexes will have changed for all the personnel rows
-					// ... and though it would likely not be so difficult to reset the row index accordingly, for now let's proceed with caution...
-					if ( $deletion_count == 0 && $do_deletions == true ) {
+                $row_info .= "<br />+~+~+~+~+ program_item #$i +~+~+~+~+<br />";
+                    
+                $tr = array();
+                $tds = array();
+                $tr_class = "program_objects";
+                if ( $show_row == "0" ) { $tr_class .= " hidden"; }
+                if ( $num_items > 1 ) { $tr_class .= " row_group"; }
+                if ( $num_items > 1 && $i == $num_items-1 ) { $tr_class .= " last_in_group"; }
+                $tr['tr_id'] = "tr-".$r.'-'.$i;
+            
+                //
+                $row_info .= "program_item_obj_id: $program_item_obj_id<br />";
+                $item_post_type = get_post_type( $program_item_obj_id );
+                $row_info .= "item_post_type: $item_post_type<br />";
+            
+                // If there's a program label set for the row, and if this is the first 
+                if ( !empty($program_item_label) ) {
+                
+                    $td_class = "test_td_class_1";
+                    if ( $placeholder_label ) { $td_class .= " placeholder"; }
+                
+                    if ( $row_type == "header" || $row_type == "program_note" || $row_type == "label_only" || $row_type == "title_only" ) {
+                    
+                        // Single column row
+                        $td_colspan = 2;                    
+                        $row_content = "";
+                    
+                        if ( $row_type == "header" ) { 
+                            $td_class = "header";
+                            $td_content = $program_item_label;
+                        } else if ( $row_type == "program_note" ) {
+                            $td_class = "program_note";
+                            $td_content = $program_item_name;
+                        } else if ( $row_type == "label_only" ) {
+                            $td_class = "label_only";
+                            $td_content = $program_item_label;
+                        } else if ( $row_type == "title_only" ) {
+                            $td_class = "title_only";
+                            $td_content = $program_item_name;
+                        }
+                    } else {
+                        $td_colspan = 1;
+                        if ( $i == 0 ) { $td_content = $program_item_label; } else { $td_content = ""; } //$td_content = "***"; }
+                    }            
+                
+                    $tds[] = array( 'td_class' => $td_class, 'td_colspan' => $td_colspan, 'td_content' => $td_content );
+                }
+                
+                if ( $authorship_display_settings && isset($authorship_display_settings[$r.'-'.$i]) ) {
+                    $display_settings = $authorship_display_settings[$r.'-'.$i];
+                    $row_info .= "[".$r.'-'.$i."] program_row >> display_settings: ".print_r($display_settings, true)."<br />";
+                    if ( isset($display_settings['show_name']) && $display_settings['show_name'] ) { $tr_class .= " show_authorship"; } else { $tr_class .= " hide_authorship"; }
+                    if ( isset($display_settings['show_dates']) && $display_settings['show_dates'] ) { $tr_class .= " show_person_dates"; } else { $tr_class .= " hide_person_dates"; }
+                } else {
+                    $row_info .= "[".$r.'-'.$i."] program_row >> display_settings not set<br />";
+                }
+            
+                // Get the program item name
+                // --------------------
+                // WIP
+                $arr_item_name = get_program_item_name( array( 'row' => $row, 'program_type' => $program_type, 'row_type' => $row_type, 'program_item_obj_id' => $program_item_obj_id, 'program_item_label' => $program_item_label ) );
+                // Title as label?
+                if ( !empty($arr_item_name['title_as_label']) ) {
+                    $row_info .= ">> use title_as_label<br />";
+                    $title_as_label = $arr_item_name['title_as_label'];
+                    $td_content = $title_as_label;
+                    $td_class = "title_as_label";
+                    $td_colspan = 1;
+                    $tds[] = array( 'td_class' => $td_class, 'td_colspan' => $td_colspan, 'td_content' => $td_content );
+                } else {
+                    $title_as_label = null;
+                }
+            
+                $row_info .= "START arr_item_name['ts_info']<br />";
+                $row_info .= $arr_item_name['ts_info']; // ts_info is already commented
+                $row_info .= "END arr_item_name['ts_info']<br />";
+                //$row_info .= "arr_item_name['info']: <pre>".$arr_item_name['info']."</pre>";
+            
+                // Program item_name
+                if ( $arr_item_name['item_name'] ) { $program_item_name = $arr_item_name['item_name']; }
+                if ( !empty($program_item_name) ) {
+                    $td_class = "program_item";
+                    if ( $title_as_label ) { $td_class .= " authorship"; }
+                    $td_content = $program_item_name;
+                    $td_colspan = 1;
+                    // Add this item as a table cell only for two-column rows -- WIP
+                    if ( ! ($row_type == "header" || $row_type == "program_note" || $row_type == "label_only" || $row_type == "title_only") ) {
+                        $tds[] = array( 'td_class' => $td_class, 'td_colspan' => $td_colspan, 'td_content' => $td_content );
+                    }
+                }
+            
+                $tr['tr_class'] = $tr_class;
+                $tr['tds'] = $tds;
+                    
+                $table_rows[] = $tr;
+                
+            }
+            
+            $row_info .= '--------------------<br />';
+        
+                // Get the program item name
+                // --------------------
+                //$item_name_args = array();
+                //$item_name_args['show_item_authorship'] = null; // wip -- get value true/false based on $program_composers array
+                //$arr_item_name = get_program_item_name($item_name_args);
+            
+            
+                // Match Placeholders
+                //if ( $run_updates == true ) { match_placeholders($row); }
+            
+                // Cleanup/Deletion of extra/empty program rows
+                // --------------------
+                /*
+                // Check for extra/empty rows -- prep to delete them
+                if ( empty($program_item_label) && empty($program_item_name) ) {
+                    // Empty row -- no label, no item
+                    $delete_row = true;
+                    $row_info .= "[$i] delete the row, because everything is empty.<br />";
+                } else if ( ( $program_item_label == "x" || $program_item_label == "")
+                    && ( $program_item_label == "x" || $program_item_label == "*NULL*" || $program_item_label == "" ) 
+                    && ( $program_item_name == "x" || $program_item_name == "*NULL*" || $program_item_name == "" ) 
+                   ) {
+                    // Both label and item are either placeholder junk or empty
+                    $delete_row = true;
+                    $row_info .= "[$i] delete the row, because everything is meaningless.<br />";
+                } else if ( $program_item_label == "*NULL*" || $program_item_name == "*NULL*" ) {
+                    // TODO: ???
+                    if ( $program_item_label == "*NULL*" ) { $program_item_label = ""; }
+                    if ( $program_item_name == "*NULL*" ) { $program_item_name = ""; }
+                }
+            
+                if ( $run_updates == true ) { $do_deletions = true; } else { $do_deletions = false; }
+                $do_deletions = false; // tft -- failsafe!
+            
+            
+                // If the row is empty/x-filled and needs to be deleted, then do so
+                if ( $delete_row == true ) {
+                
+                    //sdg_log( "divline1", $do_log );
+                    //sdg_log( "program row to be deleted:", $do_log );
+                    //sdg_log( print_r($row, true), $do_log );
+                    $row_info .= "row: ".print_r($row, true)."<br />";
+                    $row_info .= "[$i] program row to be deleted<br />";
+                    $row_info .= "[$i] program row: item_label_txt='".$row['item_label_txt']."'; item_label='".$row['item_label']."'; program_item_txt='".$row['program_item_txt']."'<br />";
+                    //$row_info .= "[$i] program row: program_item='".print_r($row['program_item'], true)."'<br />";
+                
+                    // ... but only run the action if this is the first deletion for this post_id in this round
+                    // ... because if a row has already been deleted then the row indexes will have changed for all the personnel rows
+                    // ... and though it would likely not be so difficult to reset the row index accordingly, for now let's proceed with caution...
+                    if ( $deletion_count == 0 && $do_deletions == true ) {
 
-						if ( delete_row('program_items', $i, $post_id) ) { // ACF function: https://www.advancedcustomfields.com/resources/delete_row/ -- syntax: delete_row($selector, $row_num, $post_id) 
-							$row_info .= "[program row $i deleted]<br />";
-							$deletion_count++;
-							//sdg_log( "[program row $i deleted successfully]", $do_log );
-						} else {
-							$row_info .= "[deletion failed for program row $i]<br />";
-							//sdg_log( "[failed to delete program row $i]", $do_log );
-						}
-					
-					} else {
-					
-						if ( $do_deletions == true ) {
-							$row_info .= "[$i] row to be deleted on next round due to row_index issues.<br />";
-							//sdg_log( "row to be deleted on next round due to row_index issues.", $do_log );
-						} else {
-							$row_info .= "[$i] row to be deleted when do_deletions is re-enabled.<br />";
-							//sdg_log( "row to be deleted when do_deletions is re-enabled.", $do_log );
-						}
-					}
-				
-				}
-				*/
-			
-			
-				// Display the row if it's a header, or if BOTH item_label and item_name are not empty
-				// --------------------
-			
-				// Set up the table row
-				/*if ( $display == 'table' && $delete_row != true ) {
-					$tr_class = "program_objects";
-					if ( $show_row == '0' || $show_row == 0 ) { $tr_class .= " hidden"; } else { $tr_class .= " show_row"; }
-					if ( $show_person_dates == false ) { $tr_class .= " hide_person_dates"; } else { $tr_class .= " show_person_dates"; }
-					if ( $num_row_items > 1 || $grouped_row == true ) { $tr_class .= " grouping"; }
-					$table .= '<tr class="'.$tr_class.'">';
-				}*/
-			
-				// Insert row_info for troubleshooting
-				if ( $do_ts ) {
-					if ( $display == 'table' ) {
-						//$table .= '<div class="troubleshooting">row_info:<br />'.$row_info.'</div>'; //$row_info; // Display comments w/ in row for ease of parsing dev notes
-					} else {
-						//$ts_info .= 'row_info:<br />'.$row_info;
-					}
-					$ts_info .= $row_info; //$ts_info .= 'row_info:<br />'.$row_info;
-				}
-			
-				// Add the table cells and close out the row
-				/*if ( $display == 'table' && $delete_row != true ) {
-				
-					if ( $row_type == "header" || $row_type == "program_note" || $row_type == "label_only" || $row_type == "title_only" ) {
-					
-						// Single column row
-						$row_content = "";
-						if ( $row_type == "header" ) { 
-							$td_class = "header";
-							$row_content = $program_item_label;
-						} else if ( $row_type == "program_note" ) {
-							$td_class = "program_note";
-							$row_content = $program_item_name;
-						} else if ( $row_type == "label_only" ) {
-							$td_class = "label_only";
-							$row_content = $program_item_label;
-						} else if ( $row_type == "title_only" ) {
-							$td_class = "title_only";
-							$row_content = $program_item_name;
-						}
-						if ( $placeholder_label == true ) { $td_class .= " placeholder"; }
-						$table .= '<td class="'.$td_class.'" colspan="2">'.$row_content.'</td>';
-					
-					} else {
-					
-						// Two column standard row
-					
-						$td_class = "program_label";
-					
-						if ( $show_item_label != true || empty($program_item_label) ) { $td_class .= " no_label"; }
-						if ( $placeholder_label == true ) { $td_class .= " placeholder"; }
-						if ( $label_update_required == true ) { $td_class .= " update_required"; }
-					
-						$table .= '<td class="'.$td_class.'">'.$program_item_label.'</td>';
-						$td_class = "program_item";
-						if ( $placeholder_item == true ) { $td_class .= " placeholder"; }
-						$table .= '<td class="'.$td_class.'">'.$program_item_name.'</td>';
-					
-					}
-					$table .= '</tr>';
-				}*/
-			
-				// Data Cleanup -- WIP
-				// ...figuring out how to sync repertoire related_events w/ updates to program items -- display some TS info to aid this process
-				/*if ( $do_ts ) {
-					$arr_row_info = event_program_row_cleanup ( $post_id, $i, $row, "program_items" );								
-					$ts_info .= $arr_row_info['info'];
-					$row_errors = $arr_row_info['errors'];
-					//if ( $row_errors ) { $post_errors = true; }
-					if ( isset($row['program_item'][0]) ) {
-						foreach ( $row['program_item'] as $program_item_obj_id ) {						
-							$item_post_type = get_post_type( $program_item_obj_id );						
-							if ( $item_post_type == 'repertoire' ) {
-								// Update the repertoire_events field for this rep record, as needed
-								$ts_info .= update_repertoire_events( $program_item_obj_id, false, array($post_id) );							
-							}					
-						}
-					}
-				}*/
+                        if ( delete_row('program_items', $i, $post_id) ) { // ACF function: https://www.advancedcustomfields.com/resources/delete_row/ -- syntax: delete_row($selector, $row_num, $post_id) 
+                            $row_info .= "[program row $i deleted]<br />";
+                            $deletion_count++;
+                            //sdg_log( "[program row $i deleted successfully]", $do_log );
+                        } else {
+                            $row_info .= "[deletion failed for program row $i]<br />";
+                            //sdg_log( "[failed to delete program row $i]", $do_log );
+                        }
+                    
+                    } else {
+                    
+                        if ( $do_deletions == true ) {
+                            $row_info .= "[$i] row to be deleted on next round due to row_index issues.<br />";
+                            //sdg_log( "row to be deleted on next round due to row_index issues.", $do_log );
+                        } else {
+                            $row_info .= "[$i] row to be deleted when do_deletions is re-enabled.<br />";
+                            //sdg_log( "row to be deleted when do_deletions is re-enabled.", $do_log );
+                        }
+                    }
+                
+                }
+                */
+            
+            
+                // Display the row if it's a header, or if BOTH item_label and item_name are not empty
+                // --------------------
+            
+                // Set up the table row
+                /*if ( $display == 'table' && $delete_row != true ) {
+                    $tr_class = "program_objects";
+                    if ( $show_row == '0' || $show_row == 0 ) { $tr_class .= " hidden"; } else { $tr_class .= " show_row"; }
+                    if ( $show_person_dates == false ) { $tr_class .= " hide_person_dates"; } else { $tr_class .= " show_person_dates"; }
+                    if ( $num_row_items > 1 || $grouped_row == true ) { $tr_class .= " grouping"; }
+                    $table .= '<tr class="'.$tr_class.'">';
+                }*/
+            
+                // Insert row_info for troubleshooting
+                if ( $do_ts ) {
+                    if ( $display == 'table' ) {
+                        //$table .= '<div class="troubleshooting">row_info:<br />'.$row_info.'</div>'; //$row_info; // Display comments w/ in row for ease of parsing dev notes
+                    } else {
+                        //$ts_info .= 'row_info:<br />'.$row_info;
+                    }
+                    $ts_info .= $row_info; //$ts_info .= 'row_info:<br />'.$row_info;
+                }
+            
+                // Add the table cells and close out the row
+                /*if ( $display == 'table' && $delete_row != true ) {
+                
+                    if ( $row_type == "header" || $row_type == "program_note" || $row_type == "label_only" || $row_type == "title_only" ) {
+                    
+                        // Single column row
+                        $row_content = "";
+                        if ( $row_type == "header" ) { 
+                            $td_class = "header";
+                            $row_content = $program_item_label;
+                        } else if ( $row_type == "program_note" ) {
+                            $td_class = "program_note";
+                            $row_content = $program_item_name;
+                        } else if ( $row_type == "label_only" ) {
+                            $td_class = "label_only";
+                            $row_content = $program_item_label;
+                        } else if ( $row_type == "title_only" ) {
+                            $td_class = "title_only";
+                            $row_content = $program_item_name;
+                        }
+                        if ( $placeholder_label == true ) { $td_class .= " placeholder"; }
+                        $table .= '<td class="'.$td_class.'" colspan="2">'.$row_content.'</td>';
+                    
+                    } else {
+                    
+                        // Two column standard row
+                    
+                        $td_class = "program_label";
+                    
+                        if ( $show_item_label != true || empty($program_item_label) ) { $td_class .= " no_label"; }
+                        if ( $placeholder_label == true ) { $td_class .= " placeholder"; }
+                        if ( $label_update_required == true ) { $td_class .= " update_required"; }
+                    
+                        $table .= '<td class="'.$td_class.'">'.$program_item_label.'</td>';
+                        $td_class = "program_item";
+                        if ( $placeholder_item == true ) { $td_class .= " placeholder"; }
+                        $table .= '<td class="'.$td_class.'">'.$program_item_name.'</td>';
+                    
+                    }
+                    $table .= '</tr>';
+                }*/
+            
+                // Data Cleanup -- WIP
+                // ...figuring out how to sync repertoire related_events w/ updates to program items -- display some TS info to aid this process
+                /*if ( $do_ts ) {
+                    $arr_row_info = event_program_row_cleanup ( $post_id, $i, $row, "program_items" );                                
+                    $ts_info .= $arr_row_info['info'];
+                    $row_errors = $arr_row_info['errors'];
+                    //if ( $row_errors ) { $post_errors = true; }
+                    if ( isset($row['program_item'][0]) ) {
+                        foreach ( $row['program_item'] as $program_item_obj_id ) {                        
+                            $item_post_type = get_post_type( $program_item_obj_id );                        
+                            if ( $item_post_type == 'repertoire' ) {
+                                // Update the repertoire_events field for this rep record, as needed
+                                $ts_info .= update_repertoire_events( $program_item_obj_id, false, array($post_id) );                            
+                            }                    
+                        }
+                    }
+                }*/
 
-				// --------------------
-			
-			//$i++;
-		
-		
-		} // END foreach( $program_rows as $row )
+                // --------------------
+            
+            //$i++;
+        
+        
+        } // END foreach( $program_rows as $row )
     
     }
     
@@ -3440,7 +3440,7 @@ function get_list_items( $atts = array() ) {
     if ( $display == 'table' && count($table_rows) > 0 ) {
         
         if ( $display == 'table' ) {
-        	$table_classes = "event_program program ".$program_layout;
+            $table_classes = "event_program program ".$program_layout;
             $table = '<table class="'.$table_classes.'">';
             $table .= '<tbody>';
         }
@@ -3450,86 +3450,86 @@ function get_list_items( $atts = array() ) {
         if ( $display == 'table' && !empty($program_items_header) ) {
             $table .= '<tr><th colspan="2"><h2>'.$program_items_header.'</h2></th></tr>'; //class=""
         } else {
-        	// TBD display of header for non-table display
+            // TBD display of header for non-table display
         }
         
         // --------------------
         
         foreach( $table_rows as $tr ) {
         
-        	//$ts_info .= "tr: <pre>".print_r($tr, true)."</pre><br />";
-        	
-        	$table .= '<tr id="'.$tr['tr_id'].'" class="'.$tr['tr_class'].'">';
-        	foreach ( $tr['tds'] as $td ) {
-        		$table .= '<td class="'.$td['td_class'].'" colspan="'.$td['td_colspan'].'">'.$td['td_content'].'</td>';
-        	}
-        	$table .= '</tr>';
-        	
-        	/*
+            //$ts_info .= "tr: <pre>".print_r($tr, true)."</pre><br />";
+            
+            $table .= '<tr id="'.$tr['tr_id'].'" class="'.$tr['tr_class'].'">';
+            foreach ( $tr['tds'] as $td ) {
+                $table .= '<td class="'.$td['td_class'].'" colspan="'.$td['td_colspan'].'">'.$td['td_content'].'</td>';
+            }
+            $table .= '</tr>';
+            
+            /*
         
-        	//$tr;
-        	//$show_row
-        	//$row_type
-        	//$td_class
-        	//$td_class1
-        	//$td_class2
-        	//$show_item_authorship = true;
-			//$show_person_dates = true;
-        	
-        	
-        	// Set up the table row
-			$tr_class = "program_objects";
-			if ( $show_row == '0' || $show_row == 0 ) { $tr_class .= " hidden"; } else { $tr_class .= " show_row"; }
-			if ( $show_person_dates == false ) { $tr_class .= " hide_person_dates"; } else { $tr_class .= " show_person_dates"; }
+            //$tr;
+            //$show_row
+            //$row_type
+            //$td_class
+            //$td_class1
+            //$td_class2
+            //$show_item_authorship = true;
+            //$show_person_dates = true;
+            
+            
+            // Set up the table row
+            $tr_class = "program_objects";
+            if ( $show_row == '0' || $show_row == 0 ) { $tr_class .= " hidden"; } else { $tr_class .= " show_row"; }
+            if ( $show_person_dates == false ) { $tr_class .= " hide_person_dates"; } else { $tr_class .= " show_person_dates"; }
             if ( $num_row_items > 1 || $grouped_row == true ) { $tr_class .= " grouping"; }
             
-			$table .= '<tr class="'.$tr_class.'">';
-			
-			if ( $row_type == "header" || $row_type == "program_note" || $row_type == "label_only" || $row_type == "title_only" ) {
+            $table .= '<tr class="'.$tr_class.'">';
+            
+            if ( $row_type == "header" || $row_type == "program_note" || $row_type == "label_only" || $row_type == "title_only" ) {
                     
-				// Single column row
-				
-				$row_content = "";
-				if ( $row_type == "header" ) { 
-					$td_class = "header";
-					$row_content = $program_item_label;
-				} else if ( $row_type == "program_note" ) {
-					$td_class = "program_note";
-					$row_content = $program_item_name;
-				} else if ( $row_type == "label_only" ) {
-					$td_class = "label_only";
-					$row_content = $program_item_label;
-				} else if ( $row_type == "title_only" ) {
-					$td_class = "title_only";
-					$row_content = $program_item_name;
-				}
-				if ( $placeholder_label == true ) { $td_class .= " placeholder"; }
-				$table .= '<td class="'.$td_class.'" colspan="2">'.$row_content.'</td>';
-				
-			} else {
-				
-				// Two column standard row
-				
-				$td_class = "program_label";
-				
-				if ( $show_item_label != true || empty($program_item_label) ) { $td_class .= " no_label"; }
-				if ( $placeholder_label == true ) { $td_class .= " placeholder"; }
-				if ( $label_update_required == true ) { $td_class .= " update_required"; }
-				
-				$table .= '<td class="'.$td_class.'">'.$program_item_label.'</td>';
-				$td_class = "program_item";
-				if ( $placeholder_item == true ) { $td_class .= " placeholder"; }
-				$table .= '<td class="'.$td_class.'">'.$program_item_name.'</td>';
-				
-			}
-				
-			$table .= '</tr>';
-			*/
+                // Single column row
+                
+                $row_content = "";
+                if ( $row_type == "header" ) { 
+                    $td_class = "header";
+                    $row_content = $program_item_label;
+                } else if ( $row_type == "program_note" ) {
+                    $td_class = "program_note";
+                    $row_content = $program_item_name;
+                } else if ( $row_type == "label_only" ) {
+                    $td_class = "label_only";
+                    $row_content = $program_item_label;
+                } else if ( $row_type == "title_only" ) {
+                    $td_class = "title_only";
+                    $row_content = $program_item_name;
+                }
+                if ( $placeholder_label == true ) { $td_class .= " placeholder"; }
+                $table .= '<td class="'.$td_class.'" colspan="2">'.$row_content.'</td>';
+                
+            } else {
+                
+                // Two column standard row
+                
+                $td_class = "program_label";
+                
+                if ( $show_item_label != true || empty($program_item_label) ) { $td_class .= " no_label"; }
+                if ( $placeholder_label == true ) { $td_class .= " placeholder"; }
+                if ( $label_update_required == true ) { $td_class .= " update_required"; }
+                
+                $table .= '<td class="'.$td_class.'">'.$program_item_label.'</td>';
+                $td_class = "program_item";
+                if ( $placeholder_item == true ) { $td_class .= " placeholder"; }
+                $table .= '<td class="'.$td_class.'">'.$program_item_name.'</td>';
+                
+            }
+                
+            $table .= '</tr>';
+            */
         }
-		
-		// --------------------
-		
-		// Close the table
+        
+        // --------------------
+        
+        // Close the table
         if ( $display == 'table' ) {
             $table .= '</tbody>';
             $table .= '</table>';
@@ -3541,8 +3541,8 @@ function get_list_items( $atts = array() ) {
     
     $arr_info['info'] = $info;
     $arr_info['ts_info'] = $ts_info;
-	return $arr_info;
-	
+    return $arr_info;
+    
 }
 
 
@@ -3553,14 +3553,14 @@ function get_list_items_v1( $atts = array() ) {
     $do_log = false;
     sdg_log( "divline2", $do_log );
     
-	$args = shortcode_atts( array(
-		'post_id'        => get_the_ID(),
+    $args = shortcode_atts( array(
+        'post_id'        => get_the_ID(),
         'run_updates' => false,
         'display' => 'table'       
     ), $atts );
     
     // Extract
-	extract( $args );
+    extract( $args );
     
     // Init vars
     $arr_info = array();
@@ -3571,364 +3571,364 @@ function get_list_items_v1( $atts = array() ) {
     if ( $display == 'table' ) { $table = ""; }
     
     // TODO: deal more thoroughly w/ non-table display option, or eliminate that parameter altogether.
-	
-	if ($post_id == null) { $post_id = get_the_ID(); }
-	$ts_info .= "Items for post_id: $post_id<br />";
+    
+    if ($post_id == null) { $post_id = get_the_ID(); }
+    $ts_info .= "Items for post_id: $post_id<br />";
     //$ts_info .= "display: $display<br />";
     
     // What type of list is this? Music list? Other kind of list?
     //$list_type = get_post_meta( $post_id, 'list_type', true );
     //$ts_info .= "list_type: $list_type<br />";
     
-	// Get the list item repeater field values (ACF)
+    // Get the list item repeater field values (ACF)
     $list_rows = get_field('list_items', $post_id); // ACF function: https://www.advancedcustomfields.com/resources/get_field/ -- TODO: change to use have_rows() instead?   
     if ( empty($list_rows) ) { $list_rows = array(); }    
     if ( is_array($list_rows) ) { $ts_info .= count($list_rows)." list_items/list_rows<br />"; } else { $ts_info .= "list_rows: ".print_r($list_rows, true); }
     
     // WIP: streamlining
     
-	$authorship_display_settings = null;
-	$list_composer_ids = array(); // TMP -- deprecated
+    $authorship_display_settings = null;
+    $list_composer_ids = array(); // TMP -- deprecated
     $deletion_count = 0;
     $table_rows = array();
     
     if ( is_array($list_rows) ) {
-	
-		// Check to see if ANY of the rows contains items with post_type == 'repertoire'
-		if ( list_contains_repertoire($list_rows) ) { // TODO: generalize the following to apply to any items with authorship, not just rep/composers
-	
-			$ts_info .= "list contains repertoire items<br />";
-			// If so, then get all the list composers
-			$list_item_ids = get_list_item_ids($list_rows);
-			$ts_info .= "list_item_ids: ".print_r($list_item_ids, true)."<br />";
-			//
-			$authorship_display_settings = set_row_authorship_display($list_item_ids);
-			$ts_info .= "authorship_display_settings: <pre>".print_r($authorship_display_settings, true)."</pre><br />";
-		
-		}
-	
-		// Translate list_rows into table_rows (separate row per item)
     
-		foreach( $list_rows as $r => $row ) {
-		
-			// TODO: check if row is empty >> next
-		
-			// Initialize variables
-			$row_info = ""; // Info for troubleshooting
-			$row_info .= "-------------------- [row $r] --------------------<br />";
-		
-			$grouped_row = false; // For multiple-item rows
-			//
-			$placeholder_label = false;
-			$placeholder_item = false;
-			//
-			$arr_item_label = array();
-			$arr_item_name = array();
-			//
-			$list_item_label = null;
-			$list_item_name = null;
-			//
-			$show_person_dates = true;
-		
-			//
-			$label_update_required = false;
-			$delete_row = false;
-		
-			//$row_info .= "get_list_items ==> list row [$r]: ".print_r($row, true)."<br />";
-			
-			// Is a row_type set? WIP -- working on phasing out deprecated fields like 'show_item_label' in favor of simple row_types setup
-			if ( isset($row['row_type']) ) { $row_type = $row['row_type']; } else { $row_type = null; }
-			$row_info .= "get_list_items ==> row_type: ".$row_type."<br />";
-			
-			// ROW TYPES WIP: 
-			/*
-				List item rows types:
-				default : Standard two-column row
-				header : Header row
-				list_note : Program note
-				label_only : Item label only
-				title_only : Item title only
-				//
-				Additional option to consider, TBD:
-				split : Title left/Authorship right
-				//
-				if ( $row_type == 'title_only' ) {
-					
-					$arr_item_name = get_rep_info( $list_item_obj_id, 'display', $show_item_authorship, true );
-					$item_name = $arr_item_name['info'];
-					$ts_info .= $arr_item_name['ts_info'];
-			
-				} else if ( empty($list_item_label) ) {
+        // Check to see if ANY of the rows contains items with post_type == 'repertoire'
+        if ( list_contains_repertoire($list_rows) ) { // TODO: generalize the following to apply to any items with authorship, not just rep/composers
+    
+            $ts_info .= "list contains repertoire items<br />";
+            // If so, then get all the list composers
+            $list_item_ids = get_list_item_ids($list_rows);
+            $ts_info .= "list_item_ids: ".print_r($list_item_ids, true)."<br />";
+            //
+            $authorship_display_settings = set_row_authorship_display($list_item_ids);
+            $ts_info .= "authorship_display_settings: <pre>".print_r($authorship_display_settings, true)."</pre><br />";
+        
+        }
+    
+        // Translate list_rows into table_rows (separate row per item)
+    
+        foreach( $list_rows as $r => $row ) {
+        
+            // TODO: check if row is empty >> next
+        
+            // Initialize variables
+            $row_info = ""; // Info for troubleshooting
+            $row_info .= "-------------------- [row $r] --------------------<br />";
+        
+            $grouped_row = false; // For multiple-item rows
+            //
+            $placeholder_label = false;
+            $placeholder_item = false;
+            //
+            $arr_item_label = array();
+            $arr_item_name = array();
+            //
+            $list_item_label = null;
+            $list_item_name = null;
+            //
+            $show_person_dates = true;
+        
+            //
+            $label_update_required = false;
+            $delete_row = false;
+        
+            //$row_info .= "get_list_items ==> list row [$r]: ".print_r($row, true)."<br />";
+            
+            // Is a row_type set? WIP -- working on phasing out deprecated fields like 'show_item_label' in favor of simple row_types setup
+            if ( isset($row['row_type']) ) { $row_type = $row['row_type']; } else { $row_type = null; }
+            $row_info .= "get_list_items ==> row_type: ".$row_type."<br />";
+            
+            // ROW TYPES WIP: 
+            /*
+                List item rows types:
+                default : Standard two-column row
+                header : Header row
+                list_note : Program note
+                label_only : Item label only
+                title_only : Item title only
+                //
+                Additional option to consider, TBD:
+                split : Title left/Authorship right
+                //
+                if ( $row_type == 'title_only' ) {
+                    
+                    $arr_item_name = get_rep_info( $list_item_obj_id, 'display', $show_item_authorship, true );
+                    $item_name = $arr_item_name['info'];
+                    $ts_info .= $arr_item_name['ts_info'];
+            
+                } else if ( empty($list_item_label) ) {
 
-					$ts_info .= "list_item_label is empty >> use title in left col<br />";
-				
-				}
-			*/
-			
-			// Is this a header row? (Check for deprecated field values)
-			if ( $row_type != "header" && isset($row['is_header']) && $row['is_header'] == 1 ) { $row_type = "header"; } // TODO: update the row_type in the DB
-		
-			// Should this row be displayed on the front end?
-			// TODO: modify to simplify as below -- set to true/false based on stored value, if any
-			if ( isset($row['show_row']) && $row['show_row'] != "" ) { 
-				$show_row = $row['show_row'];
-				$row_info .= "get_list_items ==> show_row = '".$row['show_row']."'<br />";
-			} else { 
-				$show_row = 1; // Default to 'Yes'/true/show the row if no zero value has been saved explicitly
-				$row_info .= "get_list_items ==> show_row = 1 (default)<br />";
-			}
-		
-			// Should we display the item label for this row?
-			// TODO: streamline/eliminate this deprecated field and simply update row_type
-			if ( isset($row['show_item_label']) && $row['show_item_label'] == "0" ) { 
-				$show_item_label = false;
-				$row_info .= "get_list_items ==> show_item_label FALSE<br />";
-			} else { 
-				$show_item_label = true; // Default to 'Yes'/true/show the row if no zero value has been saved explicitly
-				$row_info .= "get_list_items ==> show_item_label TRUE (default)<br />";
-			}
-				
-			// Should the item title for this row be displayed on the front end?
-			// TODO: streamline/eliminate this deprecated field and simply update row_type
-			if ( isset($row['show_item_title']) && $row['show_item_title'] == "0" ) { 
-				$show_item_title = false;
-				$row_info .= "show_item_title = 0, i.e. false<br />";
-			} else { 
-				$show_item_title = true; // Default to 'Yes'/true/show the row if no zero value has been saved explicitly
-				$row_info .= "default: show_item_title = true<br />";
-			}
-		
-			// Get the item label
-			// --------------------
-			// TODO/WIP: maybe figure out how to skip this for rep items in $list_type == "concert_program" where title is used in left col instead of label			
-			if ( $show_item_label == true && $row_type != 'title_only' ) {			
-				$row_info .= "get_list_item_label<br />";
-				$arr_item_label = get_list_item_label($row);
-				$list_item_label = $arr_item_label['item_label'];
-				$placeholder_label = $arr_item_label['placeholder'];
-				$row_info .= $arr_item_label['ts_info'];
-				$row_info .= ">> list_item_label: $list_item_label<br />";
-			}
-		
-			// Program item(s)
-			$list_items = array();
-			$num_items = 0;
-			if ( $show_item_title == true && $row_type != 'header' ) {
-				// Does the row contain one or more item objects?			
-				//$num_items = 1; // default: Single-item list_row translates to single table_row
-				if ( isset($row['list_item']) && is_array($row['list_item']) ) {
-					//$ts_info .= "list_item: ".print_r($row['list_item'], true)."<br />";
-					$num_items = count($row['list_item']);
-					$list_items = $row['list_item'];
-				}
-			}
-		
-			//if ( $num_items == 0 ) {
-			if ( empty($list_items) ) {
-		
-				// TODO: eliminate redundancy
-			
-				// No actual items in this row -- just placeholders
-				$row_info .= 'Zero-item list_row -- single table_row with placeholders<br />';
-				$tr = array();
-				$tds = array();
-				$tr_class = "list_objects";
-				if ( $show_row == "0" ) { $tr_class .= " hidden"; }
-				$i = 0;
-				$tr['tr_id'] = "tr-".$r.'-'.$i;
-			
-				if ( !empty($list_item_label) ) {
-					$td_class = "zero_item_row";
-					if ( $placeholder_label ) { $td_class .= " placeholder"; }
-					$td_content = $list_item_label;
-				
-					if ( $row_type == "header" || $row_type == "list_note" || $row_type == "label_only" || $row_type == "title_only" ) {
-					
-						// Single wide column row
-						$td_colspan = 2;					
-						$row_content = "";
-					
-						if ( $row_type == "header" ) { 
-							$td_class = "header";
-							$td_content = $list_item_label;
-						} else if ( $row_type == "list_note" ) {
-							$td_class = "list_note";
-							$td_content = $list_item_name;
-						} else if ( $row_type == "label_only" ) {
-							$td_class = "label_only";
-							$td_content = $list_item_label;
-						} else if ( $row_type == "title_only" ) {
-							$td_class = "title_only";
-							$td_content = $list_item_name;
-						}
-					} else {
-						$td_colspan = 1;
-					}
-				
-					$tds[] = array( 'td_class' => $td_class, 'td_colspan' => $td_colspan, 'td_content' => $td_content );
-				}
-			
-				// Get the list item name
-				// --------------------
-				$arr_item_name = get_list_item_name( array( 'row' => $row, 'list_type' => $list_type, 'row_type' => $row_type, 'list_item_label' => $list_item_label ) );
-				// Title as label?
-				if ( !empty($arr_item_name['title_as_label']) ) {
-					$row_info .= ">> use title_as_label<br />";
-					$title_as_label = $arr_item_name['title_as_label'];
-					$td_content = $title_as_label;
-					$td_class = "title_as_label";
-					$td_colspan = 1;
-					$tds[] = array( 'td_class' => $td_class, 'td_colspan' => $td_colspan, 'td_content' => $td_content );
-				} else {
-					$title_as_label = null;
-				}
-			
-				// Item Name
-				if ( $arr_item_name['item_name'] ) { $list_item_name = $arr_item_name['item_name']; }
-				if ( !empty($list_item_name) ) {
-					$td_class = "list_item placeholder"; // placeholder because this is a zero-item row
-					if ( $title_as_label ) { $td_class .= " authorship"; }
-					$td_content = $list_item_name;
-					$td_colspan = 1;
-					// Add this item as a table cell only for two-column rows -- WIP
-					if ( ! ($row_type == "header" || $row_type == "list_note" || $row_type == "label_only" || $row_type == "title_only") ) {
-						$tds[] = array( 'td_class' => $td_class, 'td_colspan' => $td_colspan, 'td_content' => $td_content );
-					}
-				}
-			
-				//
-				$tr['tr_class'] = $tr_class;
-				$tr['tds'] = $tds;
-			
-				$table_rows[] = $tr;
-			
-			} else if ( $num_items == 1 ) {
-				// Single-item list_row translates to single table_row
-				$row_info .= 'Single-item list_row -- single table_row<br />';
-			} else if ( $num_items > 1 ) {
-				// Multiple items per list row -- display settings per row_type, list_type... -- WIP
-				$row_info .= "*** $num_items list_items found for this row! ***<br />";
-			}
-		
-			$row_info .= " >>>>>>> START foreach list_item <<<<<<<<br />";
+                    $ts_info .= "list_item_label is empty >> use title in left col<br />";
+                
+                }
+            */
+            
+            // Is this a header row? (Check for deprecated field values)
+            if ( $row_type != "header" && isset($row['is_header']) && $row['is_header'] == 1 ) { $row_type = "header"; } // TODO: update the row_type in the DB
+        
+            // Should this row be displayed on the front end?
+            // TODO: modify to simplify as below -- set to true/false based on stored value, if any
+            if ( isset($row['show_row']) && $row['show_row'] != "" ) { 
+                $show_row = $row['show_row'];
+                $row_info .= "get_list_items ==> show_row = '".$row['show_row']."'<br />";
+            } else { 
+                $show_row = 1; // Default to 'Yes'/true/show the row if no zero value has been saved explicitly
+                $row_info .= "get_list_items ==> show_row = 1 (default)<br />";
+            }
+        
+            // Should we display the item label for this row?
+            // TODO: streamline/eliminate this deprecated field and simply update row_type
+            if ( isset($row['show_item_label']) && $row['show_item_label'] == "0" ) { 
+                $show_item_label = false;
+                $row_info .= "get_list_items ==> show_item_label FALSE<br />";
+            } else { 
+                $show_item_label = true; // Default to 'Yes'/true/show the row if no zero value has been saved explicitly
+                $row_info .= "get_list_items ==> show_item_label TRUE (default)<br />";
+            }
+                
+            // Should the item title for this row be displayed on the front end?
+            // TODO: streamline/eliminate this deprecated field and simply update row_type
+            if ( isset($row['show_item_title']) && $row['show_item_title'] == "0" ) { 
+                $show_item_title = false;
+                $row_info .= "show_item_title = 0, i.e. false<br />";
+            } else { 
+                $show_item_title = true; // Default to 'Yes'/true/show the row if no zero value has been saved explicitly
+                $row_info .= "default: show_item_title = true<br />";
+            }
+        
+            // Get the item label
+            // --------------------
+            // TODO/WIP: maybe figure out how to skip this for rep items in $list_type == "concert_program" where title is used in left col instead of label            
+            if ( $show_item_label == true && $row_type != 'title_only' ) {            
+                $row_info .= "get_list_item_label<br />";
+                $arr_item_label = get_list_item_label($row);
+                $list_item_label = $arr_item_label['item_label'];
+                $placeholder_label = $arr_item_label['placeholder'];
+                $row_info .= $arr_item_label['ts_info'];
+                $row_info .= ">> list_item_label: $list_item_label<br />";
+            }
+        
+            // Program item(s)
+            $list_items = array();
+            $num_items = 0;
+            if ( $show_item_title == true && $row_type != 'header' ) {
+                // Does the row contain one or more item objects?            
+                //$num_items = 1; // default: Single-item list_row translates to single table_row
+                if ( isset($row['list_item']) && is_array($row['list_item']) ) {
+                    //$ts_info .= "list_item: ".print_r($row['list_item'], true)."<br />";
+                    $num_items = count($row['list_item']);
+                    $list_items = $row['list_item'];
+                }
+            }
+        
+            //if ( $num_items == 0 ) {
+            if ( empty($list_items) ) {
+        
+                // TODO: eliminate redundancy
+            
+                // No actual items in this row -- just placeholders
+                $row_info .= 'Zero-item list_row -- single table_row with placeholders<br />';
+                $tr = array();
+                $tds = array();
+                $tr_class = "list_objects";
+                if ( $show_row == "0" ) { $tr_class .= " hidden"; }
+                $i = 0;
+                $tr['tr_id'] = "tr-".$r.'-'.$i;
+            
+                if ( !empty($list_item_label) ) {
+                    $td_class = "zero_item_row";
+                    if ( $placeholder_label ) { $td_class .= " placeholder"; }
+                    $td_content = $list_item_label;
+                
+                    if ( $row_type == "header" || $row_type == "list_note" || $row_type == "label_only" || $row_type == "title_only" ) {
+                    
+                        // Single wide column row
+                        $td_colspan = 2;                    
+                        $row_content = "";
+                    
+                        if ( $row_type == "header" ) { 
+                            $td_class = "header";
+                            $td_content = $list_item_label;
+                        } else if ( $row_type == "list_note" ) {
+                            $td_class = "list_note";
+                            $td_content = $list_item_name;
+                        } else if ( $row_type == "label_only" ) {
+                            $td_class = "label_only";
+                            $td_content = $list_item_label;
+                        } else if ( $row_type == "title_only" ) {
+                            $td_class = "title_only";
+                            $td_content = $list_item_name;
+                        }
+                    } else {
+                        $td_colspan = 1;
+                    }
+                
+                    $tds[] = array( 'td_class' => $td_class, 'td_colspan' => $td_colspan, 'td_content' => $td_content );
+                }
+            
+                // Get the list item name
+                // --------------------
+                $arr_item_name = get_list_item_name( array( 'row' => $row, 'list_type' => $list_type, 'row_type' => $row_type, 'list_item_label' => $list_item_label ) );
+                // Title as label?
+                if ( !empty($arr_item_name['title_as_label']) ) {
+                    $row_info .= ">> use title_as_label<br />";
+                    $title_as_label = $arr_item_name['title_as_label'];
+                    $td_content = $title_as_label;
+                    $td_class = "title_as_label";
+                    $td_colspan = 1;
+                    $tds[] = array( 'td_class' => $td_class, 'td_colspan' => $td_colspan, 'td_content' => $td_content );
+                } else {
+                    $title_as_label = null;
+                }
+            
+                // Item Name
+                if ( $arr_item_name['item_name'] ) { $list_item_name = $arr_item_name['item_name']; }
+                if ( !empty($list_item_name) ) {
+                    $td_class = "list_item placeholder"; // placeholder because this is a zero-item row
+                    if ( $title_as_label ) { $td_class .= " authorship"; }
+                    $td_content = $list_item_name;
+                    $td_colspan = 1;
+                    // Add this item as a table cell only for two-column rows -- WIP
+                    if ( ! ($row_type == "header" || $row_type == "list_note" || $row_type == "label_only" || $row_type == "title_only") ) {
+                        $tds[] = array( 'td_class' => $td_class, 'td_colspan' => $td_colspan, 'td_content' => $td_content );
+                    }
+                }
+            
+                //
+                $tr['tr_class'] = $tr_class;
+                $tr['tds'] = $tds;
+            
+                $table_rows[] = $tr;
+            
+            } else if ( $num_items == 1 ) {
+                // Single-item list_row translates to single table_row
+                $row_info .= 'Single-item list_row -- single table_row<br />';
+            } else if ( $num_items > 1 ) {
+                // Multiple items per list row -- display settings per row_type, list_type... -- WIP
+                $row_info .= "*** $num_items list_items found for this row! ***<br />";
+            }
+        
+            $row_info .= " >>>>>>> START foreach list_item <<<<<<<<br />";
 
-			// Loop through the list items for this row (usually there is only one)
-			foreach ( $list_items as $i => $list_item_obj_id ) {
+            // Loop through the list items for this row (usually there is only one)
+            foreach ( $list_items as $i => $list_item_obj_id ) {
 
-				$row_info .= "<br />+~+~+~+~+ list_item #$i +~+~+~+~+<br />";
-					
-				$tr = array();
-				$tds = array();
-				$tr_class = "list_objects";
-				if ( $show_row == "0" ) { $tr_class .= " hidden"; }
-				if ( $num_items > 1 ) { $tr_class .= " row_group"; }
-				if ( $num_items > 1 && $i == $num_items-1 ) { $tr_class .= " last_in_group"; }
-				$tr['tr_id'] = "tr-".$r.'-'.$i;
-			
-				//
-				$row_info .= "list_item_obj_id: $list_item_obj_id<br />";
-				$item_post_type = get_post_type( $list_item_obj_id );
-				$row_info .= "item_post_type: $item_post_type<br />";
-			
-				// If there's a list label set for the row, and if this is the first 
-				if ( !empty($list_item_label) ) {
-				
-					$td_class = "test_td_class_1";
-					if ( $placeholder_label ) { $td_class .= " placeholder"; }
-				
-					if ( $row_type == "header" || $row_type == "list_note" || $row_type == "label_only" || $row_type == "title_only" ) {
-					
-						// Single column row
-						$td_colspan = 2;					
-						$row_content = "";
-					
-						if ( $row_type == "header" ) { 
-							$td_class = "header";
-							$td_content = $list_item_label;
-						} else if ( $row_type == "list_note" ) {
-							$td_class = "list_note";
-							$td_content = $list_item_name;
-						} else if ( $row_type == "label_only" ) {
-							$td_class = "label_only";
-							$td_content = $list_item_label;
-						} else if ( $row_type == "title_only" ) {
-							$td_class = "title_only";
-							$td_content = $list_item_name;
-						}
-					} else {
-						$td_colspan = 1;
-						if ( $i == 0 ) { $td_content = $list_item_label; } else { $td_content = ""; } //$td_content = "***"; }
-					}			
-				
-					$tds[] = array( 'td_class' => $td_class, 'td_colspan' => $td_colspan, 'td_content' => $td_content );
-				}
-				
-				if ( $authorship_display_settings && isset($authorship_display_settings[$r.'-'.$i]) ) {
-					$display_settings = $authorship_display_settings[$r.'-'.$i];
-					$row_info .= "[".$r.'-'.$i."] list_row >> display_settings: ".print_r($display_settings, true)."<br />";
-					if ( isset($display_settings['show_name']) && $display_settings['show_name'] ) { $tr_class .= " show_authorship"; } else { $tr_class .= " hide_authorship"; }
-					if ( isset($display_settings['show_dates']) && $display_settings['show_dates'] ) { $tr_class .= " show_person_dates"; } else { $tr_class .= " hide_person_dates"; }
-				} else {
-					$row_info .= "[".$r.'-'.$i."] list_row >> display_settings not set<br />";
-				}
-			
-				// Get the list item name
-				// --------------------
-				// WIP
-				$arr_item_name = get_list_item_name( array( 'row' => $row, 'list_type' => $list_type, 'row_type' => $row_type, 'list_item_obj_id' => $list_item_obj_id, 'list_item_label' => $list_item_label ) );
-				// Title as label?
-				if ( !empty($arr_item_name['title_as_label']) ) {
-					$row_info .= ">> use title_as_label<br />";
-					$title_as_label = $arr_item_name['title_as_label'];
-					$td_content = $title_as_label;
-					$td_class = "title_as_label";
-					$td_colspan = 1;
-					$tds[] = array( 'td_class' => $td_class, 'td_colspan' => $td_colspan, 'td_content' => $td_content );
-				} else {
-					$title_as_label = null;
-				}
-			
-				$row_info .= "START arr_item_name['ts_info']<br />";
-				$row_info .= $arr_item_name['ts_info']; // ts_info is already commented
-				$row_info .= "END arr_item_name['ts_info']<br />";
-				//$row_info .= "arr_item_name['info']: <pre>".$arr_item_name['info']."</pre>";
-			
-				// Program item_name
-				if ( $arr_item_name['item_name'] ) { $list_item_name = $arr_item_name['item_name']; }
-				if ( !empty($list_item_name) ) {
-					$td_class = "list_item";
-					if ( $title_as_label ) { $td_class .= " authorship"; }
-					$td_content = $list_item_name;
-					$td_colspan = 1;
-					// Add this item as a table cell only for two-column rows -- WIP
-					if ( ! ($row_type == "header" || $row_type == "list_note" || $row_type == "label_only" || $row_type == "title_only") ) {
-						$tds[] = array( 'td_class' => $td_class, 'td_colspan' => $td_colspan, 'td_content' => $td_content );
-					}
-				}
-			
-				$tr['tr_class'] = $tr_class;
-				$tr['tds'] = $tds;
-					
-				$table_rows[] = $tr;
-				
-			}
-			
-			$row_info .= '--------------------<br />';
-				
-			// Insert row_info for troubleshooting
-			if ( $do_ts ) {
-				if ( $display == 'table' ) {
-					//$table .= '<div class="troubleshooting">row_info:<br />'.$row_info.'</div>'; //$row_info; // Display comments w/ in row for ease of parsing dev notes
-				} else {
-					//$ts_info .= 'row_info:<br />'.$row_info;
-				}
-				$ts_info .= $row_info; //$ts_info .= 'row_info:<br />'.$row_info;
-			}
-		
-			// --------------------
-		
-		
-		} // END foreach( $list_rows as $row )
+                $row_info .= "<br />+~+~+~+~+ list_item #$i +~+~+~+~+<br />";
+                    
+                $tr = array();
+                $tds = array();
+                $tr_class = "list_objects";
+                if ( $show_row == "0" ) { $tr_class .= " hidden"; }
+                if ( $num_items > 1 ) { $tr_class .= " row_group"; }
+                if ( $num_items > 1 && $i == $num_items-1 ) { $tr_class .= " last_in_group"; }
+                $tr['tr_id'] = "tr-".$r.'-'.$i;
+            
+                //
+                $row_info .= "list_item_obj_id: $list_item_obj_id<br />";
+                $item_post_type = get_post_type( $list_item_obj_id );
+                $row_info .= "item_post_type: $item_post_type<br />";
+            
+                // If there's a list label set for the row, and if this is the first 
+                if ( !empty($list_item_label) ) {
+                
+                    $td_class = "test_td_class_1";
+                    if ( $placeholder_label ) { $td_class .= " placeholder"; }
+                
+                    if ( $row_type == "header" || $row_type == "list_note" || $row_type == "label_only" || $row_type == "title_only" ) {
+                    
+                        // Single column row
+                        $td_colspan = 2;                    
+                        $row_content = "";
+                    
+                        if ( $row_type == "header" ) { 
+                            $td_class = "header";
+                            $td_content = $list_item_label;
+                        } else if ( $row_type == "list_note" ) {
+                            $td_class = "list_note";
+                            $td_content = $list_item_name;
+                        } else if ( $row_type == "label_only" ) {
+                            $td_class = "label_only";
+                            $td_content = $list_item_label;
+                        } else if ( $row_type == "title_only" ) {
+                            $td_class = "title_only";
+                            $td_content = $list_item_name;
+                        }
+                    } else {
+                        $td_colspan = 1;
+                        if ( $i == 0 ) { $td_content = $list_item_label; } else { $td_content = ""; } //$td_content = "***"; }
+                    }            
+                
+                    $tds[] = array( 'td_class' => $td_class, 'td_colspan' => $td_colspan, 'td_content' => $td_content );
+                }
+                
+                if ( $authorship_display_settings && isset($authorship_display_settings[$r.'-'.$i]) ) {
+                    $display_settings = $authorship_display_settings[$r.'-'.$i];
+                    $row_info .= "[".$r.'-'.$i."] list_row >> display_settings: ".print_r($display_settings, true)."<br />";
+                    if ( isset($display_settings['show_name']) && $display_settings['show_name'] ) { $tr_class .= " show_authorship"; } else { $tr_class .= " hide_authorship"; }
+                    if ( isset($display_settings['show_dates']) && $display_settings['show_dates'] ) { $tr_class .= " show_person_dates"; } else { $tr_class .= " hide_person_dates"; }
+                } else {
+                    $row_info .= "[".$r.'-'.$i."] list_row >> display_settings not set<br />";
+                }
+            
+                // Get the list item name
+                // --------------------
+                // WIP
+                $arr_item_name = get_list_item_name( array( 'row' => $row, 'list_type' => $list_type, 'row_type' => $row_type, 'list_item_obj_id' => $list_item_obj_id, 'list_item_label' => $list_item_label ) );
+                // Title as label?
+                if ( !empty($arr_item_name['title_as_label']) ) {
+                    $row_info .= ">> use title_as_label<br />";
+                    $title_as_label = $arr_item_name['title_as_label'];
+                    $td_content = $title_as_label;
+                    $td_class = "title_as_label";
+                    $td_colspan = 1;
+                    $tds[] = array( 'td_class' => $td_class, 'td_colspan' => $td_colspan, 'td_content' => $td_content );
+                } else {
+                    $title_as_label = null;
+                }
+            
+                $row_info .= "START arr_item_name['ts_info']<br />";
+                $row_info .= $arr_item_name['ts_info']; // ts_info is already commented
+                $row_info .= "END arr_item_name['ts_info']<br />";
+                //$row_info .= "arr_item_name['info']: <pre>".$arr_item_name['info']."</pre>";
+            
+                // Program item_name
+                if ( $arr_item_name['item_name'] ) { $list_item_name = $arr_item_name['item_name']; }
+                if ( !empty($list_item_name) ) {
+                    $td_class = "list_item";
+                    if ( $title_as_label ) { $td_class .= " authorship"; }
+                    $td_content = $list_item_name;
+                    $td_colspan = 1;
+                    // Add this item as a table cell only for two-column rows -- WIP
+                    if ( ! ($row_type == "header" || $row_type == "list_note" || $row_type == "label_only" || $row_type == "title_only") ) {
+                        $tds[] = array( 'td_class' => $td_class, 'td_colspan' => $td_colspan, 'td_content' => $td_content );
+                    }
+                }
+            
+                $tr['tr_class'] = $tr_class;
+                $tr['tds'] = $tds;
+                    
+                $table_rows[] = $tr;
+                
+            }
+            
+            $row_info .= '--------------------<br />';
+                
+            // Insert row_info for troubleshooting
+            if ( $do_ts ) {
+                if ( $display == 'table' ) {
+                    //$table .= '<div class="troubleshooting">row_info:<br />'.$row_info.'</div>'; //$row_info; // Display comments w/ in row for ease of parsing dev notes
+                } else {
+                    //$ts_info .= 'row_info:<br />'.$row_info;
+                }
+                $ts_info .= $row_info; //$ts_info .= 'row_info:<br />'.$row_info;
+            }
+        
+            // --------------------
+        
+        
+        } // END foreach( $list_rows as $row )
     
     }
     
@@ -3938,7 +3938,7 @@ function get_list_items_v1( $atts = array() ) {
     if ( $display == 'table' && count($table_rows) > 0 ) {
         
         if ( $display == 'table' ) {
-        	$table_classes = "list ".$list_layout;
+            $table_classes = "list ".$list_layout;
             $table = '<table class="'.$table_classes.'">';
             $table .= '<tbody>';
         }
@@ -3948,26 +3948,26 @@ function get_list_items_v1( $atts = array() ) {
         if ( $display == 'table' && !empty($list_items_header) ) {
             $table .= '<tr><th colspan="2"><h2>'.$list_items_header.'</h2></th></tr>'; //class=""
         } else {
-        	// TBD display of header for non-table display
+            // TBD display of header for non-table display
         }
         
         // --------------------
         
         foreach( $table_rows as $tr ) {
         
-        	//$ts_info .= "tr: <pre>".print_r($tr, true)."</pre><br />";
-        	
-        	$table .= '<tr id="'.$tr['tr_id'].'" class="'.$tr['tr_class'].'">';
-        	foreach ( $tr['tds'] as $td ) {
-        		$table .= '<td class="'.$td['td_class'].'" colspan="'.$td['td_colspan'].'">'.$td['td_content'].'</td>';
-        	}
-        	$table .= '</tr>';
-        	
+            //$ts_info .= "tr: <pre>".print_r($tr, true)."</pre><br />";
+            
+            $table .= '<tr id="'.$tr['tr_id'].'" class="'.$tr['tr_class'].'">';
+            foreach ( $tr['tds'] as $td ) {
+                $table .= '<td class="'.$td['td_class'].'" colspan="'.$td['td_colspan'].'">'.$td['td_content'].'</td>';
+            }
+            $table .= '</tr>';
+            
         }
-		
-		// --------------------
-		
-		// Close the table
+        
+        // --------------------
+        
+        // Close the table
         if ( $display == 'table' ) {
             $table .= '</tbody>';
             $table .= '</table>';
@@ -3979,8 +3979,8 @@ function get_list_items_v1( $atts = array() ) {
     
     $arr_info['info'] = $info;
     $arr_info['ts_info'] = $ts_info;
-	return $arr_info;
-	
+    return $arr_info;
+    
 }
 
 
@@ -3994,14 +3994,14 @@ function get_list_items_v1( $atts = array() ) {
 add_shortcode('birdhive_search_form', 'birdhive_search_form');
 function birdhive_search_form ( $atts = array(), $content = null, $tag = '' ) {
 
-	// TS/logging setup
+    // TS/logging setup
     $do_ts = devmode_active( array("dcp", "search") );
     $do_log = false;
     sdg_log( "divline2", $do_log );
     $fcn_id = "[dc-bsf]&nbsp;";
-	
-	// Init vars
-	$info = "";
+    
+    // Init vars
+    $info = "";
     $ts_info = "";
     //$search_values = false; // var to track whether any search values have been submitted on which to base the search
     $search_values = array(); // var to track whether any search values have been submitted and to which post_types they apply
@@ -4009,15 +4009,15 @@ function birdhive_search_form ( $atts = array(), $content = null, $tag = '' ) {
     $ts_info .= '_GET: <pre>'.print_r($_GET,true).'</pre>'; // tft
     //$ts_info .= '_REQUEST: <pre>'.print_r($_REQUEST,true).'</pre>'; // tft
         
-	$args = shortcode_atts( array(
-		'post_type'    => 'post',
-		'fields'       => null,
+    $args = shortcode_atts( array(
+        'post_type'    => 'post',
+        'fields'       => null,
         'form_type'    => 'simple_search',
         'limit'        => '-1'
     ), $atts );
     
     // Extract
-	extract( $args );
+    extract( $args );
     
     //$info .= "form_type: $form_type<br />"; // tft
 
@@ -4025,18 +4025,18 @@ function birdhive_search_form ( $atts = array(), $content = null, $tag = '' ) {
     // In prep for that search call, initialize some vars to be used in the args array
     // Set up basic query args
     $wp_args = array(
-		'post_type'       => array( $post_type ), // Single item array, for now. May add other related_post_types -- e.g. repertoire; edition
-		'post_status'     => 'publish',
-		'posts_per_page'  => $limit, //-1, //$posts_per_page,
+        'post_type'       => array( $post_type ), // Single item array, for now. May add other related_post_types -- e.g. repertoire; edition
+        'post_status'     => 'publish',
+        'posts_per_page'  => $limit, //-1, //$posts_per_page,
         'orderby'         => 'title',
         'order'           => 'ASC',
         'return_fields'   => 'ids',
-	);
+    );
     
     // WIP / TODO: fine-tune ordering -- 1) rep with editions, sorted by title_clean 2) rep without editions, sorted by title_clean
     /*
-    'orderby'	=> 'meta_value',
-    'meta_key' 	=> '_event_start_date',
+    'orderby'    => 'meta_value',
+    'meta_key'     => '_event_start_date',
     'order'     => 'DESC',
     */
     
@@ -4681,11 +4681,11 @@ function birdhive_search_form ( $atts = array(), $content = null, $tag = '' ) {
                                         $options[$id] = $option_name;
                                         // TODO: deal w/ possibility that last_name, first_name fields are empty
                                     } else if ( function_exists( 'sdg_post_title' ) ) {
-										$title_args = array( 'post' => $post_id, 'line_breaks' => true, 'show_subtitle' => true, 'echo' => false, 'hlevel' => null, 'hlevel_sub' => null, 'called_by' => $fcn_id );
-										$options[$id] = sdg_post_title( $title_args );
-									} else {
-										$options[$id] = get_the_title($id);
-									}
+                                        $title_args = array( 'post' => $post_id, 'line_breaks' => true, 'show_subtitle' => true, 'echo' => false, 'hlevel' => null, 'hlevel_sub' => null, 'called_by' => $fcn_id );
+                                        $options[$id] = sdg_post_title( $title_args );
+                                    } else {
+                                        $options[$id] = get_the_title($id);
+                                    }
                                 }
 
                             }
@@ -4693,11 +4693,11 @@ function birdhive_search_form ( $atts = array(), $content = null, $tag = '' ) {
                             asort($options);
 
                         } else {
-                        	
-                        	$input_html = '<input type="text" id="'.$field_name.'" name="'.$field_name.'" value="'.$field_value.'" class="'.$input_class.'" />';                                            
+                            
+                            $input_html = '<input type="text" id="'.$field_name.'" name="'.$field_name.'" value="'.$field_value.'" class="'.$input_class.'" />';                                            
                     
-                    		//$input_html = "LE TSET"; // tft
-                        	//$input_html = '<input type="text" id="'.$field_name.'" name="'.$field_name.'" value="'.$field_value.'" class="autocomplete '.$input_class.' relationship" />';
+                            //$input_html = "LE TSET"; // tft
+                            //$input_html = '<input type="text" id="'.$field_name.'" name="'.$field_name.'" value="'.$field_value.'" class="autocomplete '.$input_class.' relationship" />';
                         }
                         
                     } else if ( $field_type == "taxonomy" ) {
