@@ -1911,6 +1911,11 @@ function birdhive_get_posts ( $args = array() ) {
         }
     }
 
+    // Context -- WIP
+    if ( isset($context) ) {
+        $ts_info .= "context: ".print_r($context, true)."<br />";
+    }
+
     // Set up basic query args
     $wp_args = array(
         'post_type'       => $post_type,
