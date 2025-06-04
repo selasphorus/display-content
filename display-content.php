@@ -2412,6 +2412,9 @@ function birdhive_display_posts ( $atts = array() ) { //function birdhive_displa
         'fields'  => null, // ***
         'headers'  => null, // ***
 
+        //
+        'context' => 'general', // wip
+
     ), $atts );
 
     // Extract
