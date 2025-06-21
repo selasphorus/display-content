@@ -283,7 +283,7 @@
 .flex-box.square .flex-img {
 	aspect-ratio: 1/1;
 }
-img.grid-crop-square {
+img.grid_crop_square {
     aspect-ratio: 1 / 1;
     object-fit: cover;
     width: 100%;
