@@ -217,7 +217,7 @@
     color: inherit;
 }
 
-.post_info > a:not(.button) > .post_title, 
+.post_info > a:not(.button) > .post_title,
 .post_info > a:link:not(.button) > .post_title {
     border-bottom: 1px solid var(--mdred);
     transition: color .3s ease-in-out;
@@ -263,7 +263,7 @@
 .overlay.fullover a:hover {
 	opacity: inherit;
 }
-    
+
 .flex-img {
 	/*padding: 0.25rem;*/
 	overflow: hidden;
@@ -282,6 +282,12 @@
 
 .flex-box.square .flex-img {
 	aspect-ratio: 1/1;
+}
+img.grid-crop-square {
+    aspect-ratio: 1 / 1;
+    object-fit: cover;
+    width: 100%;
+    height: auto;
 }
 
 .overlaid .flex-img,
@@ -410,9 +416,9 @@ h2.collection_group {
 /*** TODO: (maybe) move zoom-fade img styling from apostle style.css to this plugin? ***/
 
 /*** Hover Capability ***/
-/* Primary input mechanism system can 
+/* Primary input mechanism system can
    hover over elements with ease */
-@media (hover: hover) { 
+@media (hover: hover) {
 
     .overlay {
         display: none;
@@ -420,11 +426,11 @@ h2.collection_group {
 	    top:0;
         font-size: inherit;
     }
-    
+
     .flex-box:hover {
         cursor: pointer;
     }
-    
+
     .flex-box:hover .overlay {
         display: flex;
         background-color: var(--white);
@@ -432,7 +438,7 @@ h2.collection_group {
 }
 
 @media (max-width: 800px) { /* Changed from 600px to 800px 08/23/21 */
-    
+
     .flex-container .flex-box.square,
     .flex-container.twocol .flex-box,
     .flex-container.threecol .flex-box,
@@ -441,16 +447,16 @@ h2.collection_group {
         max-width: 100%;
         margin-bottom: 1rem;
     }
-    
+
     .flex-container .flex-box.landscape,
     .flex-container .flex-box.portrait {
     	margin-bottom: 0;
     }
-    
+
     .flex-container .flex-box h3 {
     	font-size: 1.5rem;
     }
-    
+
     .flex-box .item_info {
     	font-size: 1.1rem;
     }

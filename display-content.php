@@ -1459,7 +1459,14 @@ function build_item_arr ( $item, $arr_styling = array() ) { // TODO: come up wit
         $img_class = "bia " . $display_format . "_item_image " . $img_size;
         if ( $show_content == "full" ) { $img_class .= " full"; }
         if ( $display_format == "grid" ) { $img_class .= " hoverZoom"; }
-        $item_image = wp_get_attachment_image( $image_id, $img_size, "", array( "class" => $img_class ) );
+        $item_image = wp_get_attachment_image( $image_id, $img_size, false, [
+            "class" => $img_class,
+            'srcset' => '',
+            'sizes'  => '',
+            //'loading' => 'eager', // optional: force loading now
+            'decoding' => 'async', // optional: for better rendering
+            'style' => 'height:auto;width:auto;max-width:100%;', // optional for extra safety
+         ] );
 
         if ( !empty($item_image) ) {
             if ( $show_content != "full" && ( $display_format == "excerpts" || $display_format == "archive" ) ) {
