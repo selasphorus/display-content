@@ -1459,6 +1459,7 @@ function build_item_arr ( $item, $arr_styling = array() ) { // TODO: come up wit
         $img_class = "bia " . $display_format . "_item_image " . $img_size;
         if ( $show_content == "full" ) { $img_class .= " full"; }
         if ( $display_format == "grid" ) { $img_class .= " hoverZoom"; }
+        $img_class .= " TEST";
         $item_image = wp_get_attachment_image( $image_id, $img_size, false, [
             "class" => $img_class,
             'srcset' => '',
