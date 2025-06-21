@@ -1461,10 +1461,10 @@ function build_item_arr ( $item, $arr_styling = array() ) { // TODO: come up wit
         if ( $display_format == "grid" ) { $img_class .= " hoverZoom"; }
         $img_class .= " TEST";
         $item_image = wp_get_attachment_image( $image_id, $img_size, false, [
-            "class" => $img_class,
+            'class' => $img_class,
             'srcset' => '',
             'sizes'  => '',
-            //'loading' => 'eager', // optional: force loading now
+            'loading' => 'eager', // optional: force loading now
             'decoding' => 'async', // optional: for better rendering
             'style' => 'height:auto;width:auto;max-width:100%;', // optional for extra safety
          ] );
