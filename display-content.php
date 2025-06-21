@@ -186,7 +186,7 @@ function birdhive_custom_image_sizes( $sizes ) {
 add_action( 'wp_enqueue_scripts', 'dsplycntnt_scripts_method' );
 function dsplycntnt_scripts_method() {
 
-    $ver = "0.1";
+    $ver = "0.1.250620";
     wp_enqueue_style( 'dsplycntnt-style', plugin_dir_url( __FILE__ ) . 'display-content.css', NULL, $ver );
 
     wp_register_script('dsplycntnt-js', plugin_dir_url( __FILE__ ) . 'js/dc.js', array( 'jquery' ) );
