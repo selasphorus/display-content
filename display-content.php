@@ -5,13 +5,15 @@
  */
 
 /*
-Plugin Name: Birdhive Display Content
-Version: 0.1
-Plugin URI: 
-Description: Display content of all types in a variety of formats using shortcodes.
-Author: Alison C.
-Author URI: http://birdhive.com
-Text Domain: display-content
+ * Plugin Name: Birdhive Display Content (DEV)
+ * Description: Display content of all types in a variety of formats using shortcodes.
+ * Dependencies:      Requires WHx4-Core
+ * Requires Plugins:  whx4-core
+ * Version: 0.1
+ * Plugin URI: 
+ * Author: atc
+ * Author URI: http://birdhive.com
+ * Text Domain: display-content
 */
 
 /*********
@@ -132,7 +134,6 @@ function dsplycntnt_settings_init() {
 	
 }
 
-
 // Include custom post type (collection)
 $posttypes_filepath = $plugin_path . 'inc/posttypes.php';
 if ( file_exists($posttypes_filepath) ) { include_once( $posttypes_filepath ); } else { echo "no $posttypes_filepath found"; }
@@ -216,17 +217,6 @@ function birdhive_posts_where( $where, $wp_query ) {
 
 
 /*** MISC ***/
-
-/**
- * Explode list using "," and ", ".
- *
- * @param string $string String to split up.
- * @return array Array of string parts.
- */
-function birdhive_att_explode( $string = '' ) {
-	$string = str_replace( ', ', ',', $string );
-	return explode( ',', $string );
-}
 
 function digit_to_word( $number ){
     switch($number){
@@ -1121,8 +1111,8 @@ function build_item_arr ( $item, $arr_styling = array() ) { // TODO: come up wit
 				$img_size = "grid_crop_rectangle";
 			}
 			$img_args = array( 'post_id' => $post_id, 'format' => 'excerpt', 'img_size' => $img_size, 'sources' => "all", 'echo' => false, 'return' => 'id' );
-			$image_id = sdg_post_thumbnail ( $img_args );
-			$ts_info .= 'BIA -- sdg_post_thumbnail: image_id: '.$image_id.'<br />'; // tft		
+			$image_id = whx4_post_thumbnail ( $img_args );
+			$ts_info .= 'BIA -- whx4_post_thumbnail: image_id: '.$image_id.'<br />'; // tft		
 		}
 		// +~+~+~+~+~+~+~+~+~+~+~+~+~+~+~+~+~+~+~+~+~+~+~+
 		
@@ -3528,5 +3518,3 @@ function birdhive_search_form ($atts = [], $content = null, $tag = '') {
     return $info;
     
 } // END fcn birdhive_search_form
-
-?>
