@@ -81,8 +81,8 @@ require 'inc/acf-field-groups.php';
 /**
  * Custom option and settings
  */
-function dsplycntnt_settings_init() {
-
+function dsplycntnt_settings_init()
+{
     // TS/logging setup
     $do_ts = devmode_active( array("dcp") );
     $do_log = false;
@@ -174,7 +174,8 @@ add_image_size( 'grid_crop_rectangle', 534, 300, true ); // Aspect Ratio: approx
 add_image_size( 'grid_crop_landscape', 534, 300, true ); // Aspect Ratio: approx 16:9
 add_image_size( 'grid_crop_portrait', 350, 525, true ); // Aspect Ratio: approx 2:3
 add_filter( 'image_size_names_choose', 'birdhive_custom_image_sizes' );
-function birdhive_custom_image_sizes( $sizes ) {
+function birdhive_custom_image_sizes( $sizes )
+{
     return array_merge( $sizes, array(
         'grid_crop_square' => __( 'Grid Crop (square)' ),
         'grid_crop_rectangle' => __( 'Grid Crop (rectangle)' ), // deprecated
@@ -185,8 +186,8 @@ function birdhive_custom_image_sizes( $sizes ) {
 
 // Enqueue scripts and styles -- WIP
 add_action( 'wp_enqueue_scripts', 'dsplycntnt_scripts_method' );
-function dsplycntnt_scripts_method() {
-
+function dsplycntnt_scripts_method()
+{
     $ver = "0.1.250620";
     wp_enqueue_style( 'dsplycntnt-style', plugin_dir_url( __FILE__ ) . 'display-content.css', NULL, $ver );
 
@@ -257,7 +258,8 @@ function dsplycntnt_scripts_method() {
 // Add custom query vars
 // TBD -- IMPORTANT: will this cause issues with EM?
 ///add_filter( 'query_vars', 'dsplycntnt_query_vars' );
-function dsplycntnt_query_vars( $qvars ) {
+function dsplycntnt_query_vars( $qvars )
+{
     $qvars[] = 'scope';
     return $qvars;
 }
@@ -279,8 +281,8 @@ function dsplycntnt_query_vars( $qvars ) {
 /*** IMAGE FUNCTIONS ***/
 
 // Extract first image from post content
-function get_first_image_from_post_content( $post_id ) {
-
+function get_first_image_from_post_content( $post_id )
+{
     if ( empty($post_id) ) { return false; }
 
     // Init vars
@@ -336,12 +338,13 @@ function get_first_image_from_post_content( $post_id ) {
 
 // Allow select HTML tags in excerpts
 // https://wordpress.stackexchange.com/questions/141125/allow-html-in-excerpt
-function dsplycntnt_allowedtags() {
+function dsplycntnt_allowedtags()
+{
     return '<style>,<br>,<em>,<strong>';
 }
 
-function dsplycntnt_custom_wp_trim_excerpt($excerpt) {
-
+function dsplycntnt_custom_wp_trim_excerpt($excerpt)
+{
     global $post;
 
     $raw_excerpt = $excerpt;
@@ -402,8 +405,8 @@ function dsplycntnt_custom_wp_trim_excerpt($excerpt) {
  *
  */
 
-function dsplycntnt_get_excerpt( $args = array() ) {
-
+function dsplycntnt_get_excerpt( $args = array() )
+{
     // init vars
     $info = "";
     $text = "";
@@ -478,8 +481,8 @@ function dsplycntnt_get_excerpt( $args = array() ) {
 // see https://developer.wordpress.org/reference/functions/get_the_excerpt/
 // TODO: pare down number of args -- simplify
 // TODO: build in option to submit $preview_text and $full_text as vars to be formatted for display
-function expandable_text( $args = array() ) {
-
+function expandable_text( $args = array() )
+{
     // Init
     $info = "";
     $full_text = "";
@@ -587,8 +590,8 @@ function expandable_text( $args = array() ) {
  * Prints HTML with meta information for the categories, tags.
  * This function is a version of twentysixteen_entry_meta
  */
-function birdhive_entry_meta() {
-
+function birdhive_entry_meta()
+{
     $format = get_post_format();
     if ( current_theme_supports( 'post-formats', $format ) ) {
         printf(
@@ -609,7 +612,8 @@ function birdhive_entry_meta() {
 /*** TAXONOMY-RELATED FUNCTIONS ***/
 
 // Function to determine default taxonomy for a given post_type, for use with display_posts shortcode, &c.
-function birdhive_get_default_taxonomy ( $post_type = null ) {
+function birdhive_get_default_taxonomy ( $post_type = null )
+{
     switch ($post_type) {
         case "post":
             return "category";
@@ -631,8 +635,8 @@ function birdhive_get_default_taxonomy ( $post_type = null ) {
 }
 
 // Function to determine default category for given page, for purposes of Recent Posts &c.
-function birdhive_get_default_category () {
-
+function birdhive_get_default_category ()
+{
     $default_cat = "";
 
     if ( is_category() ) {
@@ -701,8 +705,8 @@ function birdhive_get_default_category () {
 
 /*** Post Extras ***/
 
-function get_post_links( $post_id = null ) {
-
+function get_post_links( $post_id = null )
+{
     // TS/logging setup
     $do_ts = devmode_active( array("dcp") );
     $do_log = false;
@@ -766,8 +770,8 @@ function get_post_links( $post_id = null ) {
 // Perhaps rework all of this to make it object-oriented, with an "item" class of objects?
 
 //function display_item ( $display_format = "links", $item_arr = array(), $display_atts = null, $table_fields = null, $item_ts_info = null ) {
-function display_item ( $arr_item = array(), $arr_styling = array() ) {
-
+function display_item ( $arr_item = array(), $arr_styling = array() )
+{
     $info = "";
 
     extract( $arr_styling );
@@ -788,8 +792,8 @@ function display_item ( $arr_item = array(), $arr_styling = array() ) {
 
 }
 
-function display_link_item ( $arr_item = array() ) {
-
+function display_link_item ( $arr_item = array() )
+{
     // TS/logging setup
     $do_ts = devmode_active( array("dcp") );
     $do_log = false;
@@ -815,8 +819,8 @@ function display_link_item ( $arr_item = array() ) {
 
 }
 
-function display_list_item ( $arr_item = array() ) {
-
+function display_list_item ( $arr_item = array() )
+{
     // TS/logging setup
     $do_ts = devmode_active( array("dcp") );
     $do_log = false;
@@ -834,8 +838,8 @@ function display_list_item ( $arr_item = array() ) {
 
 }
 
-function display_post_item ( $arr_item = array() ) {
-
+function display_post_item ( $arr_item = array() )
+{
     // TS/logging setup
     $do_ts = devmode_active( array("dcp") );
     $do_log = false;
@@ -949,8 +953,8 @@ function display_post_item ( $arr_item = array() ) {
 
 }
 
-function display_event_list_item ( $EM_Event ) {
-
+function display_event_list_item ( $EM_Event )
+{
     // Init
     $info = "";
 
@@ -963,8 +967,8 @@ function display_event_list_item ( $EM_Event ) {
 
 }
 
-function display_table_row ( $arr_item = array(), $arr_styling = array() ) {
-
+function display_table_row ( $arr_item = array(), $arr_styling = array() )
+{
     // TS/logging setup
     $do_ts = devmode_active( array("dcp") );
     $do_log = false;
@@ -1063,8 +1067,8 @@ function display_table_row ( $arr_item = array(), $arr_styling = array() ) {
 
 }
 
-function display_grid_item ( $arr_item = array(), $arr_styling = array() ) {
-
+function display_grid_item ( $arr_item = array(), $arr_styling = array() )
+{
     // TS/logging setup
     $do_ts = devmode_active( array("dcp") );
     $do_log = false;
@@ -1507,8 +1511,8 @@ function build_item_arr ( $item, $arr_styling = array() )
 
 
 // Display a collection of post items
-function birdhive_display_collection ( $args = array() ) {
-
+function birdhive_display_collection ( $args = array() )
+{
     // TS/logging setup
     $do_ts = devmode_active( array("dcp") );
     $do_log = false;
@@ -1712,9 +1716,9 @@ function birdhive_display_collection ( $args = array() ) {
 } // END function birdhive_display_collection ( $args = array() )
 
 // TODO: add options for collection_SUBheaders... e.g. for group/subgroups/personnel; links displayed grouped by link categories; etc.
-function collection_header ( $args = array() ) { // wip
 //function collection_header ( $display_format = null, $num_cols = 3, $aspect_ratio = "square", $fields = null, $headers = null ) {
-
+function collection_header ( $args = array() )
+{
     // TS/logging setup
     $do_ts = devmode_active( array("dcp") );
     $do_log = false;
@@ -1820,8 +1824,8 @@ function collection_header ( $args = array() ) { // wip
     return $info;
 }
 
-function collection_footer ( $display_format = null ) {
-
+function collection_footer ( $display_format = null )
+{
     $info = "";
     //$info .= "+~+~+~+~+~+~+ collection_footer +~+~+~+~+~+~+<br />";
 
@@ -1846,8 +1850,8 @@ function collection_footer ( $display_format = null ) {
 
 // Get an array of posts by processing/assembling args and passing them to WP_Query
 // Among other things, this function can deal w/ special cases like sermon series, accept strings of slugs and turn them into arrays, etc. -- issues related to CPTs and taxonomies
-function birdhive_get_posts ( $args = array() ) {
-
+function birdhive_get_posts ( $args = array() )
+{
     // TS/logging setup
     $do_ts = devmode_active( array("dcp") );
     $do_log = false;
@@ -1943,7 +1947,7 @@ function birdhive_get_posts ( $args = array() ) {
         $ts_info .= "Getting posts by IDs: ".$ids."<br />";
 
         // Turn the list of IDs into a proper array
-        $post_ids         = array_map( 'intval', birdhive_att_explode( $ids ) );
+        $post_ids         = array_map( 'intval', wxc_att_explode( $ids ) );
         $wp_args['post__in'] = $post_ids;
         $wp_args['orderby']  = 'post__in';
         $get_by_ids = true;
@@ -1957,7 +1961,7 @@ function birdhive_get_posts ( $args = array() ) {
         $ts_info .= "Getting posts by slugs: ".$slugs;
 
         // Turn the list of slugs into a proper array
-        $post_slugs = birdhive_att_explode( $slugs );
+        $post_slugs = wxc_att_explode( $slugs );
         $wp_args['post_name__in'] = $post_slugs;
         $wp_args['orderby'] = 'post_name__in';
         $get_by_slugs = true;
@@ -2079,7 +2083,7 @@ function birdhive_get_posts ( $args = array() ) {
 
             if ( !is_array($orderby) && strpos($orderby, ',') !== false) {
                 $orderby = str_replace(","," ",$orderby);
-                //$orderby = birdhive_att_explode( $orderby );
+                //$orderby = wxc_att_explode( $orderby );
             }
 
             $standard_orderby_values = array( 'none', 'ID', 'author', 'title', 'name', 'type', 'date', 'modified', 'parent', 'rand', 'comment_count', 'relevance', 'menu_order', 'meta_value', 'meta_value_num', 'post__in', 'post_name__in', 'post_parent__in' );
@@ -2351,8 +2355,9 @@ Table display:
 **********
 */
 add_shortcode('display_posts', 'birdhive_display_posts');
-function birdhive_display_posts ( $atts = array() ) { //function birdhive_display_posts ( $args = array() ) {
-
+//function birdhive_display_posts ( $args = array() ) {
+function birdhive_display_posts ( $atts = array() )
+{ 
     // TS/logging setup
     $do_ts = devmode_active( array("dcp") );
     $do_log = false;
@@ -2479,7 +2484,7 @@ function birdhive_display_posts ( $atts = array() ) { //function birdhive_displa
             // Posts by ID -- translate to fit EM search attributes (https://wp-events-plugin.com/documentation/event-search-attributes/)
             if ( !empty($ids) ) {
                 $ts_info .= "Getting posts by IDs: ".$ids."<br />";
-                $post_ids = array_map( 'intval', birdhive_att_explode( $ids ) );
+                $post_ids = array_map( 'intval', wxc_att_explode( $ids ) );
                 if ( count($post_ids) > 1 ) {
                     $em_args['post_id'] = $post_ids; //$em_args['post__in'] = $post_ids;
                 } else {
@@ -2561,7 +2566,7 @@ function birdhive_display_posts ( $atts = array() ) { //function birdhive_displa
             // Is it a single or multiple group_by value?
             if ( str_contains($group_by, "," ) ) {
                 $ts_info .= "multiple group_by parameters!<br />";
-                $arr_groups = birdhive_att_explode($group_by);
+                $arr_groups = wxc_att_explode($group_by);
                 $group_by = $arr_groups[0];
                 $ts_info .= "group_by: $group_by<br />";
                 //if ( $arr_groups[1] ) { $group_by_secondary = $arr_groups[1]; }
@@ -2797,8 +2802,8 @@ function birdhive_display_posts ( $atts = array() ) { //function birdhive_displa
 }
 
 add_shortcode('content_collection', 'birdhive_content_collection');
-function birdhive_content_collection ( $atts = array() ) {
-
+function birdhive_content_collection ( $atts = array() )
+{
     // TS/logging setup
     $do_ts = devmode_active( array("dcp") );
     $do_log = false;
@@ -2825,8 +2830,8 @@ function birdhive_content_collection ( $atts = array() ) {
 }
 
 // ACF field groups...
-function match_group_field ( $field_groups, $field_name ) {
-
+function match_group_field ( $field_groups, $field_name )
+{
     $field = null;
 
     // Loop through the field_groups and their fields to look for a match (by field name)
@@ -2886,8 +2891,8 @@ function match_group_field ( $field_groups, $field_name ) {
 // TODO/WIP: generalize for use with other CPTs/other types of lists?
 // This is a modified version of WHX4: get_event_program_items
 add_shortcode('display_list_items', 'get_list_items');
-function get_list_items( $atts = array() ) {
-
+function get_list_items( $atts = array() )
+{
     // TS/logging setup
     $do_ts = devmode_active( array("dcp") );
     $do_log = false;
@@ -3560,9 +3565,8 @@ function get_list_items( $atts = array() ) {
 
 }
 
-
-function get_list_items_v1( $atts = array() ) {
-
+function get_list_items_v1( $atts = array() )
+{
     // TS/logging setup
     $do_ts = devmode_active( array("dcp") );
     $do_log = false;
@@ -4007,8 +4011,8 @@ function get_list_items_v1( $atts = array() ) {
 // See also SDG common_functions.php -- new version WIP
 // https://www.advancedcustomfields.com/resources/creating-wp-archive-custom-field-filter/
 add_shortcode('birdhive_search_form', 'birdhive_search_form');
-function birdhive_search_form ( $atts = array(), $content = null, $tag = '' ) {
-
+function birdhive_search_form ( $atts = array(), $content = null, $tag = '' )
+{
     // TS/logging setup
     $do_ts = devmode_active( array("dcp", "search") );
     $do_log = false;
@@ -4085,7 +4089,7 @@ function birdhive_search_form ( $atts = array(), $content = null, $tag = '' ) {
     if ( $fields ) {
 
         // Turn the fields list into an array
-        $arr_fields = birdhive_att_explode( $fields ); //if ( function_exists('sdg_att_explode') ) { }
+        $arr_fields = wxc_att_explode( $fields ); //if ( function_exists('sdg_att_explode') ) { }
         //$info .= print_r($arr_fields, true); // tft
 
         // e.g. http://stthomas.choirplanner.com/library/search.php?workQuery=Easter&composerQuery=Williams
