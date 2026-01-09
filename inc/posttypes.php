@@ -50,6 +50,3 @@ function register_post_type_collection() {
 
 }
 add_action( 'init', 'register_post_type_collection' );
-
-
-?>
