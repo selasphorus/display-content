@@ -84,7 +84,7 @@ require 'inc/acf-field-groups.php';
 function dsplycntnt_settings_init()
 {
     // TS/logging setup
-    $do_ts = devmode_active( array("dcp") );
+    $do_ts = devmode( array("dcp") );
     $do_log = false;
     sdg_log( "divline2", $do_log );
 
@@ -708,7 +708,7 @@ function birdhive_get_default_category ()
 function get_post_links( $post_id = null )
 {
     // TS/logging setup
-    $do_ts = devmode_active( array("dcp") );
+    $do_ts = devmode( array("dcp") );
     $do_log = false;
     sdg_log( "divline2", $do_log );
 
@@ -795,7 +795,7 @@ function display_item ( $arr_item = array(), $arr_styling = array() )
 function display_link_item ( $arr_item = array() )
 {
     // TS/logging setup
-    $do_ts = devmode_active( array("dcp") );
+    $do_ts = devmode( array("dcp") );
     $do_log = false;
     sdg_log( "divline2", $do_log );
 
@@ -822,7 +822,7 @@ function display_link_item ( $arr_item = array() )
 function display_list_item ( $arr_item = array() )
 {
     // TS/logging setup
-    $do_ts = devmode_active( array("dcp") );
+    $do_ts = devmode( array("dcp") );
     $do_log = false;
     sdg_log( "divline2", $do_log );
 
@@ -841,7 +841,7 @@ function display_list_item ( $arr_item = array() )
 function display_post_item ( $arr_item = array() )
 {
     // TS/logging setup
-    $do_ts = devmode_active( array("dcp") );
+    $do_ts = devmode( array("dcp") );
     $do_log = false;
     $fcn_id = "[dc-dpi]&nbsp;";
     sdg_log( "divline2", $do_log );
@@ -970,7 +970,7 @@ function display_event_list_item ( $EM_Event )
 function display_table_row ( $arr_item = array(), $arr_styling = array() )
 {
     // TS/logging setup
-    $do_ts = devmode_active( array("dcp") );
+    $do_ts = devmode( array("dcp") );
     $do_log = false;
     sdg_log( "divline2", $do_log );
     sdg_log( "function called: display_table_row", $do_log );
@@ -1070,7 +1070,7 @@ function display_table_row ( $arr_item = array(), $arr_styling = array() )
 function display_grid_item ( $arr_item = array(), $arr_styling = array() )
 {
     // TS/logging setup
-    $do_ts = devmode_active( array("dcp") );
+    $do_ts = devmode( array("dcp") );
     $do_log = false;
     sdg_log( "divline2", $do_log );
     sdg_log( "function called: display_grid_item", $do_log );
@@ -1514,7 +1514,7 @@ function build_item_arr ( $item, $arr_styling = array() )
 function birdhive_display_collection ( $args = array() )
 {
     // TS/logging setup
-    $do_ts = devmode_active( array("dcp") );
+    $do_ts = devmode( array("dcp") );
     $do_log = false;
     sdg_log( "divline2", $do_log );
 
@@ -1720,7 +1720,7 @@ function birdhive_display_collection ( $args = array() )
 function collection_header ( $args = array() )
 {
     // TS/logging setup
-    $do_ts = devmode_active( array("dcp") );
+    $do_ts = devmode( array("dcp") );
     $do_log = false;
     sdg_log( "divline2", $do_log );
 
@@ -1853,7 +1853,7 @@ function collection_footer ( $display_format = null )
 function birdhive_get_posts ( $args = array() )
 {
     // TS/logging setup
-    $do_ts = devmode_active( array("dcp") );
+    $do_ts = devmode( array("dcp") );
     $do_log = false;
     sdg_log( "divline2", $do_log );
 
@@ -2359,7 +2359,7 @@ add_shortcode('display_posts', 'birdhive_display_posts');
 function birdhive_display_posts ( $atts = array() )
 { 
     // TS/logging setup
-    $do_ts = devmode_active( array("dcp") );
+    $do_ts = devmode( array("dcp") );
     $do_log = false;
     sdg_log( "divline2", $do_log );
 
@@ -2805,7 +2805,7 @@ add_shortcode('content_collection', 'birdhive_content_collection');
 function birdhive_content_collection ( $atts = array() )
 {
     // TS/logging setup
-    $do_ts = devmode_active( array("dcp") );
+    $do_ts = devmode( array("dcp") );
     $do_log = false;
     sdg_log( "divline2", $do_log );
 
@@ -2894,7 +2894,7 @@ add_shortcode('display_list_items', 'get_list_items');
 function get_list_items( $atts = array() )
 {
     // TS/logging setup
-    $do_ts = devmode_active( array("dcp") );
+    $do_ts = devmode( array("dcp") );
     $do_log = false;
     sdg_log( "divline2", $do_log );
 
@@ -2929,8 +2929,8 @@ function get_list_items( $atts = array() )
     $program_layout = get_post_meta( $post_id, 'program_layout', true );
 
     /*** WIP ***/
-    //if ( devmode_active() || is_dev_site() ) { $run_updates = true; } // TMP(?) disabled 03/25/22
-    //if ( devmode_active() || ( is_dev_site() && devmode_active() )  ) { $run_updates = true; } // ???
+    //if ( devmode() || is_dev_site() ) { $run_updates = true; } // TMP(?) disabled 03/25/22
+    //if ( devmode() || ( is_dev_site() && devmode() )  ) { $run_updates = true; } // ???
 
     // Get the program item repeater field values (ACF)
     $program_rows = get_field('program_items', $post_id); // ACF function: https://www.advancedcustomfields.com/resources/get_field/ -- TODO: change to use have_rows() instead?
@@ -3568,7 +3568,7 @@ function get_list_items( $atts = array() )
 function get_list_items_v1( $atts = array() )
 {
     // TS/logging setup
-    $do_ts = devmode_active( array("dcp") );
+    $do_ts = devmode( array("dcp") );
     $do_log = false;
     sdg_log( "divline2", $do_log );
 
@@ -4014,7 +4014,7 @@ add_shortcode('birdhive_search_form', 'birdhive_search_form');
 function birdhive_search_form ( $atts = array(), $content = null, $tag = '' )
 {
     // TS/logging setup
-    $do_ts = devmode_active( array("dcp", "search") );
+    $do_ts = devmode( array("dcp", "search") );
     $do_log = false;
     sdg_log( "divline2", $do_log );
     $fcn_id = "[dc-bsf]&nbsp;";
