@@ -9,7 +9,7 @@
  * Description: Display content of all types in a variety of formats using shortcodes.
  * Dependencies:      Requires WHx4-Core
  * Requires Plugins:  whx4-core
- * Version: 0.1
+ * Version: 1.030226
  * Plugin URI: 
  * Author: atc
  * Author URI: http://birdhive.com
@@ -17,7 +17,7 @@
  */
 
 /*********
-Copyright (c) 2022, Alison Cheeseman/Birdhive Development & Design
+Copyright (c) 2022-26, Alison Cheeseman/Birdhive Development & Design
 
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
