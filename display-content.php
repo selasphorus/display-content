@@ -86,7 +86,7 @@ function dsplycntnt_settings_init()
     // TS/logging setup
     $do_ts = wxc_devmode( array("dcp") );
     $do_log = false;
-    sdg_log( "divline2", $do_log );
+    wxc_log( "divline2", $do_log );
 
     // Register a new setting for "dsplycntnt" page.
     register_setting( 'dsplycntnt', 'dsplycntnt_settings' );
@@ -710,7 +710,7 @@ function get_post_links( $post_id = null )
     // TS/logging setup
     $do_ts = wxc_devmode( array("dcp") );
     $do_log = false;
-    sdg_log( "divline2", $do_log );
+    wxc_log( "divline2", $do_log );
 
     if ( empty($post_id) ) { return false; }
 
@@ -797,7 +797,7 @@ function display_link_item ( $arr_item = array() )
     // TS/logging setup
     $do_ts = wxc_devmode( array("dcp") );
     $do_log = false;
-    sdg_log( "divline2", $do_log );
+    wxc_log( "divline2", $do_log );
 
     // Init vars
     $info = "";
@@ -824,7 +824,7 @@ function display_list_item ( $arr_item = array() )
     // TS/logging setup
     $do_ts = wxc_devmode( array("dcp") );
     $do_log = false;
-    sdg_log( "divline2", $do_log );
+    wxc_log( "divline2", $do_log );
 
     // Init vars
     $info = "";
@@ -844,7 +844,7 @@ function display_post_item ( $arr_item = array() )
     $do_ts = wxc_devmode( array("dcp") );
     $do_log = false;
     $fcn_id = "[dc-dpi]&nbsp;";
-    sdg_log( "divline2", $do_log );
+    wxc_log( "divline2", $do_log );
 
     // Init vars
     $info = "";
@@ -972,8 +972,8 @@ function display_table_row ( $arr_item = array(), $arr_styling = array() )
     // TS/logging setup
     $do_ts = wxc_devmode( array("dcp") );
     $do_log = false;
-    sdg_log( "divline2", $do_log );
-    sdg_log( "function called: display_table_row", $do_log );
+    wxc_log( "divline2", $do_log );
+    wxc_log( "function called: display_table_row", $do_log );
 
     // Init vars
     $info = "";
@@ -1072,8 +1072,8 @@ function display_grid_item ( $arr_item = array(), $arr_styling = array() )
     // TS/logging setup
     $do_ts = wxc_devmode( array("dcp") );
     $do_log = false;
-    sdg_log( "divline2", $do_log );
-    sdg_log( "function called: display_grid_item", $do_log );
+    wxc_log( "divline2", $do_log );
+    wxc_log( "function called: display_grid_item", $do_log );
 
     // Init vars
     $info = "";
@@ -1516,7 +1516,7 @@ function birdhive_display_collection ( $args = array() )
     // TS/logging setup
     $do_ts = wxc_devmode( array("dcp") );
     $do_log = false;
-    sdg_log( "divline2", $do_log );
+    wxc_log( "divline2", $do_log );
 
     // Init vars
     $info = "";
@@ -1722,7 +1722,7 @@ function collection_header ( $args = array() )
     // TS/logging setup
     $do_ts = wxc_devmode( array("dcp") );
     $do_log = false;
-    sdg_log( "divline2", $do_log );
+    wxc_log( "divline2", $do_log );
 
     // Init vars
     $info = "";
@@ -1855,7 +1855,7 @@ function birdhive_get_posts ( $args = array() )
     // TS/logging setup
     $do_ts = wxc_devmode( array("dcp") );
     $do_log = false;
-    sdg_log( "divline2", $do_log );
+    wxc_log( "divline2", $do_log );
 
     global $wpdb;
 
@@ -2361,7 +2361,7 @@ function birdhive_display_posts ( $atts = array() )
     // TS/logging setup
     $do_ts = wxc_devmode( array("dcp") );
     $do_log = false;
-    sdg_log( "divline2", $do_log );
+    wxc_log( "divline2", $do_log );
 
     global $wpdb;
     $info = "";
@@ -2807,7 +2807,7 @@ function birdhive_content_collection ( $atts = array() )
     // TS/logging setup
     $do_ts = wxc_devmode( array("dcp") );
     $do_log = false;
-    sdg_log( "divline2", $do_log );
+    wxc_log( "divline2", $do_log );
 
     global $wpdb;
     $info = "";
@@ -2896,7 +2896,7 @@ function get_list_items( $atts = array() )
     // TS/logging setup
     $do_ts = wxc_devmode( array("dcp") );
     $do_log = false;
-    sdg_log( "divline2", $do_log );
+    wxc_log( "divline2", $do_log );
 
     $args = shortcode_atts( array(
         'post_id'        => get_the_ID(),
@@ -3326,9 +3326,9 @@ function get_list_items( $atts = array() )
                 // If the row is empty/x-filled and needs to be deleted, then do so
                 if ( $delete_row == true ) {
 
-                    //sdg_log( "divline1", $do_log );
-                    //sdg_log( "program row to be deleted:", $do_log );
-                    //sdg_log( print_r($row, true), $do_log );
+                    //wxc_log( "divline1", $do_log );
+                    //wxc_log( "program row to be deleted:", $do_log );
+                    //wxc_log( print_r($row, true), $do_log );
                     $row_info .= "row: ".print_r($row, true)."<br />";
                     $row_info .= "[$i] program row to be deleted<br />";
                     $row_info .= "[$i] program row: item_label_txt='".$row['item_label_txt']."'; item_label='".$row['item_label']."'; program_item_txt='".$row['program_item_txt']."'<br />";
@@ -3342,20 +3342,20 @@ function get_list_items( $atts = array() )
                         if ( delete_row('program_items', $i, $post_id) ) { // ACF function: https://www.advancedcustomfields.com/resources/delete_row/ -- syntax: delete_row($selector, $row_num, $post_id)
                             $row_info .= "[program row $i deleted]<br />";
                             $deletion_count++;
-                            //sdg_log( "[program row $i deleted successfully]", $do_log );
+                            //wxc_log( "[program row $i deleted successfully]", $do_log );
                         } else {
                             $row_info .= "[deletion failed for program row $i]<br />";
-                            //sdg_log( "[failed to delete program row $i]", $do_log );
+                            //wxc_log( "[failed to delete program row $i]", $do_log );
                         }
 
                     } else {
 
                         if ( $do_deletions == true ) {
                             $row_info .= "[$i] row to be deleted on next round due to row_index issues.<br />";
-                            //sdg_log( "row to be deleted on next round due to row_index issues.", $do_log );
+                            //wxc_log( "row to be deleted on next round due to row_index issues.", $do_log );
                         } else {
                             $row_info .= "[$i] row to be deleted when do_deletions is re-enabled.<br />";
-                            //sdg_log( "row to be deleted when do_deletions is re-enabled.", $do_log );
+                            //wxc_log( "row to be deleted when do_deletions is re-enabled.", $do_log );
                         }
                     }
 
@@ -3570,7 +3570,7 @@ function get_list_items_v1( $atts = array() )
     // TS/logging setup
     $do_ts = wxc_devmode( array("dcp") );
     $do_log = false;
-    sdg_log( "divline2", $do_log );
+    wxc_log( "divline2", $do_log );
 
     $args = shortcode_atts( array(
         'post_id'        => get_the_ID(),
@@ -4016,7 +4016,7 @@ function birdhive_search_form ( $atts = array(), $content = null, $tag = '' )
     // TS/logging setup
     $do_ts = wxc_devmode( array("dcp", "search") );
     $do_log = false;
-    sdg_log( "divline2", $do_log );
+    wxc_log( "divline2", $do_log );
     $fcn_id = "[dc-bsf]&nbsp;";
 
     // Init vars
