@@ -53,6 +53,8 @@ define( 'DCP_PLUGIN_BLOCKS', DCP_PLUGIN_DIR . '/blocks/' );
 
 /* +~+~+~+~+~+~+~+~+~+~+~+~+~+~+~+~+~+~+~+~+~+~+~+~+ */
 
+// WIP
+
 use atc\WXC\Utils\Text;
 
 // TODO: build in plugin dependency on SDG
@@ -1811,7 +1813,7 @@ function collection_header ( $args = array() )
 
     } else if ( $display_format == "grid" ) {
 
-        $colclass = Text::digitToWord($num_cols)."col";
+        $colclass = Text::digitToWord($num_cols)."col"; // WIP -- error -- Non-static method cannot be called statically
         $ts_info .= "num_cols: ".$num_cols." => colclass: ".$colclass."<br />";
         //if ( $class ) { $colclass .= " ".$class; }
         $info .= '<div class="flex-container '.$colclass.' '.$aspect_ratio.'">';
