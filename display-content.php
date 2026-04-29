@@ -846,26 +846,26 @@ function display_post_item ( $arr_item = array() )
     // WIP
     if ( $post_id ) {
         $post_type = get_post_type($post_id);
-        $ts_info .= $fcn_id."post_id: ".$post_id."<br />";
-        $ts_info .= $fcn_id."post_type: ".$post_type."<br />";
+        $ts_info .= "post_id: ".$post_id."<br />";
+        $ts_info .= "post_type: ".$post_type."<br />";
     } else {
         $post_type = null;
     }
 
-    $ts_info .= $fcn_id.">>> display_post_item <<<<br />";
-    $ts_info .= $fcn_id."show_content: ".$show_content."<br />";
+    $ts_info .= ">>> display_post_item <<<<br />";
+    $ts_info .= "show_content: ".$show_content."<br />";
     //$ts_info .= "arr_item: <pre>".print_r($arr_item,true)."</pre>";
 
     if ( $post_id && $show_content == "full" ) {
         //$ts_info .= "Show full content<br />";
-        $item_content .= "<!-- $fcn_id START post_content for post_id $post_id -->";
+        $item_content .= "<!-- START post_content for post_id $post_id -->";
         $full_content = true;
         $post = get_post($post_id);
         $item_content .= apply_filters('the_content', $post->post_content);
-        $item_content .= "<!-- $fcn_id END post_content for post_id $post_id -->";
+        $item_content .= "<!-- END post_content for post_id $post_id -->";
         // For event posts, get date/location info for header
         if ( $post_type == 'event' ) {
-            $item_content .= "<!-- $fcn_id get item_meta via EM shortcode for post_id $post_id -->";
+            $item_content .= "<!-- get item_meta via EM shortcode for post_id $post_id -->";
             $item_meta = do_shortcode('[event post_id="'.$post_id.'"]#_EVENTDATES<br /><span class="event_time">#_EVENTTIMES</span>[/event]');
         }
     } else {
@@ -879,10 +879,10 @@ function display_post_item ( $arr_item = array() )
         $email_address = get_field( 'email_address', $post_id );
         $first_name = get_field( 'first_name', $post_id );
         if ( $email_address ) {
-            $ts_info .= $fcn_id.'email_address: '.$email_address.'<br />';
+            $ts_info .= 'email_address: '.$email_address.'<br />';
             $item_content .= '<a class="button" href="mailto:'.$email_address.'">Email '.$first_name.'</a>';
         } else {
-            $ts_info .= $fcn_id.'email_address: None found<br />';
+            $ts_info .= 'email_address: None found<br />';
         }
     }
 
@@ -907,7 +907,7 @@ function display_post_item ( $arr_item = array() )
     // TODO: add subtitle?
     $info .= '</header><!-- .entry-header -->';
     if ( empty($item_image) && $show_content == "full" ) {
-        $ts_info .= $fcn_id.'No item_image => get image via SDGPT<br />';
+        $ts_info .= 'No item_image => get image via SDGPT<br />';
         $img_args = array( 'post_id' => $post_id, 'format' => 'singular', 'img_size' => "full", 'sources' => array("featured", "gallery"), 'echo' => false );
         $info .= sdg_post_thumbnail( $img_args );
     }
@@ -1143,7 +1143,6 @@ function build_item_arr ( $item, $arr_styling = array() )
     // Init vars
     $arr_item = array();
     $ts_info = "";
-    $fcn_id = "[dc-bia]&nbsp;";
     //
     $link_posts = "true"; // default in case it's not set by arr_styling
     $display_format = null;
@@ -1176,7 +1175,7 @@ function build_item_arr ( $item, $arr_styling = array() )
     if ( is_object($item) ) { // item is post object, e.g. when called via display_posts shortcode
         $post = $item;
     } else if ( is_array($item) ) {
-        $ts_info .= '[bia] extract item: <pre>'.print_r($item,true).'</pre>';
+        $ts_info .= 'extract item: <pre>'.print_r($item,true).'</pre>';
         extract( $item );
 
         if ( isset($post_object) && isset($post_object[0]) ) {
@@ -1197,7 +1196,7 @@ function build_item_arr ( $item, $arr_styling = array() )
 
     //$ts_info .= 'BIA -- item: <pre>'.print_r($item, true).'</pre><br />';
     //$ts_info .= 'BIA -- item: '.print_r($item, true).'<br />';
-    $ts_info .= '[bia] item_type: '.$item_type.'<br />';
+    $ts_info .= 'item_type: '.$item_type.'<br />';
 
     // WIP -- image sizes
     if ( $display_format == "excerpts" || $display_format == "archive" ) {
@@ -1215,32 +1214,32 @@ function build_item_arr ( $item, $arr_styling = array() )
     */} else {
         $img_size = "grid_crop_landscape";
     }
-    $ts_info .= '[bia] img_size: '.$img_size.'<br />';
+    $ts_info .= 'img_size: '.$img_size.'<br />';
     
     if ( $post && ( $item_type == "post" || $item_type == "event" ) ) {
 
         //$ts_info .= '<!-- post: <pre>'.print_r($post, true).'</pre> -->';
         $post_type = $post->post_type;
         $post_id = $post->ID;
-        $ts_info .= '[bia] post_type: '.$post_type.' / post_id: '.$post_id."<br />";
+        $ts_info .= 'post_type: '.$post_type.' / post_id: '.$post_id."<br />";
 
         // Item Title
         // If there was no title override set via collection, then get a title
         // TODO: deal w/ prefix/suffix options?
         if ( empty($item_title) ) {
-            $ts_info .= '[bia] get item_title<br />';
+            $ts_info .= 'get item_title<br />';
             // If a short_title is set, and we're NOT showing full content, use the short title.
             $short_title = get_post_meta( $post_id, 'short_title', true );
             if ( !empty($short_title) && $show_content != "full" ) {
                 $ts_info .= ' >> use short_title: '.$short_title.'<br />';
                 $item_title = $short_title;
             } else if ( $post_type == "person" ) {
-                $title_args = array( 'person_id' => $post_id, 'override' => 'post_title', 'show_job_title' => true, 'called_by' => $fcn_id );
+                $title_args = array( 'person_id' => $post_id, 'override' => 'post_title', 'show_job_title' => true, 'called_by' => 'dcp');
                 $item_title = getPersonDisplayName($title_args)['info'];
             } else if ( function_exists( 'sdg_post_title' ) ) {
                 $ts_info .= ' >> sdg_post_title<br />';
                 if ( !isset($show_subtitle) ) { $show_subtitle = true; }
-                $title_args = array( 'post' => $post_id, 'line_breaks' => true, 'show_subtitle' => $show_subtitle, 'echo' => false, 'called_by' => $fcn_id );
+                $title_args = array( 'post' => $post_id, 'line_breaks' => true, 'show_subtitle' => $show_subtitle, 'echo' => false, 'called_by' => 'dcp' );
                 if ( $show_content == "full" ) {
                     $title_args['hlevel'] = 2;
                     $title_args['hlevel_sub'] = 3;
@@ -1269,9 +1268,9 @@ function build_item_arr ( $item, $arr_styling = array() )
         if ( empty($item_url) && $link_posts !== "false" ) {
             $item_url = get_the_permalink( $post_id ); //if ( empty($item_url) ) { $item_url = get_the_permalink( $post_id ); }
         } else {
-            $ts_info .= '[bia] link_posts: '.$link_posts."<br />";
+            $ts_info .= 'link_posts: '.$link_posts."<br />";
         }
-        $ts_info .= '[bia] item_url: '.$item_url."<br />";
+        $ts_info .= 'item_url: '.$item_url."<br />";
 
         // +~+~+~+~+~+~+~+~+~+~+~+~+~+~+~+~+~+~+~+~+~+~+~+
 
@@ -1292,8 +1291,8 @@ function build_item_arr ( $item, $arr_styling = array() )
                 $sdgpt_format = 'excerpt';
             }
             $img_args = array( 'post_id' => $post_id, 'format' => $sdgpt_format, 'img_size' => $img_size, 'sources' => "all", 'echo' => false, 'return_value' => 'id' );
-            $image_id = whx4_post_thumbnail ( $img_args );
-            $ts_info .= '[bia] whx4_post_thumbnail -> image_id: '.$image_id.'<br />';
+            $image_id = whx4_post_image ( $img_args );
+            $ts_info .= 'whx4_post_image -> image_id: '.$image_id.'<br />';
         }
         // +~+~+~+~+~+~+~+~+~+~+~+~+~+~+~+~+~+~+~+~+~+~+~+
 
@@ -1991,7 +1990,6 @@ Table display:
 -------------
 [display_posts post_type="person" taxonomy="person_category" tax_terms="dca" orderby="meta_value" order="ASC" meta_key="award_year_dca" limit="-1" display_format="table" fields="award_year_dca,title,recital_venue_dca" headers="-,Recipient,Presentation Venue"]
 
-
 **********
 */
 add_shortcode('display_posts', 'birdhive_display_posts');
@@ -2006,7 +2004,6 @@ function birdhive_display_posts ( $atts = array() )
     $items = array(); // post items -- may be simple array of post objects, or mixed array of headers and post ids
 
     $args = shortcode_atts( array(
-
         'post_type'    => 'post',
         'limit'     => 15,
         'orderby'     => 'title',
@@ -2026,6 +2023,20 @@ function birdhive_display_posts ( $atts = array() )
         //
         // This group_by is NOT the same as the wpq arg 'groupby' -- we're going to use it to retrieve posts group by group for display with headers... WIP
         'group_by'    => null, // e.g. category, event-categories, link_category -- for queries using scope, TODO: also build in options to group_by month, etc.
+        
+        'has_image' => false, // set to true to ONLY return posts with features images
+
+        // For post_type 'event' -- and others, wip (e.g. transactions -- any post type with event fields)
+        'scope' => 'all', //'upcoming',
+        'date_field' => null, // WIP -- maybe default to 'event_start'? -- applies to events -- other possibilities include sermon_date, transaction_date...
+
+        // For Events or Sermons
+        'series' => false,
+
+        //
+        'context' => 'general', // wip
+        
+        // Styling attributes
         //
         'display_format' => 'list', // other options: links; excerpts; archive (full post content); grid; table
         'return_format' => null, // deprecated -- TODO: remove this extra attribute as soon as updates are complete on all sites (STC, AGO)
@@ -2036,7 +2047,6 @@ function birdhive_display_posts ( $atts = array() )
         'header' => false,
         'overlay' => false, // ***
         //
-        'has_image' => false, // set to true to ONLY return posts with features images
         'class' => null, // for additional styling
         'link_posts' => true,
         'show_images' => false,
@@ -2047,20 +2057,9 @@ function birdhive_display_posts ( $atts = array() )
         'preview_length' => '55',
         //'aspect_ratio' => 'square', // TBD whether to activate this or not... probably better to simplify args array
 
-        // For post_type 'event' -- and others, wip (e.g. transactions -- any post type with event fields)
-        'scope' => 'all', //'upcoming',
-        'date_field' => null, // WIP -- maybe default to 'event_start'? -- applies to events -- other possibilities include sermon_date, transaction_date...
-
-        // For Events or Sermons
-        'series' => false,
-
         // For table display_format
         'fields'  => null, // ***
         'headers'  => null, // ***
-
-        //
-        'context' => 'general', // wip
-
     ), $atts );
 
     // Extract
@@ -4282,7 +4281,7 @@ function birdhive_search_form ( $atts = array(), $content = null, $tag = '' )
                                         $options[$id] = $option_name;
                                         // TODO: deal w/ possibility that last_name, first_name fields are empty
                                     } else if ( function_exists( 'sdg_post_title' ) ) {
-                                        $title_args = array( 'post' => $post_id, 'line_breaks' => true, 'show_subtitle' => true, 'echo' => false, 'hlevel' => null, 'hlevel_sub' => null, 'called_by' => $fcn_id );
+                                        $title_args = array( 'post' => $post_id, 'line_breaks' => true, 'show_subtitle' => true, 'echo' => false, 'hlevel' => null, 'hlevel_sub' => null, 'called_by' => 'dcp' );
                                         $options[$id] = sdg_post_title( $title_args );
                                     } else {
                                         $options[$id] = get_the_title($id);
