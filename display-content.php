@@ -48,8 +48,6 @@ define( 'DCP_PLUGIN_BLOCKS', DCP_PLUGIN_DIR . '/blocks/' );
 
 /* +~+~+~+~+~+~+~+~+~+~+~+~+~+~+~+~+~+~+~+~+~+~+~+~+ */
 
-// TODO: build in plugin dependency on SDG
-
 /* +~+~+ ACF +~+~+ */
 
 // Set custom load & save JSON points for ACF sync
@@ -76,13 +74,8 @@ require 'inc/acf-field-groups.php';
 /**
  * Custom option and settings
  */
-function dsplycntnt_settings_init() {
-
-    // TS/logging setup
-    $do_ts = devmode_active( array("dcp") );
-    $do_log = false;
-    sdg_log( "divline2", $do_log );
-
+function dsplycntnt_settings_init()
+{
     // Register a new setting for "dsplycntnt" page.
     register_setting( 'dsplycntnt', 'dsplycntnt_settings' );
 
