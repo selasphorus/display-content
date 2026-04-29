@@ -6,7 +6,7 @@
 
 /*
 Plugin Name: Birdhive Display Content
-Version: 0.2
+Version: 0.2.260429
 Plugin URI:
 Description: Display content of all types in a variety of formats using shortcodes.
 Author: atc
