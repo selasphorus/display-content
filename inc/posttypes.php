@@ -8,12 +8,11 @@ if ( !function_exists( 'add_action' ) ) {
 	exit;
 }
 
-
 /*** CONTENT COLLECTIONS ***/
 
 // Content Collections -- for mixed content (posts, links, media files, &c.) in conjunction w/ ACF
-function register_post_type_collection() {
-
+function register_post_type_collection()
+{
 	$labels = array(
 		'name' => __( 'Content Collections', 'sdg' ),
 		'singular_name' => __( 'Collection', 'sdg' ),
@@ -50,6 +49,3 @@ function register_post_type_collection() {
 
 }
 add_action( 'init', 'register_post_type_collection' );
-
-
-?>
