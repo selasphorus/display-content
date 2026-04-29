@@ -1,21 +1,18 @@
 <?php
-/**
- * @package Display_Content
- * @version 0.2
- */
-
 /*
-Plugin Name: Birdhive Display Content
-Version: 0.2.260429
-Plugin URI:
-Description: Display content of all types in a variety of formats using shortcodes.
-Author: atc
-Author URI: http://birdhive.com
-Text Domain: dsplycntnt
-*/
+- * Plugin Name: Birdhive Display Content (main)
+- * Description: Display content of all types in a variety of formats using shortcodes.
+- * Dependencies:      
+- * Requires Plugins:  
+- * Version: 1.260429
+- * Plugin URI: 
+- * Author: atc
+- * Author URI: http://birdhive.com
+- * Text Domain: display-content
+- */
 
 /*********
-Copyright (c) 2022, Alison Cheeseman/Birdhive Development & Design
+Copyright (c) 2022-26, Alison Cheeseman/Birdhive Development & Design
 
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
