@@ -1,5 +1,4 @@
 <?php
-
 defined( 'ABSPATH' ) or die( 'Nope!' );
 
 // Make sure we don't expose any info if called directly
@@ -46,6 +45,5 @@ function register_post_type_collection()
 	);
 
 	register_post_type( 'collection', $args );
-
 }
 add_action( 'init', 'register_post_type_collection' );
