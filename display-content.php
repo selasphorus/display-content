@@ -3,7 +3,7 @@
 - * Plugin Name: Birdhive Display Content (main)
 - * Description: Display content of all types in a variety of formats using shortcodes.
 - * Dependencies:      
-- * Requires Plugins:  
+- * Requires Plugins: whx4-core
 - * Version: 1.260513.1
 - * Plugin URI: 
 - * Author: atc
@@ -38,6 +38,7 @@ if ( !function_exists( 'add_action' ) ) {
 }
 
 $plugin_path = plugin_dir_path( __FILE__ );
+global $logCtx = ['dcp'];
 
 // Define our handy constants.
 define( 'DCP_VERSION', '0.2' );
@@ -268,8 +269,6 @@ function dsplycntnt_query_vars( $qvars )
     }
 }*/
 
-
-$logCtx = ['dcp'];
 
 /*** IMAGE FUNCTIONS ***/
 
