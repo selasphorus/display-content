@@ -38,7 +38,8 @@ if ( !function_exists( 'add_action' ) ) {
 }
 
 $plugin_path = plugin_dir_path( __FILE__ );
-global $logCtx = ['dcp'];
+global $logCtx;
+$logCtx = ['dcp'];
 
 // Define our handy constants.
 define( 'DCP_VERSION', '0.2' );
