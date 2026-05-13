@@ -38,7 +38,6 @@ if ( !function_exists( 'add_action' ) ) {
 }
 
 $plugin_path = plugin_dir_path( __FILE__ );
-$logCtx = ['dcp'];
 
 // Define our handy constants.
 define( 'DCP_VERSION', '0.2' );
@@ -268,6 +267,9 @@ function dsplycntnt_query_vars( $qvars )
         return $str;
     }
 }*/
+
+
+$logCtx = ['dcp'];
 
 /*** IMAGE FUNCTIONS ***/
 
@@ -4973,4 +4975,3 @@ function birdhive_search_form ( $atts = array(), $content = null, $tag = '' )
     return $info;
 
 } // END fcn birdhive_search_form
-
