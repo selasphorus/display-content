@@ -4,7 +4,7 @@
 - * Description: Display content of all types in a variety of formats using shortcodes.
 - * Dependencies:      
 - * Requires Plugins:  
-- * Version: 1.260429
+- * Version: 1.260513.1
 - * Plugin URI: 
 - * Author: atc
 - * Author URI: http://birdhive.com
@@ -38,6 +38,7 @@ if ( !function_exists( 'add_action' ) ) {
 }
 
 $plugin_path = plugin_dir_path( __FILE__ );
+$logCtx = ['dcp'];
 
 // Define our handy constants.
 define( 'DCP_VERSION', '0.2' );
@@ -76,6 +77,8 @@ require 'inc/acf-field-groups.php';
  */
 function dsplycntnt_settings_init()
 {
+    $logCtx = ['dcp', 'display'];
+    
     // Register a new setting for "dsplycntnt" page.
     register_setting( 'dsplycntnt', 'dsplycntnt_settings' );
 
@@ -163,7 +166,8 @@ add_image_size( 'grid_crop_rectangle', 534, 300, true ); // Aspect Ratio: approx
 add_image_size( 'grid_crop_landscape', 534, 300, true ); // Aspect Ratio: approx 16:9
 add_image_size( 'grid_crop_portrait', 350, 525, true ); // Aspect Ratio: approx 2:3
 add_filter( 'image_size_names_choose', 'birdhive_custom_image_sizes' );
-function birdhive_custom_image_sizes( $sizes ) {
+function birdhive_custom_image_sizes( $sizes )
+{
     return array_merge( $sizes, array(
         'grid_crop_square' => __( 'Grid Crop (square)' ),
         'grid_crop_rectangle' => __( 'Grid Crop (rectangle)' ), // deprecated
@@ -174,8 +178,8 @@ function birdhive_custom_image_sizes( $sizes ) {
 
 // Enqueue scripts and styles -- WIP
 add_action( 'wp_enqueue_scripts', 'dsplycntnt_scripts_method' );
-function dsplycntnt_scripts_method() {
-
+function dsplycntnt_scripts_method()
+{
     $ver = "0.1.250620";
     wp_enqueue_style( 'dsplycntnt-style', plugin_dir_url( __FILE__ ) . 'display-content.css', NULL, $ver );
 
@@ -184,15 +188,14 @@ function dsplycntnt_scripts_method() {
 
     // Enqueue Font Awesome 5
     // WIP
-
 }
 
 // The following filter function to be removed altogether after testing -- replaced by version of same fcn in sdg.php
 // TODO: build in plugin dependency on SDG
 // Facilitate search by str in post_title (as oppposed to built-in search by content or by post name, aka slug)
 //add_filter( 'posts_where', 'birdhive_posts_where', 10, 2 );
-/*function birdhive_posts_where( $where, $wp_query ) {
-
+/*function birdhive_posts_where( $where, $wp_query )
+{
     global $wpdb;
 
     if ( $search_term = $wp_query->get( '_search_title' ) ) {
@@ -246,7 +249,8 @@ function dsplycntnt_scripts_method() {
 // Add custom query vars
 // TBD -- IMPORTANT: will this cause issues with EM?
 add_filter( 'query_vars', 'dsplycntnt_query_vars' );
-function dsplycntnt_query_vars( $qvars ) {
+function dsplycntnt_query_vars( $qvars )
+{
     $qvars[] = 'scope';
     return $qvars;
 }
@@ -268,8 +272,8 @@ function dsplycntnt_query_vars( $qvars ) {
 /*** IMAGE FUNCTIONS ***/
 
 // Extract first image from post content
-function get_first_image_from_post_content( $post_id ) {
-
+function get_first_image_from_post_content( $post_id )
+{
     if ( empty($post_id) ) { return false; }
 
     // Init vars
@@ -325,12 +329,13 @@ function get_first_image_from_post_content( $post_id ) {
 
 // Allow select HTML tags in excerpts
 // https://wordpress.stackexchange.com/questions/141125/allow-html-in-excerpt
-function dsplycntnt_allowedtags() {
+function dsplycntnt_allowedtags()
+{
     return '<style>,<br>,<em>,<strong>';
 }
 
-function dsplycntnt_custom_wp_trim_excerpt($excerpt) {
-
+function dsplycntnt_custom_wp_trim_excerpt($excerpt)
+{
     global $post;
 
     $raw_excerpt = $excerpt;
@@ -391,8 +396,8 @@ function dsplycntnt_custom_wp_trim_excerpt($excerpt) {
  *
  */
 
-function dsplycntnt_get_excerpt( $args = array() ) {
-
+function dsplycntnt_get_excerpt( $args = array() )
+{
     // init vars
     $info = "";
     $text = "";
@@ -467,8 +472,8 @@ function dsplycntnt_get_excerpt( $args = array() ) {
 // see https://developer.wordpress.org/reference/functions/get_the_excerpt/
 // TODO: pare down number of args -- simplify
 // TODO: build in option to submit $preview_text and $full_text as vars to be formatted for display
-function expandable_text( $args = array() ) {
-
+function expandable_text( $args = array() )
+{
     // Init
     $info = "";
     $full_text = "";
@@ -576,8 +581,8 @@ function expandable_text( $args = array() ) {
  * Prints HTML with meta information for the categories, tags.
  * This function is a version of twentysixteen_entry_meta
  */
-function birdhive_entry_meta() {
-
+function birdhive_entry_meta()
+{
     $format = get_post_format();
     if ( current_theme_supports( 'post-formats', $format ) ) {
         printf(
@@ -598,7 +603,8 @@ function birdhive_entry_meta() {
 /*** TAXONOMY-RELATED FUNCTIONS ***/
 
 // Function to determine default taxonomy for a given post_type, for use with display_posts shortcode, &c.
-function birdhive_get_default_taxonomy ( $post_type = null ) {
+function birdhive_get_default_taxonomy ( $post_type = null )
+{
     switch ($post_type) {
         case "post":
             return "category";
@@ -620,8 +626,8 @@ function birdhive_get_default_taxonomy ( $post_type = null ) {
 }
 
 // Function to determine default category for given page, for purposes of Recent Posts &c.
-function birdhive_get_default_category () {
-
+function birdhive_get_default_category ()
+{
     $default_cat = "";
 
     if ( is_category() ) {
@@ -690,18 +696,12 @@ function birdhive_get_default_category () {
 
 /*** Post Extras ***/
 
-function get_post_links( $post_id = null ) {
-
-    // TS/logging setup
-    $do_ts = devmode_active( array("dcp") );
-    $do_log = false;
-    sdg_log( "divline2", $do_log );
-
+function get_post_links( $post_id = null )
+{
     if ( empty($post_id) ) { return false; }
 
     // Init vars
     $info = "";
-    //$ts_info = "";
 
     $related_links = get_field( 'related_links', $post_id );
     if ( $related_links ) {
@@ -741,7 +741,6 @@ function get_post_links( $post_id = null ) {
     }
 
     return $info;
-
 }
 
 /*** RETRIEVE & DISPLAY POSTS with complex queries &c. ***/
@@ -755,8 +754,8 @@ function get_post_links( $post_id = null ) {
 // Perhaps rework all of this to make it object-oriented, with an "item" class of objects?
 
 //function display_item ( $display_format = "links", $item_arr = array(), $display_atts = null, $table_fields = null, $item_ts_info = null ) {
-function display_item ( $arr_item = array(), $arr_styling = array() ) {
-
+function display_item ( $arr_item = array(), $arr_styling = array() )
+{
     $info = "";
 
     extract( $arr_styling );
@@ -777,13 +776,8 @@ function display_item ( $arr_item = array(), $arr_styling = array() ) {
 
 }
 
-function display_link_item ( $arr_item = array() ) {
-
-    // TS/logging setup
-    $do_ts = devmode_active( array("dcp") );
-    $do_log = false;
-    sdg_log( "divline2", $do_log );
-
+function display_link_item ( $arr_item = array() )
+{
     // Init vars
     $info = "";
     extract( $arr_item );
@@ -801,16 +795,10 @@ function display_link_item ( $arr_item = array() ) {
     //if ( $ts_info != "" && ( $do_ts === true || $do_ts == "dcp" ) ) { $info .= '<div class="troubleshooting">'.$ts_info.'</div>'; }
 
     return $info;
-
 }
 
-function display_list_item ( $arr_item = array() ) {
-
-    // TS/logging setup
-    $do_ts = devmode_active( array("dcp") );
-    $do_log = false;
-    sdg_log( "divline2", $do_log );
-
+function display_list_item ( $arr_item = array() )
+{
     // Init vars
     $info = "";
     extract( $arr_item );
@@ -820,17 +808,10 @@ function display_list_item ( $arr_item = array() ) {
     $info .= '</li>';
 
     return $info;
-
 }
 
-function display_post_item ( $arr_item = array() ) {
-
-    // TS/logging setup
-    $do_ts = devmode_active( array("dcp") );
-    $do_log = false;
-    $fcn_id = "[dc-dpi]&nbsp;";
-    sdg_log( "divline2", $do_log );
-
+function display_post_item ( $arr_item = array() )
+{
     // Init vars
     $info = "";
     $ts_info = "";
@@ -938,8 +919,8 @@ function display_post_item ( $arr_item = array() ) {
 
 }
 
-function display_event_list_item ( $EM_Event ) {
-
+function display_event_list_item ( $EM_Event )
+{
     // Init
     $info = "";
 
@@ -952,14 +933,8 @@ function display_event_list_item ( $EM_Event ) {
 
 }
 
-function display_table_row ( $arr_item = array(), $arr_styling = array() ) {
-
-    // TS/logging setup
-    $do_ts = devmode_active( array("dcp") );
-    $do_log = false;
-    sdg_log( "divline2", $do_log );
-    sdg_log( "function called: display_table_row", $do_log );
-
+function display_table_row ( $arr_item = array(), $arr_styling = array() )
+{
     // Init vars
     $info = "";
     $ts_info = "";
@@ -1052,14 +1027,8 @@ function display_table_row ( $arr_item = array(), $arr_styling = array() ) {
 
 }
 
-function display_grid_item ( $arr_item = array(), $arr_styling = array() ) {
-
-    // TS/logging setup
-    $do_ts = devmode_active( array("dcp") );
-    $do_log = false;
-    sdg_log( "divline2", $do_log );
-    sdg_log( "function called: display_grid_item", $do_log );
-
+function display_grid_item ( $arr_item = array(), $arr_styling = array() )
+{
     // Init vars
     $info = "";
     $item_info = "";
@@ -1141,8 +1110,9 @@ function display_grid_item ( $arr_item = array(), $arr_styling = array() ) {
 // TODO: streamline and generalize so that it's possible (e.g.) to pass just item_title, item_text for grid display
 // TODO: simplify -- item atts, display atts -- don't need all of them for every display_format etc.
 //function build_item_arr ( $item = array(), $item_type = null, $display_format = "list", $aspect_ratio = null, $collection_id = null ) {
-function build_item_arr ( $item, $arr_styling = array() ) { // TODO: come up with better name for $arr_styling -- which also includes atts like collection_id, not just styling atts like aspect_ratio
-
+function build_item_arr ( $item, $arr_styling = array() )
+{ 
+    // TODO: come up with better name for $arr_styling -- which also includes atts like collection_id, not just styling atts like aspect_ratio
     // Init vars
     $arr_item = array();
     $ts_info = "";
@@ -1245,7 +1215,7 @@ function build_item_arr ( $item, $arr_styling = array() ) { // TODO: come up wit
                 $item_title = $short_title;
             } else if ( $post_type == "person" ) {
                 $title_args = array( 'person_id' => $post_id, 'override' => 'post_title', 'show_job_title' => true, 'called_by' => $fcn_id );
-                $item_title = get_person_display_name($title_args)['info'];
+                $item_title = getPersonDisplayName($title_args)['info'];
             } else if ( function_exists( 'sdg_post_title' ) ) {
                 $ts_info .= ' >> sdg_post_title<br />';
                 if ( !isset($show_subtitle) ) { $show_subtitle = true; }
@@ -1500,13 +1470,8 @@ function build_item_arr ( $item, $arr_styling = array() ) { // TODO: come up wit
 
 
 // Display a collection of post items
-function birdhive_display_collection ( $args = array() ) {
-
-    // TS/logging setup
-    $do_ts = devmode_active( array("dcp") );
-    $do_log = false;
-    sdg_log( "divline2", $do_log );
-
+function birdhive_display_collection ( $args = array() )
+{
     // Init vars
     $info = "";
     $ts_info = "";
@@ -1705,17 +1670,10 @@ function birdhive_display_collection ( $args = array() ) {
 } // END function birdhive_display_collection ( $args = array() )
 
 // TODO: add options for collection_SUBheaders... e.g. for group/subgroups/personnel; links displayed grouped by link categories; etc.
-function collection_header ( $args = array() ) { // wip
-//function collection_header ( $display_format = null, $num_cols = 3, $aspect_ratio = "square", $fields = null, $headers = null ) {
-
-    // TS/logging setup
-    $do_ts = devmode_active( array("dcp") );
-    $do_log = false;
-    sdg_log( "divline2", $do_log );
-
+function collection_header ( $args = array() ) 
+{
     // Init vars
     $info = "";
-    $ts_info = "";
 
     // Defaults
     $defaults = array(
@@ -1730,27 +1688,16 @@ function collection_header ( $args = array() ) { // wip
     // Parse & Extract args
     $args = wp_parse_args( $args, $defaults );
     extract( $args );
-    //$ts_info .= "collection_header >> args: <pre>".print_r($args, true)."</pre>";
 
     $ts_info .= "<!-- +~+~+~+~+~+~+ collection_header +~+~+~+~+~+~+ -->";
 
     if ( $display_format == "list" ) {
-
         $info .= '<ul>';
-
     } else if ( $display_format == "links" ) {
-
         //$info .= '';
-
     } else if ( $display_format == "excerpts" || $display_format == "archive" ) {
-
         $info .= '<div class="posts_archive">';
-
     } else if ( $display_format == "table" ) {
-
-        //$ts_info .= "fields: <pre>".print_r($fields, true)."</pre>";
-        //$ts_info .= "headers: <pre>".print_r($headers, true)."</pre>";
-
         $table_classes = "posts_archive";
         if ( $custom_class ) { $table_classes .= " ".$custom_class; }
         $info .= '<table class="'.$table_classes.'">';
@@ -1768,10 +1715,8 @@ function collection_header ( $args = array() ) { // wip
             $th_customization = ""; // wip -- see e.g. bkkp employment income
 
             if ( !empty($headers) ) {
-
                 // Create array from headers string, as needed
                 if ( is_array($headers) ) { $arr_headers = $headers; } else { $arr_headers = explode(",",$headers); }
-
                 foreach ( $arr_headers as $header ) {
                     $header = trim($header);
                     if ( $header == "-" ) { $header = ""; }
@@ -1781,40 +1726,29 @@ function collection_header ( $args = array() ) { // wip
                     //width="25%
                     $col++;
                 }
-
             } else {
-
                 // If no headers were submitted, make do with the field names
                 foreach ( $arr_fields as $field_name ) {
                     $field_name = ucfirst(trim($field_name));
                     $info .= '<th'.$th_customization.'>'.$header."</th>";
                     $col++;
                 }
-
             }
-
             $info .= "</tr>"; // close out the header row
         }
-
     } else if ( $display_format == "grid" ) {
-
         $colclass = sdg_digit_to_word($num_cols)."col";
-        $ts_info .= "num_cols: ".$num_cols." => colclass: ".$colclass."<br />";
-        //if ( $class ) { $colclass .= " ".$class; }
         $info .= '<div class="flex-container '.$colclass.' '.$aspect_ratio.'">';
-
     } else {
         $info .= '<!-- display_format '.$display_format.' not matched -->';
     }
-
-    if ( $ts_info != "" && ( $do_ts === true || $do_ts == "dcp" ) ) { $info .= $ts_info; } //if ( $do_ts && !empty($ts_info) ) { $info .= $ts_info; } //if ( $do_ts && !empty($ts_info) ) { $info .= '<div class="troubleshooting">'.$ts_info.'</div>'; }
 
     // Return info for display
     return $info;
 }
 
-function collection_footer ( $display_format = null ) {
-
+function collection_footer ( $display_format = null )
+{
     $info = "";
     //$info .= "+~+~+~+~+~+~+ collection_footer +~+~+~+~+~+~+<br />";
 
@@ -1839,24 +1773,18 @@ function collection_footer ( $display_format = null ) {
 
 // Get an array of posts by processing/assembling args and passing them to WP_Query
 // Among other things, this function can deal w/ special cases like sermon series, accept strings of slugs and turn them into arrays, etc. -- issues related to CPTs and taxonomies
-function birdhive_get_posts ( $args = array() ) {
-
-    // TS/logging setup
-    $do_ts = devmode_active( array("dcp") );
-    $do_log = false;
-    sdg_log( "divline2", $do_log );
-
+function birdhive_get_posts ( $args = array() )
+{
     global $wpdb;
 
     // Init vars
     $arr_info = array();
-    $ts_info = "";
     //
     $get_by_ids = false;
     $get_by_slugs = false;
     $category_link = null;
     //
-    $ts_info .= "[bgp] args as passed to birdhive_get_posts: <pre>".print_r($args,true)."</pre>";
+    wxc_log("args as passed to birdhive_get_posts", $args, $logCtx);
 
     // Defaults
     $defaults = array(
@@ -1911,7 +1839,7 @@ function birdhive_get_posts ( $args = array() ) {
 
     // Context -- WIP
     if ( isset($context) ) {
-        $ts_info .= "context: ".print_r($context, true)."<br />";
+        wxc("context", $context, $logCtx);
     }
 
     // Set up basic query args
@@ -1932,34 +1860,29 @@ function birdhive_get_posts ( $args = array() ) {
     // Posts by ID
     // NB: if IDs are specified, ignore most other args
     if ( !empty($ids) ) {
-
-        $ts_info .= "Getting posts by IDs: ".$ids."<br />";
+        //$ts_info .= "Getting posts by IDs: ".$ids."<br />";
 
         // Turn the list of IDs into a proper array
         $post_ids         = array_map( 'intval', birdhive_att_explode( $ids ) );
         $wp_args['post__in'] = $post_ids;
         $wp_args['orderby']  = 'post__in';
         $get_by_ids = true;
-
     }
 
     // Posts by slug
     // NB: if slugs are specified, ignore most other args
     if ( !empty($slugs) ) {
-
-        $ts_info .= "Getting posts by slugs: ".$slugs;
+        //$ts_info .= "Getting posts by slugs: ".$slugs;
 
         // Turn the list of slugs into a proper array
         $post_slugs = birdhive_att_explode( $slugs );
         $wp_args['post_name__in'] = $post_slugs;
         $wp_args['orderby'] = 'post_name__in';
         $get_by_slugs = true;
-
     }
 
     // If not getting posts by ID or by slugs, build the Tax and Meta Queries
     if ( !$get_by_ids && !$get_by_slugs ) {
-
         // Deal w/ taxonomy args
         if ( $category && $category != "all" && empty($taxonomy) ) {
             $taxonomy = 'category';
@@ -1969,13 +1892,12 @@ function birdhive_get_posts ( $args = array() ) {
 
         // If not empty tax_terms and empty taxonomy, determine default taxonomy from post type
         if ( empty($taxonomy) && !empty($tax_terms) ) {
-            $ts_info .= "Using birdhive_get_default_taxonomy"; // tft
+            //$ts_info .= "Using birdhive_get_default_taxonomy"; // tft
             $taxonomy = birdhive_get_default_taxonomy($post_type);
         }
 
         // Taxonomy operator
         if ( $tax_terms && strpos($tax_terms,"+") !== false ) {
-
             $arr_terms = explode("+",$tax_terms);
 
             // Build tax_query
@@ -1991,7 +1913,6 @@ function birdhive_get_posts ( $args = array() ) {
                     'operator'  => 'IN',
                 );
             }
-
         } else if ( $tax_terms && strpos($tax_terms,"NOT-") !== false ) {
             // WIP
             // What if there are multiple terms, and not all are negated?
@@ -2067,8 +1988,7 @@ function birdhive_get_posts ( $args = array() ) {
 
         // Orderby
         if ( isset($orderby) ) {
-
-            $ts_info .= "orderby: ".print_r($orderby, true)."<br />";
+            //$ts_info .= "orderby: ".print_r($orderby, true)."<br />";
 
             if ( !is_array($orderby) && strpos($orderby, ',') !== false) {
                 $orderby = str_replace(","," ",$orderby);
@@ -2131,20 +2051,15 @@ function birdhive_get_posts ( $args = array() ) {
                 if ( empty($wp_args['orderby']) && !empty( $orderby )) {
                     $wp_args['orderby'] = $orderby;
                 }
-
             }
-
         }
 
         // Tax Query
         if ( !empty($tax_query) ) {
-
             $wp_args['tax_query'] = $tax_query;
-
         } else if ( is_category() && $category != "all" && $context != "snippet" ) {
-
             // Post category archive
-            $ts_info .= "is_category (archive)<br />";
+            //$ts_info .= "is_category (archive)<br />";
 
             // Get archive term_id from slug
             $archive_term = term_exists( "archives", "category" );
@@ -2177,8 +2092,7 @@ function birdhive_get_posts ( $args = array() ) {
             );
 
         } else if ( $taxonomy && $tax_terms ) {
-
-            $ts_info .= "Building tax_query based on taxonomy & tax_terms.<br />";
+            //$ts_info .= "Building tax_query based on taxonomy & tax_terms.<br />";
 
             $wp_args['tax_query'] = array(
                 array(
@@ -2189,12 +2103,10 @@ function birdhive_get_posts ( $args = array() ) {
                     'operator'  => $tax_operator,
                 )
             );
-
         }
 
         // Meta Query
         if ( empty($meta_query) ) {
-
             // If meta_query was NOT set already via query args, then build it based on other args, as needed
             $meta_query_components = array();
 
@@ -2217,7 +2129,7 @@ function birdhive_get_posts ( $args = array() ) {
                     $scope_dates = sdg_scope_dates($scope);
                     $start_date = $scope_dates['start'];
                     $end_date = $scope_dates['end'];
-                    $ts_info .= "start_date: $start_date; end_date: $end_date<br />";
+                    //$ts_info .= "start_date: $start_date; end_date: $end_date<br />";
 
                     $meta_query_components[] =
                         array(
@@ -2313,16 +2225,14 @@ function birdhive_get_posts ( $args = array() ) {
     // -------
     $arr_posts = new WP_Query( $wp_args );
 
-    $ts_info .= "[bgp] WP_Query run as follows:";
-    $ts_info .= "<pre>args: ".print_r($wp_args, true)."</pre>";
-    $ts_info .= "[".count($arr_posts->posts)."] posts found.<br />";
-    //$ts_info .= "<pre>meta_query: ".print_r($meta_query, true)."</pre>";
-    //$ts_info .= "birdhive_get_posts arr_posts: <pre>".print_r($arr_posts, true)."</pre>";
+    ///wxc_log("args", $wp_args, $logCtx);
+    ///wxc_log("[".count($arr_posts->posts)."] posts found, null, $logCtx)_;
+    //wxc_log("meta_query", $meta_query, $logCtx);
+    //wxc_log("meta_query", $meta_query, $logCtx);
+    //wxc_log("birdhive_get_posts arr_posts", $arr_posts, $logCtx);
 
     //$ts_info .= "birdhive_get_posts arr_posts->request<pre>".$arr_posts->request."</pre>";
-    $ts_info .= "birdhive_get_posts last_query:<pre>".$wpdb->last_query."</pre>";
-
-    //if ( $ts_info != "" && ( $do_ts === true || $do_ts == "dcp" ) ) { $ts_info = '<div class="troubleshooting">'.$ts_info.'</div>'; }
+    wxc_log("birdhive_get_posts last_query", $wpdb->last_query, $logCtx);
 
     $arr_info['arr_posts'] = $arr_posts;
     $arr_info['args'] = $wp_args;
@@ -2340,17 +2250,11 @@ Table display:
 -------------
 [display_posts post_type="person" taxonomy="person_category" tax_terms="dca" orderby="meta_value" order="ASC" meta_key="award_year_dca" limit="-1" display_format="table" fields="award_year_dca,title,recital_venue_dca" headers="-,Recipient,Presentation Venue"]
 
-
 **********
 */
 add_shortcode('display_posts', 'birdhive_display_posts');
-function birdhive_display_posts ( $atts = array() ) { //function birdhive_display_posts ( $args = array() ) {
-
-    // TS/logging setup
-    $do_ts = devmode_active( array("dcp") );
-    $do_log = false;
-    sdg_log( "divline2", $do_log );
-
+function birdhive_display_posts ( $atts = array() )
+{
     global $wpdb;
     $info = "";
     $ts_info = "";
