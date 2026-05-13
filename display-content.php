@@ -3,7 +3,7 @@
 - * Plugin Name: Birdhive Display Content (main)
 - * Description: Display content of all types in a variety of formats using shortcodes.
 - * Dependencies:      
-- * Requires Plugins: whx4-core
+- * Requires Plugins: whx4-core, stc
 - * Version: 1.260513.1
 - * Plugin URI: 
 - * Author: atc
@@ -794,8 +794,6 @@ function display_link_item ( $arr_item = array() )
     if ( $item_text )  { $info .= '&nbsp;&mdash;&nbsp;<span class="description">'.$item_text.'</span>'; }
     if ( $info ) { $info = '<div class="cc_item">'.$info.'</div>'; }
 
-    //if ( $ts_info != "" && ( $do_ts === true || $do_ts == "dcp" ) ) { $info .= '<div class="troubleshooting">'.$ts_info.'</div>'; }
-
     return $info;
 }
 
@@ -915,8 +913,6 @@ function display_post_item ( $arr_item = array() )
     //get_template_part( 'template-parts/content', $post_type_for_template );
     //$info .= get_template_part( 'template-parts/content', $post_type );
 
-    if ( $ts_info != "" && ( $do_ts === true || $do_ts == "dcp" ) ) { $info .= '<div class="troubleshooting">'.$ts_info.'</div>'; }
-
     return $info;
 
 }
@@ -991,7 +987,7 @@ function display_table_row ( $arr_item = array(), $arr_styling = array() )
 
                             // Get post_title
                             if ( function_exists( 'sdg_post_title' ) ) {
-                                $title_args = array( 'post' => $field_value[0], 'line_breaks' => false, 'show_subtitle' => false, 'hlevel' => 0, 'echo' => false, 'called_by' => 'dcp->display_table_row', 'do_ts' => $do_ts );
+                                $title_args = array( 'post' => $field_value[0], 'line_breaks' => false, 'show_subtitle' => false, 'hlevel' => 0, 'echo' => false, 'called_by' => 'dcp->display_table_row' );
                                 $value = sdg_post_title( $title_args );
                                 if ( empty($value) ) {
                                     $info .= "no title found using sdg_post_title with title_args: <pre>".print_r($title_args, true)."</pre>";
@@ -1022,11 +1018,8 @@ function display_table_row ( $arr_item = array(), $arr_styling = array() )
     }
 
     $info .= '</tr>';
-
-    //if ( $ts_info != "" && ( $do_ts === true || $do_ts == "dcp" ) ) { $info .= '<div class="troubleshooting">'.$ts_info.'</div>'; }
-
+    
     return $info;
-
 }
 
 function display_grid_item ( $arr_item = array(), $arr_styling = array() )
@@ -1097,11 +1090,7 @@ function display_grid_item ( $arr_item = array(), $arr_styling = array() )
     }
     $info .= '</div>';
 
-    // Troubleshooting info
-    if ( $ts_info != "" && ( $do_ts === true || $do_ts == "dcp" ) ) { $info .= '<div class="troubleshooting">'.$ts_info.'</div>'; }
-
     return $info;
-
 }
 
 // TODO:
@@ -1586,7 +1575,7 @@ function birdhive_display_collection ( $args = array() )
         } else {
 
             // Assemble the array of styling parameters
-            $arr_styling = array( 'item_type' => $item_type, 'display_format' => $display_format, 'link_posts' => $link_posts, 'show_subtitle' => $show_subtitles, 'show_content' => $show_content, 'show_image' => $show_images, 'aspect_ratio' => $aspect_ratio, 'table_fields' => $table_fields, 'collection_id' => $collection_id, 'do_ts' => $do_ts ); // wip
+            $arr_styling = array( 'item_type' => $item_type, 'display_format' => $display_format, 'link_posts' => $link_posts, 'show_subtitle' => $show_subtitles, 'show_content' => $show_content, 'show_image' => $show_images, 'aspect_ratio' => $aspect_ratio, 'table_fields' => $table_fields, 'collection_id' => $collection_id ); // wip
             //$item_ts_info .= "item: <pre>".print_r($item, true)."</pre>";
             //$item_ts_info .= "arr_styling: <pre>".print_r($arr_styling, true)."</pre>";
 
@@ -1663,11 +1652,8 @@ function birdhive_display_collection ( $args = array() )
     // List/table/grid footer or close container
     $info .= collection_footer ( $display_format );
 
-    if ( $ts_info != "" && ( $do_ts === true || $do_ts == "dcp" ) ) { $info .= '<div class="troubleshooting">'.$ts_info.'</div>'; }
-
     // Return info for display
     return $info;
-
 } // END function birdhive_display_collection ( $args = array() )
 
 // TODO: add options for collection_SUBheaders... e.g. for group/subgroups/personnel; links displayed grouped by link categories; etc.
@@ -1840,7 +1826,7 @@ function birdhive_get_posts ( $args = array() )
 
     // Context -- WIP
     if ( isset($context) ) {
-        wxc("context", $context, $logCtx);
+        wxc_log("context", $context, $logCtx);
     }
 
     // Set up basic query args
@@ -2688,8 +2674,6 @@ function birdhive_display_posts ( $atts = array() )
 
     } // END if posts
 
-    if ( $ts_info != "" && ( $do_ts === true || $do_ts == "dcp" ) ) { $info .= '<div class="troubleshooting">'.$ts_info.'</div>'; }
-
     return $info;
 
 }
@@ -2699,17 +2683,15 @@ function birdhive_content_collection ( $atts = array() )
 {
     global $wpdb;
     $info = "";
-    $ts_info = "";
 
     $args = shortcode_atts( array(
         'id' => null,
-        'do_ts' => $do_ts,
     ), $atts );
 
     // Extract
     extract( $args );
 
-    $info .= birdhive_display_collection( array('collection_id' => $id, 'display_atts' => array('do_ts' => $do_ts) ) );
+    $info .= birdhive_display_collection( array('collection_id' => $id ) );
 
     return $info;
 }
@@ -3152,7 +3134,6 @@ function get_list_items( $atts = array() )
                 $tr['tds'] = $tds;
 
                 $table_rows[] = $tr;
-
             }
 
             $row_info .= '--------------------<br />';
@@ -3231,7 +3212,6 @@ function get_list_items( $atts = array() )
                 }
                 */
 
-
                 // Display the row if it's a header, or if BOTH item_label and item_name are not empty
                 // --------------------
 
@@ -3243,16 +3223,6 @@ function get_list_items( $atts = array() )
                     if ( $num_row_items > 1 || $grouped_row == true ) { $tr_class .= " grouping"; }
                     $table .= '<tr class="'.$tr_class.'">';
                 }*/
-
-                // Insert row_info for troubleshooting
-                if ( $do_ts ) {
-                    if ( $display == 'table' ) {
-                        //$table .= '<div class="troubleshooting">row_info:<br />'.$row_info.'</div>'; //$row_info; // Display comments w/ in row for ease of parsing dev notes
-                    } else {
-                        //$ts_info .= 'row_info:<br />'.$row_info;
-                    }
-                    $ts_info .= $row_info; //$ts_info .= 'row_info:<br />'.$row_info;
-                }
 
                 // Add the table cells and close out the row
                 /*if ( $display == 'table' && $delete_row != true ) {
@@ -3313,14 +3283,7 @@ function get_list_items( $atts = array() )
                         }
                     }
                 }*/
-
-                // --------------------
-
-            //$i++;
-
-
         } // END foreach( $program_rows as $row )
-
     }
 
     /////
@@ -3798,22 +3761,7 @@ function get_list_items_v1( $atts = array() )
             }
 
             $row_info .= '--------------------<br />';
-
-            // Insert row_info for troubleshooting
-            if ( $do_ts ) {
-                if ( $display == 'table' ) {
-                    //$table .= '<div class="troubleshooting">row_info:<br />'.$row_info.'</div>'; //$row_info; // Display comments w/ in row for ease of parsing dev notes
-                } else {
-                    //$ts_info .= 'row_info:<br />'.$row_info;
-                }
-                $ts_info .= $row_info; //$ts_info .= 'row_info:<br />'.$row_info;
-            }
-
-            // --------------------
-
-
         } // END foreach( $list_rows as $row )
-
     }
 
     /////
@@ -3864,9 +3812,7 @@ function get_list_items_v1( $atts = array() )
     $arr_info['info'] = $info;
     $arr_info['ts_info'] = $ts_info;
     return $arr_info;
-
 }
-
 
 ///// ****** END ACF Repeater Rows Display Function(s) -- WIP ****** /////
 
@@ -4970,8 +4916,6 @@ function birdhive_search_form ( $atts = array(), $content = null, $tag = '' )
 
     } // END if ( $args['fields'] )
 
-    if ( $ts_info != "" && ( $do_ts === true || $do_ts == "dcp" ) ) { $info .= '<div class="troubleshooting">'.$ts_info.'</div>'; }
-
     return $info;
 
-} // END fcn birdhive_search_form
+}
