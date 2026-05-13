@@ -1,15 +1,15 @@
 <?php
 /*
-- * Plugin Name: Birdhive Display Content (main)
-- * Description: Display content of all types in a variety of formats using shortcodes.
-- * Dependencies:      
-- * Requires Plugins: whx4-core, stc
-- * Version: 1.260513.1
-- * Plugin URI: 
-- * Author: atc
-- * Author URI: http://birdhive.com
-- * Text Domain: display-content
-- */
+ * Plugin Name: Birdhive Display Content (main)
+ * Description: Display content of all types in a variety of formats using shortcodes.
+ * Dependencies:      
+ * Requires Plugins: whx4-core, stc
+ * Version: 1.260513.1
+ * Plugin URI: 
+ * Author: atc
+ * Author URI: http://birdhive.com
+ * Text Domain: display-content
+ */
 
 /*********
 Copyright (c) 2022-26, Alison Cheeseman/Birdhive Development & Design
