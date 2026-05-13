@@ -823,26 +823,26 @@ function display_post_item ( $arr_item = array() )
     // WIP
     if ( $post_id ) {
         $post_type = get_post_type($post_id);
-        $ts_info .= $fcn_id."post_id: ".$post_id."<br />";
-        $ts_info .= $fcn_id."post_type: ".$post_type."<br />";
+        $ts_info .= "post_id: ".$post_id."<br />";
+        $ts_info .= "post_type: ".$post_type."<br />";
     } else {
         $post_type = null;
     }
 
-    $ts_info .= $fcn_id.">>> display_post_item <<<<br />";
-    $ts_info .= $fcn_id."show_content: ".$show_content."<br />";
+    $ts_info .= ">>> display_post_item <<<<br />";
+    $ts_info .= "show_content: ".$show_content."<br />";
     //$ts_info .= "arr_item: <pre>".print_r($arr_item,true)."</pre>";
 
     if ( $post_id && $show_content == "full" ) {
         //$ts_info .= "Show full content<br />";
-        $item_content .= "<!-- $fcn_id START post_content for post_id $post_id -->";
+        $item_content .= "<!-- START post_content for post_id $post_id -->";
         $full_content = true;
         $post = get_post($post_id);
         $item_content .= apply_filters('the_content', $post->post_content);
-        $item_content .= "<!-- $fcn_id END post_content for post_id $post_id -->";
+        $item_content .= "<!-- END post_content for post_id $post_id -->";
         // For event posts, get date/location info for header
         if ( $post_type == 'event' ) {
-            $item_content .= "<!-- $fcn_id get item_meta via EM shortcode for post_id $post_id -->";
+            $item_content .= "<!-- get item_meta via EM shortcode for post_id $post_id -->";
             $item_meta = do_shortcode('[event post_id="'.$post_id.'"]#_EVENTDATES<br /><span class="event_time">#_EVENTTIMES</span>[/event]');
         }
     } else {
@@ -856,10 +856,10 @@ function display_post_item ( $arr_item = array() )
         $email_address = get_field( 'email_address', $post_id );
         $first_name = get_field( 'first_name', $post_id );
         if ( $email_address ) {
-            $ts_info .= $fcn_id.'email_address: '.$email_address.'<br />';
+            $ts_info .= 'email_address: '.$email_address.'<br />';
             $item_content .= '<a class="button" href="mailto:'.$email_address.'">Email '.$first_name.'</a>';
         } else {
-            $ts_info .= $fcn_id.'email_address: None found<br />';
+            $ts_info .= 'email_address: None found<br />';
         }
     }
 
@@ -884,7 +884,7 @@ function display_post_item ( $arr_item = array() )
     // TODO: add subtitle?
     $info .= '</header><!-- .entry-header -->';
     if ( empty($item_image) && $show_content == "full" ) {
-        $ts_info .= $fcn_id.'No item_image => get image via SDGPT<br />';
+        $ts_info .= 'No item_image => get image via SDGPT<br />';
         $img_args = array( 'post_id' => $post_id, 'format' => 'singular', 'img_size' => "full", 'sources' => array("featured", "gallery"), 'echo' => false );
         $info .= sdg_post_thumbnail( $img_args );
     }
@@ -1116,7 +1116,6 @@ function build_item_arr ( $item, $arr_styling = array() )
     // Init vars
     $arr_item = array();
     $ts_info = "";
-    $fcn_id = "[dc-bia]&nbsp;";
     //
     $link_posts = "true"; // default in case it's not set by arr_styling
     $display_format = null;
@@ -1214,12 +1213,12 @@ function build_item_arr ( $item, $arr_styling = array() )
                 $ts_info .= ' >> use short_title: '.$short_title.'<br />';
                 $item_title = $short_title;
             } else if ( $post_type == "person" ) {
-                $title_args = array( 'person_id' => $post_id, 'override' => 'post_title', 'show_job_title' => true, 'called_by' => $fcn_id );
+                $title_args = array( 'person_id' => $post_id, 'override' => 'post_title', 'show_job_title' => true, 'called_by' => 'dcp' );
                 $item_title = getPersonDisplayName($title_args)['info'];
             } else if ( function_exists( 'sdg_post_title' ) ) {
                 $ts_info .= ' >> sdg_post_title<br />';
                 if ( !isset($show_subtitle) ) { $show_subtitle = true; }
-                $title_args = array( 'post' => $post_id, 'line_breaks' => true, 'show_subtitle' => $show_subtitle, 'echo' => false, 'called_by' => $fcn_id );
+                $title_args = array( 'post' => $post_id, 'line_breaks' => true, 'show_subtitle' => $show_subtitle, 'echo' => false, 'called_by' => 'dcp' );
                 if ( $show_content == "full" ) {
                     $title_args['hlevel'] = 2;
                     $title_args['hlevel_sub'] = 3;
@@ -2694,13 +2693,8 @@ function birdhive_display_posts ( $atts = array() )
 }
 
 add_shortcode('content_collection', 'birdhive_content_collection');
-function birdhive_content_collection ( $atts = array() ) {
-
-    // TS/logging setup
-    $do_ts = devmode_active( array("dcp") );
-    $do_log = false;
-    sdg_log( "divline2", $do_log );
-
+function birdhive_content_collection ( $atts = array() )
+{
     global $wpdb;
     $info = "";
     $ts_info = "";
@@ -2715,15 +2709,12 @@ function birdhive_content_collection ( $atts = array() ) {
 
     $info .= birdhive_display_collection( array('collection_id' => $id, 'display_atts' => array('do_ts' => $do_ts) ) );
 
-    if ( $ts_info != "" && ( $do_ts === true || $do_ts == "dcp" ) ) { $info .= '<div class="troubleshooting">'.$ts_info.'</div>'; }
-
     return $info;
-
 }
 
 // ACF field groups...
-function match_group_field ( $field_groups, $field_name ) {
-
+function match_group_field ( $field_groups, $field_name )
+{
     $field = null;
 
     // Loop through the field_groups and their fields to look for a match (by field name)
@@ -2783,13 +2774,8 @@ function match_group_field ( $field_groups, $field_name ) {
 // TODO/WIP: generalize for use with other CPTs/other types of lists?
 // This is a modified version of WHX4: get_event_program_items
 add_shortcode('display_list_items', 'get_list_items');
-function get_list_items( $atts = array() ) {
-
-    // TS/logging setup
-    $do_ts = devmode_active( array("dcp") );
-    $do_log = false;
-    sdg_log( "divline2", $do_log );
-
+function get_list_items( $atts = array() )
+{
     $args = shortcode_atts( array(
         'post_id'        => get_the_ID(),
         'run_updates' => false,
@@ -2820,19 +2806,8 @@ function get_list_items( $atts = array() ) {
     // Program Layout -- left or centered?
     $program_layout = get_post_meta( $post_id, 'program_layout', true );
 
-    /*** WIP ***/
-    //if ( devmode_active() || is_dev_site() ) { $run_updates = true; } // TMP(?) disabled 03/25/22
-    //if ( devmode_active() || ( is_dev_site() && devmode_active() )  ) { $run_updates = true; } // ???
-
     // Get the program item repeater field values (ACF)
     $program_rows = get_field('program_items', $post_id); // ACF function: https://www.advancedcustomfields.com/resources/get_field/ -- TODO: change to use have_rows() instead?
-    /*
-    if ( have_rows('program_items', $post_id) ) { // ACF function: https://www.advancedcustomfields.com/resources/have_rows/
-        while ( have_rows('program_items', $post_id) ) : the_row();
-            $XXX = get_sub_field('XXX'); // ACF function: https://www.advancedcustomfields.com/resources/get_sub_field/
-        endwhile;
-    } // end if
-    */
     if ( empty($program_rows) ) { $program_rows = array(); }
     if ( is_array($program_rows) ) { $ts_info .= count($program_rows)." program_items/program_rows<br />"; } else { $ts_info .= "program_rows: ".print_r($program_rows, true); }
 
@@ -3458,13 +3433,8 @@ function get_list_items( $atts = array() ) {
 }
 
 
-function get_list_items_v1( $atts = array() ) {
-
-    // TS/logging setup
-    $do_ts = devmode_active( array("dcp") );
-    $do_log = false;
-    sdg_log( "divline2", $do_log );
-
+function get_list_items_v1( $atts = array() )
+{
     $args = shortcode_atts( array(
         'post_id'        => get_the_ID(),
         'run_updates' => false,
@@ -3904,14 +3874,8 @@ function get_list_items_v1( $atts = array() ) {
 // See also SDG common_functions.php -- new version WIP
 // https://www.advancedcustomfields.com/resources/creating-wp-archive-custom-field-filter/
 add_shortcode('birdhive_search_form', 'birdhive_search_form');
-function birdhive_search_form ( $atts = array(), $content = null, $tag = '' ) {
-
-    // TS/logging setup
-    $do_ts = devmode_active( array("dcp", "search") );
-    $do_log = false;
-    sdg_log( "divline2", $do_log );
-    $fcn_id = "[dc-bsf]&nbsp;";
-
+function birdhive_search_form ( $atts = array(), $content = null, $tag = '' )
+{
     // Init vars
     $info = "";
     $ts_info = "";
@@ -4593,7 +4557,7 @@ function birdhive_search_form ( $atts = array(), $content = null, $tag = '' ) {
                                         $options[$id] = $option_name;
                                         // TODO: deal w/ possibility that last_name, first_name fields are empty
                                     } else if ( function_exists( 'sdg_post_title' ) ) {
-                                        $title_args = array( 'post' => $post_id, 'line_breaks' => true, 'show_subtitle' => true, 'echo' => false, 'hlevel' => null, 'hlevel_sub' => null, 'called_by' => $fcn_id );
+                                        $title_args = array( 'post' => $post_id, 'line_breaks' => true, 'show_subtitle' => true, 'echo' => false, 'hlevel' => null, 'hlevel_sub' => null, 'called_by' => 'dcp' );
                                         $options[$id] = sdg_post_title( $title_args );
                                     } else {
                                         $options[$id] = get_the_title($id);
@@ -5010,4 +4974,3 @@ function birdhive_search_form ( $atts = array(), $content = null, $tag = '' ) {
 
 } // END fcn birdhive_search_form
 
-?>
