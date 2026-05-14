@@ -38,8 +38,7 @@ if ( !function_exists( 'add_action' ) ) {
 }
 
 $plugin_path = plugin_dir_path( __FILE__ );
-global $logCtx;
-$logCtx = ['dcp'];
+$logCtx = ['dcp']; // global default
 
 // Define our handy constants.
 define( 'DCP_VERSION', '0.2' );
@@ -78,7 +77,7 @@ require 'inc/acf-field-groups.php';
  */
 function dsplycntnt_settings_init()
 {
-    $logCtx = ['dcp', 'display'];
+    global $logCtx;
     
     // Register a new setting for "dsplycntnt" page.
     register_setting( 'dsplycntnt', 'dsplycntnt_settings' );
@@ -1763,6 +1762,7 @@ function collection_footer ( $display_format = null )
 function birdhive_get_posts ( $args = array() )
 {
     global $wpdb;
+    global $logCtx;
 
     // Init vars
     $arr_info = array();
