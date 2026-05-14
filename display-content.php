@@ -249,7 +249,7 @@ function dsplycntnt_scripts_method()
 
 // Add custom query vars
 // TBD -- IMPORTANT: will this cause issues with EM?
-///add_filter( 'query_vars', 'dsplycntnt_query_vars' );
+add_filter( 'query_vars', 'dsplycntnt_query_vars' );
 function dsplycntnt_query_vars( $qvars )
 {
     $qvars[] = 'scope';
@@ -1324,7 +1324,6 @@ function build_item_arr ( $item, $arr_styling = array() )
             $item_date_str = str_replace(array('am','pm'),array('a.m.','p.m.'),$item_date_str); // STC >> TODO: generalize formatting options
 
         }
-		// +~+~+~+~+~+~+~+~+~+~+~+~+~+~+~+~+~+~+~+~+~+~+~+
 		
 	} else if ( $item_type == "tax_term" || $item_type == "event_category" || $item_type == "post_category" ) {
 		
@@ -1414,6 +1413,7 @@ function build_item_arr ( $item, $arr_styling = array() )
 	if ( !empty($item_subtitle) ) { $item_subtitle = '<span class="item_subtitle">'.$item_subtitle.'</span>'; }
 	
 	// Finalize the item image html based on the image_id, if any
+    // If show_content=="full", show full-size image, not medium thumb
 	$item_image = ""; // init
 	if ( !empty($image_id) ) {
 	
@@ -1440,19 +1440,21 @@ function build_item_arr ( $item, $arr_styling = array() )
 		}
 		
 	} else {		
-		$ts_info .= 'BIA -- image_id NOT FOUND<br />';
+		$ts_info .= 'image_id NOT FOUND<br />';
 		//$item_ts_info .= "arr_item: <pre>".print_r($arr_item, true)."</pre>";
 	}
 	
 	// Set the array values based on what we've found
 	// Some of the values will be null, but that will prevent undefined index errors
 	$arr_item['post_id'] = $post_id;
+    $arr_item['show_content'] = $show_content;
 	$arr_item['item_title'] = $item_title;
 	$arr_item['item_subtitle'] = $item_subtitle;
 	$arr_item['item_text'] = $item_text;
 	$arr_item['item_image'] = $item_image;
 	$arr_item['item_date_str'] = $item_date_str;
 	$arr_item['ts_info'] = $ts_info;
+    $arr_item['field_values'] = $field_values;
 	
 	// Return the assembled item array
 	return $arr_item;
@@ -2142,7 +2144,7 @@ function birdhive_display_posts ( $atts = array() )
             // Is it a single or multiple group_by value?
             if ( str_contains($group_by, "," ) ) {
                 $ts_info .= "multiple group_by parameters!<br />";
-                $arr_groups = wxc_att_explode($group_by);
+                $arr_groups = birdhive_att_explode($group_by); // >> wxc_att_explode?
                 $group_by = $arr_groups[0];
                 $ts_info .= "group_by: $group_by<br />";
                 //if ( $arr_groups[1] ) { $group_by_secondary = $arr_groups[1]; }
@@ -3571,7 +3573,7 @@ function birdhive_search_form ( $atts = array(), $content = null, $tag = '' )
     if ( $fields ) {
 
         // Turn the fields list into an array
-        $arr_fields = wxc_att_explode( $fields ); //if ( function_exists('sdg_att_explode') ) { }
+        $arr_fields = birdhive_att_explode( $fields ); //if ( function_exists('sdg_att_explode') ) { }
         //$info .= print_r($arr_fields, true); // tft
 
         // e.g. http://stthomas.choirplanner.com/library/search.php?workQuery=Easter&composerQuery=Williams

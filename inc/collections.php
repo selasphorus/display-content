@@ -7,19 +7,15 @@ function birdhive_content_collection ( $atts = array() )
 
     global $wpdb;
     $info = "";
-    $ts_info = "";
 
     $args = shortcode_atts( array(
         'id' => null,
-        'do_ts' => $do_ts,
     ), $atts );
 
     // Extract
     extract( $args );
 
-    $info .= birdhive_display_collection( array('collection_id' => $id, 'display_atts' => array('do_ts' => $do_ts) ) );
-
-    if ( $ts_info != "" && ( $do_ts === true || $do_ts == "dcp" ) ) { $info .= '<div class="troubleshooting">'.$ts_info.'</div>'; }
+    $info .= birdhive_display_collection( array('collection_id' => $id ) );
 
     return $info;
 }
@@ -140,7 +136,7 @@ function birdhive_display_collection ( $args = array() )
         } else {
 
             // Assemble the array of styling parameters
-            $arr_styling = array( 'item_type' => $item_type, 'display_format' => $display_format, 'link_posts' => $link_posts, 'show_subtitle' => $show_subtitles, 'show_content' => $show_content, 'show_image' => $show_images, 'aspect_ratio' => $aspect_ratio, 'table_fields' => $table_fields, 'collection_id' => $collection_id, 'do_ts' => $do_ts ); // wip
+            $arr_styling = array( 'item_type' => $item_type, 'display_format' => $display_format, 'link_posts' => $link_posts, 'show_subtitle' => $show_subtitles, 'show_content' => $show_content, 'show_image' => $show_images, 'aspect_ratio' => $aspect_ratio, 'table_fields' => $table_fields, 'collection_id' => $collection_id ); // wip
             //$item_ts_info .= "item: <pre>".print_r($item, true)."</pre>";
             //$item_ts_info .= "arr_styling: <pre>".print_r($arr_styling, true)."</pre>";
 
@@ -154,11 +150,8 @@ function birdhive_display_collection ( $args = array() )
 
             // Get content for display in appropriate form...
             //$item_args = array( 'content_type' => $content_type, 'display_format' => $display_format, 'item' => $item );
-            //$item_info .= display_item($display_format, $arr_item, $display_atts, $table_fields, $item_ts_info); //$item_info .= display_item($item_args);
             $item_info .= display_item ( $arr_item, $arr_styling );
-
         }
-
 
         if ( isset( $arr_item['item_content'] ) && $item_type == "modal" || ( isset( $arr_item['item_link_target'] ) && $arr_item['item_link_target'] == "modal" ) ) {
             // modal_content...
@@ -246,7 +239,7 @@ function collection_header ( $args = array() )
     // Parse & Extract args
     $args = wp_parse_args( $args, $defaults );
     extract( $args );
-    //$ts_info .= "collection_header >> args: <pre>".print_r($args, true)."</pre>";
+
     $ts_info .= "<!-- +~+~+~+~+~+~+ collection_header +~+~+~+~+~+~+ -->";
 
     if ( $display_format == "list" ) {
@@ -256,9 +249,6 @@ function collection_header ( $args = array() )
     } else if ( $display_format == "excerpts" || $display_format == "archive" ) {
         $info .= '<div class="posts_archive">';
     } else if ( $display_format == "table" ) {
-        //$ts_info .= "fields: <pre>".print_r($fields, true)."</pre>";
-        //$ts_info .= "headers: <pre>".print_r($headers, true)."</pre>";
-
         $table_classes = "posts_archive";
         if ( $custom_class ) { $table_classes .= " ".$custom_class; }
         $info .= '<table class="'.$table_classes.'">';
@@ -298,14 +288,11 @@ function collection_header ( $args = array() )
             $info .= "</tr>"; // close out the header row
         }
     } else if ( $display_format == "grid" ) {
-        $colclass = Text::digitToWord($num_cols)."col"; // WIP -- error -- Non-static method cannot be called statically
-        $ts_info .= "num_cols: ".$num_cols." => colclass: ".$colclass."<br />";
-        //if ( $class ) { $colclass .= " ".$class; }
+        $colclass = sdg_digit_to_word($num_cols)."col";
         $info .= '<div class="flex-container '.$colclass.' '.$aspect_ratio.'">';
     } else {
         $info .= '<!-- display_format '.$display_format.' not matched -->';
     }
-    //if ( $ts_info != "" && ( $do_ts === true || $do_ts == "dcp" ) ) { $info .= $ts_info; } //if ( $do_ts && !empty($ts_info) ) { $info .= $ts_info; } //if ( $do_ts && !empty($ts_info) ) { $info .= '<div class="troubleshooting">'.$ts_info.'</div>'; }
 
     // Return info for display
     return $info;
