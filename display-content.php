@@ -158,6 +158,8 @@ function dsplycntnt_settings_init()
 // Include custom post type (collection)
 $posttypes_filepath = $plugin_path . 'inc/posttypes.php';
 if ( file_exists($posttypes_filepath) ) { include_once( $posttypes_filepath ); } else { echo "no $posttypes_filepath found"; }
+$collections_filepath = $plugin_path . 'inc/collections.php';
+if ( file_exists($collections_filepath) ) { include_once( $collections_filepath ); } else { echo "no $collections_filepath found"; }
 
 // Add custom image sizes
 // TODO: build in option to customize dimensions per site
