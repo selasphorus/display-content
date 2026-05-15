@@ -1,10 +1,9 @@
 <?php
+$logCtx = ['whx4', 'display', 'collections'];
 
 add_shortcode('content_collection', 'birdhive_content_collection');
 function birdhive_content_collection ( $atts = array() )
 {
-    $logCtx = ['whx4', 'display', 'collections'];
-
     global $wpdb;
     $info = "";
 
@@ -210,12 +209,10 @@ function birdhive_display_collection ( $args = array() )
     // List/table/grid footer or close container
     $info .= collection_footer ( $display_format );
 
-    if ( $ts_info != "" && ( $do_ts === true || $do_ts == "dcp" ) ) { $info .= '<div class="troubleshooting">'.$ts_info.'</div>'; }
-
     // Return info for display
     return $info;
 
-} // END function birdhive_display_collection ( $args = array() )
+}
 
 // TODO: add options for collection_SUBheaders... e.g. for group/subgroups/personnel; links displayed grouped by link categories; etc.
 function collection_header ( $args = array() )
