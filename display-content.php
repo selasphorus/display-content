@@ -1391,7 +1391,7 @@ function build_item_arr ( $item, $arr_styling = array() )
 			$item_link_target = "_blank";
 		}
 	}
-	$link_target = ' target="'.$item_link_target.'"';
+	if ( !empty($item_link_target) ) { $link_target = ' target="'.$item_link_target.'"'; } else { $link_target = ""; }
 	
 	// Style the title
 	if ( !empty($item_title) ) {
