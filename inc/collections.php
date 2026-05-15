@@ -211,7 +211,6 @@ function birdhive_display_collection ( $args = array() )
 
     // Return info for display
     return $info;
-
 }
 
 // TODO: add options for collection_SUBheaders... e.g. for group/subgroups/personnel; links displayed grouped by link categories; etc.
