@@ -1391,7 +1391,7 @@ function build_item_arr ( $item, $arr_styling = array() )
 			$item_link_target = "_blank";
 		}
 	}
-	if ( !empty($item_link_target) ) { $link_target = ' target="'.$item_link_target.'"'; } else { $link_target = ""; }
+    if ( !empty($item_link_target) ) { $link_target = ' target="'.$item_link_target.'"'; } else { $link_target = ""; }
 	
 	// Style the title
 	if ( !empty($item_title) ) {
@@ -1406,7 +1406,7 @@ function build_item_arr ( $item, $arr_styling = array() )
 			}
 			if ( !empty($hlevel) ) {
 				$item_title = '<h'.$hlevel.' id="'.$item_id.'" class="collection_group">'.$item_title.'</h'.$hlevel.'>';
-						if ( $hlevel <= 2 && $set_anchors == true ) { $item_title = anchor_link_top().$item_title; }
+					if ( $hlevel <= 2 && $set_anchors == true ) { $item_title = anchor_link_top().$item_title; }
 			}
 		}
     }
@@ -1418,7 +1418,7 @@ function build_item_arr ( $item, $arr_styling = array() )
     // If show_content=="full", show full-size image, not medium thumb
 	$item_image = ""; // init
     if ( !empty($image_id) ) { // && $show_image !== 'false'
-	
+		
 		if ( $aspect_ratio == "square" ) {
 			$img_size = "grid_crop_square"; //$img_size = array(600, 600); //"medium_large"; //
 		} else {
