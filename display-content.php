@@ -1940,7 +1940,6 @@ function birdhive_get_posts ( $args = array() )
     $arr_info['arr_posts'] = $arr_posts;
     $arr_info['args'] = $wp_args;
     $arr_info['category_link'] = $category_link;
-    $arr_info['ts_info'] = $ts_info;
 
     return $arr_info;
 }
