@@ -2343,14 +2343,12 @@ function birdhive_display_posts ( $atts = array() )
             $posts_info = birdhive_get_posts( $args );
             $items = $posts_info['arr_posts']->posts; // Retrieves an array of WP_Post Objects
             //$info .= $posts_info['info']; // obsolete(?)
-            $ts_info .= 'args as passed to birdhive_get_posts: <pre>'.print_r($args, true).'</pre>';
-            $ts_info .= $posts_info['ts_info'];
+            //$ts_info .= 'args as passed to birdhive_get_posts: <pre>'.print_r($args, true).'</pre>';
         } // END if ( $group_by )
 
     } // END if ( empty($posts) )
 
     if ( $items ) {
-
         //$ts_info .= 'Items to be passed to birdhive_display_collection: <pre>'.print_r($items, true).'</pre>'; // tft
 
         $class = " ".$display_format; // wip
