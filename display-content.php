@@ -1387,7 +1387,7 @@ function build_item_arr ( $item, $arr_styling = array() )
 	if ( empty($item_link_target) ) {
 		if ( $display_format == "table" ) {
 			$item_link_target = "_blank";
-		} else if ( $post && $post_type == "link" ) {
+		} else if ( $post && $post_type == "link" ) { // } else if ( $post && $item_type == "link" ) {?
 			$item_link_target = "_blank";
 		}
 	}
@@ -1395,19 +1395,21 @@ function build_item_arr ( $item, $arr_styling = array() )
 	
 	// Style the title
 	if ( !empty($item_title) ) {
-		$item_title = '<span class="item_title">'.$item_title.'</span>';
-		// Wrap the title in a hyperlink, if a URL has been set	OR if the item is linked to modal content		
-		if ( $item_type == "modal" || $item_link_target == "modal" ) {
-			$dialog_id = sanitize_title($item_title); // tmp/wip
-			$item_title = '<a href="#!" id="dialog_handle_'.$dialog_id.'" class="dialog_handle">'.$item_title.'</a>'; 
-		} else {
-			if ( !empty($item_url) ) { $item_title = '<a href="'.$item_url.'" rel="bookmark"'.$link_target.'>'.$item_title.'</a>'; }
+        if ( $show_content != "full" ) { // ?
+			$item_title = '<span class="item_title">'.$item_title.'</span>';
+			// Wrap the title in a hyperlink, if a URL has been set	OR if the item is linked to modal content		
+			if ( $item_type == "modal" || $item_link_target == "modal" ) {
+				$dialog_id = sanitize_title($item_title); // tmp/wip
+				$item_title = '<a href="#!" id="dialog_handle_'.$dialog_id.'" class="dialog_handle">'.$item_title.'</a>'; 
+			} else {
+				if ( !empty($item_url) ) { $item_title = '<a href="'.$item_url.'" rel="bookmark"'.$link_target.'>'.$item_title.'</a>'; }
+			}
+			if ( !empty($hlevel) ) {
+				$item_title = '<h'.$hlevel.' id="'.$item_id.'" class="collection_group">'.$item_title.'</h'.$hlevel.'>';
+						if ( $hlevel <= 2 && $set_anchors == true ) { $item_title = anchor_link_top().$item_title; }
+			}
 		}
-		if ( !empty($hlevel) ) {
-			$item_title = '<h'.$hlevel.' id="'.$item_id.'" class="collection_group">'.$item_title.'</h'.$hlevel.'>';
-			if ( $hlevel <= 2 ) { $item_title = anchor_link_top().$item_title; }
-		}
-	}
+    }
 	
 	// Style the subtitle
 	if ( !empty($item_subtitle) ) { $item_subtitle = '<span class="item_subtitle">'.$item_subtitle.'</span>'; }
@@ -1415,27 +1417,37 @@ function build_item_arr ( $item, $arr_styling = array() )
 	// Finalize the item image html based on the image_id, if any
     // If show_content=="full", show full-size image, not medium thumb
 	$item_image = ""; // init
-	if ( !empty($image_id) ) {
+    if ( !empty($image_id) ) { // && $show_image !== 'false'
 	
-		$ts_info .= '<!-- image_id: '.print_r($image_id,true).' -->'; // tft
-		
 		if ( $aspect_ratio == "square" ) {
 			$img_size = "grid_crop_square"; //$img_size = array(600, 600); //"medium_large"; //
 		} else {
 			$img_size = "grid_crop_rectangle";
 		}
-		$ts_info .= '<!-- aspect_ratio: '.$aspect_ratio.' -->'; // tft
-		$ts_info .= '<!-- img_size: '.print_r($img_size, true).' -->'; // tft		
-		//wp_get_attachment_image( int $attachment_id, string|int[] $size = 'thumbnail', bool $icon = false, string|array $attr = '' ): string
-		//$img_attr = array ( 'sizes' => "(max-width: 600px) 100vw, 100vw" );
 		$item_image = wp_get_attachment_image( $image_id, $img_size );
+		/*$img_class = "bia " . $display_format . "_item_image " . $img_size;
+        if ( $show_content == "full" ) { $img_class .= " full"; }
+        if ( $display_format == "grid" ) { $img_class .= " hoverZoom"; }
+        $item_image = wp_get_attachment_image( $image_id, $img_size, false, [
+            'class' => $img_class,
+            'srcset' => '',
+         ] );*/
 		
 		if ( !empty($item_image) ) {
 			$img_class = $display_format."_item_image";
+			/*if ( $show_content != "full" && ( $display_format == "excerpts" || $display_format == "archive" ) ) {
+                $img_class .= " post-thumbnail sdg no-caption float-left";
+            }*/
 			if ( !empty($dialog_id) && ( $item_type == "modal" || $item_link_target == "modal" ) ) {
 				$item_image = '<a href="#!" id="dialog_handle_'.$dialog_id.'" class="'.$img_class.' dialog_handle">'.$item_image.'</a>'; 
+            } else if ( $show_content == "full" ) {
+                $img_class = 'post-thumbnail sdg no-caption full '.$img_class;
+                $item_image = '<div class="'.$img_class.'">'.$item_image.'</div>';
 			} else if ( !empty($item_url) ) { 
 				$item_image = '<a href="'.$item_url.'" rel="bookmark"'.$link_target.' class="'.$img_class.'">'.$item_image.'</a>';
+            } else {
+                $img_class = $img_class.' bia_default';
+                $item_image = '<div class="'.$img_class.'">'.$item_image.'</div>';
 			}
 		}
 		
@@ -1554,7 +1566,7 @@ function birdhive_get_posts ( $args = array() )
         //$ts_info .= "Getting posts by IDs: ".$ids."<br />";
 
         // Turn the list of IDs into a proper array
-        $post_ids         = array_map( 'intval', wxc_att_explode( $ids ) );
+        $post_ids         = array_map( 'intval', birdhive_att_explode( $ids ) ); // >> wxc_att_explode?
         $wp_args['post__in'] = $post_ids;
         $wp_args['orderby']  = 'post__in';
         $get_by_ids = true;
@@ -1566,7 +1578,7 @@ function birdhive_get_posts ( $args = array() )
         //$ts_info .= "Getting posts by slugs: ".$slugs;
 
         // Turn the list of slugs into a proper array
-        $post_slugs = wxc_att_explode( $slugs );
+        $post_slugs = birdhive_att_explode( $slugs ); // >> wxc_att_explode?
         $wp_args['post_name__in'] = $post_slugs;
         $wp_args['orderby'] = 'post_name__in';
         $get_by_slugs = true;
@@ -1683,7 +1695,7 @@ function birdhive_get_posts ( $args = array() )
 
             if ( !is_array($orderby) && strpos($orderby, ',') !== false) {
                 $orderby = str_replace(","," ",$orderby);
-                //$orderby = wxc_att_explode( $orderby );
+                //$orderby = birdhive_att_explode( $orderby ); // >> wxc_att_explode?
             }
 
             $standard_orderby_values = array( 'none', 'ID', 'author', 'title', 'name', 'type', 'date', 'modified', 'parent', 'rand', 'comment_count', 'relevance', 'menu_order', 'meta_value', 'meta_value_num', 'post__in', 'post_name__in', 'post_parent__in' );
@@ -2067,7 +2079,7 @@ function birdhive_display_posts ( $atts = array() )
             // Posts by ID -- translate to fit EM search attributes (https://wp-events-plugin.com/documentation/event-search-attributes/)
             if ( !empty($ids) ) {
                 $ts_info .= "Getting posts by IDs: ".$ids."<br />";
-                $post_ids = array_map( 'intval', wxc_att_explode( $ids ) );
+                $post_ids = array_map( 'intval', birdhive_att_explode( $ids ) ); // >> wxc_att_explode?
                 if ( count($post_ids) > 1 ) {
                     $em_args['post_id'] = $post_ids; //$em_args['post__in'] = $post_ids;
                 } else {
