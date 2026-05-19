@@ -45,8 +45,9 @@ function birdhive_display_collection ( $args = array() )
     $args = wp_parse_args( $args, $defaults );
     extract( $args );
     //$ts_info .= "birdhive_display_collection >> args: <pre>".print_r($args, true)."</pre>";
-
-    if ( is_array($display_atts) ) { extract( $display_atts ); } // one of args
+    
+    // One possible args is display_atts
+    if ( isset($display_atts) && is_array($display_atts) ) { extract( $display_atts ); } else { $display_atts = []; }
     //$ts_info .= "display_atts: <pre>".print_r($display_atts, true)."</pre>";
 
     // Get args from array
