@@ -1205,7 +1205,7 @@ function build_item_arr ( $item, $arr_styling = array() )
                 $item_title = $short_title;
             } else if ( $post_type == "person" ) {
                 $title_args = array( 'person_id' => $post_id, 'override' => 'post_title', 'show_job_title' => true, 'called_by' => 'dcp' );
-                $item_title = getPersonDisplayName($title_args)['info'];
+                $item_title = getPersonDisplayName($title_args);
             } else if ( function_exists( 'sdg_post_title' ) ) {
                 $ts_info .= ' >> sdg_post_title<br />';
                 if ( !isset($show_subtitle) ) { $show_subtitle = true; }
