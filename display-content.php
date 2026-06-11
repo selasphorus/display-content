@@ -4,7 +4,7 @@
  * Description: Display content of all types in a variety of formats using shortcodes.
  * Dependencies:      
  * Requires Plugins: whx4-core, stc
- * Version: 1.260603.1
+ * Version: 1.260611.1
  * Plugin URI: 
  * Author: atc
  * Author URI: http://birdhive.com
@@ -1566,7 +1566,7 @@ function birdhive_get_posts ( $args = array() )
         //$ts_info .= "Getting posts by IDs: ".$ids."<br />";
 
         // Turn the list of IDs into a proper array
-        $post_ids         = array_map( 'intval', birdhive_att_explode( $ids ) ); // >> wxc_att_explode?
+        $post_ids         = array_map( 'intval', wxc_att_explode( $ids ) );
         $wp_args['post__in'] = $post_ids;
         $wp_args['orderby']  = 'post__in';
         $get_by_ids = true;
@@ -1578,7 +1578,7 @@ function birdhive_get_posts ( $args = array() )
         //$ts_info .= "Getting posts by slugs: ".$slugs;
 
         // Turn the list of slugs into a proper array
-        $post_slugs = birdhive_att_explode( $slugs ); // >> wxc_att_explode?
+        $post_slugs = wxc_att_explode( $slugs );
         $wp_args['post_name__in'] = $post_slugs;
         $wp_args['orderby'] = 'post_name__in';
         $get_by_slugs = true;
@@ -1695,7 +1695,7 @@ function birdhive_get_posts ( $args = array() )
 
             if ( !is_array($orderby) && strpos($orderby, ',') !== false) {
                 $orderby = str_replace(","," ",$orderby);
-                //$orderby = birdhive_att_explode( $orderby ); // >> wxc_att_explode?
+                //$orderby = wxc_att_explode( $orderby );
             }
 
             $standard_orderby_values = array( 'none', 'ID', 'author', 'title', 'name', 'type', 'date', 'modified', 'parent', 'rand', 'comment_count', 'relevance', 'menu_order', 'meta_value', 'meta_value_num', 'post__in', 'post_name__in', 'post_parent__in' );
@@ -2078,7 +2078,7 @@ function birdhive_display_posts ( $atts = array() )
             // Posts by ID -- translate to fit EM search attributes (https://wp-events-plugin.com/documentation/event-search-attributes/)
             if ( !empty($ids) ) {
                 $ts_info .= "Getting posts by IDs: ".$ids."<br />";
-                $post_ids = array_map( 'intval', birdhive_att_explode( $ids ) ); // >> wxc_att_explode?
+                $post_ids = array_map( 'intval', wxc_att_explode( $ids ) );
                 if ( count($post_ids) > 1 ) {
                     $em_args['post_id'] = $post_ids; //$em_args['post__in'] = $post_ids;
                 } else {
@@ -2155,7 +2155,7 @@ function birdhive_display_posts ( $atts = array() )
             // Is it a single or multiple group_by value?
             if ( str_contains($group_by, "," ) ) {
                 $ts_info .= "multiple group_by parameters!<br />";
-                $arr_groups = birdhive_att_explode($group_by); // >> wxc_att_explode?
+                $arr_groups = wxc_att_explode($group_by);
                 $group_by = $arr_groups[0];
                 $ts_info .= "group_by: $group_by<br />";
                 //if ( $arr_groups[1] ) { $group_by_secondary = $arr_groups[1]; }
@@ -3582,7 +3582,7 @@ function birdhive_search_form ( $atts = array(), $content = null, $tag = '' )
     if ( $fields ) {
 
         // Turn the fields list into an array
-        $arr_fields = birdhive_att_explode( $fields ); //if ( function_exists('sdg_att_explode') ) { }
+        $arr_fields = wxc_att_explode( $fields );
         //$info .= print_r($arr_fields, true); // tft
 
         // e.g. http://stthomas.choirplanner.com/library/search.php?workQuery=Easter&composerQuery=Williams
