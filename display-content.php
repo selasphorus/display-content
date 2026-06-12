@@ -4,7 +4,7 @@
  * Description: Display content of all types in a variety of formats using shortcodes.
  * Dependencies:      
  * Requires Plugins: whx4-core, stc
- * Version: 1.260611.1
+ * Version: 1.260612.1
  * Plugin URI: 
  * Author: atc
  * Author URI: http://birdhive.com
@@ -826,18 +826,11 @@ function display_post_item ( $arr_item = array() )
     // WIP
     if ( $post_id ) {
         $post_type = get_post_type($post_id);
-        $ts_info .= "post_id: ".$post_id."<br />";
-        $ts_info .= "post_type: ".$post_type."<br />";
     } else {
         $post_type = null;
     }
 
-    $ts_info .= ">>> display_post_item <<<<br />";
-    $ts_info .= "show_content: ".$show_content."<br />";
-    //$ts_info .= "arr_item: <pre>".print_r($arr_item,true)."</pre>";
-
     if ( $post_id && $show_content == "full" ) {
-        //$ts_info .= "Show full content<br />";
         $item_content .= "<!-- START post_content for post_id $post_id -->";
         $full_content = true;
         $post = get_post($post_id);
@@ -849,9 +842,7 @@ function display_post_item ( $arr_item = array() )
             $item_meta = do_shortcode('[event post_id="'.$post_id.'"]#_EVENTDATES<br /><span class="event_time">#_EVENTTIMES</span>[/event]');
         }
     } else {
-        //$info .= $item_image;
-        //$info .= $item_text; // old -- incorrect -- ??
-        $item_content = $item_text; // 240828
+        $item_content = $item_text;
     }
 
     // This is temporary! Show email addresses until the vestry form is approved
@@ -859,10 +850,7 @@ function display_post_item ( $arr_item = array() )
         $email_address = get_field( 'email_address', $post_id );
         $first_name = get_field( 'first_name', $post_id );
         if ( $email_address ) {
-            $ts_info .= 'email_address: '.$email_address.'<br />';
             $item_content .= '<a class="button" href="mailto:'.$email_address.'">Email '.$first_name.'</a>';
-        } else {
-            $ts_info .= 'email_address: None found<br />';
         }
     }
 
@@ -887,7 +875,6 @@ function display_post_item ( $arr_item = array() )
     // TODO: add subtitle?
     $info .= '</header><!-- .entry-header -->';
     if ( empty($item_image) && $show_content == "full" ) {
-        $ts_info .= 'No item_image => get image via SDGPT<br />';
         $img_args = array( 'post_id' => $post_id, 'format' => 'singular', 'img_size' => "full", 'sources' => array("featured", "gallery"), 'echo' => false );
         $info .= sdg_post_thumbnail( $img_args );
     }
@@ -917,7 +904,6 @@ function display_post_item ( $arr_item = array() )
     //$info .= get_template_part( 'template-parts/content', $post_type );
 
     return $info;
-
 }
 
 function display_event_list_item ( $EM_Event )
@@ -947,7 +933,6 @@ function display_table_row ( $arr_item = array(), $arr_styling = array() )
     extract( $arr_styling );
 
     // Get/set item vars
-    //$ts_info .= "<!-- item: ".print_r($item, true)."; fields: ".print_r($fields, true)." -->";
 
     // TBD: build in possibility that one field value might be item_image?
     // TBD: build in possibility that one field value might be item_text?
@@ -959,17 +944,12 @@ function display_table_row ( $arr_item = array(), $arr_styling = array() )
     if ( !is_array($table_fields) ) { $arr_fields = explode(",",$table_fields); } else { $arr_fields = $table_fields; }
 
     if ( $arr_fields ) {
-
         //if ( !is_array($field_values) ) { $arr_field_values = explode(",",$field_values); } else { $arr_field_values = $field_values; }
-
         foreach ( $arr_fields as $field_name ) {
-
             $field_name = trim($field_name);
 
             if ( !empty($field_name) ) {
-
                 $info .= '<td>';
-                //$info .= "[".$field_name."] "; // tft
 
                 // Check for corresponding field value passed with item
                 if ( isset($field_values[$field_name]) ) {
@@ -981,15 +961,8 @@ function display_table_row ( $arr_item = array(), $arr_styling = array() )
                 }
 
                 if ( is_array($field_value) ) {
-
                     if ( count($field_value) == 1 ) {
-
-                        //$info .= "<pre>".print_r($field_value,true)."</pre>"; // tft
-
                         if ( is_numeric($field_value[0]) ) {
-
-                            //$info .= $field_value[0]; // tft
-
                             // Get post_title
                             if ( function_exists( 'sdg_post_title' ) ) {
                                 $title_args = array( 'post' => $field_value[0], 'line_breaks' => false, 'show_subtitle' => false, 'hlevel' => 0, 'echo' => false, 'called_by' => 'dcp->display_table_row' );
@@ -1004,22 +977,18 @@ function display_table_row ( $arr_item = array(), $arr_styling = array() )
                         } else {
                             $info .= "Not is_numeric: ".$field_value[0];
                         }
-
                     } else {
                         $info .= count($field_value).": <pre>".print_r($field_value, true)."</pre>";
                     }
-
                 } else {
                     if ( is_numeric($field_value) && !strpos( $field_name, "year" ) ) {
                         $field_value = number_format_i18n($field_value);
                     }
                     $info .= $field_value;
                 }
-
                 $info .= '</td>';
             }
         }
-
     }
 
     $info .= '</tr>';
@@ -1037,13 +1006,9 @@ function display_grid_item ( $arr_item = array(), $arr_styling = array() )
     $ts_info = "";
     //
     $display_format = null;
-    //$aspect_ratio = 'square';
     //
     extract( $arr_item );
     extract( $arr_styling );
-
-    //$ts_info .= "item: <pre>".print_r($arr_item, true)."</pre>";
-    //$ts_info .= "arr_styling: <pre>".print_r($arr_styling, true)."</pre>";
 
     // Post Type?
     if ( $post_id ) { $post_type = get_post_type($post_id); }
@@ -1145,7 +1110,6 @@ function build_item_arr ( $item, $arr_styling = array() )
     if ( is_object($item) ) { // item is post object, e.g. when called via display_posts shortcode
         $post = $item;
     } else if ( is_array($item) ) {
-        $ts_info .= 'extract item: <pre>'.print_r($item,true).'</pre>';
         extract( $item );
 
         if ( isset($post_object) && isset($post_object[0]) ) {
@@ -1162,11 +1126,6 @@ function build_item_arr ( $item, $arr_styling = array() )
     // Item Image
     // If this is a post via a collection, check to see if there's an image override
     if ( !empty($item_image) ) { $image_id = $item_image; }
-    //
-
-    //$ts_info .= 'BIA -- item: <pre>'.print_r($item, true).'</pre><br />';
-    //$ts_info .= 'BIA -- item: '.print_r($item, true).'<br />';
-    $ts_info .= 'item_type: '.$item_type.'<br />';
 
     // WIP -- image sizes
     if ( $display_format == "excerpts" || $display_format == "archive" ) {
@@ -1184,30 +1143,23 @@ function build_item_arr ( $item, $arr_styling = array() )
     */} else {
         $img_size = "grid_crop_landscape";
     }
-    $ts_info .= 'img_size: '.$img_size.'<br />';
     
     if ( $post && ( $item_type == "post" || $item_type == "event" ) ) {
-
-        //$ts_info .= '<!-- post: <pre>'.print_r($post, true).'</pre> -->';
         $post_type = $post->post_type;
         $post_id = $post->ID;
-        $ts_info .= 'post_type: '.$post_type.' / post_id: '.$post_id."<br />";
 
         // Item Title
         // If there was no title override set via collection, then get a title
         // TODO: deal w/ prefix/suffix options?
         if ( empty($item_title) ) {
-            $ts_info .= 'get item_title<br />';
             // If a short_title is set, and we're NOT showing full content, use the short title.
             $short_title = get_post_meta( $post_id, 'short_title', true );
             if ( !empty($short_title) && $show_content != "full" ) {
-                $ts_info .= ' >> use short_title: '.$short_title.'<br />';
                 $item_title = $short_title;
             } else if ( $post_type == "person" ) {
                 $title_args = array( 'person_id' => $post_id, 'override' => 'post_title', 'show_job_title' => true, 'called_by' => 'dcp' );
                 $item_title = getPersonDisplayName($title_args);
             } else if ( function_exists( 'sdg_post_title' ) ) {
-                $ts_info .= ' >> sdg_post_title<br />';
                 if ( !isset($show_subtitle) ) { $show_subtitle = true; }
                 $title_args = array( 'post' => $post_id, 'line_breaks' => true, 'show_subtitle' => $show_subtitle, 'echo' => false, 'called_by' => 'dcp' );
                 if ( $show_content == "full" ) {
@@ -1224,7 +1176,6 @@ function build_item_arr ( $item, $arr_styling = array() )
                 }
                 $item_title = sdg_post_title( $title_args );
             } else {
-                $ts_info .= ' >> use get_the_title()<br />';
                 $item_title = get_the_title($post_id);// Retrieve and style the subtitle
                 if ( empty($item_subtitle) ) { $item_subtitle = get_post_meta( $post_id, 'subtitle', true ); }
                 if ( !empty($item_subtitle) ) { $item_subtitle = '<span class="item_subtitle">'.$item_subtitle.'</span>'; }
@@ -1237,10 +1188,7 @@ function build_item_arr ( $item, $arr_styling = array() )
         //if ( $post_type == "link" ) { $item_url = get_field( 'url', $post_id ); }
         if ( empty($item_url) && $link_posts !== "false" ) {
             $item_url = get_the_permalink( $post_id ); //if ( empty($item_url) ) { $item_url = get_the_permalink( $post_id ); }
-        } else {
-            $ts_info .= 'link_posts: '.$link_posts."<br />";
         }
-        $ts_info .= 'item_url: '.$item_url."<br />";
 
         // +~+~+~+~+~+~+~+~+~+~+~+~+~+~+~+~+~+~+~+~+~+~+~+
 
@@ -1262,7 +1210,6 @@ function build_item_arr ( $item, $arr_styling = array() )
             }
             $img_args = array( 'post_id' => $post_id, 'format' => $sdgpt_format, 'img_size' => $img_size, 'sources' => "all", 'echo' => false, 'return_value' => 'id' );
             $image_id = whx4_post_image ( $img_args );
-            $ts_info .= 'whx4_post_image -> image_id: '.$image_id.'<br />';
         }
         // +~+~+~+~+~+~+~+~+~+~+~+~+~+~+~+~+~+~+~+~+~+~+~+
 
@@ -1315,7 +1262,6 @@ function build_item_arr ( $item, $arr_styling = array() )
                 } else {
                     $item_date_str = date_i18n( "l, F j, Y \@ g:i a", strtotime($event_start_datetime) );
                 }
-
             }
             // Multi-day event? Then show the end date
             if ( $event_end_datetime && $event_all_day ) {
@@ -1324,9 +1270,7 @@ function build_item_arr ( $item, $arr_styling = array() )
             $item_date_str = str_replace(array('am','pm'),array('a.m.','p.m.'),$item_date_str); // STC >> TODO: generalize formatting options
 
         }
-		
 	} else if ( $item_type == "tax_term" || $item_type == "event_category" || $item_type == "post_category" ) {
-		
 		if ( empty($term_id) ) {
 			if ( $item_type == "event_category" ) { $term_id = $event_category; } else { $term_id = $post_category; }
 		}
@@ -1359,15 +1303,12 @@ function build_item_arr ( $item, $arr_styling = array() )
 			$taxonomy_featured_image = get_term_meta( $term_id, 'taxonomy_featured_image', true );
 			if ( $taxonomy_featured_image ) { $image_id = $taxonomy_featured_image; } else { $image_id = null; }
 		}
-		
 	} else { // if ( $item_type == ??? )
-	
 		$arr_item = $item; // init
 		
 		// Item URL
 		if ( $item_type == "page_link" && isset($page_link) ) {
 			$item_url = $page_link;
-			//$ts_info .= '<!-- page_link item: <pre>'.print_r($item, true).'</pre> -->'; // tft
 		} else if ( $item_type == "email" ) {
 			if ( !empty($item_email) ) {
 				$item_url = "mailto:".$item_email;
@@ -1379,8 +1320,7 @@ function build_item_arr ( $item, $arr_styling = array() )
 		$event_category = $item['event_category'];
 		$post_category = $item['post_category'];
 		//if ( isset($row['row_type']) ) { $row_type = $row['row_type']; } else { $row_type = null; }
-		*/
-					
+		*/			
 	}
 	
 	// Set Link Target
@@ -1406,7 +1346,7 @@ function build_item_arr ( $item, $arr_styling = array() )
 			}
 			if ( !empty($hlevel) ) {
 				$item_title = '<h'.$hlevel.' id="'.$item_id.'" class="collection_group">'.$item_title.'</h'.$hlevel.'>';
-					if ( $hlevel <= 2 && $set_anchors == true ) { $item_title = anchor_link_top().$item_title; }
+				if ( $hlevel <= 2 && $set_anchors == true ) { $item_title = anchor_link_top().$item_title; }
 			}
 		}
     }
@@ -1418,7 +1358,6 @@ function build_item_arr ( $item, $arr_styling = array() )
     // If show_content=="full", show full-size image, not medium thumb
 	$item_image = ""; // init
     if ( !empty($image_id) ) { // && $show_image !== 'false'
-		
 		if ( $aspect_ratio == "square" ) {
 			$img_size = "grid_crop_square"; //$img_size = array(600, 600); //"medium_large"; //
 		} else {
@@ -1432,7 +1371,6 @@ function build_item_arr ( $item, $arr_styling = array() )
             'class' => $img_class,
             'srcset' => '',
          ] );*/
-		
 		if ( !empty($item_image) ) {
 			$img_class = $display_format."_item_image";
 			/*if ( $show_content != "full" && ( $display_format == "excerpts" || $display_format == "archive" ) ) {
@@ -1450,10 +1388,8 @@ function build_item_arr ( $item, $arr_styling = array() )
                 $item_image = '<div class="'.$img_class.'">'.$item_image.'</div>';
 			}
 		}
-		
 	} else {		
-		$ts_info .= 'image_id NOT FOUND<br />';
-		//$item_ts_info .= "arr_item: <pre>".print_r($arr_item, true)."</pre>";
+		//image_id NOT FOUND
 	}
 	
 	// Set the array values based on what we've found
@@ -1563,8 +1499,6 @@ function birdhive_get_posts ( $args = array() )
     // Posts by ID
     // NB: if IDs are specified, ignore most other args
     if ( !empty($ids) ) {
-        //$ts_info .= "Getting posts by IDs: ".$ids."<br />";
-
         // Turn the list of IDs into a proper array
         $post_ids         = array_map( 'intval', wxc_att_explode( $ids ) );
         $wp_args['post__in'] = $post_ids;
@@ -1575,8 +1509,6 @@ function birdhive_get_posts ( $args = array() )
     // Posts by slug
     // NB: if slugs are specified, ignore most other args
     if ( !empty($slugs) ) {
-        //$ts_info .= "Getting posts by slugs: ".$slugs;
-
         // Turn the list of slugs into a proper array
         $post_slugs = wxc_att_explode( $slugs );
         $wp_args['post_name__in'] = $post_slugs;
@@ -1595,7 +1527,6 @@ function birdhive_get_posts ( $args = array() )
 
         // If not empty tax_terms and empty taxonomy, determine default taxonomy from post type
         if ( empty($taxonomy) && !empty($tax_terms) ) {
-            //$ts_info .= "Using birdhive_get_default_taxonomy"; // tft
             $taxonomy = birdhive_get_default_taxonomy($post_type);
         }
 
@@ -1665,7 +1596,6 @@ function birdhive_get_posts ( $args = array() )
                 $tax_terms = str_replace("NOT-","",$tax_terms);
                 $tax_operator = 'NOT IN';
             }
-
         } else {
             $tax_operator = 'IN';
         }
@@ -1691,8 +1621,6 @@ function birdhive_get_posts ( $args = array() )
 
         // Orderby
         if ( isset($orderby) ) {
-            //$ts_info .= "orderby: ".print_r($orderby, true)."<br />";
-
             if ( !is_array($orderby) && strpos($orderby, ',') !== false) {
                 $orderby = str_replace(","," ",$orderby);
                 //$orderby = wxc_att_explode( $orderby );
@@ -1738,7 +1666,6 @@ function birdhive_get_posts ( $args = array() )
                 ) );
                 */
             } else {
-
                 $orderby = array();
 
                 foreach ( $orderby as $k => $v ) {
@@ -1762,7 +1689,6 @@ function birdhive_get_posts ( $args = array() )
             $wp_args['tax_query'] = $tax_query;
         } else if ( is_category() && $category != "all" && $context != "snippet" ) {
             // Post category archive
-            //$ts_info .= "is_category (archive)<br />";
 
             // Get archive term_id from slug
             $archive_term = term_exists( "archives", "category" );
@@ -1795,8 +1721,7 @@ function birdhive_get_posts ( $args = array() )
             );
 
         } else if ( $taxonomy && $tax_terms ) {
-            //$ts_info .= "Building tax_query based on taxonomy & tax_terms.<br />";
-
+            // Building tax_query based on taxonomy & tax_terms
             $wp_args['tax_query'] = array(
                 array(
                     'taxonomy'  => $taxonomy,
@@ -1825,14 +1750,13 @@ function birdhive_get_posts ( $args = array() )
 
             // Scope restrictions? WIP
             if ( $scope && $date_field ) {
-                $ts_info .= "query by scope/date_field<br />";
+                // query by scope/date_field
                 // Check to make sure the date_field is a registered meta field
                 //if ( registered_meta_key_exists( 'post', $date_field ) ) { //if ( registered_meta_key_exists( 'post', $date_field, $post_type ) ) { // disabled -- not working as expected
                     //
                     $scope_dates = sdg_scope_dates($scope);
                     $start_date = $scope_dates['start'];
                     $end_date = $scope_dates['end'];
-                    //$ts_info .= "start_date: $start_date; end_date: $end_date<br />";
 
                     $meta_query_components[] =
                         array(
@@ -1843,7 +1767,7 @@ function birdhive_get_posts ( $args = array() )
                         );
 
                 //} else {
-                    //$ts_info .= "No registered meta_key with key: '$date_field'<br />"; // for post_type '$post_type'
+                    // No registered meta_key with key: '$date_field'<br />"; // for post_type '$post_type'
                 //}
             }
 
@@ -1902,7 +1826,6 @@ function birdhive_get_posts ( $args = array() )
         }
 
         if ( $cat_id && ! is_category() ) { // is_archive()
-
             // Get the URL of this category
             $category_url = get_category_link( $cat_id );
             $category_link = 'Category Link';
@@ -1915,9 +1838,7 @@ function birdhive_get_posts ( $args = array() )
                 }
                 $category_link .= '</a>';
             }
-
         }
-
     } // END if ( !$get_by_ids )
 
     // Groupby
@@ -1934,7 +1855,7 @@ function birdhive_get_posts ( $args = array() )
     //wxc_log("meta_query", $meta_query, $logCtx);
     //wxc_log("birdhive_get_posts arr_posts", $arr_posts, $logCtx);
 
-    //$ts_info .= "birdhive_get_posts arr_posts->request<pre>".$arr_posts->request."</pre>";
+    //wxc_log()"birdhive_get_posts arr_posts->request", $arr_posts->request, $logCtx);
     wxc_log("birdhive_get_posts last_query", $wpdb->last_query, $logCtx);
 
     $arr_info['arr_posts'] = $arr_posts;
@@ -2031,21 +1952,16 @@ function birdhive_display_posts ( $atts = array() )
     // WIP -- all override for ALL args? or just specific ones?0
     if ( get_query_var('scope') ) {
         $scope = get_query_var('scope');
-        $ts_info .= "scope via query_var: ".print_r($scope,true)."<br />";
+        // scope via query_var
     } else {
-        $ts_info .= "scope query_var not set<br />";
+        // scope query_var not set
     }
-
-    //$ts_info .= 'extracted args: <pre>'.print_r($args, true).'</pre>';
-    $ts_info .= "post_type: ".$post_type."<br />";
 
     if ( $return_format ) { $display_format = $return_format; $args['display_format'] = $display_format; } // deal w/ deprecated attribute
     if ( $show_subtitles == "false" ) {
         $show_subtitles = false;
-        $ts_info .= "show_subtitles: false<br />";
     } else {
         $show_subtitles = true;
-        $ts_info .= "show_subtitles: true<br />";
     }
 
     // TODO: 'category' applies to pages and posts only, but it's an easy mistake to use that attribute for events too => correct for that possibility
@@ -2077,34 +1993,18 @@ function birdhive_display_posts ( $atts = array() )
 
             // Posts by ID -- translate to fit EM search attributes (https://wp-events-plugin.com/documentation/event-search-attributes/)
             if ( !empty($ids) ) {
-                $ts_info .= "Getting posts by IDs: ".$ids."<br />";
                 $post_ids = array_map( 'intval', wxc_att_explode( $ids ) );
                 if ( count($post_ids) > 1 ) {
                     $em_args['post_id'] = $post_ids; //$em_args['post__in'] = $post_ids;
                 } else {
                     $em_args['post_id'] = $ids;
                 }
-                //$em_args['post_id'] = $ids;
             }
             if ( $em_args ) { $ts_info .= 'shortcode_atts as passed to EM_Events::get <pre>'.print_r($em_args, true).'</pre>'; } // tft
 
             $items = EM_Events::get( $em_args ); // Retrieves an array of EM_Event Objects
-            //$ts_info .= "EM items retrieved: <pre>".print_r($items, true)."</pre>";
-
-            $ts_info .= 'Posts retrieved using EM_Events::get: <pre>';
-            foreach ( $items as $obj ) {
-                //$ts_info .= "obj: ".print_r($obj, true)."<br />";
-                $ts_info .= "post_id: ".$obj->post_id."<br />";
-                $ts_info .= "event_id: ".$obj->event_id."<br />";
-                $ts_info .= "event_name: ".$obj->event_name."<br />";
-                $ts_info .= "-------<br />";
-                //$ts_info .= "event_attributes: ".print_r($post->event_attributes, true)."<br />";
-                //if ( isset($post->event_attributes['event_series']) ) { $ts_info .= "event_series: ".$post->event_attributes['event_series']."<br />"; }
-            }
-            //$ts_info .= 'last_query: '.print_r( $wpdb->last_query, true); // '<pre></pre>'
-            $ts_info .= '</pre>'; // tft
         } else {
-            $ts_info .= "searching for events with series_id: ".$series."<br />";
+            // searching for events with series_id
 
             // If no meta_key is yet set and the orderby str is event_start, or _event_start_date, or variations on that theme, set the ordering and meta_key accordingly
             if ( empty($meta_key) && str_contains($orderby, "event_start" ) ) {
@@ -2131,9 +2031,6 @@ function birdhive_display_posts ( $atts = array() )
         $display_format = "list"; // default
     }*/
     if ( ( $display_format == "excerpts" || $display_format == "archive" ) && $show_content == null ) { $show_content = 'excerpts'; }
-    //
-    $ts_info .= "display_format: ".$display_format."<br />";
-    $ts_info .= "show_content: ".$show_content."<br />";
 
     // Init index
     $index = "";
@@ -2154,30 +2051,26 @@ function birdhive_display_posts ( $atts = array() )
 
             // Is it a single or multiple group_by value?
             if ( str_contains($group_by, "," ) ) {
-                $ts_info .= "multiple group_by parameters!<br />";
+                // multiple group_by parameters!
                 $arr_groups = wxc_att_explode($group_by);
                 $group_by = $arr_groups[0];
-                $ts_info .= "group_by: $group_by<br />";
-                //if ( $arr_groups[1] ) { $group_by_secondary = $arr_groups[1]; }
                 $group_by_secondary = $arr_groups[1];
-                $ts_info .= "group_by_secondary: $group_by_secondary<br />";
 
                 // WIP!
                 if ( $group_by_secondary ) {
-
                     //$field = get_field_object($group_by_secondary); // this won't work here because there's no object instance to check
 
                     if ( taxonomy_exists($group_by_secondary) ) {
-                        $ts_info .= "'$group_by_secondary' is a taxonomy<br />";
+                        // '$group_by_secondary' is a taxonomy
                     //} else if ( get_field_object($group_by_secondary) ) {
-                        //$ts_info .= "'$group_by_secondary' is an ACF field";
+                        // '$group_by_secondary' is an ACF field
                     } else if ( registered_meta_key_exists( 'post', $group_by_secondary, 'link' ) || registered_meta_key_exists( 'post', $group_by_secondary ) ) {
-                        $ts_info .= "'$group_by_secondary' is a registered_meta_key<br />";
+                        // '$group_by_secondary' is a registered_meta_key
                         // is $group_by_secondary a meta_key? -- why doesn't this work? are ACF fields not officially registered as meta keys? why not?
                         // if so...
                         // orderby meta_value
                     } else {
-                        $ts_info .= "'$group_by_secondary' is neither a taxonomy, nor a registered_meta_key<br />"; // , nor an ACF field
+                        // '$group_by_secondary' is neither a taxonomy, nor a registered_meta_key  // , nor an ACF field
                     }
                 }
             }
@@ -2187,7 +2080,6 @@ function birdhive_display_posts ( $atts = array() )
 
             // First check to see if the group_by refers to a taxonomy
             if ( taxonomy_exists($group_by) ) {
-
                 $current_term_id = ""; // init
                 $items = array();
                 $tax_terms = array();
@@ -2230,8 +2122,6 @@ function birdhive_display_posts ( $atts = array() )
                     }
                     $posts_info = birdhive_get_posts( $wp_args );
                     $posts = $posts_info['arr_posts']->posts;
-                    //$ts_info .= 'shortcode_atts as passed to birdhive_get_posts: <pre>'.print_r($args, true).'</pre>';
-                    $ts_info .= $posts_info['ts_info'];
 
                     // Add the posts to the items array
                     $current_sub = ""; // init for group_by_secondary
@@ -2262,7 +2152,6 @@ function birdhive_display_posts ( $atts = array() )
                     // WIP: get term children, if any, and the childrens' links...
                     $child_terms = get_terms( array( 'taxonomy' => $group_by, 'hide_empty' => true, 'child_of' => $term_id ) );
                     foreach ( $child_terms as $child_term ) {
-
                         $hlevel = 3;
 
                         $child_term_id = $child_term->term_id;
@@ -2280,9 +2169,6 @@ function birdhive_display_posts ( $atts = array() )
                         // Get posts per child_term_id
                         $posts_info = birdhive_get_posts( $wp_args );
                         $child_posts = $posts_info['arr_posts']->posts;
-
-                        //$ts_info .= 'shortcode_atts as passed to birdhive_get_posts: <pre>'.print_r($args, true).'</pre>';
-                        $ts_info .= $posts_info['ts_info'];
 
                         // Add the posts to the items array
                         $current_sub = ""; // init for group_by_secondary
@@ -2328,8 +2214,6 @@ function birdhive_display_posts ( $atts = array() )
 
                     $posts_info = birdhive_get_posts( $wp_args );
                     $posts = $posts_info['arr_posts']->posts; // Retrieves an array of WP_Post Objects
-                    //$ts_info .= 'shortcode_atts as passed to birdhive_get_posts: <pre>'.print_r($args, true).'</pre>';
-                    $ts_info .= $posts_info['ts_info'];
                     */
                     //array_push( $items, $posts );
                     //$info .= $posts_info['info']; // obsolete(?)
@@ -2342,15 +2226,11 @@ function birdhive_display_posts ( $atts = array() )
             // No groupings, just get one set of posts based on args
             $posts_info = birdhive_get_posts( $args );
             $items = $posts_info['arr_posts']->posts; // Retrieves an array of WP_Post Objects
-            //$info .= $posts_info['info']; // obsolete(?)
-            //$ts_info .= 'args as passed to birdhive_get_posts: <pre>'.print_r($args, true).'</pre>';
         } // END if ( $group_by )
 
     } // END if ( empty($posts) )
 
     if ( $items ) {
-        //$ts_info .= 'Items to be passed to birdhive_display_collection: <pre>'.print_r($items, true).'</pre>'; // tft
-
         $class = " ".$display_format; // wip
 
         //if ($args['header'] == 'true') { $info .= '<h3>Latest '.$category.' Articles:</h3>'; } // WIP
@@ -2367,13 +2247,12 @@ function birdhive_display_posts ( $atts = array() )
         // TODO: revise args to fit new setup for item arrays etc.
         $display_args = array( 'content_type' => $content_type, 'display_format' => $display_format, 'link_posts' => $link_posts, 'show_subtitles' => $show_subtitles, 'show_content' => $show_content, 'items' => $items, 'display_atts' => $args );
         $info .= birdhive_display_collection( $display_args );
-
         $info .= '</div>'; // end div class="dsplycntnt-posts" (wrapper)
 
         wp_reset_postdata();
 
     }  else {
-        $ts_info .= "No post items found!";
+        // No post items found!
     } // END if posts
 
     return $info;
@@ -2396,11 +2275,9 @@ function match_group_field ( $field_groups, $field_name )
 
         $i = 0;
         foreach ( $group_fields as $group_field ) {
-
             $i++;
 
             if ( $group_field['name'] == $field_name ) {
-
                 // field exists, i.e. the post_type is associated with a field matching the $field_name
                 $field = $group_field;
                 // field_object parameters include: key, label, name, type, id -- also potentially: 'post_type' for relationship fields, 'sub_fields' for repeater fields, 'choices' for select fields, and so on
@@ -2422,11 +2299,9 @@ function match_group_field ( $field_groups, $field_name )
 
                 break;
             }
-
         }
 
         if ( $field ) {
-            //$field_info .= "break.<br />";
             break;  // Once the field has been matched to a post_type field, there's no need to continue looping
         }
 
@@ -2459,7 +2334,6 @@ function get_list_items( $atts = array() )
     $arr_info = array(); // wip 06/27/23
     $info = "";
     $ts_info = "";
-    $ts_info .= "===== get_list_items =====<br />";
 
     if ( $display == 'table' ) { $table = ""; }
 
@@ -2467,7 +2341,6 @@ function get_list_items( $atts = array() )
 
     if ($post_id == null) { $post_id = get_the_ID(); }
     $ts_info .= "Event Program Items for post_id: $post_id<br />";
-    //$ts_info .= "display: $display<br />";
 
     // What type of program is this? Service order or concert program?
     $program_type = get_post_meta( $post_id, 'program_type', true );
@@ -2496,10 +2369,8 @@ function get_list_items( $atts = array() )
     $table_rows = array();
 
     if ( is_array($program_rows) ) {
-
         // Check to see if ANY of the rows contains items with post_type == 'repertoire'
         if ( program_contains_repertoire($program_rows) ) { // TODO: generalize the following to apply to any items with authorship, not just rep/composers
-
             $ts_info .= "program contains repertoire items<br />";
             // If so, then get all the program composers
             $program_item_ids = get_program_item_ids($program_rows);
@@ -2507,21 +2378,19 @@ function get_list_items( $atts = array() )
             //
             $authorship_display_settings = set_row_authorship_display($program_item_ids);
             $ts_info .= "authorship_display_settings: <pre>".print_r($authorship_display_settings, true)."</pre><br />";
-
         }
 
         // Translate program_rows into table_rows (separate row per item)
         //////
 
         foreach( $program_rows as $r => $row ) {
-
             // TODO: check if row is empty >> next
 
             // Initialize variables
             $row_info = ""; // Info for troubleshooting
             $row_info .= "-------------------- [row $r] --------------------<br />";
 
-                $grouped_row = false; // For multiple-item rows
+            $grouped_row = false; // For multiple-item rows
                 //
             $placeholder_label = false;
             $placeholder_item = false;
@@ -2532,7 +2401,7 @@ function get_list_items( $atts = array() )
             $program_item_label = null;
             $program_item_name = null;
                 //
-                $show_person_dates = true;
+            $show_person_dates = true;
 
             //
             $label_update_required = false;
