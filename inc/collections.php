@@ -24,7 +24,6 @@ function birdhive_display_collection ( $args = array() )
 {
     // Init vars
     $info = "";
-    $ts_info = "";
 
     // Defaults
     $defaults = array(
@@ -44,17 +43,12 @@ function birdhive_display_collection ( $args = array() )
     // Parse & Extract args
     $args = wp_parse_args( $args, $defaults );
     extract( $args );
-    //$ts_info .= "birdhive_display_collection >> args: <pre>".print_r($args, true)."</pre>";
     
     // One possible args is display_atts
     if ( isset($display_atts) && is_array($display_atts) ) { extract( $display_atts ); } else { $display_atts = []; }
-    //$ts_info .= "display_atts: <pre>".print_r($display_atts, true)."</pre>";
 
     // Get args from array
     if ( isset($collection_id) ) {
-
-        $ts_info .= "collection_id: $collection_id<br />";
-
         $content_type = "mixed";
         $display_format = get_field('display_format', $collection_id);
         $items = get_field('collection_items', $collection_id); // ACF collection item repeater field values
@@ -69,9 +63,7 @@ function birdhive_display_collection ( $args = array() )
         //$content_type = $args['content_type']; -- probably mixed, but could be posts or whatever, collection of single type of items -- would have to loop to determine
 
     } else {
-
-        $ts_info .= "No collection_id set<br />";
-
+        // No collection_id set
         if ( $display_format == "table" && isset($display_atts['fields']) ) {
             $table_fields = $display_atts['fields'];
             $table_headers = $display_atts['headers'];
@@ -80,19 +72,19 @@ function birdhive_display_collection ( $args = array() )
         if ( $display_format == "grid" && isset($display_atts['cols']) ) {
             $num_cols = $display_atts['cols'];
         } else {
-            $ts_info .= "Get num_cols from default: ".$num_cols." for display_format: ".$display_format."<br />";
+            // Get num_cols from default: ".$num_cols." for display_format: ".$display_format
         }
 
-        if ( isset($display_atts['aspect_ratio']) ) { $aspect_ratio = $display_atts['aspect_ratio']; } // TODO: either eliminate this, or make it so that aspect_ratio actually ever is passable as an arg, via mods to args array of display_posts, for example...
-
+        if ( isset($display_atts['aspect_ratio']) ) { $aspect_ratio = $display_atts['aspect_ratio']; } 
+        // TODO: either eliminate this, or make it so that aspect_ratio actually ever is passable as an arg, via mods to args array of display_posts, for example...
     }
 
     // Show TS info based on display_format (tft)
     if ( $display_format == "table" ) {
-        $ts_info .= "display_format: $display_format<br />";
-        $ts_info .= "table_fields: ".print_r($table_fields, true)."<br />";
-        $ts_info .= "table_headers: ".print_r($table_headers, true)."<br />";
-        $ts_info .= "table_totals: ".print_r($table_totals, true)."<br />";
+        //"display_format: $display_format<br />";
+        //"table_fields: ".print_r($table_fields, true)."<br />";
+        //"table_headers: ".print_r($table_headers, true)."<br />";
+        //"table_totals: ".print_r($table_totals, true)."<br />";
     }
     $col_totals = array();
 
@@ -109,13 +101,9 @@ function birdhive_display_collection ( $args = array() )
 
     // For each item, get content for display in appropriate form...
     foreach ( $items as $item ) {
-
         $item_info = "";
-        $item_ts_info = "";
         $arr_item = array();
         $image_id = null;
-
-        //$item_ts_info .= "item: <pre>".print_r($item, true)."</pre>";
 
         if ( is_array($item) && isset($item['item_type']) ) {
             $item_type = $item['item_type'];
@@ -126,26 +114,18 @@ function birdhive_display_collection ( $args = array() )
         } else {
             $item_type = "UNKNOWN!";
         }
-
-        //$item_ts_info .= "item_type: ".$item_type."<br />"; //$item_ts_info .= "<!-- item_type: ".$item_type." -->";
-
+        
         if ( $item_type == "event" && ( $display_format == "excerpts" || ( $display_format == "archive" && $show_content != 'full' ) ) ) {
-
             $item_info .= display_event_list_item( $item );
-
         } else {
-
             // Assemble the array of styling parameters
             $arr_styling = array( 'item_type' => $item_type, 'display_format' => $display_format, 'link_posts' => $link_posts, 'show_subtitle' => $show_subtitles, 'show_content' => $show_content, 'show_image' => $show_images, 'aspect_ratio' => $aspect_ratio, 'table_fields' => $table_fields, 'collection_id' => $collection_id ); // wip
-            //$item_ts_info .= "item: <pre>".print_r($item, true)."</pre>";
-            //$item_ts_info .= "arr_styling: <pre>".print_r($arr_styling, true)."</pre>";
 
             // Assemble the arr_item
             if ( $item_type == "custom_item" ) {
                 $arr_item = $item;
             } else {
                 $arr_item = build_item_arr ( $item, $arr_styling );
-                $item_ts_info .= $arr_item['ts_info'];
             }
 
             // Get content for display in appropriate form...
@@ -163,15 +143,11 @@ function birdhive_display_collection ( $args = array() )
         //
         if ( !empty($table_totals) ) {
             foreach ( $table_totals as $field_name ) {
-                //$item_ts_info .= "table_totals field_name '".$field_name."'<br />";
                 if ( isset( $arr_item['field_values'][$field_name] ) ) { // isset( $arr_item[$field_name] ) ||
-                    //$item_ts_info .= "item value for field_name '".$field_name."': ".$arr_item['field_values'][$field_name]."<br />";
                     if ( isset($col_totals[$field_name]) ) {
                         $col_totals[$field_name] += (float) $arr_item['field_values'][$field_name];
-                        //$item_ts_info .= "add to total: ".(float) $arr_item['field_values'][$field_name]."<br />";
                     } else {
                         $col_totals[$field_name] = (float) $arr_item['field_values'][$field_name];
-                        //$item_ts_info .= "set col_totals $field_name: ".(float) $arr_item['field_values'][$field_name]."<br />";
                     }
                 }
             }
@@ -179,7 +155,6 @@ function birdhive_display_collection ( $args = array() )
 
         // Add the item_info to the info for return/display
         $info .= $item_info;
-        $ts_info .= $item_ts_info;
 
     } // END foreach items as item
 
@@ -190,7 +165,6 @@ function birdhive_display_collection ( $args = array() )
     // Display column totals, if applicable
     if ( $display_format == "table" && !empty($col_totals) ) {
         // WIP
-        //$info .= "col_totals: <pre>".print_r($col_totals, true)."</pre>";
         if ( is_array($table_fields) ) { $arr_fields = $table_fields; } else { $arr_fields = explode(",",$table_fields); }
         $info .= '<tfoot>';
         $info .= '<tr class="totals">';
@@ -221,7 +195,6 @@ function collection_header ( $args = array() )
 
     // Init vars
     $info = "";
-    $ts_info = "";
 
     // Defaults
     $defaults = array(
@@ -236,8 +209,6 @@ function collection_header ( $args = array() )
     // Parse & Extract args
     $args = wp_parse_args( $args, $defaults );
     extract( $args );
-
-    $ts_info .= "<!-- +~+~+~+~+~+~+ collection_header +~+~+~+~+~+~+ -->";
 
     if ( $display_format == "list" ) {
         $info .= '<ul>';
