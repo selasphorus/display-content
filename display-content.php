@@ -3523,8 +3523,8 @@ function birdhive_search_form ( $atts = array(), $content = null, $tag = '' )
 
     $args = shortcode_atts( array(
         'post_type'    => 'post',
-        'fields'       => null,
         'form_type'    => 'simple_search',
+        'fields'       => null,
         'limit'        => '-1'
     ), $atts );
 
