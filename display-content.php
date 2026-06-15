@@ -4321,16 +4321,11 @@ function birdhive_search_form ( $atts = array(), $content = null, $tag = '' )
 
                 $arr_post_ids = $posts_info['arr_posts']->posts; // Retrieves an array of IDs (based on return_fields: 'ids')
                 $ts_info .= "Num arr_post_ids: [".count($arr_post_ids)."]<br />";
-                //$ts_info .= "arr_post_ids: <pre>".print_r($arr_post_ids,true)."</pre>"; // tft
-
-                //$info .= '<div class="troubleshooting">'.$posts_info['ts_info'].'</div>';
                 $ts_info .= $posts_info['ts_info'];
 
                 // Print last SQL query string
                 global $wpdb;
                 $ts_info .= "last_query:<pre>".$wpdb->last_query."</pre>";
-                //$info .= '<div class="troubleshooting">'."last_query:<pre>".$wpdb->last_query."</pre>".'</div>';
-
             }
 
             if ( $args_related ) {
@@ -4344,9 +4339,6 @@ function birdhive_search_form ( $atts = array(), $content = null, $tag = '' )
 
                     $arr_related_post_ids = $related_posts_info['arr_posts']->posts;
                     $ts_info .= "Num arr_related_post_ids: [".count($arr_related_post_ids)."]<br />";
-                    //$ts_info .= "arr_related_post_ids: <pre>".print_r($arr_related_post_ids,true)."</pre>"; // tft
-
-                    $ts_info .= $related_posts_info['ts_info'];
 
                     // Print last SQL query string
                     global $wpdb;
@@ -4354,9 +4346,7 @@ function birdhive_search_form ( $atts = array(), $content = null, $tag = '' )
 
                     // WIP -- we're running an "and" so we need to find the OVERLAP between the two sets of ids... one set of repertoire ids, one of editions... hmm...
                     if ( !empty($arr_post_ids) ) {
-
                         $related_post_field_name = "repertoire_editions"; // TODO: generalize!
-
                         $full_match_ids = array(); // init
 
                         // Search through the smaller of the two data sets and find posts that overlap both sets; return only those
