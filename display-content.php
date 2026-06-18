@@ -1850,7 +1850,7 @@ function birdhive_get_posts ( $args = array() )
     $arr_posts = new WP_Query( $wp_args );
 
     ///wxc_log("args", $wp_args, $logCtx);
-    ///wxc_log("[".count($arr_posts->posts)."] posts found, null, $logCtx)_;
+    ///wxc_log("[".count($arr_posts->posts)."] posts found, null, $logCtx);
     //wxc_log("meta_query", $meta_query, $logCtx);
     //wxc_log("meta_query", $meta_query, $logCtx);
     //wxc_log("birdhive_get_posts arr_posts", $arr_posts, $logCtx);
@@ -2731,9 +2731,8 @@ function get_list_items( $atts = array() )
                 // If the row is empty/x-filled and needs to be deleted, then do so
                 if ( $delete_row == true ) {
 
-                    //wxc_log( "divline1");
-                    //wxc_log( "program row to be deleted:");
-                    //wxc_log( print_r($row, true));
+                    //wxc_log("divline1", null, $logCtx);
+                    //wxc_log("program row to be deleted", $row, $logCtx);
                     $row_info .= "row: ".print_r($row, true)."<br />";
                     $row_info .= "[$i] program row to be deleted<br />";
                     $row_info .= "[$i] program row: item_label_txt='".$row['item_label_txt']."'; item_label='".$row['item_label']."'; program_item_txt='".$row['program_item_txt']."'<br />";
@@ -2747,23 +2746,22 @@ function get_list_items( $atts = array() )
                         if ( delete_row('program_items', $i, $post_id) ) { // ACF function: https://www.advancedcustomfields.com/resources/delete_row/ -- syntax: delete_row($selector, $row_num, $post_id)
                             $row_info .= "[program row $i deleted]<br />";
                             $deletion_count++;
-                            //wxc_log( "[program row $i deleted successfully]");
+                            //wxc_log("[program row $i deleted successfully]", null, $logCtx);
                         } else {
                             $row_info .= "[deletion failed for program row $i]<br />";
-                            //wxc_log( "[failed to delete program row $i]");
+                            //wxc_log("[failed to delete program row $i]", null, $logCtx);
                         }
 
                     } else {
 
                         if ( $do_deletions == true ) {
                             $row_info .= "[$i] row to be deleted on next round due to row_index issues.<br />";
-                            //wxc_log( "row to be deleted on next round due to row_index issues.");
+                            //wxc_log("row to be deleted on next round due to row_index issues.", null, $logCtx);
                         } else {
                             $row_info .= "[$i] row to be deleted when do_deletions is re-enabled.<br />";
-                            //wxc_log( "row to be deleted when do_deletions is re-enabled.");
+                            //wxc_log("row to be deleted when do_deletions is re-enabled.", null, $logCtx);
                         }
                     }
-
                 }
                 */
 
