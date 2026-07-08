@@ -4,7 +4,7 @@
  * Description: Display content of all types in a variety of formats using shortcodes.
  * Dependencies:      
  * Requires Plugins: whx4-core, stc
- * Version: 1.260624
+ * Version: 1.260708
  * Plugin URI: 
  * Author: atc
  * Author URI: http://birdhive.com
