@@ -876,7 +876,7 @@ function display_post_item ( $arr_item = array() )
     $info .= '</header><!-- .entry-header -->';
     if ( empty($item_image) && $show_content == "full" ) {
         $img_args = array( 'post_id' => $post_id, 'format' => 'singular', 'img_size' => "full", 'sources' => array("featured", "gallery"), 'echo' => false );
-        $info .= sdg_post_thumbnail( $img_args );
+        $info .= stc_post_thumbnail( $img_args );
     }
     $info .= '<div class="entry-content">';
     //if ( $post_type == 'event' ) { $info .= do_shortcode('[event post_id="'.$post_id.'"]#_EVENTDATES<br /><span class="event_time">#_EVENTTIMES</span>[/event]'); }
@@ -964,11 +964,11 @@ function display_table_row ( $arr_item = array(), $arr_styling = array() )
                     if ( count($field_value) == 1 ) {
                         if ( is_numeric($field_value[0]) ) {
                             // Get post_title
-                            if ( function_exists( 'sdg_post_title' ) ) {
+                            if ( function_exists( 'stc_post_title' ) ) {
                                 $title_args = array( 'post' => $field_value[0], 'line_breaks' => false, 'show_subtitle' => false, 'hlevel' => 0, 'echo' => false, 'called_by' => 'dcp->display_table_row' );
-                                $value = sdg_post_title( $title_args );
+                                $value = stc_post_title( $title_args );
                                 if ( empty($value) ) {
-                                    $info .= "no title found using sdg_post_title with title_args: <pre>".print_r($title_args, true)."</pre>";
+                                    $info .= "no title found using stc_post_title with title_args: <pre>".print_r($title_args, true)."</pre>";
                                 }
                             } else {
                                 $value = get_the_title($field_value[0]);
@@ -1159,7 +1159,7 @@ function build_item_arr ( $item, $arr_styling = array() )
             } else if ( $post_type == "person" ) {
                 $title_args = array( 'person_id' => $post_id, 'override' => 'post_title', 'show_job_title' => true, 'called_by' => 'dcp' );
                 $item_title = getPersonDisplayName($title_args);
-            } else if ( function_exists( 'sdg_post_title' ) ) {
+            } else if ( function_exists( 'stc_post_title' ) ) {
                 if ( !isset($show_subtitle) ) { $show_subtitle = true; }
                 $title_args = array( 'post' => $post_id, 'line_breaks' => true, 'show_subtitle' => $show_subtitle, 'echo' => false, 'called_by' => 'dcp' );
                 if ( $show_content == "full" ) {
@@ -1174,7 +1174,7 @@ function build_item_arr ( $item, $arr_styling = array() )
                     $title_args['hlevel'] = 0;
                     $title_args['hlevel_sub'] = 0;
                 }
-                $item_title = sdg_post_title( $title_args );
+                $item_title = stc_post_title( $title_args );
             } else {
                 $item_title = get_the_title($post_id);// Retrieve and style the subtitle
                 if ( empty($item_subtitle) ) { $item_subtitle = get_post_meta( $post_id, 'subtitle', true ); }
@@ -3685,7 +3685,7 @@ function birdhive_search_form ( $atts = array(), $content = null, $tag = '' )
                     $field_info .= "field_type: $field_type<br />"; // tft
 
                     if ( !empty($field_value) ) {
-                        if ( function_exists('sdg_sanitize')) { $field_value = sdg_sanitize($field_value); }
+                        //if ( function_exists('wxc_sanitize')) { $field_value = wxc_sanitize($field_value); }
                     }
 
                     //$field_info .= "field_name: $field_name<br />";
@@ -4059,9 +4059,9 @@ function birdhive_search_form ( $atts = array(), $content = null, $tag = '' )
                                         //$option_name = $last_name.", ".$first_name;
                                         $options[$id] = $option_name;
                                         // TODO: deal w/ possibility that last_name, first_name fields are empty
-                                    } else if ( function_exists( 'sdg_post_title' ) ) {
+                                    } else if ( function_exists( 'stc_post_title' ) ) {
                                         $title_args = array( 'post' => $post_id, 'line_breaks' => true, 'show_subtitle' => true, 'echo' => false, 'hlevel' => null, 'hlevel_sub' => null, 'called_by' => 'dcp' );
-                                        $options[$id] = sdg_post_title( $title_args );
+                                        $options[$id] = stc_post_title( $title_args );
                                     } else {
                                         $options[$id] = get_the_title($id);
                                     }

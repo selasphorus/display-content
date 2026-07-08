@@ -256,7 +256,7 @@ function collection_header ( $args = array() )
             $info .= "</tr>"; // close out the header row
         }
     } else if ( $display_format == "grid" ) {
-        $colclass = sdg_digit_to_word($num_cols)."col";
+        $colclass = stc_digit_to_word($num_cols)."col";
         $info .= '<div class="flex-container '.$colclass.' '.$aspect_ratio.'">';
     } else {
         $info .= '<!-- display_format '.$display_format.' not matched -->';
