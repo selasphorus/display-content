@@ -4,7 +4,7 @@
  * Description: Display content of all types in a variety of formats using shortcodes.
  * Dependencies:      
  * Requires Plugins: whx4-core, stc
- * Version: 1.260708
+ * Version: 1.260730
  * Plugin URI: 
  * Author: atc
  * Author URI: http://birdhive.com
@@ -57,6 +57,7 @@ require 'inc/acf-json.php';
 // Load ACF field groups hard-coded as PHP
 require 'inc/acf-field-groups.php';
 
+/* +~+~+ Includes +~+~+ */
 
 // Include custom post type (collection) and collections methods file
 $posttypes_filepath = $plugin_path . 'inc/posttypes.php';
