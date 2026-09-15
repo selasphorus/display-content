@@ -51,9 +51,6 @@ define( 'DCP_PLUGIN_BLOCKS', DCP_PLUGIN_DIR . '/blocks/' );
 
 /* +~+~+ ACF +~+~+ */
 
-// Set custom load & save JSON points for ACF sync
-require 'inc/acf-json.php';
-
 // Load ACF field groups hard-coded as PHP
 require 'inc/acf-field-groups.php';
 
@@ -1037,7 +1034,7 @@ function build_item_arr ( $item, $arr_styling = array() )
         if ( $show_content == "full" ) {
             $img_size = "full";
         } else {
-            $img_size = array( 250, 250 ); //$img_size = "post-thumbnail";
+            $img_size = "medium"; // 300x300 crop
         }
     } else if ( $aspect_ratio ) {
         $img_size = "grid_crop_".$aspect_ratio;
@@ -2337,15 +2334,9 @@ function get_list_items( $atts = array() )
                 split : Title left/Authorship right
                 //
                 if ( $row_type == 'title_only' ) {
-
-                    $arr_item_name = get_rep_info( $program_item_obj_id, 'display', $show_item_authorship, true );
-                    $item_name = $arr_item_name['info'];
-                    $ts_info .= $arr_item_name['ts_info'];
-
+                    $item_name = get_rep_info( $program_item_obj_id, 'display', $show_item_authorship, true );
                 } else if ( empty($program_item_label) ) {
-
                     $ts_info .= "program_item_label is empty >> use title in left col<br />";
-
                 }
             */
 
@@ -2958,15 +2949,9 @@ function get_list_items_v1( $atts = array() )
                 split : Title left/Authorship right
                 //
                 if ( $row_type == 'title_only' ) {
-
-                    $arr_item_name = get_rep_info( $list_item_obj_id, 'display', $show_item_authorship, true );
-                    $item_name = $arr_item_name['info'];
-                    $ts_info .= $arr_item_name['ts_info'];
-
+                    $item_name = get_rep_info( $list_item_obj_id, 'display', $show_item_authorship, true );
                 } else if ( empty($list_item_label) ) {
-
                     $ts_info .= "list_item_label is empty >> use title in left col<br />";
-
                 }
             */
 
