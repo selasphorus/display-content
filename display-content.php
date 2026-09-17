@@ -677,7 +677,6 @@ function display_item ( $arr_item = array(), $arr_styling = array() )
     }
 
     return $info;
-
 }
 
 function display_link_item ( $arr_item = array() )
@@ -718,7 +717,6 @@ function display_post_item ( $arr_item = array() )
 
     // Init vars
     $info = "";
-    $ts_info = "";
     $item_content = "";
     $item_meta = null;
     $player_status = null;
@@ -827,7 +825,6 @@ function display_table_row ( $arr_item = array(), $arr_styling = array() )
     
     // Init vars
     $info = "";
-    $ts_info = "";
     $fields = null;
 
     extract( $arr_item );
@@ -904,7 +901,6 @@ function display_grid_item ( $arr_item = array(), $arr_styling = array() )
     // Init vars
     $info = "";
     $item_info = "";
-    $ts_info = "";
     //
     $display_format = null;
     //
@@ -913,7 +909,7 @@ function display_grid_item ( $arr_item = array(), $arr_styling = array() )
 
     // Post Type?
     if ( $post_id ) { $post_type = get_post_type($post_id); }
-    if ( isset($overlay) ) { $ts_info .= "<!-- overlay: $overlay -->"; } else { $overlay = null; }
+    if ( isset($overlay) ) { wxc_log( "overlay: $overlay", null, $logCtx ); } else { $overlay = null; }
 
     // Begin building item_info
     if ( $aspect_ratio ) {
@@ -978,7 +974,6 @@ function build_item_arr ( $item, $arr_styling = array() )
 {
     // Init vars
     $arr_item = array();
-    $ts_info = "";
     //
     $link_posts = "true"; // default in case it's not set by arr_styling
     $display_format = null;
@@ -1302,7 +1297,6 @@ function build_item_arr ( $item, $arr_styling = array() )
 	$arr_item['item_text'] = $item_text;
 	$arr_item['item_image'] = $item_image;
 	$arr_item['item_date_str'] = $item_date_str;
-	$arr_item['ts_info'] = $ts_info;
     $arr_item['field_values'] = $field_values;
 	
 	// Return the assembled item array
@@ -1783,7 +1777,6 @@ function birdhive_display_posts ( $atts = array() )
     global $logCtx;
     
     $info = "";
-    $ts_info = "";
     $posts = array();
     $items = array(); // post items -- may be simple array of post objects, or mixed array of headers and post ids
 
@@ -1901,7 +1894,9 @@ function birdhive_display_posts ( $atts = array() )
                     $em_args['post_id'] = $ids;
                 }
             }
-            if ( $em_args ) { $ts_info .= 'shortcode_atts as passed to EM_Events::get <pre>'.print_r($em_args, true).'</pre>'; } // tft
+            if ( $em_args ) {
+                wxc_log( "shortcode_atts as passed to EM_Events::get", $em_args, $logCtx );
+            }
 
             $items = EM_Events::get( $em_args ); // Retrieves an array of EM_Event Objects
         } else {
@@ -1914,7 +1909,12 @@ function birdhive_display_posts ( $atts = array() )
             } else {
                 if ( str_contains($meta_key, "event_start" ) ) { $args['meta_key'] = "_event_start"; }
                 //if ( $meta_key == "event_start_date,event_start_time" ) { $args['meta_key'] = "_event_start_date"; }
-                if ( empty($orderby) ) { $args['orderby'] = "meta_value"; } else { $ts_info .= "args['meta_key']: ".$args['meta_key']."<br />"; $ts_info .= "orderby: ".$orderby."<br />"; }
+                if ( empty($orderby) ) {
+                    $args['orderby'] = "meta_value";
+                } else {
+                    wxc_log( "args['meta_key']", $args['meta_key'], $logCtx );
+                    wxc_log( "orderby: ".$orderby, null, $logCtx );
+                }
             }
 
             if ( isset($args['category']) &&  !isset($args['taxonomy']) ) { $args['taxonomy'] = "event-categories"; $args['tax_terms'] = $args['category']; unset($args["category"]); }
@@ -1998,7 +1998,6 @@ function birdhive_display_posts ( $atts = array() )
                     // TFT: get sort_num -- because the orderby isn't working right
                     //get_postmeta.... WIP
                     $sort_num = get_field('sort_num', $term_id, false);
-                    //$ts_info .= "term_id: ".$term_id."/sort_num: ".$sort_num."<br />";
                     $item_id = $term->slug;
 
                     // Add item to index
@@ -2234,18 +2233,17 @@ function get_list_items( $atts = array() )
     // Init vars
     $arr_info = array(); // wip 06/27/23
     $info = "";
-    $ts_info = "";
 
     if ( $display == 'table' ) { $table = ""; }
 
     // TODO: deal more thoroughly w/ non-table display option, or eliminate that parameter altogether.
 
     if ($post_id == null) { $post_id = get_the_ID(); }
-    $ts_info .= "Event Program Items for post_id: $post_id<br />";
+    wxc_log( "Event Program Items for post_id: $post_id", null, $logCtx );
 
     // What type of program is this? Service order or concert program?
     $program_type = get_post_meta( $post_id, 'program_type', true );
-    $ts_info .= "program_type: $program_type<br />";
+    wxc_log( "program_type: $program_type", null, $logCtx );
 
     // Program Layout -- left or centered?
     $program_layout = get_post_meta( $post_id, 'program_layout', true );
@@ -2253,7 +2251,10 @@ function get_list_items( $atts = array() )
     // Get the program item repeater field values (ACF)
     $program_rows = get_field('program_items', $post_id); // ACF function: https://www.advancedcustomfields.com/resources/get_field/ -- TODO: change to use have_rows() instead?
     if ( empty($program_rows) ) { $program_rows = array(); }
-    if ( is_array($program_rows) ) { $ts_info .= count($program_rows)." program_items/program_rows<br />"; } else { $ts_info .= "program_rows: ".print_r($program_rows, true); }
+    if ( is_array($program_rows) ) {
+        wxc_log( count($program_rows)." program_items/program_rows", null, $logCtx );
+    }
+    wxc_log( "program_rows", $program_rows, $logCtx );
 
     //TODO: Determine whether program as a whole contains grouped rows
     /*
@@ -2272,13 +2273,13 @@ function get_list_items( $atts = array() )
     if ( is_array($program_rows) ) {
         // Check to see if ANY of the rows contains items with post_type == 'repertoire'
         if ( program_contains_repertoire($program_rows) ) { // TODO: generalize the following to apply to any items with authorship, not just rep/composers
-            $ts_info .= "program contains repertoire items<br />";
+            wxc_log( "program contains repertoire items", null, $logCtx );
             // If so, then get all the program composers
             $program_item_ids = get_program_item_ids($program_rows);
-            $ts_info .= "program_item_ids: ".print_r($program_item_ids, true)."<br />";
+            wxc_log( "program_item_ids", $program_item_ids, $logCtx );
             //
             $authorship_display_settings = set_row_authorship_display($program_item_ids);
-            $ts_info .= "authorship_display_settings: <pre>".print_r($authorship_display_settings, true)."</pre><br />";
+            wxc_log( "authorship_display_settings", $authorship_display_settings, $logCtx );
         }
 
         // Translate program_rows into table_rows (separate row per item)
@@ -2335,7 +2336,7 @@ function get_list_items( $atts = array() )
                 if ( $row_type == 'title_only' ) {
                     $item_name = get_rep_info( $program_item_obj_id, 'display', $show_item_authorship, true );
                 } else if ( empty($program_item_label) ) {
-                    $ts_info .= "program_item_label is empty >> use title in left col<br />";
+                    wxc_log( "program_item_label is empty >> use title in left col", null, $logCtx );
                 }
             */
 
@@ -2380,7 +2381,6 @@ function get_list_items( $atts = array() )
                 $arr_item_label = get_program_item_label($row);
                 $program_item_label = $arr_item_label['item_label'];
                 $placeholder_label = $arr_item_label['placeholder'];
-                $row_info .= $arr_item_label['ts_info'];
                 $row_info .= ">> program_item_label: $program_item_label<br />";
             }
 
@@ -2391,7 +2391,7 @@ function get_list_items( $atts = array() )
                 // Does the row contain one or more item objects?
                 //$num_items = 1; // default: Single-item program_row translates to single table_row
                 if ( isset($row['program_item']) && is_array($row['program_item']) ) {
-                    //$ts_info .= "program_item: ".print_r($row['program_item'], true)."<br />";
+                    //wxc_log( "program_item", $row['program_item'], $logCtx );
                     $num_items = count($row['program_item']);
                     $program_items = $row['program_item'];
                 }
@@ -2561,10 +2561,6 @@ function get_list_items( $atts = array() )
                 } else {
                     $title_as_label = null;
                 }
-
-                $row_info .= "START arr_item_name['ts_info']<br />";
-                $row_info .= $arr_item_name['ts_info']; // ts_info is already commented
-                $row_info .= "END arr_item_name['ts_info']<br />";
                 //$row_info .= "arr_item_name['info']: <pre>".$arr_item_name['info']."</pre>";
 
                 // Program item_name
@@ -2718,7 +2714,6 @@ function get_list_items( $atts = array() )
                 // ...figuring out how to sync repertoire related_events w/ updates to program items -- display some TS info to aid this process
                 /*if ( $do_ts ) {
                     $arr_row_info = event_program_row_cleanup ( $post_id, $i, $row, "program_items" );
-                    $ts_info .= $arr_row_info['info'];
                     $row_errors = $arr_row_info['errors'];
                     //if ( $row_errors ) { $post_errors = true; }
                     if ( isset($row['program_item'][0]) ) {
@@ -2726,7 +2721,7 @@ function get_list_items( $atts = array() )
                             $item_post_type = get_post_type( $program_item_obj_id );
                             if ( $item_post_type == 'repertoire' ) {
                                 // Update the repertoire_events field for this rep record, as needed
-                                $ts_info .= update_repertoire_events( $program_item_obj_id, false, array($post_id) );
+                                wxc_log( update_repertoire_events( $program_item_obj_id, false, array($post_id) ), null, $logCtx );
                             }
                         }
                     }
@@ -2738,7 +2733,6 @@ function get_list_items( $atts = array() )
 
     // Build the table based on the table_rows array
     if ( $display == 'table' && count($table_rows) > 0 ) {
-
         if ( $display == 'table' ) {
             $table_classes = "event_program program ".$program_layout;
             $table = '<table class="'.$table_classes.'">';
@@ -2756,8 +2750,7 @@ function get_list_items( $atts = array() )
         // --------------------
 
         foreach( $table_rows as $tr ) {
-
-            //$ts_info .= "tr: <pre>".print_r($tr, true)."</pre><br />";
+            //wxc_log( "tr", $tr, $logCtx );
 
             $table .= '<tr id="'.$tr['tr_id'].'" class="'.$tr['tr_class'].'">';
             foreach ( $tr['tds'] as $td ) {
@@ -2766,7 +2759,6 @@ function get_list_items( $atts = array() )
             $table .= '</tr>';
 
             /*
-
             //$tr;
             //$show_row
             //$row_type
@@ -2840,9 +2832,7 @@ function get_list_items( $atts = array() )
     } // end if $rows
 
     $arr_info['info'] = $info;
-    $arr_info['ts_info'] = $ts_info;
     return $arr_info;
-
 }
 
 function get_list_items_v1( $atts = array() )
@@ -2860,25 +2850,23 @@ function get_list_items_v1( $atts = array() )
     // Init vars
     $arr_info = array();
     $info = "";
-    $ts_info = "";
-    $ts_info .= "===== get_list_items =====<br />";
 
     if ( $display == 'table' ) { $table = ""; }
 
     // TODO: deal more thoroughly w/ non-table display option, or eliminate that parameter altogether.
 
     if ($post_id == null) { $post_id = get_the_ID(); }
-    $ts_info .= "Items for post_id: $post_id<br />";
-    //$ts_info .= "display: $display<br />";
+    wxc_log( "Items for post_id: $post_id", null, $logCtx );
+    //wxc_log( "display: $display", null, $logCtx );
 
     // What type of list is this? Music list? Other kind of list?
     //$list_type = get_post_meta( $post_id, 'list_type', true );
-    //$ts_info .= "list_type: $list_type<br />";
+    //wxc_log( "list_type: $list_type", null, $logCtx );
 
     // Get the list item repeater field values (ACF)
     $list_rows = get_field('list_items', $post_id); // ACF function: https://www.advancedcustomfields.com/resources/get_field/ -- TODO: change to use have_rows() instead?
     if ( empty($list_rows) ) { $list_rows = array(); }
-    if ( is_array($list_rows) ) { $ts_info .= count($list_rows)." list_items/list_rows<br />"; } else { $ts_info .= "list_rows: ".print_r($list_rows, true); }
+    if ( is_array($list_rows) ) { wxc_log( count($list_rows)." list_items/list_rows", null, $logCtx ); } else { wxc_log( "list_rows", $list_rows, $logCtx ); }
 
     // WIP: streamlining
 
@@ -2891,21 +2879,18 @@ function get_list_items_v1( $atts = array() )
 
         // Check to see if ANY of the rows contains items with post_type == 'repertoire'
         if ( list_contains_repertoire($list_rows) ) { // TODO: generalize the following to apply to any items with authorship, not just rep/composers
-
-            $ts_info .= "list contains repertoire items<br />";
+            wxc_log( "list contains repertoire items", null, $logCtx );
             // If so, then get all the list composers
             $list_item_ids = get_list_item_ids($list_rows);
-            $ts_info .= "list_item_ids: ".print_r($list_item_ids, true)."<br />";
+            wxc_log( "list_item_ids", $list_item_ids, $logCtx );
             //
             $authorship_display_settings = set_row_authorship_display($list_item_ids);
-            $ts_info .= "authorship_display_settings: <pre>".print_r($authorship_display_settings, true)."</pre><br />";
-
+            wxc_log( "authorship_display_settings", $authorship_display_settings, $logCtx );
         }
 
         // Translate list_rows into table_rows (separate row per item)
 
         foreach( $list_rows as $r => $row ) {
-
             // TODO: check if row is empty >> next
 
             // Initialize variables
@@ -2950,7 +2935,7 @@ function get_list_items_v1( $atts = array() )
                 if ( $row_type == 'title_only' ) {
                     $item_name = get_rep_info( $list_item_obj_id, 'display', $show_item_authorship, true );
                 } else if ( empty($list_item_label) ) {
-                    $ts_info .= "list_item_label is empty >> use title in left col<br />";
+                    wxc_log( "list_item_label is empty >> use title in left col", null, $logCtx );
                 }
             */
 
@@ -2995,7 +2980,6 @@ function get_list_items_v1( $atts = array() )
                 $arr_item_label = get_list_item_label($row);
                 $list_item_label = $arr_item_label['item_label'];
                 $placeholder_label = $arr_item_label['placeholder'];
-                $row_info .= $arr_item_label['ts_info'];
                 $row_info .= ">> list_item_label: $list_item_label<br />";
             }
 
@@ -3006,7 +2990,7 @@ function get_list_items_v1( $atts = array() )
                 // Does the row contain one or more item objects?
                 //$num_items = 1; // default: Single-item list_row translates to single table_row
                 if ( isset($row['list_item']) && is_array($row['list_item']) ) {
-                    //$ts_info .= "list_item: ".print_r($row['list_item'], true)."<br />";
+                    wxc_log( "list_item", $row['list_item'], $logCtx );
                     $num_items = count($row['list_item']);
                     $list_items = $row['list_item'];
                 }
@@ -3014,7 +2998,6 @@ function get_list_items_v1( $atts = array() )
 
             //if ( $num_items == 0 ) {
             if ( empty($list_items) ) {
-
                 // TODO: eliminate redundancy
 
                 // No actual items in this row -- just placeholders
@@ -3032,7 +3015,6 @@ function get_list_items_v1( $atts = array() )
                     $td_content = $list_item_label;
 
                     if ( $row_type == "header" || $row_type == "list_note" || $row_type == "label_only" || $row_type == "title_only" ) {
-
                         // Single wide column row
                         $td_colspan = 2;
                         $row_content = "";
@@ -3176,10 +3158,6 @@ function get_list_items_v1( $atts = array() )
                 } else {
                     $title_as_label = null;
                 }
-
-                $row_info .= "START arr_item_name['ts_info']<br />";
-                $row_info .= $arr_item_name['ts_info']; // ts_info is already commented
-                $row_info .= "END arr_item_name['ts_info']<br />";
                 //$row_info .= "arr_item_name['info']: <pre>".$arr_item_name['info']."</pre>";
 
                 // Program item_name
@@ -3228,15 +3206,12 @@ function get_list_items_v1( $atts = array() )
         // --------------------
 
         foreach( $table_rows as $tr ) {
-
-            //$ts_info .= "tr: <pre>".print_r($tr, true)."</pre><br />";
-
+            //wxc_log( "tr", $tr, $logCtx);
             $table .= '<tr id="'.$tr['tr_id'].'" class="'.$tr['tr_class'].'">';
             foreach ( $tr['tds'] as $td ) {
                 $table .= '<td class="'.$td['td_class'].'" colspan="'.$td['td_colspan'].'">'.$td['td_content'].'</td>';
             }
             $table .= '</tr>';
-
         }
 
         // --------------------
@@ -3252,7 +3227,6 @@ function get_list_items_v1( $atts = array() )
     } // end if $rows
 
     $arr_info['info'] = $info;
-    $arr_info['ts_info'] = $ts_info;
     return $arr_info;
 }
 
@@ -3270,12 +3244,11 @@ function birdhive_search_form ( $atts = array(), $content = null, $tag = '' )
 
     // Init vars
     $info = "";
-    $ts_info = "";
     //$search_values = false; // var to track whether any search values have been submitted on which to base the search
     $search_values = array(); // var to track whether any search values have been submitted and to which post_types they apply
 
-    $ts_info .= '_GET: <pre>'.print_r($_GET,true).'</pre>'; // tft
-    //$ts_info .= '_REQUEST: <pre>'.print_r($_REQUEST,true).'</pre>'; // tft
+    wxc_log( "_GET", $_GET, $logCtx );
+    wxc_log( "_REQUEST", $_REQUEST, $logCtx );
 
     $args = shortcode_atts( array(
         'post_type'    => 'post',
@@ -3549,16 +3522,15 @@ function birdhive_search_form ( $atts = array(), $content = null, $tag = '' )
                             // instead of boolean, create a search_values array? and track which post_type they relate to?
                             $search_values[] = array( 'field_post_type' => $field_post_type, 'arr_field' => $arr_field, 'field_name' => $field_name, 'field_value' => $field_value );
                             //$field_info .= "field value: $field_value<br />";
-                            //$ts_info .= "query_assignment for field_name $field_name is *$query_assignment* >> search value: '$field_value'<br />";
+                            //wxc_log( "query_assignment for field_name $field_name is *$query_assignment* >> search value: '$field_value'", null, $logCtx );
 
                             if ( $query_assignment == "primary" ) {
                                 $search_primary_post_type = true;
-                                $ts_info .= ">> Setting search_primary_post_type var to TRUE based on field $field_name searching value $field_value<br />";
+                                wxc_log( ">> Setting search_primary_post_type var to TRUE based on field $field_name searching value $field_value", null, $logCtx );
                             } else {
                                 $search_related_post_type = true;
-                                $ts_info .= ">> Setting search_related_post_type var to TRUE based on field $field_name searching value $field_value<br />";
+                                wxc_log( ">> Setting search_related_post_type var to TRUE based on field $field_name searching value $field_value", null, $logCtx );
                             }
-
                         }
 
                         $field_info .= "field value: $field_value<br />";
@@ -3567,7 +3539,6 @@ function birdhive_search_form ( $atts = array(), $content = null, $tag = '' )
                         //$field_info .= "field value: [none]<br />";
                         $field_value = null;
                     }
-
 
                     // Get 'type' field option
                     $field_type = $field['type'];
@@ -3589,12 +3560,10 @@ function birdhive_search_form ( $atts = array(), $content = null, $tag = '' )
                     //if ( ( $field_name == "post_title" || $field_name == "title_clean" ) && !empty($field_value) ) {
 
                     if ( $field_name == "post_title" && !empty($field_value) ) {
-
                         //$wp_args['s'] = $field_value;
                         $wp_args['_search_title'] = $field_value; // custom parameter -- see posts_where filter fcn
 
                     } else if ( $field_type == "text" && !empty($field_value) ) {
-
                         // TODO: figure out how to determine whether to match exact or not for particular fields
                         // -- e.g. box_num should be exact, but not necessarily for title_clean?
                         // For now, set it explicitly per field_name
@@ -3621,7 +3590,6 @@ function birdhive_search_form ( $atts = array(), $content = null, $tag = '' )
                         $field_info .= ">> Added $query_assignment meta_query_component for key: $field_name, value: $match_value<br/>";
 
                     } else if ( $field_type == "select" && !empty($field_value) ) {
-
                         // If field allows multiple values, then values will return as array and we must use LIKE comparison
                         if ( $field['multiple'] == 1 ) {
                             $compare = 'LIKE';
@@ -3646,7 +3614,6 @@ function birdhive_search_form ( $atts = array(), $content = null, $tag = '' )
                         $field_info .= ">> Added $query_assignment meta_query_component for key: $field_name, value: $match_value<br/>";
 
                     } else if ( $field_type == "relationship" ) { // && !empty($field_value)
-
                         $field_post_type = $field['post_type'];
                         // Check to see if more than one element in array. If not, use $field['post_type'][0]...
                         if ( count($field_post_type) == 1) {
@@ -3658,7 +3625,6 @@ function birdhive_search_form ( $atts = array(), $content = null, $tag = '' )
                         $field_info .= "field_post_type: ".print_r($field_post_type,true)."<br />";
 
                         if ( !empty($field_value) ) {
-
                             $field_value_converted = ""; // init var for storing ids of posts matching field_value
 
                             // If $options,
@@ -3685,7 +3651,6 @@ function birdhive_search_form ( $atts = array(), $content = null, $tag = '' )
                                 }
 
                                 if ( $alt_field_name ) {
-
                                     $meta_query['relation'] = 'OR';
 
                                     $query_component = array(
@@ -3702,11 +3667,9 @@ function birdhive_search_form ( $atts = array(), $content = null, $tag = '' )
                                     } else {
                                         $mq_components_related[] = $query_component;
                                     }
-
                                 }
 
                             } else {
-
                                 // If no $options, match search terms
                                 $field_info .= "options array is empty.<br />";
 
@@ -3746,7 +3709,6 @@ function birdhive_search_form ( $atts = array(), $content = null, $tag = '' )
                                     }
                                     //$mq_components_primary[] = $sub_query;
                                 }
-
                             }
 
                             //$field_info .= ">> WIP: set meta_query component for: $field_name = $field_value<br/>";
@@ -3755,7 +3717,6 @@ function birdhive_search_form ( $atts = array(), $content = null, $tag = '' )
                         }
 
                         // For text fields, may need to get ID matching value -- e.g. person id for name mousezart (220824), if composer field were not set up as combobox -- maybe faster?
-
 
                         /* ACF
                         create_field( $field_name ); // new ACF fcn to generate HTML for field
@@ -3768,9 +3729,7 @@ function birdhive_search_form ( $atts = array(), $content = null, $tag = '' )
                             // checkbox code or whatever
                         }
                         */
-
                     } else if ( $field_type == "taxonomy" && !empty($field_value) ) {
-
                         $query_component = array (
                             'taxonomy' => $field_name,
                             //'field'    => 'slug',
@@ -3785,11 +3744,9 @@ function birdhive_search_form ( $atts = array(), $content = null, $tag = '' )
                         }
 
                         if ( $post_type == "repertoire" ) {
-
                             // Since rep & editions share numerous taxonomies in common, check both
 
                             $related_field_name = 'repertoire_editions'; //$related_field_name = 'related_editions';
-
                             $field_info .= ">> WIP: field_type: taxonomy; field_name: $field_name; post_type: $post_type; terms: $field_value<br />"; // tft
 
                             // Add a tax query somehow to search for related_post_type posts with matching taxonomy value
@@ -3810,20 +3767,14 @@ function birdhive_search_form ( $atts = array(), $content = null, $tag = '' )
                                 $tq_components_related[] = $query_component;
                             }
                             */
-
                         }
-
                     }
-
-                    //$field_info .= "-----<br />";
-
                 } // END if ( $field )
 
 
                 // Set up the form fields
                 // ----------------------
                 if ( $form_type == "advanced_search" ) {
-
                     //$field_info .= "CONFIRM field_type: $field_type<br />"; // tft
 
                     $input_class = "advanced_search";
@@ -3838,11 +3789,9 @@ function birdhive_search_form ( $atts = array(), $content = null, $tag = '' )
                     $info .= '<label for="'.$field_name.'" class="'.$input_class.'">'.$field_label.':</label>';
 
                     if ( $field_type == "text" ) {
-
                         $input_html = '<input type="text" id="'.$field_name.'" name="'.$field_name.'" value="'.$field_value.'" class="'.$input_class.'" />';
 
                     } else if ( $field_type == "select" ) {
-
                         if ( isset($field['choices']) ) {
                             $options = $field['choices'];
                             //$field_info .= "field: <pre>".print_r($field, true)."</pre>";
@@ -3854,7 +3803,6 @@ function birdhive_search_form ( $atts = array(), $content = null, $tag = '' )
                         }
 
                     } else if ( $field_type == "relationship" ) {
-
                         if ( $field_cptt_name ) { $field_info .= "field_cptt_name: $field_cptt_name<br />"; } // tft
                         if ( $arr_field ) { $field_info .= "arr_field: $arr_field<br />"; } // tft
 
@@ -3863,13 +3811,11 @@ function birdhive_search_form ( $atts = array(), $content = null, $tag = '' )
 
                         if ( $field_cptt_name != $arr_field ) {
                         //if ( $field_cptt_name != $field_name ) {
-
                             $field_info .= "field_cptt_name NE arr_field<br />"; // tft
                             //$field_info .= "field_cptt_name NE field_name<br />"; // tft
 
                             // TODO:
                             if ( $field_post_type && $field_post_type != "person" && $field_post_type != "publisher" ) { // TMP disable options for person fields so as to allow for free autocomplete
-
                                 // TODO: consider when to present options as combo box and when to go for autocomplete text
                                 // For instance, what if the user can't remember which Bach wrote a piece? Should be able to search for all...
 
@@ -3910,7 +3856,6 @@ function birdhive_search_form ( $atts = array(), $content = null, $tag = '' )
                                 $arr_ids = array(); // init
 
                                 foreach ( $options_posts as $options_post_id ) {
-
                                     // see also get composer_ids
                                     $meta_values = get_field($field_name, $options_post_id, false);
                                     $alt_meta_values = get_field($alt_field_name, $options_post_id, false);
@@ -3926,7 +3871,6 @@ function birdhive_search_form ( $atts = array(), $content = null, $tag = '' )
                                             $arr_ids[] = $meta_value;
                                         }
                                     }
-
                                 }
 
                                 $arr_ids = array_unique($arr_ids);
@@ -3955,21 +3899,17 @@ function birdhive_search_form ( $atts = array(), $content = null, $tag = '' )
                                         $options[$id] = get_the_title($id);
                                     }
                                 }
-
                             }
 
                             asort($options);
 
                         } else {
-
                             $input_html = '<input type="text" id="'.$field_name.'" name="'.$field_name.'" value="'.$field_value.'" class="'.$input_class.'" />';
-
                             //$input_html = "LE TSET"; // tft
                             //$input_html = '<input type="text" id="'.$field_name.'" name="'.$field_name.'" value="'.$field_value.'" class="autocomplete '.$input_class.' relationship" />';
                         }
 
                     } else if ( $field_type == "taxonomy" ) {
-
                         // Get options, i.e. taxonomy terms
                         $obj_options = get_terms ( $field_name );
                         //$info .= "options for taxonomy $field_name: <pre>".print_r($options, true)."</pre>"; // tft
@@ -3984,13 +3924,11 @@ function birdhive_search_form ( $atts = array(), $content = null, $tag = '' )
                         }
 
                     } else {
-
                         $field_info .= "field_type could not be determined.";
                     }
 
                     if ( !empty($options) ) { // WIP // && strpos($input_class, "combobox")
-
-                        //if ( !empty($field_value) ) { $ts_info .= "options: <pre>".print_r($options, true)."</pre>"; } // tft
+                        //if ( !empty($field_value) ) { wxc_log( "options", $options, $logCtx ); }
 
                         $input_class .= " combobox"; // tft
 
@@ -4027,15 +3965,15 @@ function birdhive_search_form ( $atts = array(), $content = null, $tag = '' )
                     //$info .= '<!-- '."\n".$field_info."\n".' -->';
                 }
 
-                //$ts_info .= "+++++<br />FIELD INFO<br/>+++++<br />".$field_info."<br />";
+                //wxc_log( "field_info", $field_info, $logCtx );
                 //if ( strpos($field_name, "publisher") || strpos($field_name, "devmode") || strpos($arr_field, "devmode") || $field_name == "devmode" ) {
                 if ( (!empty($field_value) && $field_name != 'search_operator' && $field_name != 'devmode' ) ||
                    ( !empty($options_posts) && count($options_posts) > 0 ) ||
                    strpos($field_name, "liturgical") ) {
-                    $ts_info .= "+++++<br />FIELD INFO<br/>+++++<br />".$field_info."<br />";
+                    wxc_log( "field_info", $field_info, $logCtx );
                 }
                 //$field_name == "liturgical_date" || $field_name == "repertoire_litdates" ||
-                //if ( !empty($field_value) ) { $ts_info .= "+++++<br />FIELD INFO<br/>+++++<br />".$field_info."<br />"; }
+                //if ( !empty($field_value) ) { wxc_log( "field_info", $field_info, $logCtx ); }
 
             } // End conditional for actual search fields
 
@@ -4049,33 +3987,33 @@ function birdhive_search_form ( $atts = array(), $content = null, $tag = '' )
         $args_related = null; // init
         $mq_components = array();
         $tq_components = array();
-        //$ts_info .= "mq_components_primary: <pre>".print_r($mq_components_primary,true)."</pre>"; // tft
-        //$ts_info .= "tq_components_primary: <pre>".print_r($tq_components_primary,true)."</pre>"; // tft
-        //$ts_info .= "mq_components_related: <pre>".print_r($mq_components_related,true)."</pre>"; // tft
-        //$ts_info .= "tq_components_related: <pre>".print_r($tq_components_related,true)."</pre>"; // tft
+        //wxc_log( "mq_components_primary", $mq_components_primary, $logCtx );
+        //wxc_log( "tq_components_primary", $tq_components_primary, $logCtx );
+        //wxc_log( "mq_components_related", $mq_components_related, $logCtx );
+        //wxc_log( "tq_components_related", $tq_components_related, $logCtx );
 
         // If field values were found related to both post types,
         // AND if we're searching for posts that match ALL terms (search_operator: "and"),
         // then set up a second set of args/birdhive_get_posts
         if ( $search_primary_post_type == true && $search_related_post_type == true && $search_operator == "and" ) {
-            $ts_info .= "Querying both primary and related post_types (two sets of args)<br />";
+            wxc_log( "Querying both primary and related post_types (two sets of args)", null, $logCtx );
             $args_related = $wp_args;
             $args_related['post_type'] = $related_post_type; // reset post_type
         } else if ( $search_primary_post_type == true && $search_related_post_type == true && $search_operator == "or" ) {
             // WIP -- in this case
-            $ts_info .= "Querying both primary and related post_types (two sets of args) but with OR operator... WIP<br />";
+            wxc_log( "Querying both primary and related post_types (two sets of args) but with OR operator... WIP", null, $logCtx );
             //$args_related = $wp_args;
             //$args_related['post_type'] = $related_post_type; // reset post_type
         } else {
             if ( $search_primary_post_type == true ) {
                 // Searching primary post_type only
-                $ts_info .= "Searching primary post_type only<br />";
+                wxc_log( "Searching primary post_type only", null, $logCtx );
                 $wp_args['post_type'] = $post_type;
                 $mq_components = $mq_components_primary;
                 $tq_components = $tq_components_primary;
             } else if ( $search_related_post_type == true ) {
                 // Searching related post_type only
-                $ts_info .= "Searching related post_type only<br />";
+                wxc_log( "Searching related post_type only", null, $logCtx );
                 $wp_args['post_type'] = $related_post_type;
                 $mq_components = $mq_components_related;
                 $tq_components = $tq_components_related;
@@ -4090,12 +4028,11 @@ function birdhive_search_form ( $atts = array(), $content = null, $tag = '' )
         */
 
         if ( empty($args_related) ) {
-
             if ( count($mq_components) > 1 && empty($meta_query['relation']) ) {
                 $meta_query['relation'] = $search_operator;
             }
             if ( count($mq_components) == 1) {
-                //$ts_info .= "Single mq_component.<br />";
+                //wxc_log( "Single mq_component.", null, $logCtx );
                 $meta_query = $mq_components; //$meta_query = $mq_components[0];
             } else {
                 foreach ( $mq_components AS $component ) {
@@ -4106,7 +4043,6 @@ function birdhive_search_form ( $atts = array(), $content = null, $tag = '' )
             if ( !empty($meta_query) ) { $wp_args['meta_query'] = $meta_query; }
 
         } else {
-
             // TODO: eliminate redundancy!
             if ( count($mq_components_primary) > 1 && empty($meta_query['relation']) ) {
                 $meta_query['relation'] = $search_operator;
@@ -4138,14 +4074,11 @@ function birdhive_search_form ( $atts = array(), $content = null, $tag = '' )
                 $meta_query_related[] = $component;
             }*/
             if ( !empty($meta_query_related) ) { $args_related['meta_query'] = $meta_query_related; }
-
         }
-
 
         // Finalize tax_query or queries
         // =============================
         if ( empty($args_related) ) {
-
             if ( count($tq_components) > 1 && empty($tax_query['relation']) ) {
                 $tax_query['relation'] = $search_operator;
             }
@@ -4155,7 +4088,6 @@ function birdhive_search_form ( $atts = array(), $content = null, $tag = '' )
             if ( !empty($tax_query) ) { $wp_args['tax_query'] = $tax_query; }
 
         } else {
-
             // TODO: eliminate redundancy!
             if ( count($tq_components_primary) > 1 && empty($tax_query['relation']) ) {
                 $tax_query['relation'] = $search_operator;
@@ -4173,12 +4105,10 @@ function birdhive_search_form ( $atts = array(), $content = null, $tag = '' )
                 $tax_query_related[] = $component;
             }
             if ( !empty($tax_query_related) ) { $args_related['tax_query'] = $tax_query_related; }
-
         }
 
         ///// WIP
         if ( $related_post_type ) {
-
             // If we're dealing with multiple post types, then the and/or is extra-complicated, because not all taxonomies apply to all post_types
             // Must be able to find, e.g., repertoire with composer: Mousezart as well as ("OR") all editions/rep with instrument: Bells
 
@@ -4192,44 +4122,40 @@ function birdhive_search_form ( $atts = array(), $content = null, $tag = '' )
 
         // If search values have been submitted, then run the search query
         if ( count($search_values) > 0 ) {
-
-            $ts_info .= "About to pass wp_args to birdhive_get_posts: <pre>".print_r($wp_args,true)."</pre>"; // tft
+            wxc_log( "About to pass wp_args to birdhive_get_posts", $wp_args, $logCtx );
 
             // Get posts matching the assembled args
             /* ===================================== */
             if ( $form_type == "advanced_search" ) {
-                //$ts_info .= "<strong>NB: search temporarily disabled for troubleshooting.</strong><br />"; $posts_info = array(); // tft
+                //wxc_log( "NB: search temporarily disabled for troubleshooting.", null, $logCtx );
+                //$posts_info = array();
                 $posts_info = birdhive_get_posts( $wp_args );
             } else {
                 $posts_info = birdhive_get_posts( $wp_args );
             }
 
             if ( isset($posts_info['arr_posts']) ) {
-
                 $arr_post_ids = $posts_info['arr_posts']->posts; // Retrieves an array of IDs (based on return_fields: 'ids')
-                $ts_info .= "Num arr_post_ids: [".count($arr_post_ids)."]<br />";
-                $ts_info .= $posts_info['ts_info'];
+                wxc_log( "Num arr_post_ids: [".count($arr_post_ids)."]", null, $logCtx );
 
                 // Print last SQL query string
                 global $wpdb;
-                $ts_info .= "last_query:<pre>".$wpdb->last_query."</pre>";
+                wxc_log("last_query", $wpdb->last_query, $logCtx);
             }
 
             if ( $args_related ) {
-
-                $ts_info .= "About to pass args_related to birdhive_get_posts: <pre>".print_r($args_related,true)."</pre>"; // tft
-
-                $ts_info .= "<strong>NB: search temporarily disabled for troubleshooting.</strong><br />"; $related_posts_info = array(); // tft
+                wxc_log( "About to pass args_related to birdhive_get_posts", $args_related, $logCtx );
+                wxc_log( "NB: search temporarily disabled for troubleshooting.", null, $logCtx ); // ???
+                $related_posts_info = array(); // tft
                 //$related_posts_info = birdhive_get_posts( $args_related );
 
                 if ( isset($related_posts_info['arr_posts']) ) {
-
                     $arr_related_post_ids = $related_posts_info['arr_posts']->posts;
-                    $ts_info .= "Num arr_related_post_ids: [".count($arr_related_post_ids)."]<br />";
+                    wxc_log( "Num arr_related_post_ids: [".count($arr_related_post_ids)."]", null, $logCtx );
 
                     // Print last SQL query string
                     global $wpdb;
-                    $ts_info .= "last_query: <pre>".$wpdb->last_query."</pre>"; // tft
+                    wxc_log("last_query", $wpdb->last_query, $logCtx);
 
                     // WIP -- we're running an "and" so we need to find the OVERLAP between the two sets of ids... one set of repertoire ids, one of editions... hmm...
                     if ( !empty($arr_post_ids) ) {
@@ -4240,9 +4166,9 @@ function birdhive_search_form ( $atts = array(), $content = null, $tag = '' )
                         // TODO: eliminate redundancy
                         if ( count($arr_post_ids) > count($arr_related_post_ids) ) {
                             // more rep than edition records
-                            $ts_info .= "more rep than edition records >> loop through arr_related_post_ids<br />";
+                            wxc_log( "more rep than edition records >> loop through arr_related_post_ids", null, $logCtx );
                             foreach ( $arr_related_post_ids as $tmp_id ) {
-                                $ts_info .= "tmp_id: $tmp_id<br />";
+                                wxc_log( "tmp_id: $tmp_id", null, $logCtx );
                                 $tmp_posts = get_field($related_post_field_name, $tmp_id); // repertoire_editions
                                 if ( empty($tmp_posts) ) { $tmp_posts = get_field('musical_work', $tmp_id); } // WIP/tmp
                                 if ( $tmp_posts ) {
@@ -4257,18 +4183,18 @@ function birdhive_search_form ( $atts = array(), $content = null, $tag = '' )
                                         if ( in_array($tmp_match_id, $arr_post_ids) ) {
                                             // it's a full match -- keep it
                                             $full_match_ids[] = $tmp_match_id;
-                                            $ts_info .= "$related_post_field_name tmp_match_id: $tmp_match_id -- FOUND in arr_post_ids<br />";
+                                            wxc_log( "$related_post_field_name tmp_match_id: $tmp_match_id -- FOUND in arr_post_ids", null, $logCtx );
                                         } else {
-                                            $ts_info .= "$related_post_field_name tmp_match_id: $tmp_match_id -- NOT found in arr_post_ids<br />";
+                                            wxc_log( "$related_post_field_name tmp_match_id: $tmp_match_id -- NOT found in arr_post_ids", null, $logCtx );
                                         }
                                     }
                                 } else {
-                                    $ts_info .= "No $related_post_field_name records found matching related_post_id $tmp_id<br />";
+                                    wxc_log( "No $related_post_field_name records found matching related_post_id $tmp_id", null, $logCtx );
                                 }
                             }
                         } else {
                             // more editions than rep records
-                            $ts_info .= "more editions than rep records >> loop through arr_post_ids<br />";
+                            wxc_log( "more editions than rep records >> loop through arr_post_ids", null, $logCtx );
                             foreach ( $arr_post_ids as $tmp_id ) {
                                 $tmp_posts = get_field($related_post_field_name, $tmp_id); // repertoire_editions
                                 if ( empty($tmp_posts) ) { $tmp_posts = get_field('related_editions', $tmp_id); } // WIP/tmp
@@ -4285,7 +4211,7 @@ function birdhive_search_form ( $atts = array(), $content = null, $tag = '' )
                                             // it's a full match -- keep it
                                             $full_match_ids[] = $tmp_match_id;
                                         } else {
-                                            $ts_info .= "$related_post_field_name tmp_match_id: $tmp_match_id -- NOT in arr_related_post_ids<br />";
+                                            wxc_log( "$related_post_field_name tmp_match_id: $tmp_match_id -- NOT in arr_related_post_ids.", null, $logCtx );
                                         }
                                     }
                                 }
@@ -4293,61 +4219,46 @@ function birdhive_search_form ( $atts = array(), $content = null, $tag = '' )
                         }
                         //$arr_post_ids = array_merge($arr_post_ids, $arr_related_post_ids); // Merge $arr_related_posts into arr_post_ids -- nope, too simple
                         $arr_post_ids = $full_match_ids;
-                        $ts_info .= "Num full_match_ids: [".count($full_match_ids)."]".'</div>';
-
+                        wxc_log( "Num full_match_ids: [".count($full_match_ids)."]", null, $logCtx );
                     } else {
                         $arr_post_ids = $arr_related_post_ids;
                     }
-
                 }
             }
-
             //
 
             if ( !empty($arr_post_ids) ) {
-
-                $ts_info .= "Num matching posts found (raw results): [".count($arr_post_ids)."]"; // tft -- if there are both rep and editions, it will likely be an overcount
+                wxc_log( "Num matching posts found (raw results): [".count($arr_post_ids)."]", null, $logCtx ); // tft -- if there are both rep and editions, it will likely be an overcount
                 $info .= format_search_results($arr_post_ids);
-
             } else {
-
-                $info .= "No matching items found.<br />";
-
+                wxc_log( "No matching items found.", null, $logCtx );
             } // END if ( !empty($arr_post_ids) )
 
             /*if ( isset($posts_info['arr_posts']) ) {
-
                 $arr_posts = $posts_info['arr_posts'];//$posts_info['arr_posts']->posts; // Retrieves an array of WP_Post Objects
 
-                $ts_info .= $posts_info['ts_info']."<hr />";
-
                 if ( !empty($arr_posts) ) {
-
-                    $ts_info .= "Num matching posts found (raw results): [".count($arr_posts->posts)."]";
+                    wxc_log( "Num matching posts found (raw results): [".count($arr_posts->posts)."]", null, $logCtx );
                     //$info .= '<div class="troubleshooting">'."Num matching posts found (raw results): [".count($arr_posts->posts)."]".'</div>'; // tft -- if there are both rep and editions, it will likely be an overcount
 
                     if ( count($arr_posts->posts) == 0 ) { // || $form_type == "advanced_search"
-                        //$ts_info .= "args: <pre>".print_r($args,true)."</pre>"; // tft
+                        //wxc_log( "args", $args, $logCtx );
                     }
 
                     // Print last SQL query string
                     global $wpdb;
-                    $ts_info .= "<p>last_query:</p><pre>".$wpdb->last_query."</pre>"; // tft
+                    wxc_log("last_query", $wpdb->last_query, $logCtx);
 
                     $info .= format_search_results($arr_posts);
 
                 } // END if ( !empty($arr_posts) )
-
             } else {
-                $ts_info .= "No arr_posts retrieved.<br />";
+                wxc_log( "No arr_posts retrieved.", null, $logCtx );
             }*/
 
         } else {
-
-            $ts_info .= "No search values submitted.<br />";
-
+            wxc_log( "No search values submitted.", null, $logCtx );
         }
-
     } // END if ( $args['fields'] )
 
     return $info;
