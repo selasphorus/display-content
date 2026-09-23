@@ -972,6 +972,8 @@ function display_grid_item ( $arr_item = array(), $arr_styling = array() )
 // TODO: come up with better name for $arr_styling -- which also includes atts like collection_id, not just styling atts like aspect_ratio
 function build_item_arr ( $item, $arr_styling = array() )
 {
+    global $logCtx;
+    
     // Init vars
     $arr_item = array();
     //
@@ -1054,7 +1056,15 @@ function build_item_arr ( $item, $arr_styling = array() )
                 $item_title = $short_title;
             } else if ( $post_type == "person" ) {
                 $title_args = array( 'person_id' => $post_id, 'override' => 'post_title', 'show_job_title' => true, 'called_by' => 'dcp' );
-                $item_title = getPersonDisplayName($title_args);
+                
+                if ( function_exists('getPersonDisplayName') )  {
+					wxc_log("About to get item_title using 'getPersonDisplayName' method", null, $logCtx );
+					$item_title = getPersonDisplayName($title_args);
+				} else if ( function_exists('whx4_get_display_name') )  {
+					wxc_log("About to get item_title using 'whx4_get_display_name' method", null, $logCtx );
+					$item_title = whx4_get_display_name('person', $title_args);
+				}
+                
             } else if ( function_exists( 'stc_post_title' ) ) {
                 if ( !isset($show_subtitle) ) { $show_subtitle = true; }
                 $title_args = array( 'post' => $post_id, 'line_breaks' => true, 'show_subtitle' => $show_subtitle, 'echo' => false, 'called_by' => 'dcp' );
