@@ -4,7 +4,7 @@
  * Description: Display content of all types in a variety of formats using shortcodes.
  * Dependencies:      
  * Requires Plugins: whx4-core, stc
- * Version: 1.260923
+ * Version: 1.261124
  * Plugin URI: 
  * Author: atc
  * Author URI: http://birdhive.com
@@ -94,7 +94,7 @@ function dsplycntnt_scripts_method()
 
 // The following filter function to be removed altogether after testing -- replaced by version of same fcn in sdg.php
 // TODO: build in plugin dependency on SDG
-// Facilitate search by str in post_title (as oppposed to built-in search by content or by post name, aka slug)
+// Facilitate search by str in post_title (as opposed to built-in search by content or by post name, aka slug)
 //add_filter( 'posts_where', 'birdhive_posts_where', 10, 2 );
 /*function birdhive_posts_where( $where, $wp_query )
 {
@@ -1058,10 +1058,10 @@ function build_item_arr ( $item, $arr_styling = array() )
                 $title_args = array( 'person_id' => $post_id, 'override' => 'post_title', 'show_job_title' => true, 'called_by' => 'dcp' );
                 
                 if ( function_exists('getPersonDisplayName') )  {
-					wxc_log("About to get item_title using 'getPersonDisplayName' method", null, $logCtx );
+					wxc_log( "About to get item_title using 'getPersonDisplayName' method", null, $logCtx );
 					$item_title = getPersonDisplayName($title_args);
 				} else if ( function_exists('whx4_get_display_name') )  {
-					wxc_log("About to get item_title using 'whx4_get_display_name' method", null, $logCtx );
+					wxc_log( "About to get item_title using 'whx4_get_display_name' method", null, $logCtx );
 					$item_title = whx4_get_display_name('person', $title_args);
 				}
                 

@@ -305,7 +305,7 @@ function dcp_register_field_groups() {
 						'post_type' => array(
 							0 => 'post',
 							1 => 'page',
-							2 => 'event',
+							2 => 'event', // >> whx4_event
 							3 => 'person',
 							4 => 'identity',
 							5 => 'group',

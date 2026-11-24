@@ -24,6 +24,7 @@ function birdhive_display_collection ( $args = array() )
 {
     // Init vars
     $info = "";
+    $items = [];
 
     // Defaults
     $defaults = array(
