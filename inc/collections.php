@@ -101,63 +101,65 @@ function birdhive_display_collection ( $args = array() )
     //$info .= "+~+~+~+~+~+~+ collection items +~+~+~+~+~+~+<br />";
 
     // For each item, get content for display in appropriate form...
-    foreach ( $items as $item ) {
-        $item_info = "";
-        $arr_item = array();
-        $image_id = null;
-
-        if ( is_array($item) && isset($item['item_type']) ) {
-            $item_type = $item['item_type'];
-        } else if ( $content_type == "posts" ) {
-            $item_type = "post";
-        } else if ( $content_type == "events" ) {
-            $item_type = "event";
-        } else {
-            $item_type = "UNKNOWN!";
-        }
-        
-        if ( $item_type == "event" && ( $display_format == "excerpts" || ( $display_format == "archive" && $show_content != 'full' ) ) ) {
-            $item_info .= display_event_list_item( $item );
-        } else {
-            // Assemble the array of styling parameters
-            $arr_styling = array( 'item_type' => $item_type, 'display_format' => $display_format, 'link_posts' => $link_posts, 'show_subtitle' => $show_subtitles, 'show_content' => $show_content, 'show_image' => $show_images, 'aspect_ratio' => $aspect_ratio, 'table_fields' => $table_fields, 'collection_id' => $collection_id ); // wip
-
-            // Assemble the arr_item
-            if ( $item_type == "custom_item" ) {
-                $arr_item = $item;
-            } else {
-                $arr_item = build_item_arr ( $item, $arr_styling );
-            }
-
-            // Get content for display in appropriate form...
-            //$item_args = array( 'content_type' => $content_type, 'display_format' => $display_format, 'item' => $item );
-            $item_info .= display_item ( $arr_item, $arr_styling );
-        }
-
-        if ( isset( $arr_item['item_content'] ) && $item_type == "modal" || ( isset( $arr_item['item_link_target'] ) && $arr_item['item_link_target'] == "modal" ) ) {
-            // modal_content...
-            //<div id="dialog_content_contact_us" class="dialog dialog_content"></div>
-            $dialog_id = sanitize_title($arr_item['item_title']); // wip
-            $info .= '<div id="dialog_content_'.$dialog_id.'" class="dialog dialog_content">'.$arr_item['item_content'].'</div>';
-        }
-
-        //
-        if ( !empty($table_totals) ) {
-            foreach ( $table_totals as $field_name ) {
-                if ( isset( $arr_item['field_values'][$field_name] ) ) { // isset( $arr_item[$field_name] ) ||
-                    if ( isset($col_totals[$field_name]) ) {
-                        $col_totals[$field_name] += (float) $arr_item['field_values'][$field_name];
-                    } else {
-                        $col_totals[$field_name] = (float) $arr_item['field_values'][$field_name];
-                    }
-                }
-            }
-        }
-
-        // Add the item_info to the info for return/display
-        $info .= $item_info;
-
-    } // END foreach items as item
+    if ( $items ) {
+        foreach ( $items as $item ) {
+			$item_info = "";
+			$arr_item = array();
+			$image_id = null;
+	
+			if ( is_array($item) && isset($item['item_type']) ) {
+				$item_type = $item['item_type'];
+			} else if ( $content_type == "posts" ) {
+				$item_type = "post";
+			} else if ( $content_type == "events" ) {
+				$item_type = "event";
+			} else {
+				$item_type = "UNKNOWN!";
+			}
+			
+			if ( $item_type == "event" && ( $display_format == "excerpts" || ( $display_format == "archive" && $show_content != 'full' ) ) ) {
+				$item_info .= display_event_list_item( $item );
+			} else {
+				// Assemble the array of styling parameters
+				$arr_styling = array( 'item_type' => $item_type, 'display_format' => $display_format, 'link_posts' => $link_posts, 'show_subtitle' => $show_subtitles, 'show_content' => $show_content, 'show_image' => $show_images, 'aspect_ratio' => $aspect_ratio, 'table_fields' => $table_fields, 'collection_id' => $collection_id ); // wip
+	
+				// Assemble the arr_item
+				if ( $item_type == "custom_item" ) {
+					$arr_item = $item;
+				} else {
+					$arr_item = build_item_arr ( $item, $arr_styling );
+				}
+	
+				// Get content for display in appropriate form...
+				//$item_args = array( 'content_type' => $content_type, 'display_format' => $display_format, 'item' => $item );
+				$item_info .= display_item ( $arr_item, $arr_styling );
+			}
+	
+			if ( isset( $arr_item['item_content'] ) && $item_type == "modal" || ( isset( $arr_item['item_link_target'] ) && $arr_item['item_link_target'] == "modal" ) ) {
+				// modal_content...
+				//<div id="dialog_content_contact_us" class="dialog dialog_content"></div>
+				$dialog_id = sanitize_title($arr_item['item_title']); // wip
+				$info .= '<div id="dialog_content_'.$dialog_id.'" class="dialog dialog_content">'.$arr_item['item_content'].'</div>';
+			}
+	
+			//
+			if ( !empty($table_totals) ) {
+				foreach ( $table_totals as $field_name ) {
+					if ( isset( $arr_item['field_values'][$field_name] ) ) { // isset( $arr_item[$field_name] ) ||
+						if ( isset($col_totals[$field_name]) ) {
+							$col_totals[$field_name] += (float) $arr_item['field_values'][$field_name];
+						} else {
+							$col_totals[$field_name] = (float) $arr_item['field_values'][$field_name];
+						}
+					}
+				}
+			}
+	
+			// Add the item_info to the info for return/display
+			$info .= $item_info;
+	
+		} // END foreach items as item
+    }
 
     if ( $display_format == "table" ) {
         $info .= '</tbody>';
